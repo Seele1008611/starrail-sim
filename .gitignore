@@ -1,0 +1,31 @@
+# eclipse
+bin
+*.launch
+.settings
+.metadata
+.classpath
+.project
+
+# idea
+out
+*.ipr
+*.iws
+*.iml
+.idea
+
+# gradle
+build
+.gradle
+.gradle-user-home
+
+# compiled files and JVM crash logs
+*.class
+hs_err_pid*.log
+replay_pid*.log
+
+# other
+eclipse
+run
+
+# Files from Forge MDK
+forge*changelog.txt

@@ -1,0 +1,103 @@
+package com.starrail.sim;
+
+/** Shared rules for initial path trials and later breakthrough trials. */
+public final class StarRailPathRules {
+    public static final long TRIAL_TIME_LIMIT = 120L * 20L;
+    public static final long HUNT_STREAK_WINDOW = 8L * 20L;
+    public static final long REMEMBRANCE_WINDOW = 8L * 20L;
+    public static final long ELATION_COMBO_WINDOW = 5L * 20L;
+
+    private StarRailPathRules() {
+    }
+
+    public static boolean isImplemented(StarRailPath path) {
+        return path == StarRailPath.HUNT
+                || path == StarRailPath.PRESERVATION
+                || path == StarRailPath.ABUNDANCE
+                || path == StarRailPath.DESTRUCTION
+                || path == StarRailPath.ERUDITION
+                || path == StarRailPath.NIHILITY
+                || path == StarRailPath.HARMONY
+                || path == StarRailPath.REMEMBRANCE
+                || path == StarRailPath.ELATION;
+    }
+
+    public static int objective1Target(StarRailPath path) {
+        return objective1Target(path, StarRailPathRank.UNALIGNED);
+    }
+
+    public static int objective1Target(StarRailPath path, StarRailPathRank trialRank) {
+        int base = switch (path) {
+            case HUNT -> 5;
+            case PRESERVATION -> 3;
+            case ABUNDANCE -> 10;
+            case DESTRUCTION -> 3;
+            case ERUDITION -> 1;
+            case NIHILITY -> 5;
+            case HARMONY -> 3;
+            case REMEMBRANCE -> 3;
+            case ELATION -> 8;
+            default -> 0;
+        };
+        return scaleTarget(base, trialRank);
+    }
+
+    public static int objective2Target(StarRailPath path) {
+        return objective2Target(path, StarRailPathRank.UNALIGNED);
+    }
+
+    public static int objective2Target(StarRailPath path, StarRailPathRank trialRank) {
+        int base = switch (path) {
+            case HUNT -> 2;
+            case PRESERVATION -> 5;
+            case ABUNDANCE -> 3;
+            case DESTRUCTION -> 10;
+            case ERUDITION -> 3;
+            case NIHILITY -> 3;
+            case HARMONY -> 3;
+            case REMEMBRANCE -> 2;
+            case ELATION -> 2;
+            default -> 0;
+        };
+        return scaleTarget(base, trialRank);
+    }
+
+    /**
+     * Later breakthrough trials grow gradually instead of multiplying the
+     * two objectives by the same raw number. This keeps the first trial
+     * values unchanged while making higher ranks long-term goals.
+     */
+    private static int scaleTarget(int base, StarRailPathRank trialRank) {
+        if (base <= 0 || trialRank == null) {
+            return base;
+        }
+        double multiplier = switch (trialRank) {
+            case RESONANCE -> 1.5D;
+            case PRACTICE -> 2.0D;
+            case DEEP_PRACTICE -> 3.0D;
+            case HIGH_PATHSTRIDER -> 4.0D;
+            case PATH_PINNACLE -> 5.0D;
+            default -> 1.0D;
+        };
+        return (int) Math.ceil(base * multiplier);
+    }
+
+    public static long trialTimeLimit(StarRailPathRank trialRank) {
+        return switch (trialRank == null ? StarRailPathRank.UNALIGNED : trialRank) {
+            case RESONANCE -> 180L * 20L;
+            case PRACTICE -> 300L * 20L;
+            case DEEP_PRACTICE -> 480L * 20L;
+            case HIGH_PATHSTRIDER -> 600L * 20L;
+            case PATH_PINNACLE -> 900L * 20L;
+            default -> TRIAL_TIME_LIMIT;
+        };
+    }
+
+    public static long trialTimeLimit(StarRailPath path, StarRailPathRank trialRank) {
+        if (path == StarRailPath.ERUDITION
+                && (trialRank == null || trialRank == StarRailPathRank.UNALIGNED)) {
+            return 30L * 20L;
+        }
+        return trialTimeLimit(trialRank);
+    }
+}

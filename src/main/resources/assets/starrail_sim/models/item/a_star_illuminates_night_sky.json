@@ -1,0 +1,6 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "starrail_sim:item/a_star_illuminates_night_sky"
+  }
+}
