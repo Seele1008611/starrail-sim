@@ -24,7 +24,7 @@
 - 结构集的 `spacing=64`、`separation=25` 限制自然候选锚点间隔至少 26 区块（416 格）；寻迹遗迹另以世界保存的锚点执行 400 格水平距离检查。
 - 首次冷态定位新地形用时约 31.6 秒；同一候选区已生成后再次查询为 0 毫秒。冷态查询有一次服务器落后警告；`latest.log` 无 ERROR/FATAL，`debug.log` 有不影响启动与关停的 Windows WMI/Netty 探测警告。
 - 客户端记录到两张模组物品贴图的 mip 等级警告（`the_unreachable_side`、`star_rail_logo`）；资源加载继续完成，未阻止启动。
-- 已更新本地候选审核包：`build/libs/starrail_sim-1.1.0-candidate.zip`，包含候选 JAR、安装说明、更新日志、设计参考、服务端验证报告和 SHA-256 校验文件。压缩包内 JAR 的 SHA-256 与构建产物一致；此包仅供本地审阅，不是正式发布。
+- 发布前的本地候选审核包已通过文件清单和 SHA-256 核对；正式发行 JAR 已发布于 [GitHub Release v1.1.0](https://github.com/Seele1008611/starrail-sim/releases/tag/v1.1.0)。
 - 将重映射后的发行 JAR 直接放入 ForgeGradle 开发服务器时，在 `Registries.CREATIVE_MODE_TAB` 处出现映射字段不匹配。开发环境使用 Mojang 映射类，这种加载方式不能用于验证发行 JAR；不据此认定候选包有故障。
 - 使用 Java 17、Gradle 8.8 执行 `build` 成功，`reobfJar` 完成。Gradle 的 `test` 为 `NO-SOURCE`，项目当前没有自动化测试用例。
 - 发行 JAR 元数据通过核对：mod ID `starrail_sim`，版本 `1.1.0`，Minecraft 范围 `[1.20.1,1.21)`，Forge 范围 `[47,)`，Curios 范围 `[5.14.1,)`；目标 Minecraft 1.20.1 匹配。
