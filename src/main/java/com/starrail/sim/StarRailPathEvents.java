@@ -71,7 +71,8 @@ public final class StarRailPathEvents {
             if (data.getTrialPath().isRealPath()
                     && !data.isTrialComplete()
                     && player.level().getGameTime() - data.getTrialStartTick()
-                    > StarRailPathRules.trialTimeLimit(data.getTrialRank())) {
+                    >= StarRailPathRules.trialTimeLimit(
+                            data.getTrialPath(), data.getTrialRank())) {
                 StarRailPath trialPath = data.getTrialPath();
                 boolean rankTrial = data.isRankTrial();
                 data.resetTrial();
