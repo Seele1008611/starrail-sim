@@ -1,5 +1,9 @@
 package com.starrail.sim;
 
+/**
+ * 模组代码说明：网络数据包类，定义需要在客户端与服务端之间传递的数据及其处理入口。
+ */
+
 import com.starrail.sim.client.StarRailPathClientState;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.network.NetworkEvent;
@@ -19,6 +23,10 @@ public final class PathStatePacket {
     private final int objective1;
     private final int objective2;
     private final int secondsRemaining;
+    private final StarRailPath soughtPath;
+    private final int soughtX;
+    private final int soughtY;
+    private final int soughtZ;
 
     public PathStatePacket(boolean unlocked, StarRailPath currentPath,
                            StarRailPathRank currentPathRank,
@@ -26,7 +34,8 @@ public final class PathStatePacket {
                            int pinnaclePracticeCount,
                            StarRailPath trialPath, StarRailPathRank trialRank,
                            int objective1,
-                           int objective2, int secondsRemaining) {
+                           int objective2, int secondsRemaining,
+                           StarRailPath soughtPath, int soughtX, int soughtY, int soughtZ) {
         this.unlocked = unlocked;
         this.currentPath = currentPath;
         this.currentPathRank = currentPathRank;
@@ -38,6 +47,10 @@ public final class PathStatePacket {
         this.objective1 = objective1;
         this.objective2 = objective2;
         this.secondsRemaining = secondsRemaining;
+        this.soughtPath = soughtPath;
+        this.soughtX = soughtX;
+        this.soughtY = soughtY;
+        this.soughtZ = soughtZ;
     }
 
     public static void encode(PathStatePacket packet, FriendlyByteBuf buffer) {
@@ -52,6 +65,10 @@ public final class PathStatePacket {
         buffer.writeInt(packet.objective1);
         buffer.writeInt(packet.objective2);
         buffer.writeInt(packet.secondsRemaining);
+        buffer.writeEnum(packet.soughtPath);
+        buffer.writeInt(packet.soughtX);
+        buffer.writeInt(packet.soughtY);
+        buffer.writeInt(packet.soughtZ);
     }
 
     public static PathStatePacket decode(FriendlyByteBuf buffer) {
@@ -64,6 +81,10 @@ public final class PathStatePacket {
                 buffer.readInt(),
                 buffer.readEnum(StarRailPath.class),
                 buffer.readEnum(StarRailPathRank.class),
+                buffer.readInt(),
+                buffer.readInt(),
+                buffer.readInt(),
+                buffer.readEnum(StarRailPath.class),
                 buffer.readInt(),
                 buffer.readInt(),
                 buffer.readInt());
@@ -83,7 +104,11 @@ public final class PathStatePacket {
                 packet.trialRank,
                 packet.objective1,
                 packet.objective2,
-                packet.secondsRemaining));
+                packet.secondsRemaining,
+                packet.soughtPath,
+                packet.soughtX,
+                packet.soughtY,
+                packet.soughtZ));
         context.setPacketHandled(true);
     }
 }

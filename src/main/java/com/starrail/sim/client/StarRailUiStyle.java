@@ -1,5 +1,9 @@
 package com.starrail.sim.client;
 
+/**
+ * 模组代码说明：集中定义模组界面使用的颜色、边框和文字绘制样式。
+ */
+
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;

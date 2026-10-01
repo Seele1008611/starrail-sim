@@ -1,5 +1,9 @@
 package com.starrail.sim;
 
+/**
+ * 模组代码说明：统一处理命途提示文本和消息发送方式。
+ */
+
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.contents.TranslatableContents;
@@ -35,6 +39,12 @@ public final class StarRailPathMessages {
             "message.starrail_sim.trial_timeout",
             "message.starrail_sim.trial_not_complete",
             "message.starrail_sim.trial_already_active",
+            "message.starrail_sim.path_locked",
+            "message.starrail_sim.path_already_chosen",
+            "message.starrail_sim.path_unavailable",
+            "message.starrail_sim.path_seek_overworld_only",
+            "message.starrail_sim.path_seek_pending",
+            "message.starrail_sim.path_seek_no_spaced_site",
             "message.starrail_sim.path_rank_up");
 
     private static final Set<String> SKILL_NOTIFICATIONS = Set.of(

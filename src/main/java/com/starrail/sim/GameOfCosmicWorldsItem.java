@@ -1,5 +1,9 @@
 package com.starrail.sim;
 
+/**
+ * 模组代码说明：自定义光锥物品类，定义装备属性或物品交互行为，并把专属效果接入模组系统。
+ */
+
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.world.entity.ai.attributes.Attribute;

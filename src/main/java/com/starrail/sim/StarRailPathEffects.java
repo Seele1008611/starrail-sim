@@ -1,5 +1,9 @@
 package com.starrail.sim;
 
+/**
+ * 模组代码说明：把玩家已选择的命途效果刷新到实际属性或状态中。
+ */
+
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;

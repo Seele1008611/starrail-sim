@@ -1,5 +1,9 @@
 package com.starrail.sim.client;
 
+/**
+ * 模组代码说明：保存客户端收到的命途状态，供命途界面与提示显示使用。
+ */
+
 import com.starrail.sim.StarRailPath;
 import com.starrail.sim.StarRailPathEffects;
 import com.starrail.sim.StarRailPathProgress;
@@ -19,6 +23,10 @@ public final class StarRailPathClientState {
     private static int objective1;
     private static int objective2;
     private static int secondsRemaining;
+    private static StarRailPath soughtPath = StarRailPath.NONE;
+    private static int soughtX;
+    private static int soughtY;
+    private static int soughtZ;
 
     private StarRailPathClientState() {
     }
@@ -29,7 +37,9 @@ public final class StarRailPathClientState {
                               StarRailPath trial,
                               StarRailPathRank breakthroughRank,
                               int firstObjective,
-                              int secondObjective, int remaining) {
+                              int secondObjective, int remaining,
+                              StarRailPath lastSoughtPath, int lastSoughtX,
+                              int lastSoughtY, int lastSoughtZ) {
         unlocked = pathUnlocked;
         currentPath = current;
         currentPathRank = currentRank;
@@ -41,6 +51,10 @@ public final class StarRailPathClientState {
         objective1 = firstObjective;
         objective2 = secondObjective;
         secondsRemaining = remaining;
+        soughtPath = lastSoughtPath;
+        soughtX = lastSoughtX;
+        soughtY = lastSoughtY;
+        soughtZ = lastSoughtZ;
 
         Minecraft minecraft = Minecraft.getInstance();
         if (minecraft.player != null) {
@@ -95,5 +109,21 @@ public final class StarRailPathClientState {
 
     public static int getSecondsRemaining() {
         return secondsRemaining;
+    }
+
+    public static StarRailPath getSoughtPath() {
+        return soughtPath;
+    }
+
+    public static int getSoughtX() {
+        return soughtX;
+    }
+
+    public static int getSoughtY() {
+        return soughtY;
+    }
+
+    public static int getSoughtZ() {
+        return soughtZ;
     }
 }

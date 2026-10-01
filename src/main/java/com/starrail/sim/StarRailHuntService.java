@@ -1,5 +1,9 @@
 package com.starrail.sim;
 
+/**
+ * 模组代码说明：服务层类，封装对应系统的状态操作与规则，供事件、指令或界面调用。
+ */
+
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 

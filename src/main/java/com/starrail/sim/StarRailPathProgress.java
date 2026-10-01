@@ -1,5 +1,9 @@
 package com.starrail.sim;
 
+/**
+ * 模组代码说明：集中计算命途阶位升级所需的修行进度和上限。
+ */
+
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 

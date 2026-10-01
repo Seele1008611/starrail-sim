@@ -1,3 +1,4 @@
+// 项目中文说明：配置 Gradle 插件仓库和本项目的构建插件解析规则。
 pluginManagement {
     repositories {
         gradlePluginPortal()

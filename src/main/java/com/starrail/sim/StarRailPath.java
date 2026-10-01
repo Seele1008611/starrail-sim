@@ -1,5 +1,9 @@
 package com.starrail.sim;
 
+/**
+ * 模组代码说明：命途枚举及其标识、显示名称和有效性判断。
+ */
+
 import java.util.Arrays;
 
 /** The nine playable paths planned for the first content phase. */

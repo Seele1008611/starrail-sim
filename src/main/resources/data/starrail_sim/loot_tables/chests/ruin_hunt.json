@@ -1,0 +1,70 @@
+{
+  "type": "minecraft:chest",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:path_trial_token",
+          "functions": [
+            {
+              "function": "minecraft:set_nbt",
+              "tag": "{Path:\"hunt\"}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "rolls": {
+        "type": "minecraft:uniform",
+        "min": 1,
+        "max": 3
+      },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:in_the_night"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:i_will_hunt"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:worrisome_blissful"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:sleep_like_the_dead"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:pure_thought_baptism"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:ideal_burning_hell"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:embark_on_second_life"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:finale_of_a_lie"
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:loot_table",
+          "name": "minecraft:chests/desert_pyramid"
+        }
+      ]
+    }
+  ]
+}

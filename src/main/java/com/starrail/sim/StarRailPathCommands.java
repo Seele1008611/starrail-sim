@@ -1,5 +1,9 @@
 package com.starrail.sim;
 
+/**
+ * 模组代码说明：注册并处理命途相关的服务端指令入口。
+ */
+
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.context.CommandContext;
@@ -86,8 +90,9 @@ public final class StarRailPathCommands {
             return 0;
         }
 
-        StarRailPathService.startTrial(player, path);
-        return 1;
+        context.getSource().sendFailure(Component.translatable(
+                "message.starrail_sim.trial_token_required"));
+        return 0;
     }
 
     private static int confirm(CommandContext<CommandSourceStack> context) {

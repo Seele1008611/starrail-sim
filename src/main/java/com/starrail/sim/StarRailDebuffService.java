@@ -1,5 +1,9 @@
 package com.starrail.sim;
 
+/**
+ * 模组代码说明：集中应用、叠加和清除模组中的负面战斗效果。
+ */
+
 import net.minecraft.network.chat.Component;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;

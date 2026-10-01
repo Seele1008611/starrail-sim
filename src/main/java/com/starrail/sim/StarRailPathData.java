@@ -1,5 +1,9 @@
 package com.starrail.sim;
 
+/**
+ * 模组代码说明：玩家命途数据的默认实现，保存当前命途、试炼、阶位、修行进度和战斗效果所需的临时状态。
+ */
+
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 
@@ -14,6 +18,10 @@ public final class StarRailPathData implements IStarRailPathData {
     private StarRailPath trialPath = StarRailPath.NONE;
     private StarRailPathRank trialRank = StarRailPathRank.UNALIGNED;
     private boolean pathUnlocked;
+    private StarRailPath soughtPath = StarRailPath.NONE;
+    private int soughtX;
+    private int soughtY;
+    private int soughtZ;
     private final EnumMap<StarRailPath, StarRailPathRank> pathRanks =
             new EnumMap<>(StarRailPath.class);
     private final EnumMap<StarRailPath, Integer> practiceProgress =
@@ -88,6 +96,46 @@ public final class StarRailPathData implements IStarRailPathData {
     @Override
     public void setPathUnlocked(boolean unlocked) {
         pathUnlocked = unlocked;
+    }
+
+    @Override
+    public StarRailPath getSoughtPath() {
+        return soughtPath;
+    }
+
+    @Override
+    public int getSoughtX() {
+        return soughtX;
+    }
+
+    @Override
+    public int getSoughtY() {
+        return soughtY;
+    }
+
+    @Override
+    public int getSoughtZ() {
+        return soughtZ;
+    }
+
+    @Override
+    public void setSoughtRuin(StarRailPath path, int x, int y, int z) {
+        if (path == null || !path.isRealPath()) {
+            clearSoughtRuin();
+            return;
+        }
+        soughtPath = path;
+        soughtX = x;
+        soughtY = y;
+        soughtZ = z;
+    }
+
+    @Override
+    public void clearSoughtRuin() {
+        soughtPath = StarRailPath.NONE;
+        soughtX = 0;
+        soughtY = 0;
+        soughtZ = 0;
     }
 
     @Override
@@ -505,6 +553,8 @@ public final class StarRailPathData implements IStarRailPathData {
         trialPath = other.getTrialPath();
         trialRank = other.getTrialRank();
         pathUnlocked = other.isPathUnlocked();
+        setSoughtRuin(other.getSoughtPath(), other.getSoughtX(), other.getSoughtY(),
+                other.getSoughtZ());
         pathRanks.clear();
         practiceProgress.clear();
         pinnaclePracticeCount.clear();
@@ -560,6 +610,10 @@ public final class StarRailPathData implements IStarRailPathData {
         tag.putString("trial_path", trialPath.getId());
         tag.putInt("trial_rank", trialRank.getLevel());
         tag.putBoolean("path_unlocked", pathUnlocked);
+        tag.putString("sought_path", soughtPath.getId());
+        tag.putInt("sought_x", soughtX);
+        tag.putInt("sought_y", soughtY);
+        tag.putInt("sought_z", soughtZ);
         CompoundTag rankTag = new CompoundTag();
         for (StarRailPath path : StarRailPath.values()) {
             if (path.isRealPath()) {
@@ -639,6 +693,10 @@ public final class StarRailPathData implements IStarRailPathData {
                 ? StarRailPathRank.fromLevel(tag.getInt("trial_rank"))
                 : StarRailPathRank.UNALIGNED;
         pathUnlocked = tag.getBoolean("path_unlocked");
+        soughtPath = StarRailPath.byId(tag.getString("sought_path"));
+        soughtX = tag.getInt("sought_x");
+        soughtY = tag.getInt("sought_y");
+        soughtZ = tag.getInt("sought_z");
         pathRanks.clear();
         if (tag.contains("path_ranks")) {
             CompoundTag rankTag = tag.getCompound("path_ranks");

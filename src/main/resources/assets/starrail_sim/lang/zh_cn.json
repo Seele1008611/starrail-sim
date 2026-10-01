@@ -54,7 +54,7 @@
   "screen.starrail_sim.character_open_details": "属性详情",
   "screen.starrail_sim.character_unaligned": "未踏上命途",
   "screen.starrail_sim.open_paths": "\u6253\u5f00\u547d\u9014",
-  "screen.starrail_sim.paths": "\u547d\u9014\u5171\u9e23",
+  "screen.starrail_sim.paths": "\u547d\u9014\u5bfb\u8ff9",
   "screen.starrail_sim.path_locked": "\u83b7\u5f97\u94bb\u77f3\u540e\u89e3\u9501\u547d\u9014\u7ebf\u7d22",
   "screen.starrail_sim.current_path": "\u5f53\u524d\u547d\u9014\uff1a%s",
   "screen.starrail_sim.current_path_rank": "\u5f53\u524d\u547d\u9014\uff1a%s  \u00b7  %s",
@@ -66,7 +66,7 @@
   "screen.starrail_sim.hunt_kills": "\u5de1\u730e\u8bd5\u70bc\uff1a\u51fb\u8d25\u654c\u5bf9\u751f\u7269 %s/%s",
   "screen.starrail_sim.hunt_streak": "\u8fde\u7eed\u72e9\u730e\uff1a%s/%s",
   "screen.starrail_sim.hunt_time": "\u5269\u4f59\u65f6\u95f4\uff1a%s \u79d2",
-  "screen.starrail_sim.choose_path": "\u9009\u62e9\u4e00\u6761\u547d\u9014\u5f00\u59cb\u8bd5\u70bc",
+  "screen.starrail_sim.choose_path": "\u9009\u62e9\u547d\u9014\u540e\u70b9\u51fb\u786e\u8ba4\u5bfb\u8ff9\uff1b\u5230\u8fbe\u9057\u8ff9\u540e\u4f7f\u7528\u5b9d\u7bb1\u4e2d\u5bf9\u5e94\u51ed\u8bc1\u5f00\u542f\u8bd5\u70bc",
   "screen.starrail_sim.confirm_path": "\u786e\u8ba4\u8e0f\u4e0a\u547d\u9014",
   "screen.starrail_sim.reset_path": "\u56de\u9000\u547d\u9014",
   "screen.starrail_sim.reset_path_title": "\u56de\u9000\u547d\u9014\uff1f",
@@ -93,6 +93,16 @@
   "message.starrail_sim.path_reset": "\u5df2\u56de\u9000\u5f53\u524d\u547d\u9014\uff0c\u4f60\u53ef\u4ee5\u91cd\u65b0\u9009\u62e9\u3002",
   "message.starrail_sim.no_path_to_reset": "\u5f53\u524d\u6ca1\u6709\u53ef\u56de\u9000\u7684\u547d\u9014\u3002",
   "message.starrail_sim.trial_already_active": "\u4f60\u5df2\u7ecf\u5728\u8fdb\u884c\u547d\u9014\u8bd5\u70bc\u3002",
+  "message.starrail_sim.trial_token_required": "\u8bd5\u70bc\u5fc5\u987b\u4f7f\u7528\u5bf9\u5e94\u547d\u9014\u9057\u8ff9\u5b9d\u7bb1\u4e2d\u7684\u51ed\u8bc1\u5f00\u542f\u3002",
+  "message.starrail_sim.path_seek_wrong_token": "\u8fd9\u4e0d\u662f\u5f53\u524d\u5bfb\u8ff9\u547d\u9014\uff08%s\uff09\u7684\u51ed\u8bc1\uff0c\u8bf7\u53d6\u5f97\u5bf9\u5e94\u9057\u8ff9\u5b9d\u7bb1\u4e2d\u7684\u8bd5\u70bc\u51ed\u8bc1\u3002",
+  "message.starrail_sim.path_seek_busy": "\u670d\u52a1\u5668\u6b63\u5728\u653e\u7f6e\u53e6\u4e00\u5ea7\u9057\u8ff9\uff0c\u8bf7\u7a0d\u540e\u518d\u5bfb\u8ff9\u3002",
+  "message.starrail_sim.path_seek_pending": "\u5f53\u524d\u5df2\u6709%s\u547d\u9014\u9057\u8ff9\u7684\u5bfb\u8ff9\u76ee\u6807\uff1b\u8bf7\u5148\u4f7f\u7528\u8be5\u9057\u8ff9\u5b9d\u7bb1\u4e2d\u7684\u8bd5\u70bc\u51ed\u8bc1\uff0c\u518d\u5bfb\u8ff9\u5176\u4ed6\u547d\u9014\u3002",
+  "message.starrail_sim.path_seek_no_spaced_site": "\u9644\u8fd1\u627e\u4e0d\u5230\u6ee1\u8db3 400 \u683c\u95f4\u8ddd\u7684\u9057\u8ff9\u4f4d\u7f6e\uff0c\u8bf7\u79fb\u52a8\u5230\u66f4\u8fdc\u533a\u57df\u540e\u91cd\u8bd5\u3002",
+  "message.starrail_sim.path_seek_overworld_only": "\u547d\u9014\u9057\u8ff9\u53ea\u80fd\u5728\u4e3b\u4e16\u754c\u5bfb\u8ff9\u3002",
+  "message.starrail_sim.path_seek_failed": "\u65e0\u6cd5\u5b89\u6392\u547d\u9014\u9057\u8ff9\uff0c\u8bf7\u7a0d\u540e\u91cd\u8bd5\u3002",
+  "message.starrail_sim.path_seek_started": "\u6b63\u5728\u5bfb\u8ff9%s\u9057\u8ff9\uff0c\u76ee\u6807\u533a\u57df X=%s\uff0cZ=%s\uff1b\u5efa\u6210\u540e\u4f1a\u63d0\u4f9b\u5b8c\u6574\u951a\u70b9\u3002",
+  "message.starrail_sim.path_seek_target": "\u5df2\u627e\u5230%s\u9057\u8ff9\uff1a\u951a\u70b9 X=%s\uff0cY=%s\uff0cZ=%s\u3002\u524d\u5f80\u5e76\u6253\u5f00\u9057\u8ff9\u5b9d\u7bb1\uff0c\u4f7f\u7528\u5176\u4e2d\u5bf9\u5e94\u7684\u8bd5\u70bc\u51ed\u8bc1\u3002",
+  "message.starrail_sim.path_seek_retry": "%s\u9057\u8ff9\u672a\u80fd\u5b89\u5168\u751f\u6210\uff0c\u8bf7\u91cd\u65b0\u70b9\u51fb\u547d\u9014\u8fdb\u884c\u5bfb\u8ff9\u3002",
   "message.starrail_sim.path_unavailable": "%s \u547d\u9014\u8bd5\u70bc\u5c1a\u672a\u5f00\u653e\u3002",
   "message.starrail_sim.hunt_started": "\u5df2\u5f00\u59cb\u5de1\u730e\u8bd5\u70bc\uff1a120\u79d2\u5185\u51fb\u8d25\u0035\u4e2a\u654c\u5bf9\u751f\u7269\uff0c\u5e76\u5b8c\u6210\u0032\u6b21\u8fde\u7eed\u72e9\u730e\u3002",
   "message.starrail_sim.hunt_intent": "猎意：%s/%s（剩余%s秒）",
@@ -184,8 +194,8 @@
   ,"screen.starrail_sim.guide_ranks": "等级成长"
   ,"screen.starrail_sim.guide_help": "系统说明"
   ,"guide.starrail_sim.current.locked": "尚未发现命途线索。"
-  ,"guide.starrail_sim.current.unaligned": "已经发现命途线索，但还没有踏上命途。"
-  ,"guide.starrail_sim.current.hint": "打开“命途”页面，选择一条命途并完成对应试炼。完成试炼后会自动踏上命途，不需要输入指令。"
+  ,"guide.starrail_sim.current.unaligned": "已经发现命途线索；先寻迹并完成对应初始试炼，即可自动踏上命途。"
+  ,"guide.starrail_sim.current.hint": "打开命途寻迹页面，选中命途后点击“确认开始寻迹”。前往界面坐标处的遗迹，打开宝箱并使用对应试炼凭证；完成两个目标后会自动踏上命途。"
   ,"guide.starrail_sim.current.path": "当前命途：%s"
   ,"guide.starrail_sim.current.rank": "命途等级：%s"
   ,"guide.starrail_sim.current.practice": "当前实践度（%s）：%s/%s"
@@ -214,10 +224,10 @@
   ,"guide.starrail_sim.ranks.max": "最高等级"
   ,"guide.starrail_sim.ranks.trials": "等级越高，晋阶试炼的目标数量越多、时间越长。试炼超时只会重置试炼目标，不会清除已经积累的实践度。"
   ,"guide.starrail_sim.help.title": "命途系统说明"
-  ,"guide.starrail_sim.help.path": "完成初始命途试炼后会自动踏上命途。玩家同时只能拥有一条当前命途。"
+  ,"guide.starrail_sim.help.path": "选中命途后还要点击“确认开始寻迹”才会安排遗迹。前往界面记录的锚点，打开对应宝箱并使用匹配的试炼凭证，才会开启该命途的初始试炼；每名玩家同时只能有一条待处理遗迹线索。"
   ,"guide.starrail_sim.help.practice": "完成符合命途特色的行为可以获得实践度。当前实践度和目标会显示在命途界面。"
-  ,"guide.starrail_sim.help.trial": "实践度达到阶段目标后，系统会自动开始晋阶试炼。完成两个目标后自动升级。"
-  ,"guide.starrail_sim.help.progress": "战斗中的命途技能提示显示在状态栏上方；试炼目标进度也会即时提示。打开命途指南可查看每种目标的详细判定方式。"
+  ,"guide.starrail_sim.help.trial": "匹配的遗迹试炼凭证用于开启初始试炼；完成两个目标后自动踏上命途。踏上命途后，实践度达到阶段目标会自动开启晋阶试炼，完成后自动晋阶。"
+  ,"guide.starrail_sim.help.progress": "寻迹锚点会持续显示在左下角和命途寻迹页面。当前遗迹线索处理完前不能开始另一条寻迹；找不到满足400格水平间距的位置时，请移动到更远处重试。命途指南会说明每个试炼目标。"
   ,"guide.starrail_sim.help.rollback": "回退命途只移除当前命途效果，已经获得的等级和实践度会保留。"
   ,"guide.starrail_sim.path.preservation.core": "通过格挡和承受伤害践行存护，强调防御、格挡与生存。"
   ,"guide.starrail_sim.path.preservation.goals": "格挡3次攻击，并承受5点敌对伤害后存活。"
@@ -1941,4 +1951,13 @@
   ,"tooltip.starrail_sim.light_cone.base_header": "光锥属性"
   ,"tooltip.starrail_sim.light_cone.base_values": "攻击伤害 +10%，最大生命值 +5%"
   ,"tooltip.starrail_sim.light_cone.base_defense": "护甲值 +5%"
+  ,"item.starrail_sim.path_trial_token": "命途试炼凭证"
+  ,"item.starrail_sim.path_trial_token.named": "命途试炼凭证：%s"
+  ,"tooltip.starrail_sim.path_trial_token.path": "命途：%s"
+  ,"tooltip.starrail_sim.path_trial_token.use": "先寻迹对应命途遗迹，再右键开启试炼。"
+  ,"message.starrail_sim.invalid_path_trial_token": "这件凭证没有记录有效的命途。"
+  ,"screen.starrail_sim.sought_ruin": "已寻迹：%s遗迹锚点 X=%s，Y=%s，Z=%s"
+  ,"screen.starrail_sim.sought_ruin_hint": "前往遗迹宝箱使用对应试炼凭证；当前线索处理完后可再次寻迹。"
+  ,"screen.starrail_sim.confirm_seek": "确认开始寻迹"
+  ,"screen.starrail_sim.path_seek_selected": "已选择%s命途；点击“确认开始寻迹”后才会安排遗迹。"
 }

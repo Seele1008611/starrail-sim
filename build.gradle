@@ -1,3 +1,4 @@
+// 项目中文说明：配置 Forge 插件、Java 工具链、开发运行任务、依赖和资源打包。
 plugins {
     id 'eclipse'
     id 'idea'

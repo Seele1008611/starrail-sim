@@ -1,5 +1,9 @@
 package com.starrail.sim;
 
+/**
+ * 模组代码说明：集中监听战斗相关事件，并把伤害、击杀等事件交给命途和光锥系统处理。
+ */
+
 import net.minecraft.util.Mth;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;

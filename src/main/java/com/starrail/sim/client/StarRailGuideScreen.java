@@ -1,5 +1,9 @@
 package com.starrail.sim.client;
 
+/**
+ * 模组代码说明：客户端界面类，构建对应页面并处理玩家的界面交互。
+ */
+
 import com.starrail.sim.PathActionPacket;
 import com.starrail.sim.StarRailNetwork;
 import com.starrail.sim.StarRailPath;

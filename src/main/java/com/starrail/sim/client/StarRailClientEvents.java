@@ -1,5 +1,9 @@
 package com.starrail.sim.client;
 
+/**
+ * 模组代码说明：监听客户端玩家和界面事件，刷新模组客户端状态。
+ */
+
 import com.starrail.sim.StarRailSimMod;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;

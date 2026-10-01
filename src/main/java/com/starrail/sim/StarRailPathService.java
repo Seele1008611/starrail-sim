@@ -1,50 +1,70 @@
 package com.starrail.sim;
 
+/**
+ * 模组代码说明：命途服务层，统一处理试炼启动、完成确认、命途回退以及向客户端同步玩家命途状态。
+ */
+
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
 
 /** Server-authoritative operations shared by commands and the path screen. */
 public final class StarRailPathService {
     private StarRailPathService() {
     }
 
-    public static void startTrial(ServerPlayer player, StarRailPath path) {
-        player.getCapability(StarRailPathCapability.PATH_DATA).ifPresent(data -> {
-            if (!data.isPathUnlocked()) {
-                return;
-            }
-            if (data.getCurrentPath().isRealPath()) {
-                StarRailPathMessages.sendQueued(player, data.getCurrentPath(), Component.translatable(
-                        "message.starrail_sim.path_already_chosen"));
-                return;
-            }
-            if (data.getTrialPath().isRealPath()) {
-                StarRailPathMessages.sendQueued(player, data.getTrialPath(), Component.translatable(
-                        "message.starrail_sim.trial_already_active"));
-                return;
-            }
-            if (!StarRailPathRules.isImplemented(path)) {
-                StarRailPathMessages.sendQueued(player, path, Component.translatable(
-                        "message.starrail_sim.path_unavailable",
-                        path.getDisplayName()));
-                return;
-            }
+    // 校验解锁、当前命途和试炼状态后，初始化新试炼；只有返回 true 才表示启动成功。
+    public static boolean startTrialFromToken(ServerPlayer player, ItemStack token) {
+        // 试炼只能由注册的命途凭证启动，界面按钮本身不授予试炼资格。
+        if (token == null || !token.is(StarRailSimMod.PATH_TRIAL_TOKEN.get())) {
+            return false;
+        }
+        StarRailPath path = PathTrialTokenItem.getPath(token);
+        IStarRailPathData data = player.getCapability(StarRailPathCapability.PATH_DATA)
+                .resolve().orElse(null);
+        if (data == null || !data.isPathUnlocked()) {
+            return false;
+        }
+        if (data.getCurrentPath().isRealPath()) {
+            StarRailPathMessages.sendQueued(player, data.getCurrentPath(), Component.translatable(
+                    "message.starrail_sim.path_already_chosen"));
+            return false;
+        }
+        if (data.getTrialPath().isRealPath()) {
+            StarRailPathMessages.sendQueued(player, data.getTrialPath(), Component.translatable(
+                    "message.starrail_sim.trial_already_active"));
+            return false;
+        }
+        if (!StarRailPathRules.isImplemented(path)) {
+            StarRailPathMessages.sendQueued(player, path, Component.translatable(
+                    "message.starrail_sim.path_unavailable",
+                    path.getDisplayName()));
+            return false;
+        }
+        if (data.getSoughtPath() != path) {
+            StarRailPathMessages.sendQueued(player, path, Component.translatable(
+                    "message.starrail_sim.path_seek_wrong_token",
+                    path.getDisplayName()));
+            return false;
+        }
 
-            data.setTrialPath(path);
-            data.setTrialRank(StarRailPathRank.UNALIGNED);
-            data.setTrialStartTick(player.level().getGameTime());
-            data.setObjective1Progress(0);
-            data.setObjective2Progress(0);
-            data.setLastHuntKillTick(-1L);
-            data.setEruditionHitTick(-1L);
-            data.setEruditionHitCount(0);
-            data.setLastEruditionMultiHitTick(-1L);
-            StarRailPathMessages.sendQueued(player, path,
-                    Component.translatable(startMessageKey(path)));
-            sync(player);
-        });
+        data.setTrialPath(path);
+        data.setTrialRank(StarRailPathRank.UNALIGNED);
+        data.setTrialStartTick(player.level().getGameTime());
+        data.setObjective1Progress(0);
+        data.setObjective2Progress(0);
+        data.setLastHuntKillTick(-1L);
+        data.setEruditionHitTick(-1L);
+        data.setEruditionHitCount(0);
+        data.setLastEruditionMultiHitTick(-1L);
+        data.clearSoughtRuin();
+        StarRailPathMessages.sendQueued(player, path,
+                Component.translatable(startMessageKey(path)));
+        sync(player);
+        return true;
     }
 
+    // 首个试炼完成后，将试炼命途设为当前命途并清理临时试炼数据。
     public static void confirmTrial(ServerPlayer player) {
         player.getCapability(StarRailPathCapability.PATH_DATA).ifPresent(data -> {
             if (data.isRankTrial()) {
@@ -71,6 +91,7 @@ public final class StarRailPathService {
         });
     }
 
+    // 阶位试炼完成后保存新阶位、重置该命途修行进度并刷新效果。
     public static void confirmRankTrial(ServerPlayer player) {
         player.getCapability(StarRailPathCapability.PATH_DATA).ifPresent(data -> {
             if (!data.isRankTrial() || !data.isTrialComplete()) {
@@ -93,6 +114,7 @@ public final class StarRailPathService {
         });
     }
 
+    // 回退当前命途时清除对应服务状态，但保留已解锁记录和各命途历史阶位。
     public static void resetPath(ServerPlayer player) {
         player.getCapability(StarRailPathCapability.PATH_DATA).ifPresent(data -> {
             if (!data.getCurrentPath().isRealPath()) {
@@ -106,6 +128,7 @@ public final class StarRailPathService {
             StarRailEruditionService.clear(data);
             data.setCurrentPath(StarRailPath.NONE);
             data.resetTrial();
+            data.clearSoughtRuin();
             StarRailPathEffects.refresh(player, StarRailPath.NONE);
             StarRailPathMessages.sendQueued(player, previousPath, Component.translatable(
                     "message.starrail_sim.path_reset"));
@@ -113,6 +136,7 @@ public final class StarRailPathService {
         });
     }
 
+    // 把服务端的玩家命途和试炼状态打包发送给客户端界面。
     public static void sync(ServerPlayer player) {
         player.getCapability(StarRailPathCapability.PATH_DATA).ifPresent(data -> {
             int remaining = 0;
@@ -133,7 +157,11 @@ public final class StarRailPathService {
                     data.getTrialRank(),
                     data.getObjective1Progress(),
                     data.getObjective2Progress(),
-                    remaining));
+                    remaining,
+                    data.getSoughtPath(),
+                    data.getSoughtX(),
+                    data.getSoughtY(),
+                    data.getSoughtZ()));
         });
     }
 

@@ -1,5 +1,9 @@
 package com.starrail.sim;
 
+/**
+ * 模组代码说明：命途试炼规则表，定义已实现命途、目标数量和各阶位的目标缩放与时限。
+ */
+
 /** Shared rules for initial path trials and later breakthrough trials. */
 public final class StarRailPathRules {
     public static final long TRIAL_TIME_LIMIT = 120L * 20L;
@@ -10,6 +14,7 @@ public final class StarRailPathRules {
     private StarRailPathRules() {
     }
 
+    // 判断该命途是否已经有完整试炼逻辑。
     public static boolean isImplemented(StarRailPath path) {
         return path == StarRailPath.HUNT
                 || path == StarRailPath.PRESERVATION
@@ -26,6 +31,7 @@ public final class StarRailPathRules {
         return objective1Target(path, StarRailPathRank.UNALIGNED);
     }
 
+    // 按命途和试炼阶位取得第一项目标数量。
     public static int objective1Target(StarRailPath path, StarRailPathRank trialRank) {
         int base = switch (path) {
             case HUNT -> 5;
@@ -46,6 +52,7 @@ public final class StarRailPathRules {
         return objective2Target(path, StarRailPathRank.UNALIGNED);
     }
 
+    // 按命途和试炼阶位取得第二项目标数量。
     public static int objective2Target(StarRailPath path, StarRailPathRank trialRank) {
         int base = switch (path) {
             case HUNT -> 2;
@@ -67,6 +74,7 @@ public final class StarRailPathRules {
      * two objectives by the same raw number. This keeps the first trial
      * values unchanged while making higher ranks long-term goals.
      */
+    // 把基础目标数量按试炼阶位缩放，并向上取整。
     private static int scaleTarget(int base, StarRailPathRank trialRank) {
         if (base <= 0 || trialRank == null) {
             return base;

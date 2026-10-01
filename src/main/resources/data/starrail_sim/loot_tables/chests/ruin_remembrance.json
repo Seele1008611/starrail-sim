@@ -1,0 +1,58 @@
+{
+  "type": "minecraft:chest",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:path_trial_token",
+          "functions": [
+            {
+              "function": "minecraft:set_nbt",
+              "tag": "{Path:\"remembrance\"}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "rolls": {
+        "type": "minecraft:uniform",
+        "min": 1,
+        "max": 3
+      },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:weave_time_into_gold"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:make_farewell_more_beautiful"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:love_is_eternal"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:starlight_for_long_nights"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:may_rainbow_stay_in_the_sky"
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:loot_table",
+          "name": "minecraft:chests/desert_pyramid"
+        }
+      ]
+    }
+  ]
+}

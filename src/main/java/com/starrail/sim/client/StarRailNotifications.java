@@ -1,5 +1,9 @@
 package com.starrail.sim.client;
 
+/**
+ * 模组代码说明：在客户端呈现模组的通知和短时提示。
+ */
+
 import com.starrail.sim.StarRailSimMod;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;

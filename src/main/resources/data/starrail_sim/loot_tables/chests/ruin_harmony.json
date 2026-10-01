@@ -1,0 +1,66 @@
+{
+  "type": "minecraft:chest",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:path_trial_token",
+          "functions": [
+            {
+              "function": "minecraft:set_nbt",
+              "tag": "{Path:\"harmony\"}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "rolls": {
+        "type": "minecraft:uniform",
+        "min": 1,
+        "max": 3
+      },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:battle_isnt_over"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:memory_of_me"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:night_flowing_colors"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:game_of_cosmic_worlds"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:returning_to_earth"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:if_time_were_a_flower"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:an_age_etched_in_golden_blood"
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:loot_table",
+          "name": "minecraft:chests/desert_pyramid"
+        }
+      ]
+    }
+  ]
+}

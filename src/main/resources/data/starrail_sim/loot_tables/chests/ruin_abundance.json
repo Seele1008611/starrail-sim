@@ -1,0 +1,54 @@
+{
+  "type": "minecraft:chest",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:path_trial_token",
+          "functions": [
+            {
+              "function": "minecraft:set_nbt",
+              "tag": "{Path:\"abundance\"}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "rolls": {
+        "type": "minecraft:uniform",
+        "min": 1,
+        "max": 3
+      },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:echoes_of_the_coffin"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:time_waits_for_no_one"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:night_of_fright"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:only_the_scent_remains"
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:loot_table",
+          "name": "minecraft:chests/desert_pyramid"
+        }
+      ]
+    }
+  ]
+}

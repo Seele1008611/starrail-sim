@@ -1,5 +1,9 @@
 package com.starrail.sim;
 
+/**
+ * 模组代码说明：命途阶位枚举，提供阶位顺序和界面显示所需信息。
+ */
+
 import java.util.Arrays;
 
 /** Seven-step path depth framework. Numeric effects are intentionally defined later. */

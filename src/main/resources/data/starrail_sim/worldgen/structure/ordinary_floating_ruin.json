@@ -1,0 +1,7 @@
+{
+  "type": "starrail_sim:floating_ordinary_ruin",
+  "biomes": "#minecraft:is_overworld",
+  "step": "surface_structures",
+  "spawn_overrides": {},
+  "terrain_adaptation": "none"
+}

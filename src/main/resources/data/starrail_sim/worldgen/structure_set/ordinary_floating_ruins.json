@@ -1,0 +1,15 @@
+{
+  "structures": [
+    {
+      "structure": "starrail_sim:ordinary_floating_ruin",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "spacing": 64,
+    "separation": 25,
+    "salt": 18374629,
+    "spread_type": "linear"
+  }
+}

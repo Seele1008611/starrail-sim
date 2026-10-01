@@ -1,5 +1,9 @@
 package com.starrail.sim.client;
 
+/**
+ * 模组代码说明：数据类，保存并读写对应系统的运行状态。
+ */
+
 import com.starrail.sim.StarRailSimMod;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;

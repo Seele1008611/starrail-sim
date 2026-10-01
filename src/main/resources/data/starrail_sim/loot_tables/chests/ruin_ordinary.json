@@ -1,0 +1,271 @@
+{
+  "type": "minecraft:chest",
+  "pools": [
+    {
+      "rolls": {
+        "type": "minecraft:uniform",
+        "min": 1,
+        "max": 3
+      },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:something_irreplaceable"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:brighter_than_the_sun"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:dance_at_sunset"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:the_unreachable_side"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:this_body_as_sword"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:no_reward_crowning"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:blood_fire_burning_path"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:where_dreams_belong"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:dawn_burns_just_so"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:what_you_see_is_me"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:in_the_night"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:i_will_hunt"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:worrisome_blissful"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:sleep_like_the_dead"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:pure_thought_baptism"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:ideal_burning_hell"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:embark_on_second_life"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:finale_of_a_lie"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:galaxy_railway"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:moment_of_glory"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:before_dawn"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:price_of_peace"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:towards_unanswerable"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:ninja_scroll"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:life_as_a_light"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:a_star_illuminates_night_sky"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:sparkle_quietly_shines"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:battle_isnt_over"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:memory_of_me"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:night_flowing_colors"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:game_of_cosmic_worlds"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:returning_to_earth"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:if_time_were_a_flower"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:an_age_etched_in_golden_blood"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:in_the_name_of_the_world"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:on_the_shore_in_the_flow_of_time"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:a_thousand_fold_spring"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:only_wait"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:rain_never_stops"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:lies_in_the_wind"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:reforged_remembrance"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:ocean_why_sings"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:do_not_forget_her_flame"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:new_flesh_of_inferno"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:return_to_long_road"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:moment_of_victory"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:she_has_closed_her_eyes"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:though_rivers_and_mountains"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:fate_never_fair"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:echoes_of_the_coffin"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:time_waits_for_no_one"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:night_of_fright"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:only_the_scent_remains"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:weave_time_into_gold"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:make_farewell_more_beautiful"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:love_is_eternal"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:starlight_for_long_nights"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:may_rainbow_stay_in_the_sky"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:welcome_to_galactic_city"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:meet_in_the_next_flower_season"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:when_she_decides_to_see"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:flower_world_mesmerizing_eyes"
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:loot_table",
+          "name": "minecraft:chests/desert_pyramid"
+        }
+      ]
+    }
+  ]
+}

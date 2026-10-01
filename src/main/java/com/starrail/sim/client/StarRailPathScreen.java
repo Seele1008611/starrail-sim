@@ -1,5 +1,9 @@
 package com.starrail.sim.client;
 
+/**
+ * 模组代码说明：客户端界面类，构建对应页面并处理玩家的界面交互。
+ */
+
 import com.starrail.sim.PathActionPacket;
 import com.starrail.sim.StarRailNetwork;
 import com.starrail.sim.StarRailPath;
@@ -25,6 +29,7 @@ public final class StarRailPathScreen extends Screen {
     private final Map<StarRailPath, Button> pathButtons = new EnumMap<>(StarRailPath.class);
     private final Button[] navigationButtons = new Button[
             StarRailUiStyle.CHARACTER_NAVIGATION_KEYS.length];
+    private StarRailPath selectedSeekPath = StarRailPath.NONE;
     private Button confirmButton;
     private Button resetButton;
     private int gridLeft;
@@ -51,6 +56,7 @@ public final class StarRailPathScreen extends Screen {
         panelRight = panelLeft + panelWidth;
         panelBottom = panelTop + panelHeight;
         compactLayout = StarRailUiStyle.isCompact(panelWidth, panelHeight);
+        selectedSeekPath = StarRailPath.NONE;
         Button[] createdNavigation = StarRailUiStyle.createCharacterNavigation(
                 panelLeft, panelTop, panelWidth, panelHeight, 4, index -> {
                     if (index == 0) {
@@ -95,8 +101,8 @@ public final class StarRailPathScreen extends Screen {
         int actionY = panelBottom - 30;
         int actionLeft = contentLeft;
         confirmButton = addRenderableWidget(StarRailUiStyle.button(
-                        Component.translatable("screen.starrail_sim.confirm_path"),
-                        ignored -> confirmPath(), actionLeft, actionY,
+                        Component.translatable("screen.starrail_sim.confirm_seek"),
+                        ignored -> confirmSelection(), actionLeft, actionY,
                         actionWidth, 22));
         resetButton = addRenderableWidget(StarRailUiStyle.button(
                         Component.translatable("screen.starrail_sim.reset_path"),
@@ -108,27 +114,32 @@ public final class StarRailPathScreen extends Screen {
 
     private Component pathLabel(StarRailPath path) {
         if (StarRailPathRules.isImplemented(path)) {
-            return Component.literal(path.getDisplayName());
+            return Component.literal(path.getDisplayName()
+                    + (path == selectedSeekPath ? "  [已选]" : ""));
         }
         return Component.literal(path.getDisplayName() + "（未开放）");
     }
 
     private void selectPath(StarRailPath path) {
         if (StarRailPathRules.isImplemented(path)) {
-            StarRailNetwork.CHANNEL.sendToServer(new PathActionPacket(
-                    PathActionPacket.Action.START_PATH, path));
+            selectedSeekPath = path;
+            pathButtons.forEach((buttonPath, button) -> button.setMessage(pathLabel(buttonPath)));
         }
     }
 
-    private void confirmPath() {
-        StarRailNetwork.CHANNEL.sendToServer(
-                new PathActionPacket(PathActionPacket.Action.CONFIRM));
+    private void confirmSelection() {
+        if (selectedSeekPath.isRealPath()) {
+            StarRailNetwork.CHANNEL.sendToServer(new PathActionPacket(
+                    PathActionPacket.Action.SEEK_PATH, selectedSeekPath));
+        }
     }
 
     private void resetPath() {
         Minecraft.getInstance().setScreen(new ConfirmScreen(
                 confirmed -> {
                     if (confirmed) {
+                        selectedSeekPath = StarRailPath.NONE;
+                        pathButtons.forEach((path, button) -> button.setMessage(pathLabel(path)));
                         StarRailNetwork.CHANNEL.sendToServer(new PathActionPacket(
                                 PathActionPacket.Action.RESET_PATH));
                     }
@@ -165,6 +176,15 @@ public final class StarRailPathScreen extends Screen {
                     StarRailPathClientState.getCurrentPath().getDisplayName(),
                     Component.translatable(StarRailPathClientState.getCurrentPathRank()
                             .getTranslationKey()));
+        } else if (StarRailPathClientState.getSoughtPath().isRealPath()) {
+            status = Component.translatable("screen.starrail_sim.sought_ruin",
+                    StarRailPathClientState.getSoughtPath().getDisplayName(),
+                    StarRailPathClientState.getSoughtX(),
+                    StarRailPathClientState.getSoughtY(),
+                    StarRailPathClientState.getSoughtZ());
+        } else if (selectedSeekPath.isRealPath()) {
+            status = Component.translatable("screen.starrail_sim.path_seek_selected",
+                    selectedSeekPath.getDisplayName());
         } else if (StarRailPathClientState.getTrialPath().isRealPath()) {
             drawTrialProgress(graphics, StarRailPathClientState.getTrialPath());
             return;
@@ -176,6 +196,11 @@ public final class StarRailPathScreen extends Screen {
         int statusY = panelTop + (compactLayout ? 84 : 45);
         int center = (contentLeft + contentRight) / 2;
         graphics.drawCenteredString(font, status, center, statusY, color);
+        if (StarRailPathClientState.getSoughtPath().isRealPath()) {
+            graphics.drawCenteredString(font,
+                    Component.translatable("screen.starrail_sim.sought_ruin_hint"),
+                    center, statusY + 13, StarRailUiStyle.MUTED_COLOR);
+        }
         if (StarRailPathClientState.getCurrentPath().isRealPath()) {
             Component practice = StarRailPathClientState.getCurrentPathRank()
                     == com.starrail.sim.StarRailPathRank.PATH_PINNACLE
@@ -247,6 +272,7 @@ public final class StarRailPathScreen extends Screen {
         boolean canStart = StarRailPathClientState.isUnlocked()
                 && !StarRailPathClientState.getCurrentPath().isRealPath()
                 && !StarRailPathClientState.getTrialPath().isRealPath();
+        boolean canSeek = canStart && !StarRailPathClientState.getSoughtPath().isRealPath();
         for (StarRailPath path : new StarRailPath[]{StarRailPath.HUNT,
                 StarRailPath.PRESERVATION, StarRailPath.ABUNDANCE,
                 StarRailPath.DESTRUCTION, StarRailPath.ERUDITION,
@@ -254,22 +280,15 @@ public final class StarRailPathScreen extends Screen {
                 StarRailPath.REMEMBRANCE, StarRailPath.ELATION}) {
             Button button = pathButtons.get(path);
             if (button != null) {
-                button.active = canStart;
+                button.active = canSeek;
             }
         }
 
-        StarRailPath trialPath = StarRailPathClientState.getTrialPath();
-        boolean complete = StarRailPathRules.isImplemented(trialPath)
-                && StarRailPathClientState.getObjective1()
-                >= StarRailPathRules.objective1Target(trialPath,
-                StarRailPathClientState.getTrialRank())
-                && StarRailPathClientState.getObjective2()
-                >= StarRailPathRules.objective2Target(trialPath,
-                StarRailPathClientState.getTrialRank());
         if (confirmButton != null) {
-            confirmButton.active = complete
-                    && StarRailPathClientState.getTrialRank()
-                    == com.starrail.sim.StarRailPathRank.UNALIGNED;
+            // 初始试炼完成时由服务端自动踏上命途；此按钮只负责确认开始寻迹。
+            confirmButton.visible = true;
+            confirmButton.setMessage(Component.translatable("screen.starrail_sim.confirm_seek"));
+            confirmButton.active = canSeek && selectedSeekPath.isRealPath();
         }
         if (resetButton != null) {
             resetButton.active = StarRailPathClientState.isUnlocked()

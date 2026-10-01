@@ -1,5 +1,9 @@
 package com.starrail.sim;
 
+/**
+ * 模组代码说明：注册模组网络通道，并封装客户端与服务端的数据包发送。
+ */
+
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.network.chat.Component;
@@ -10,7 +14,8 @@ import net.minecraftforge.network.simple.SimpleChannel;
 
 /** Network channel for server-authoritative combat feedback. */
 public final class StarRailNetwork {
-    private static final String PROTOCOL_VERSION = "1";
+    // 新版路径按钮改为寻迹；协议号递增以拒绝仍会直接开始试炼的旧客户端。
+    private static final String PROTOCOL_VERSION = "3";
 
     public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(
             new ResourceLocation(StarRailSimMod.MOD_ID, "main"),

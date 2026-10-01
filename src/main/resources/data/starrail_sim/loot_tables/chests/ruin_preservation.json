@@ -1,0 +1,54 @@
+{
+  "type": "minecraft:chest",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:path_trial_token",
+          "functions": [
+            {
+              "function": "minecraft:set_nbt",
+              "tag": "{Path:\"preservation\"}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "rolls": {
+        "type": "minecraft:uniform",
+        "min": 1,
+        "max": 3
+      },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:moment_of_victory"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:she_has_closed_her_eyes"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:though_rivers_and_mountains"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:fate_never_fair"
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:loot_table",
+          "name": "minecraft:chests/desert_pyramid"
+        }
+      ]
+    }
+  ]
+}

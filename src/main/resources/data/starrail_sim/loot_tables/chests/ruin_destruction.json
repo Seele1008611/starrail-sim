@@ -1,0 +1,78 @@
+{
+  "type": "minecraft:chest",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:path_trial_token",
+          "functions": [
+            {
+              "function": "minecraft:set_nbt",
+              "tag": "{Path:\"destruction\"}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "rolls": {
+        "type": "minecraft:uniform",
+        "min": 1,
+        "max": 3
+      },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:something_irreplaceable"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:brighter_than_the_sun"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:dance_at_sunset"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:the_unreachable_side"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:this_body_as_sword"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:no_reward_crowning"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:blood_fire_burning_path"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:where_dreams_belong"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:dawn_burns_just_so"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:what_you_see_is_me"
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:loot_table",
+          "name": "minecraft:chests/desert_pyramid"
+        }
+      ]
+    }
+  ]
+}

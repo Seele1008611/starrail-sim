@@ -1,5 +1,9 @@
 package com.starrail.sim;
 
+/**
+ * 模组代码说明：玩家命途能力数据接口，规定命途、试炼进度及各命途战斗状态的读写入口。
+ */
+
 import net.minecraft.nbt.CompoundTag;
 
 import java.util.UUID;
@@ -26,6 +30,19 @@ public interface IStarRailPathData {
     boolean isPathUnlocked();
 
     void setPathUnlocked(boolean unlocked);
+
+    /** 当前玩家已寻迹到、可用于校验试炼凭证的命途遗迹。 */
+    StarRailPath getSoughtPath();
+
+    int getSoughtX();
+
+    int getSoughtY();
+
+    int getSoughtZ();
+
+    void setSoughtRuin(StarRailPath path, int x, int y, int z);
+
+    void clearSoughtRuin();
 
     StarRailPathRank getPathRank(StarRailPath path);
 

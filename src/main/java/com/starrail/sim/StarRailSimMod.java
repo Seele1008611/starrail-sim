@@ -1,5 +1,9 @@
 package com.starrail.sim;
 
+/**
+ * 模组代码说明：模组入口和注册中心，集中注册光锥、状态效果、配方与创造模式物品栏，并连接 Forge 生命周期。
+ */
+
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
@@ -25,6 +29,7 @@ import net.minecraftforge.registries.RegistryObject;
 public final class StarRailSimMod {
     public static final String MOD_ID = "starrail_sim";
 
+    // 延迟注册器：先声明注册表，再在模组构造阶段挂接 Forge 生命周期。
     public static final DeferredRegister<Item> ITEMS =
             DeferredRegister.create(ForgeRegistries.ITEMS, MOD_ID);
     public static final DeferredRegister<MobEffect> EFFECTS =
@@ -34,6 +39,7 @@ public final class StarRailSimMod {
     public static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZERS =
             DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, MOD_ID);
 
+    // 以下按命途注册自定义光锥；注册 ID 必须与模型、语言文件和战利品表一致。
     public static final RegistryObject<InTheNightItem> IN_THE_NIGHT = ITEMS.register(
             "in_the_night", InTheNightItem::new);
     public static final RegistryObject<IWillHuntItem> I_WILL_HUNT = ITEMS.register(
@@ -157,6 +163,8 @@ public final class StarRailSimMod {
                     "though_rivers_and_mountains", ThoughRiversAndMountainsItem::new);
     public static final RegistryObject<FateNeverFairItem> FATE_NEVER_FAIR = ITEMS.register(
             "fate_never_fair", FateNeverFairItem::new);
+    public static final RegistryObject<PathTrialTokenItem> PATH_TRIAL_TOKEN = ITEMS.register(
+            "path_trial_token", PathTrialTokenItem::new);
     public static final RegistryObject<EchoesOfTheCoffinItem> ECHOES_OF_THE_COFFIN =
             ITEMS.register("echoes_of_the_coffin", EchoesOfTheCoffinItem::new);
     public static final RegistryObject<TimeWaitsForNoOneItem> TIME_WAITS_FOR_NO_ONE =
@@ -165,6 +173,7 @@ public final class StarRailSimMod {
             ITEMS.register("night_of_fright", NightOfFrightItem::new);
     public static final RegistryObject<OnlyTheScentRemainsItem> ONLY_THE_SCENT_REMAINS =
             ITEMS.register("only_the_scent_remains", OnlyTheScentRemainsItem::new);
+    // 状态效果集中注册区，光锥和命途效果通过这些注册对象引用。
     public static final RegistryObject<MobEffect> AETHER_CODE = EFFECTS.register(
             "aether_code", AetherCodeEffect::new);
     public static final RegistryObject<MobEffect> BEWILDERED = EFFECTS.register(
@@ -370,11 +379,32 @@ public final class StarRailSimMod {
                         output.accept(WHEN_SHE_DECIDES_TO_SEE.get());
                         output.accept(FLOWER_WORLD_MESMERIZING_EYES.get());
                         output.accept(MAY_RAINBOW_STAY_IN_THE_SKY.get());
+                        // 创造模式中提供九种命途凭证，供测试各自的试炼流程。
+                        output.accept(pathTrialTokenForCreative(StarRailPath.PRESERVATION));
+                        output.accept(pathTrialTokenForCreative(StarRailPath.DESTRUCTION));
+                        output.accept(pathTrialTokenForCreative(StarRailPath.HUNT));
+                        output.accept(pathTrialTokenForCreative(StarRailPath.ERUDITION));
+                        output.accept(pathTrialTokenForCreative(StarRailPath.HARMONY));
+                        output.accept(pathTrialTokenForCreative(StarRailPath.NIHILITY));
+                        output.accept(pathTrialTokenForCreative(StarRailPath.ABUNDANCE));
+                        output.accept(pathTrialTokenForCreative(StarRailPath.REMEMBRANCE));
+                        output.accept(pathTrialTokenForCreative(StarRailPath.ELATION));
                     })
                     .build());
 
+    // 创建带命途标记和可辨识名称的创造模式占位凭证。
+    private static ItemStack pathTrialTokenForCreative(StarRailPath path) {
+        ItemStack stack = new ItemStack(PATH_TRIAL_TOKEN.get());
+        stack.getOrCreateTag().putString(PathTrialTokenItem.PATH_TAG, path.getId());
+        stack.setHoverName(Component.translatable(
+                "item.starrail_sim.path_trial_token.named", path.getDisplayName()));
+        return stack;
+    }
+
+    // 把各延迟注册器接入模组事件总线，并设置创造模式物品栏内容。
     public StarRailSimMod(FMLJavaModLoadingContext context) {
         var modEventBus = context.getModEventBus();
+        StarRailRuinWorldgen.register(modEventBus);
         StarRailNetwork.register();
         StarRailAttributes.ATTRIBUTES.register(modEventBus);
         EFFECTS.register(modEventBus);

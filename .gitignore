@@ -29,3 +29,6 @@ run
 
 # Files from Forge MDK
 forge*changelog.txt
+
+# Dedicated-server test installation and generated test world
+/设计方案/服务端测试/

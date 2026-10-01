@@ -1,5 +1,9 @@
 package com.starrail.sim.client;
 
+/**
+ * 模组代码说明：为光锥等物品生成模组自定义的悬浮提示信息。
+ */
+
 import com.starrail.sim.InTheNightItem;
 import com.starrail.sim.IWillHuntItem;
 import com.starrail.sim.StarRailLightConeService;

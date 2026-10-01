@@ -1,5 +1,9 @@
 package com.starrail.sim.client;
 
+/**
+ * 模组代码说明：在客户端绘制战斗伤害数字及其显示动画。
+ */
+
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.starrail.sim.StarRailSimMod;
 import net.minecraft.client.Camera;

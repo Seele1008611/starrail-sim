@@ -1,0 +1,82 @@
+{
+  "type": "minecraft:chest",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:path_trial_token",
+          "functions": [
+            {
+              "function": "minecraft:set_nbt",
+              "tag": "{Path:\"nihility\"}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "rolls": {
+        "type": "minecraft:uniform",
+        "min": 1,
+        "max": 3
+      },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:in_the_name_of_the_world"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:on_the_shore_in_the_flow_of_time"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:a_thousand_fold_spring"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:only_wait"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:rain_never_stops"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:lies_in_the_wind"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:reforged_remembrance"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:ocean_why_sings"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:do_not_forget_her_flame"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:new_flesh_of_inferno"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:return_to_long_road"
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:loot_table",
+          "name": "minecraft:chests/desert_pyramid"
+        }
+      ]
+    }
+  ]
+}

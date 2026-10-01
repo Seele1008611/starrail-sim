@@ -1,5 +1,9 @@
 package com.starrail.sim.client;
 
+/**
+ * 模组代码说明：客户端初始化入口，注册界面、渲染与客户端事件处理器。
+ */
+
 import com.mojang.blaze3d.platform.InputConstants;
 import com.starrail.sim.StarRailSimMod;
 import net.minecraft.client.KeyMapping;

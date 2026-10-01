@@ -54,7 +54,7 @@
   "screen.starrail_sim.character_open_details": "Attribute Details",
   "screen.starrail_sim.character_unaligned": "No Path",
   "screen.starrail_sim.open_paths": "Open Paths",
-  "screen.starrail_sim.paths": "Path Resonance",
+  "screen.starrail_sim.paths": "Path Search",
   "screen.starrail_sim.path_locked": "Obtain a diamond to unlock the path clue.",
   "screen.starrail_sim.current_path": "Current Path: %s",
   "screen.starrail_sim.current_path_rank": "Current Path: %s · %s",
@@ -66,7 +66,7 @@
   "screen.starrail_sim.hunt_kills": "Hunt Trial: Defeat hostile mobs %s/%s",
   "screen.starrail_sim.hunt_streak": "Hunt streak: %s/%s",
   "screen.starrail_sim.hunt_time": "Time remaining: %s seconds",
-  "screen.starrail_sim.choose_path": "Choose a path to begin its trial.",
+  "screen.starrail_sim.choose_path": "Select a Path and confirm the search; use its chest token to start the trial.",
   "screen.starrail_sim.confirm_path": "Confirm Path",
   "screen.starrail_sim.reset_path": "Reset Path",
   "screen.starrail_sim.reset_path_title": "Reset Path?",
@@ -93,6 +93,16 @@
   "message.starrail_sim.path_reset": "The current path was reset. You can choose a new path.",
   "message.starrail_sim.no_path_to_reset": "There is no current path to reset.",
   "message.starrail_sim.trial_already_active": "A path trial is already active.",
+  "message.starrail_sim.trial_token_required": "Use the matching Path Trial Token from a themed ruin chest to start a trial.",
+  "message.starrail_sim.path_seek_wrong_token": "This is not the token for your current %s search. Find the matching token in that Path's ruin chest.",
+  "message.starrail_sim.path_seek_busy": "Another ruin is being placed on this server. Try seeking again shortly.",
+  "message.starrail_sim.path_seek_pending": "You already have an active %s ruin clue. Use the matching Trial Token from that ruin before seeking another Path.",
+  "message.starrail_sim.path_seek_no_spaced_site": "No nearby site meets the 400-block ruin spacing. Move farther away and try again.",
+  "message.starrail_sim.path_seek_overworld_only": "Path ruins can only be sought in the Overworld.",
+  "message.starrail_sim.path_seek_failed": "The Path ruin could not be scheduled. Please try again shortly.",
+  "message.starrail_sim.path_seek_started": "Seeking the %s ruin near X=%s, Z=%s. Its full anchor will be shown when it is ready.",
+  "message.starrail_sim.path_seek_target": "The %s ruin is ready at anchor X=%s, Y=%s, Z=%s. Open its chest and use the matching Trial Token.",
+  "message.starrail_sim.path_seek_retry": "The %s ruin could not be placed safely. Click a Path again to seek another site.",
   "message.starrail_sim.path_unavailable": "The %s path trial is not available yet.",
   "message.starrail_sim.hunt_started": "Hunt trial started: defeat 5 hostile mobs and complete 2 hunt streaks within 120 seconds.",
   "message.starrail_sim.hunt_intent": "Hunt Intent: %s/%s (%s seconds remaining)",
@@ -184,8 +194,8 @@
   ,"screen.starrail_sim.guide_ranks": "Rank Growth"
   ,"screen.starrail_sim.guide_help": "System Guide"
   ,"guide.starrail_sim.current.locked": "You have not discovered a path clue yet."
-  ,"guide.starrail_sim.current.unaligned": "A path clue is available, but you have not entered a path."
-  ,"guide.starrail_sim.current.hint": "Open the Paths screen, choose a path, and complete its trial. You will enter the path automatically after the trial; no command is required."
+  ,"guide.starrail_sim.current.unaligned": "A Path clue is available. Seek a ruin and complete its initial trial to enter that Path automatically."
+  ,"guide.starrail_sim.current.hint": "Open Path Search, select a Path, then click Confirm Path Search. Travel to the displayed ruin anchor, open its chest, and use the matching Trial Token. Complete both objectives to enter the Path automatically."
   ,"guide.starrail_sim.current.path": "Current Path: %s"
   ,"guide.starrail_sim.current.rank": "Path Rank: %s"
   ,"guide.starrail_sim.current.practice": "Current Practice (%s): %s/%s"
@@ -217,10 +227,10 @@
   ,"guide.starrail_sim.ranks.trials": "Higher ranks increase trial objectives and time limits. A timeout resets only trial objectives; accumulated practice is kept. After Rank 7, practice becomes endless: each 120 practice grants +5% Attack Damage, up to 10 times."
   ,"guide.starrail_sim.help.title": "Path System Guide"
   ,"guide.starrail_sim.help.open_current": "Press P to open the character attributes screen."
-  ,"guide.starrail_sim.help.path": "Complete an initial path trial to enter a path automatically. You can have only one current path at a time."
+  ,"guide.starrail_sim.help.path": "Selecting a Path does not place a ruin until you click Confirm Path Search. Travel to the displayed anchor, open its chest, and use the matching Trial Token to start that Path's initial trial. Each player can have only one pending ruin clue at a time."
   ,"guide.starrail_sim.help.practice": "Path-themed actions grant practice. Current practice and its target are shown on the Paths screen. After the Path Pinnacle, practice continues: every 120 points become one +5% Attack Damage milestone, up to 10 milestones."
-  ,"guide.starrail_sim.help.trial": "Reaching a practice target automatically starts a breakthrough trial. Complete both objectives to rank up."
-  ,"guide.starrail_sim.help.progress": "Path skill notices appear above the HUD, and trial objective progress updates immediately. Open the Path Guide for the exact counting rules of each objective."
+  ,"guide.starrail_sim.help.trial": "The matching ruin Trial Token starts the initial trial; completing both objectives enters the Path automatically. Afterward, reaching a practice target automatically starts a rank-up trial, which also ranks up automatically when both objectives are complete."
+  ,"guide.starrail_sim.help.progress": "The ruin anchor stays visible in the lower-left messages and on the Path Search screen. You cannot seek another ruin while a clue is pending. If no site meets the 400-block horizontal spacing, move farther away and retry. The Path Guide explains each trial objective."
   ,"guide.starrail_sim.help.rollback": "Resetting a path removes its current effects, but keeps its unlocked rank, practice progress, and completed Pinnacle bonus milestones."
   ,"guide.starrail_sim.path.preservation.core": "Practice Preservation through blocking and enduring damage, focusing on defense and survival."
   ,"guide.starrail_sim.path.preservation.goals": "Block 3 attacks and survive after taking 5 hostile damage."
@@ -1938,4 +1948,13 @@
   ,"tooltip.starrail_sim.light_cone.base_header": "Light Cone Attributes"
   ,"tooltip.starrail_sim.light_cone.base_values": "Attack Damage +10%, Max Health +5%"
   ,"tooltip.starrail_sim.light_cone.base_defense": "Armor +5%"
+  ,"item.starrail_sim.path_trial_token": "Path Trial Token"
+  ,"item.starrail_sim.path_trial_token.named": "Path Trial Token: %s"
+  ,"tooltip.starrail_sim.path_trial_token.path": "Path: %s"
+  ,"tooltip.starrail_sim.path_trial_token.use": "Right-click after seeking its matching Path ruin."
+  ,"message.starrail_sim.invalid_path_trial_token": "This token has no valid Path recorded."
+  ,"screen.starrail_sim.sought_ruin": "%s Ruin Found: Anchor X=%s, Y=%s, Z=%s"
+  ,"screen.starrail_sim.sought_ruin_hint": "Use the matching Trial Token from its chest; finish this clue before seeking again."
+  ,"screen.starrail_sim.confirm_seek": "Confirm Path Search"
+  ,"screen.starrail_sim.path_seek_selected": "%s selected. Click Confirm Path Search to place the ruin."
 }

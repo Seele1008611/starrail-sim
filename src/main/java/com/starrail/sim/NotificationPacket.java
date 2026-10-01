@@ -1,5 +1,9 @@
 package com.starrail.sim;
 
+/**
+ * 模组代码说明：网络数据包类，定义需要在客户端与服务端之间传递的数据及其处理入口。
+ */
+
 import com.starrail.sim.client.StarRailNotifications;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
