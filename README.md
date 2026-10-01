@@ -54,4 +54,4 @@ Windows 下可用项目自带 Gradle Wrapper 启动开发客户端或构建项�
 
 设计和测试流程见 [DESIGN.md](DESIGN.md)、[PATH_TRIALS.md](PATH_TRIALS.md)、[PATH_RANKS.md](PATH_RANKS.md) 与 `设计方案/`。版本记录见 [CHANGELOG.md](CHANGELOG.md)。
 
-`README.txt` 和根目录 `changelog.txt` 是 Forge MDK 上游模板文件；项目说明和版本记录以本文件及 `CHANGELOG.md` 为准。
+`README.txt` 和根目录 `changelog.txt` 是 Forge MDK 上游模板文件；项目说明和版本记录以本文件及 `CHANGELOG.md` 为准。发布归档见 [releases/1.1.0.md](releases/1.1.0.md)。
