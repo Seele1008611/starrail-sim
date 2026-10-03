@@ -22,11 +22,12 @@
 
 .blueprint-guide{display:flex;gap:15px;background:#10242d;border-left:3px solid #69cdbd;padding:12px 16px;font-size:12px;color:#b7cbd0}.blueprint-guide b{white-space:nowrap;color:#9be6d7}.blueprint-controls,.blueprint-export{display:flex;align-items:center;flex-wrap:wrap;gap:10px;padding:15px 0}.blueprint-controls label,.blueprint-export label{display:flex;align-items:center;gap:7px;color:#b5c9d1;font-size:12px}.blueprint-controls select,.blueprint-controls input,.blueprint-export input{background:#0c1922;border:1px solid #43616a;color:#e4f6ef;padding:8px;font:inherit;font-size:12px}.blueprint-controls select{min-width:125px}.blueprint-controls input,.blueprint-export input{width:74px}.blueprint-controls button,.blueprint-export button,.blueprint-key-levels button{cursor:pointer;border:1px solid #447c78;background:#173431;color:#c9f5eb;padding:8px 11px;font:inherit;font-size:12px}.blueprint-controls button:hover,.blueprint-export button:hover,.blueprint-key-levels button:hover{background:#245249}.blueprint-slider{display:flex;align-items:center;gap:15px;font-size:12px;color:#a8c5cd}.blueprint-slider input{width:min(600px,70%);accent-color:#67cfbd}.blueprint-key-levels{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}.blueprint-key-levels button{padding:5px 8px;font-size:11px}.blueprint-key-levels button.selected{background:#3a7970;color:#fff}.blueprint-layout{display:grid;grid-template-columns:minmax(0,1fr) 240px;gap:16px}.blueprint-canvas-wrap{overflow:auto;background:#0a1420;border:1px solid #34505a;max-height:940px}.blueprint-canvas-wrap canvas{display:block;max-width:none;image-rendering:pixelated}.blueprint-sidebar{background:#0e1b26;border:1px solid #2a4651;padding:15px;min-width:0;align-self:start;max-height:780px;overflow:auto}.blueprint-sidebar h3{font-size:15px;font-weight:500;margin:0;color:#d9eee9}.blueprint-sidebar p{font-size:12px;color:#a9c2ca}.blueprint-legend{display:flex;flex-direction:column;gap:4px}.blueprint-legend button{display:flex;align-items:center;gap:8px;cursor:pointer;text-align:left;width:100%;background:#142631;border:1px solid #304c55;color:#c6d8d9;padding:5px 7px;font:inherit;font-size:11px}.blueprint-legend button.selected{border-color:#91d5c8;background:#25443e}.blueprint-legend i{width:13px;height:13px;flex:none;border:1px solid #829aa0}.blueprint-legend em{margin-left:auto;font-style:normal;color:#90aeb9}.blueprint-export{border-top:1px solid #304750;margin-top:18px}.blueprint-export>div{display:flex;flex-wrap:wrap;gap:9px;align-items:center;margin-right:auto}.blueprint-export b{font-size:12px;color:#a0e2d4;font-weight:500}@media(max-width:850px){.blueprint-layout{grid-template-columns:1fr}.blueprint-sidebar{max-height:350px}.blueprint-guide{display:block}}
 </style>
+<link rel="stylesheet" href="监守者守卫室.css">
 </head>
 <body>
 <div class="wrap">
 <header class="head"><div><div class="eyebrow">STAR RAIL · SKY SANCTUARY / CONCEPT 06</div><h1>浮空遗迹 · 天枢圣所</h1><p class="subtitle">一座仍被古老能量托举的空中圣所。普通遗迹确立建筑母型，九条命途在同一文明遗产上留下各自的回应。现在可切换普通与九种命途模型，使用同尺度并排对照；九种命途均已加入四个专属室内空间。</p></div><div class="stamp">方块级蓝图　/　待游戏落地</div></header>
-<nav class="tabs" aria-label="设计图视图"><button class="tab active" data-view="overall">01　整体概念</button><button class="tab" data-view="plan">02　平面布局</button><button class="tab" data-view="paths">03　九种命途变体</button><button class="tab" data-view="blueprint">04　分层施工蓝图</button></nav>
+<nav class="tabs" aria-label="设计图视图"><button class="tab active" data-view="overall">01　整体概念</button><button class="tab" data-view="plan">02　平面布局</button><button class="tab" data-view="paths">03　九种命途变体</button><button class="tab" data-view="blueprint">04　分层施工蓝图</button><button class="tab" data-view="guard">05　监守者守卫室</button></nav>
 <main>
 <section class="view active" id="overall">
 <div class="hero-grid"><div class="panel figure" aria-label="由Minecraft原版方块搭建的浮空遗迹等距模型">
@@ -64,8 +65,44 @@
 <div class="build-note"><b>施工顺序：</b>先按 Y 从低到高搭浮岛龙骨与表面，再搭入口、前庭、主殿和侧室，最后完成高塔与命途塔冠。每层图显示该 Y 的确切方块；黑底表示空位。CSV 写出每个方块的世界坐标、原版方块 ID 和中文名称，可用来制作结构模板。侧室与主殿通道、宝箱 (0,10,-21)、梯井 (7,8…31,-13) 已纳入模型。</div>
 <div class="build-note"><b>落地说明：</b>这是逐格放置蓝图，仍需在 Minecraft 内为悬空部位搭临时脚手架。模型把台阶、地毯、梯子等表示为单格位置；台阶朝向、部分装饰旋转和方块状态需要在实际搭建时确定。普通母体自然生成、命途变体寻迹、宝箱战利品、试炼凭证与放置间距限制已接入模组；本页用于建筑外观、材料和分层施工参考。</div>
 </div></section>
+<section class="view" id="guard"><div class="panel">
+  <div class="guard-intro"><div><div class="eyebrow">1.2.0 · GUARDIAN CHAMBER / DESIGN DRAFT</div><h2>监守者守卫室</h2><p>进入主殿，击败一只原版监守者，后方铁栅门开放，再走上阶梯打开原有宝箱。普通母体和九种命途变体共用同一空间布局；监守者采用原版战斗属性。</p></div><span class="guard-badge">普通母体自然生成与生存流程通过 · 九种变体游戏测试中</span></div>
+  <div class="guard-picker" id="guardVariantPicker" aria-label="守卫室命途切换"></div>
+  <div class="guard-layout">
+    <div class="guard-stage">
+      <div class="guard-tools"><button type="button" class="selected" data-guard-view="room">室内剖切</button><button type="button" data-guard-view="treasure">宝箱室</button><button type="button" data-guard-view="location">主殿定位</button><button type="button" data-guard-view="whole">完整遗迹</button><label>放大 <input id="guardZoom" type="range" min=".7" max="1.7" step=".1" value="1"></label><button type="button" class="guard-turn" id="guardTurn">旋转 90° ↻</button><button type="button" id="guardReset">复位</button></div>
+      <canvas id="guardCanvas" aria-label="监守者战斗房、铁栅门和宝箱室的方块剖切模型"></canvas>
+      <div class="guard-caption" id="guardCaption"></div>
+    </div>
+    <aside class="guard-aside">
+      <article class="guard-card"><small>SHARED FOOTPRINT</small><h3 id="guardVariantTitle">普通 · 同一守卫布局</h3><p>战斗区范围 <b>21 × 15 格</b>，东侧保留观星梯井柱。地坪 Y=7，人物脚部 Y=8。</p><p>石质实心地面、封顶墙体与前方低入口，让战斗集中在主殿内。彩色材料用于墙面点缀。</p></article>
+      <article class="guard-card"><small>PREVIEW STATE</small><h3 id="guardStateTitle">存活 · 宝箱室封闭</h3><p id="guardStatusText"></p><button type="button" class="guard-state" id="guardStateButton">预览击败后开门</button><p>这个按钮只切换设计图的门状态。游戏中必须击败守卫才能领取宝箱奖励。</p></article>
+      <article class="guard-card"><small>ORIGINAL TREASURE</small><h3>宝箱坐标保留</h3><p><code>(0, 10, -21)</code></p><p>五格宽、五格高的铁栅门位于 <code>Z=-18</code>。宝箱所在区域分隔为独立房间，保留原有阶梯祭坛与箱盖空间。</p><p>监守者为一只原版实体；不增加生命、伤害或特殊技能。</p></article>
+    </aside>
+  </div>
+  <div class="guard-route"><b>前庭 → 三格宽低入口</b><span>→</span><b>监守者战斗区</b><span>→ 击败守卫 →</span><b>铁栅门开放</b><span>→</span><b>阶梯与原宝箱</b><span>→</span><b>按原有规则取得凭证、开启试炼</b></div>
+  <div class="section-title"><h2>同一方块模型 · 俯视与分层定位</h2><p>所有数字为局部坐标，十种遗迹坐标一致</p></div>
+  <div class="guard-plan-layout">
+    <div class="guard-plan-wrap"><div class="guard-plan-controls" aria-label="守卫室分层查看"><button type="button" class="selected" data-guard-layer="route">功能俯视</button><button type="button" data-guard-layer="7">Y=7 地坪</button><button type="button" data-guard-layer="8">Y=8 门与入口</button><button type="button" data-guard-layer="10">Y=10 宝箱</button><button type="button" data-guard-layer="13">Y=13 门楣</button><button type="button" data-guard-layer="24">Y=24 顶封</button></div><svg id="guardPlan" viewBox="0 0 660 570" role="img" aria-label="守卫室逐格俯视布局图"></svg><div id="guardHover">将鼠标移到色格上查看方块坐标和材料。</div><div class="guard-key"><span><i style="background:#69caba"></i>战斗范围</span><span><i style="background:#f0bd74"></i>宝箱与门禁</span><span><i style="background:#9fc5d4"></i>原有梯井</span></div></div>
+    <div><table class="guard-coordinate-table"><thead><tr><th>空间或节点</th><th>局部坐标 / 净尺寸</th></tr></thead><tbody>
+      <tr><td>主殿适配范围</td><td>X <code>-12…12</code> · Z <code>-26…0</code></td></tr>
+      <tr><td>战斗活动区</td><td>X <code>-10…10</code> · Z <code>-17…-3</code></td></tr>
+      <tr><td>监守者脚部</td><td><code>(-2,8,-10)</code> · 一只</td></tr>
+      <tr><td>前庭入口</td><td>Z <code>0</code> · 净宽 3 / 净高 2</td></tr>
+      <tr><td>后方铁栅门洞</td><td>Z <code>-18</code> · X <code>-2…2</code> · Y <code>8…12</code></td></tr>
+      <tr><td>宝箱室</td><td>X <code>-11…11</code> · Z <code>-25…-19</code></td></tr>
+      <tr><td>宝箱放置位置</td><td><code>(0,10,-21)</code> · 上方两格留空</td></tr>
+      <tr><td>保留观星梯井</td><td><code>(7,8…31,-13)</code></td></tr>
+      <tr><td>房间顶封</td><td>Y <code>24</code> · 梯井处保持连通</td></tr>
+    </tbody></table><div class="guard-note">入口采用两格净高，作为限制监守者离开房间的空间方案；实际通过性与战斗体验须在游戏原型中验证。玩家保留进退路线，门禁只设置在后方宝箱室。</div><div class="guard-note">铁栅门表达“击败后开放”的空间关系。严格领取条件还要由游戏端的宝箱完成状态保证，覆盖挖墙、上层梯井绕行、破坏宝箱或漏斗取物，不能只依靠建筑挡路。</div></div>
+  </div>
+  <div class="section-title"><h2>当前命途 · 守卫室材料</h2><p>封闭状态用量 · 方块数据统计 · 实体不计入</p></div>
+  <div class="guard-materials" id="guardMaterials"></div>
+  <div class="guard-note">材料为 Minecraft Java 1.20.1 原版方块。颜色与监守者外形为简化示意，战斗区不铺冰或裸露岩浆块。此页预览是一份独立的 1.2.0 空间草案，现有“分层施工蓝图”仍展示 1.1.0 的已通过模型；普通母体自然生成与守卫流程已通过玩家测试，九种变体已接入同布局蓝图，等待游戏内验收。</div>
+</div></section>
 </main>
-<footer class="footer"><span>施工参考 06　·　v1.0.0 开发同步</span><span>模型坐标与材料清单由当前方块数据生成 · 世界生成规则见配套说明</span></footer>
+<footer class="footer"><span>1.1.0 建筑参考　·　1.2.0 监守者守卫室设计草案</span><span>模型坐标与材料清单由当前方块数据生成 · 世界生成规则见配套说明</span></footer>
 </div>
 <script src="命途内饰.js"></script><script src="命途变体.js"></script><script src="天枢圣所模型.js"></script><script src="施工蓝图.js"></script>
+<script src="监守者守卫室.js"></script>
 </body></html>

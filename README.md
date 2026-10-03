@@ -5,30 +5,30 @@
 ## 版本与依赖
 
 - Mod ID：`starrail_sim`
-- 当前版本：`1.1.0` 第二版正式版（2026-10-01 发布）。
+- 当前版本：`1.2.0`（2026-10-03，正式发行）。
 - Minecraft：`1.20.1`
 - Forge：`47.x`；发行包在 `47.4.13` 客户端上完成启动核验。
 - Java：`17`
 - 必需依赖：Curios API（Forge、Minecraft 1.20.1）；候选包使用 `5.14.1` 核验。
 
-发行 JAR 位于 `build/libs/starrail_sim-1.1.0.jar`。该文件是工作区构建产物，不代表 GitHub 已有对应发布包。
+发行 JAR：[`starrail_sim-1.2.0.jar`](https://github.com/Seele1008611/starrail-sim/releases/download/v1.2.0/starrail_sim-1.2.0.jar)。
 
 ## 功能概览
 
 - 角色属性、战斗反馈、光锥与 Curios 饰品槽。
 - 九条命途的初始试炼、命途效果、实践度和等级晋阶。
-- 普通空中遗迹在主世界自然生成；九种命途主题遗迹通过寻迹安排。
+- 普通空中遗迹在主世界自然生成；九种命途主题遗迹通过寻迹安排。遗迹由原版监守者守卫，击败后开放宝箱室并解锁奖励。
 - 命途界面显示寻迹结果和锚点坐标；对应遗迹宝箱提供匹配的试炼凭证。
 - 初始命途流程：发现线索 → 选择命途 → 确认寻迹 → 前往遗迹 → 打开宝箱并使用匹配凭证 → 完成试炼后自动踏上命途。
 - 命途指南、九种遗迹材料表和可逐层查看的建造蓝图。
 
 普通遗迹候选锚点至少相距 416 格；命途遗迹寻迹点与已知遗迹至少相距 400 格水平距离。每名玩家同一时间只保留一条待处理线索。
 
-## 安装候选包
+## 安装发行包
 
 1. 安装 Minecraft 1.20.1、Java 17 和 Forge 47.x。
 2. 安装适用于 Forge 1.20.1 的 Curios API。当前候选包使用 5.14.1 完成客户端核验。
-3. 将 `starrail_sim-1.1.0.jar` 和 Curios API JAR 放入游戏实例的 `mods` 文件夹。
+3. 将 `starrail_sim-1.2.0.jar` 和 Curios API JAR 放入游戏实例的 `mods` 文件夹。
 4. 启动 Forge 配置文件。
 
 建议先在新存档中体验。自然生成只会发生在首次生成的区块；已经生成过的区块不会因为安装模组而自动补出遗迹。普通遗迹会在满足高度和结构放置条件时尝试生成，命途主题遗迹由命途寻迹安排。
@@ -45,13 +45,14 @@ Windows 下可用项目自带 Gradle Wrapper 启动开发客户端或构建项�
 ## 验证状态
 
 - 用户已在 Forge 1.20.1 客户端验证遗迹生成、九种变体、宝箱凭证、寻迹坐标和命途试炼流程。
+- `1.2.0` 发行 JAR 已在 Forge 47.4.13、Java 17、Curios 5.14.1 独立专用服务端中加载；普通母体放置、守卫与宝箱状态通过，服务端重启后守卫 UUID 保持一致。
 - `1.1.0` 发行 JAR 已在 Forge 47.4.13 正式客户端运行环境中，以隔离游戏目录加载，并完成 Forge、模组资源、音频和渲染初始化。
 - `1.1.0` 发行 JAR 已在 Java 17、Forge 47.4.13、Curios 5.14.1 的隔离专用服务器中启动验证。全新测试世界实际生成了浮空遗迹；区块数据确认遗迹宝箱及战利品表已写入，生成高度符合设计，间距参数满足至少 400 格要求。
 - 详细服务端记录见 [`设计方案/服务端验证报告-1.1.0.md`](设计方案/服务端验证报告-1.1.0.md)。测试服务端和测试世界已在验证后清理；没有读取或修改玩家存档。
-- 正式发行 JAR 和 SHA-256 校验值见 [GitHub Release v1.1.0](https://github.com/Seele1008611/starrail-sim/releases/tag/v1.1.0)。
+- 正式发行 JAR 和 SHA-256 校验值见 [GitHub Release v1.2.0](https://github.com/Seele1008611/starrail-sim/releases/tag/v1.2.0)。
 
 ## 项目文档
 
 设计和测试流程见 [DESIGN.md](DESIGN.md)、[PATH_TRIALS.md](PATH_TRIALS.md)、[PATH_RANKS.md](PATH_RANKS.md) 与 `设计方案/`。版本记录见 [CHANGELOG.md](CHANGELOG.md)，下一版方向草案见 [PLAN_1.2.0.md](PLAN_1.2.0.md)。
 
-`README.txt` 和根目录 `changelog.txt` 是 Forge MDK 上游模板文件；项目说明和版本记录以本文件及 `CHANGELOG.md` 为准。发布归档见 [releases/1.1.0.md](releases/1.1.0.md)。
+`README.txt` 和根目录 `changelog.txt` 是 Forge MDK 上游模板文件；项目说明和版本记录以本文件及 `CHANGELOG.md` 为准。发布归档见 [releases/1.2.0.md](releases/1.2.0.md) 和 [releases/1.1.0.md](releases/1.1.0.md)。

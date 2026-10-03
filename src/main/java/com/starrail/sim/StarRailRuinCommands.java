@@ -65,22 +65,30 @@ public final class StarRailRuinCommands {
     @SubscribeEvent
     // 注册普通遗迹与九种命途变体的放置指令，以及取消进行中任务的指令。
     public static void register(RegisterCommandsEvent event) {
-        event.getDispatcher().register(Commands.literal("starrail")
-                .then(Commands.literal("ruin")
-                        .requires(source -> source.hasPermission(2))
-                        .then(Commands.literal("place")
-                                .then(placeCommand("ordinary"))
-                                .then(placeCommand("destruction"))
-                                .then(placeCommand("hunt"))
-                                .then(placeCommand("erudition"))
-                                .then(placeCommand("harmony"))
-                                .then(placeCommand("nihility"))
-                                .then(placeCommand("preservation"))
-                                .then(placeCommand("abundance"))
-                                .then(placeCommand("remembrance"))
-                                .then(placeCommand("elation")))
+        var locate = Commands.literal("locate")
+                .then(Commands.literal("ordinary")
+                        .executes(context -> StarRailRuinLocateService.start(context.getSource()))
                         .then(Commands.literal("cancel")
-                                .executes(StarRailRuinCommands::cancel))));
+                                .executes(context -> StarRailRuinLocateService.cancel(
+                                        context.getSource()))));
+        var ruin = Commands.literal("ruin")
+                .requires(source -> source.hasPermission(2))
+                .then(Commands.literal("place")
+                        .then(placeCommand("ordinary"))
+                        .then(placeCommand("destruction"))
+                        .then(placeCommand("hunt"))
+                        .then(placeCommand("erudition"))
+                        .then(placeCommand("harmony"))
+                        .then(placeCommand("nihility"))
+                        .then(placeCommand("preservation"))
+                        .then(placeCommand("abundance"))
+                        .then(placeCommand("remembrance"))
+                        .then(placeCommand("elation")))
+                .then(Commands.literal("cancel").executes(StarRailRuinCommands::cancel))
+                .then(Commands.literal("guard_status")
+                        .executes(context -> StarRailRuinGuardService.status(context.getSource())))
+                .then(locate);
+        event.getDispatcher().register(Commands.literal("starrail").then(ruin));
     }
 
     private static LiteralArgumentBuilder<CommandSourceStack> placeCommand(String variantId) {
@@ -237,19 +245,26 @@ public final class StarRailRuinCommands {
 
     // 按变体读取并缓存压缩蓝图，避免重复解压和解析大型数据。
     static Blueprint getBlueprint(String variantId) throws IOException {
-        Blueprint result = CACHED_BLUEPRINTS.get(variantId);
+        // 新放置的母体和命途变体统一使用守卫室蓝图；旧结构片仍按 NBT 标记读取。
+        return readBlueprint(variantId, true);
+    }
+
+    /** 旧结构片显式读取旧蓝图，避免更新后把半生成的旧遗迹改成守卫室。 */
+    static Blueprint readBlueprint(String variantId, boolean guarded) throws IOException {
+        String resourceId = variantId + (guarded ? "_guard" : "");
+        Blueprint result = CACHED_BLUEPRINTS.get(resourceId);
         if (result != null) {
             return result;
         }
         synchronized (CACHED_BLUEPRINTS) {
-            result = CACHED_BLUEPRINTS.get(variantId);
+            result = CACHED_BLUEPRINTS.get(resourceId);
             if (result != null) {
                 return result;
             }
             try (InputStream raw = StarRailRuinCommands.class.getResourceAsStream(
-                    "/data/starrail_sim/ruins/" + variantId + ".json.gz")) {
+                    "/data/starrail_sim/ruins/" + resourceId + ".json.gz")) {
                 if (raw == null) {
-                    throw new IOException("Missing data/starrail_sim/ruins/" + variantId + ".json.gz");
+                    throw new IOException("Missing data/starrail_sim/ruins/" + resourceId + ".json.gz");
                 }
                 try (InputStreamReader reader = new InputStreamReader(
                         new GZIPInputStream(raw), StandardCharsets.UTF_8)) {
@@ -266,8 +281,8 @@ public final class StarRailRuinCommands {
                     List<Placement> placements = readPlacements(root.getAsJsonArray("blocks"),
                             states.size());
                     result = new Blueprint(variantId, root.get("name").getAsString(), bounds, states,
-                            placements);
-                    CACHED_BLUEPRINTS.put(variantId, result);
+                            placements, guarded);
+                    CACHED_BLUEPRINTS.put(resourceId, result);
                     return result;
                 }
             }
@@ -295,6 +310,10 @@ public final class StarRailRuinCommands {
                 state = state.setValue(BlockStateProperties.FACING, Direction.UP);
             } else if (block == Blocks.CHEST) {
                 state = state.setValue(BlockStateProperties.HORIZONTAL_FACING, Direction.SOUTH);
+            } else if (block == Blocks.IRON_BARS) {
+                // 门洞沿 X 轴排列，显式连接横向栏杆，避免已知形状放置留下独立细杆。
+                state = state.setValue(BlockStateProperties.EAST, true)
+                        .setValue(BlockStateProperties.WEST, true);
             } else if (block instanceof LeavesBlock) {
                 state = state.setValue(LeavesBlock.PERSISTENT, true);
             }
@@ -364,7 +383,7 @@ public final class StarRailRuinCommands {
     }
 
     record Blueprint(String variantId, String name, Bounds bounds, List<BlockState> palette,
-                              List<Placement> placements) {
+                              List<Placement> placements, boolean guarded) {
     }
 
     private static final class PlacementJob {
@@ -473,7 +492,9 @@ public final class StarRailRuinCommands {
                     // 宝箱方块放置后绑定对应变体的战利品表，首次打开时再随机生成内容。
                     if (state.is(Blocks.CHEST)
                             && level.getBlockEntity(worldPos) instanceof ChestBlockEntity chest) {
-                        chest.setLootTable(new ResourceLocation(StarRailSimMod.MOD_ID,
+                        if (blueprint.guarded()) {
+                            StarRailRuinGuardService.markChest(chest, origin, blueprint.variantId());
+                        } else chest.setLootTable(new ResourceLocation(StarRailSimMod.MOD_ID,
                                 "chests/ruin_" + blueprint.variantId()),
                                 level.getRandom().nextLong());
                         chest.setChanged();
@@ -499,9 +520,12 @@ public final class StarRailRuinCommands {
                 nextProgressMark++;
             }
             if (placedCount >= placements.size()) {
+                if (blueprint.guarded()) StarRailRuinGuardService.register(
+                        level, origin, blueprint.variantId());
                 notify(displayName(blueprint) + "浮空遗迹已放置完成。锚点 " + origin.getX() + " "
                         + origin.getY() + " " + origin.getZ()
-                        + "；对应战利品已装入宝箱，首次打开时生成。", false);
+                        + (blueprint.guarded() ? "；击败主殿监守者后开放宝箱。"
+                        : "；对应战利品已装入宝箱，首次打开时生成。"), false);
                 return finish(true);
             }
             return false;

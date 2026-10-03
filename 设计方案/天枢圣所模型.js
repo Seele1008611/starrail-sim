@@ -356,7 +356,7 @@
   document.querySelectorAll('[data-room]').forEach(b=>b.addEventListener('click',()=>selectRoom(b.dataset.room)));
   document.getElementById('resetModel').onclick=()=>selectRoom('exterior');
   document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.tab,.view').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.getElementById(b.dataset.view).classList.add('active');schedule();}));
-  window.RuinDesign={getVariant:()=>variant,getModel:()=>original,getPalette:()=>palette,selectVariant};
+  window.RuinDesign={getVariant:()=>variant,getModel:()=>original,getModelFor:modelFor,getPalette:()=>palette,selectVariant};
   window.addEventListener('resize',schedule);const params=new URLSearchParams(location.search);document.getElementById('compareVariant').checked=params.get('compare')==='1';selectVariant(params.get('variant')||'ordinary');selectRoom(params.get('room')||'exterior');
   const initialView=params.get('view');if(initialView&&document.getElementById(initialView)&&document.querySelector(`[data-view="${initialView}"]`))document.querySelector(`[data-view="${initialView}"]`).click();
 })();

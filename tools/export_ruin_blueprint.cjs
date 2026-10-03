@@ -9,6 +9,7 @@ const zlib = require('node:zlib');
 
 const designDir = path.resolve(__dirname, '..', '设计方案');
 const variantId = process.argv[2] || 'ordinary';
+const guarded = process.argv.includes('--guard');
 const variantSource = fs.readFileSync(path.join(designDir, '命途变体.js'), 'utf8');
 const interiorSource = fs.readFileSync(path.join(designDir, '命途内饰.js'), 'utf8');
 let modelSource = fs.readFileSync(path.join(designDir, '天枢圣所模型.js'), 'utf8');
@@ -29,9 +30,19 @@ vm.runInContext(modelSource, context);
 const def = window.RuinVariants.definitions.find(entry => entry.id === variantId);
 if (!def) throw new Error(`Unknown ruin variant: ${variantId}`);
 const {modelFor, palette} = window.__exportModel;
-const model = modelFor(variantId);
+let model = modelFor(variantId);
+if (guarded) {
+  // 守卫室复用同一布局；build 会按命途调色板替换墙面玻璃与强调色。
+  window.RuinDesign = {getModelFor:modelFor, getPalette:()=>palette};
+  let guardSource = fs.readFileSync(path.join(designDir, '监守者守卫室.js'), 'utf8');
+  guardSource = guardSource.slice(0, guardSource.indexOf("  const canvas=$('guardCanvas')"))
+    + `window.__guardModel=build(${JSON.stringify(variantId)},false);\n})();`;
+  vm.runInContext(guardSource, context);
+  model = window.__guardModel;
+  palette.guardBars = ['#a4bac0', '铁栏杆'];
+}
 const blockIds = {
-  q: 'minecraft:smooth_quartz', qb: 'minecraft:quartz_bricks',
+  guardBars: 'minecraft:iron_bars', q: 'minecraft:smooth_quartz', qb: 'minecraft:quartz_bricks',
   pillar: 'minecraft:quartz_pillar', calcite: 'minecraft:calcite',
   prism: 'minecraft:prismarine_bricks', dark: 'minecraft:dark_prismarine',
   black: 'minecraft:polished_blackstone_bricks', slate: 'minecraft:deepslate_tiles',
@@ -68,6 +79,7 @@ const bounds = model.reduce((b, block) => ({
 // 组装蓝图版本、边界、调色板和每个方块的局部坐标。
 const data = {
   version: 1,
+  guarded,
   variant: variantId,
   name: def.name,
   bounds,
@@ -76,7 +88,7 @@ const data = {
 };
 // 蓝图最终写入模组资源目录，供运行时遗迹命令读取。
 const output = path.resolve(__dirname, '..', 'src', 'main', 'resources',
-  'data', 'starrail_sim', 'ruins', `${variantId}.json.gz`);
+  'data', 'starrail_sim', 'ruins', `${variantId}${guarded?'_guard':''}.json.gz`);
 fs.mkdirSync(path.dirname(output), {recursive: true});
 fs.writeFileSync(output, zlib.gzipSync(Buffer.from(JSON.stringify(data), 'utf8'), {level: 9}));
 console.log(`${def.name}: ${model.length.toLocaleString()} blocks, ${materialKeys.length} materials`);

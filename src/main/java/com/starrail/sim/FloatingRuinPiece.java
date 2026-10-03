@@ -42,13 +42,18 @@ public final class FloatingRuinPiece extends StructurePiece {
         return origin;
     }
 
+    /** 返回存档中记录的命途版本，供普通母体专用定位筛选自然生成结构。 */
+    public String getVariantId() {
+        return variantId;
+    }
+
     public FloatingRuinPiece(StructurePieceSerializationContext context, CompoundTag tag) {
         super(StarRailRuinWorldgen.PIECE.get(), tag);
         origin = new BlockPos(tag.getInt("OriginX"), tag.getInt("OriginY"), tag.getInt("OriginZ"));
         // 旧存档中的母体结构没有 VariantId，读取时继续按 ordinary 兼容。
         variantId = tag.contains("VariantId") ? tag.getString("VariantId") : "ordinary";
         try {
-            blueprint = StarRailRuinCommands.getBlueprint(variantId);
+            blueprint = StarRailRuinCommands.readBlueprint(variantId, tag.getBoolean("Guarded"));
         } catch (IOException exception) {
             throw new IllegalStateException("Cannot restore floating ruin variant: " + variantId,
                     exception);
@@ -66,12 +71,13 @@ public final class FloatingRuinPiece extends StructurePiece {
         tag.putInt("OriginY", origin.getY());
         tag.putInt("OriginZ", origin.getZ());
         tag.putString("VariantId", variantId);
+        tag.putBoolean("Guarded", blueprint.guarded());
     }
 
     // 锚点在区块中心，因此局部坐标加8再分桶；每个区块只处理自己的方块。
     private static Map<Long, List<StarRailRuinCommands.Placement>> blocksByChunk(
             StarRailRuinCommands.Blueprint blueprint) {
-        return CHUNK_BLOCKS.computeIfAbsent(blueprint.variantId(), variantKey -> {
+        return CHUNK_BLOCKS.computeIfAbsent(blueprint.variantId() + (blueprint.guarded() ? "_guard" : ""), variantKey -> {
             Map<Long, List<StarRailRuinCommands.Placement>> result = new HashMap<>();
             for (var p : blueprint.placements()) {
                 long key = ChunkPos.asLong(Math.floorDiv(p.x()+8,16), Math.floorDiv(p.z()+8,16));
@@ -93,7 +99,10 @@ public final class FloatingRuinPiece extends StructurePiece {
             level.setBlock(target, state, Block.UPDATE_CLIENTS | Block.UPDATE_KNOWN_SHAPE);
             // 原版结构生成阶段绑定战利品表，首次开箱生成奖励。
             if (state.is(Blocks.CHEST) && level.getBlockEntity(target) instanceof ChestBlockEntity chest) {
-                chest.setLootTable(new ResourceLocation(StarRailSimMod.MOD_ID,
+                if (blueprint.guarded()) {
+                    StarRailRuinGuardService.markChest(chest, origin, blueprint.variantId());
+                    StarRailRuinGuardService.queue(level.getLevel(), origin);
+                } else chest.setLootTable(new ResourceLocation(StarRailSimMod.MOD_ID,
                         "chests/ruin_" + variantId), random.nextLong());
                 chest.setChanged();
             }

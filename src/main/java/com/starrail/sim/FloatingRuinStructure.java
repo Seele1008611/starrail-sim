@@ -6,16 +6,11 @@ import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureType;
 import java.io.IOException;
-import java.util.List;
 import java.util.Optional;
 
 /** 普通浮空遗迹：只检查空间与地形高度，不筛选主世界群系。 */
 public final class FloatingRuinStructure extends Structure {
     public static final Codec<FloatingRuinStructure> CODEC = simpleCodec(FloatingRuinStructure::new);
-    // 一套结构集内随机抽取母体或九种命途变体，保持总生成率不变。
-    private static final List<String> VARIANT_IDS = List.of(
-            "ordinary", "preservation", "destruction", "hunt", "erudition",
-            "harmony", "nihility", "abundance", "remembrance", "elation");
 
     public FloatingRuinStructure(StructureSettings settings) { super(settings); }
 
@@ -23,8 +18,8 @@ public final class FloatingRuinStructure extends Structure {
     protected Optional<GenerationStub> findGenerationPoint(GenerationContext context) {
         final StarRailRuinCommands.Blueprint blueprint;
         try {
-            String variantId = VARIANT_IDS.get(context.random().nextInt(VARIANT_IDS.size()));
-            blueprint = StarRailRuinCommands.getBlueprint(variantId);
+            // 自然生成只使用普通母体；九种命途版本由命途寻迹系统单独放置。
+            blueprint = StarRailRuinCommands.getBlueprint("ordinary");
         } catch (IOException exception) {
             throw new IllegalStateException("Cannot load floating ruin blueprint", exception);
         }
