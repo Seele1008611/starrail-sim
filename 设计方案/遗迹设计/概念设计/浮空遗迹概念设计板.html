@@ -22,7 +22,7 @@
 
 .blueprint-guide{display:flex;gap:15px;background:#10242d;border-left:3px solid #69cdbd;padding:12px 16px;font-size:12px;color:#b7cbd0}.blueprint-guide b{white-space:nowrap;color:#9be6d7}.blueprint-controls,.blueprint-export{display:flex;align-items:center;flex-wrap:wrap;gap:10px;padding:15px 0}.blueprint-controls label,.blueprint-export label{display:flex;align-items:center;gap:7px;color:#b5c9d1;font-size:12px}.blueprint-controls select,.blueprint-controls input,.blueprint-export input{background:#0c1922;border:1px solid #43616a;color:#e4f6ef;padding:8px;font:inherit;font-size:12px}.blueprint-controls select{min-width:125px}.blueprint-controls input,.blueprint-export input{width:74px}.blueprint-controls button,.blueprint-export button,.blueprint-key-levels button{cursor:pointer;border:1px solid #447c78;background:#173431;color:#c9f5eb;padding:8px 11px;font:inherit;font-size:12px}.blueprint-controls button:hover,.blueprint-export button:hover,.blueprint-key-levels button:hover{background:#245249}.blueprint-slider{display:flex;align-items:center;gap:15px;font-size:12px;color:#a8c5cd}.blueprint-slider input{width:min(600px,70%);accent-color:#67cfbd}.blueprint-key-levels{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}.blueprint-key-levels button{padding:5px 8px;font-size:11px}.blueprint-key-levels button.selected{background:#3a7970;color:#fff}.blueprint-layout{display:grid;grid-template-columns:minmax(0,1fr) 240px;gap:16px}.blueprint-canvas-wrap{overflow:auto;background:#0a1420;border:1px solid #34505a;max-height:940px}.blueprint-canvas-wrap canvas{display:block;max-width:none;image-rendering:pixelated}.blueprint-sidebar{background:#0e1b26;border:1px solid #2a4651;padding:15px;min-width:0;align-self:start;max-height:780px;overflow:auto}.blueprint-sidebar h3{font-size:15px;font-weight:500;margin:0;color:#d9eee9}.blueprint-sidebar p{font-size:12px;color:#a9c2ca}.blueprint-legend{display:flex;flex-direction:column;gap:4px}.blueprint-legend button{display:flex;align-items:center;gap:8px;cursor:pointer;text-align:left;width:100%;background:#142631;border:1px solid #304c55;color:#c6d8d9;padding:5px 7px;font:inherit;font-size:11px}.blueprint-legend button.selected{border-color:#91d5c8;background:#25443e}.blueprint-legend i{width:13px;height:13px;flex:none;border:1px solid #829aa0}.blueprint-legend em{margin-left:auto;font-style:normal;color:#90aeb9}.blueprint-export{border-top:1px solid #304750;margin-top:18px}.blueprint-export>div{display:flex;flex-wrap:wrap;gap:9px;align-items:center;margin-right:auto}.blueprint-export b{font-size:12px;color:#a0e2d4;font-weight:500}@media(max-width:850px){.blueprint-layout{grid-template-columns:1fr}.blueprint-sidebar{max-height:350px}.blueprint-guide{display:block}}
 </style>
-<link rel="stylesheet" href="监守者守卫室.css">
+<link rel="stylesheet" href="../模型源文件/监守者守卫室.css">
 </head>
 <body>
 <div class="wrap">
@@ -66,7 +66,7 @@
 <div class="build-note"><b>落地说明：</b>这是逐格放置蓝图，仍需在 Minecraft 内为悬空部位搭临时脚手架。模型把台阶、地毯、梯子等表示为单格位置；台阶朝向、部分装饰旋转和方块状态需要在实际搭建时确定。普通母体自然生成、命途变体寻迹、宝箱战利品、试炼凭证与放置间距限制已接入模组；本页用于建筑外观、材料和分层施工参考。</div>
 </div></section>
 <section class="view" id="guard"><div class="panel">
-  <div class="guard-intro"><div><div class="eyebrow">1.2.0 · GUARDIAN CHAMBER / DESIGN DRAFT</div><h2>监守者守卫室</h2><p>进入主殿，击败一只原版监守者，后方铁栅门开放，再走上阶梯打开原有宝箱。普通母体和九种命途变体共用同一空间布局；监守者采用原版战斗属性。</p></div><span class="guard-badge">普通母体自然生成与生存流程通过 · 九种变体游戏测试中</span></div>
+  <div class="guard-intro"><div><div class="eyebrow">1.2.0 · GUARDIAN CHAMBER / DESIGN DRAFT</div><h2>监守者守卫室</h2><p>进入主殿，击败一只原版监守者，后方铁栅门开放，再走上阶梯打开原有宝箱。普通母体和九种命途变体共用同一空间布局；监守者采用原版战斗属性。</p></div><span class="guard-badge">普通母体流程通过 · 九种变体机制核对通过</span></div>
   <div class="guard-picker" id="guardVariantPicker" aria-label="守卫室命途切换"></div>
   <div class="guard-layout">
     <div class="guard-stage">
@@ -103,6 +103,6 @@
 </main>
 <footer class="footer"><span>1.1.0 建筑参考　·　1.2.0 监守者守卫室设计草案</span><span>模型坐标与材料清单由当前方块数据生成 · 世界生成规则见配套说明</span></footer>
 </div>
-<script src="命途内饰.js"></script><script src="命途变体.js"></script><script src="天枢圣所模型.js"></script><script src="施工蓝图.js"></script>
-<script src="监守者守卫室.js"></script>
+<script src="../模型源文件/命途内饰.js"></script><script src="../模型源文件/命途变体.js"></script><script src="../模型源文件/天枢圣所模型.js"></script><script src="../模型源文件/施工蓝图.js"></script>
+<script src="../模型源文件/监守者守卫室.js"></script>
 </body></html>
