@@ -1,6 +1,62 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "minecraft:item/echo_shard"
-  }
+    "layer0": "starrail_sim:item/path_trial_token"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "starrail_sim:path": 0.1
+      },
+      "model": "starrail_sim:item/path_trial_token_preservation"
+    },
+    {
+      "predicate": {
+        "starrail_sim:path": 0.2
+      },
+      "model": "starrail_sim:item/path_trial_token_destruction"
+    },
+    {
+      "predicate": {
+        "starrail_sim:path": 0.3
+      },
+      "model": "starrail_sim:item/path_trial_token_hunt"
+    },
+    {
+      "predicate": {
+        "starrail_sim:path": 0.4
+      },
+      "model": "starrail_sim:item/path_trial_token_erudition"
+    },
+    {
+      "predicate": {
+        "starrail_sim:path": 0.5
+      },
+      "model": "starrail_sim:item/path_trial_token_harmony"
+    },
+    {
+      "predicate": {
+        "starrail_sim:path": 0.6
+      },
+      "model": "starrail_sim:item/path_trial_token_nihility"
+    },
+    {
+      "predicate": {
+        "starrail_sim:path": 0.7
+      },
+      "model": "starrail_sim:item/path_trial_token_abundance"
+    },
+    {
+      "predicate": {
+        "starrail_sim:path": 0.8
+      },
+      "model": "starrail_sim:item/path_trial_token_remembrance"
+    },
+    {
+      "predicate": {
+        "starrail_sim:path": 0.9
+      },
+      "model": "starrail_sim:item/path_trial_token_elation"
+    }
+  ]
 }

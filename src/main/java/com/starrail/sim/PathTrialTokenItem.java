@@ -27,6 +27,15 @@ public final class PathTrialTokenItem extends Item {
     }
 
     @Override
+    public Component getName(ItemStack stack) {
+        StarRailPath path = getPath(stack);
+        if (!path.isRealPath()) {
+            return super.getName(stack);
+        }
+        return Component.translatable("item.starrail_sim.path_trial_token.named", pathName(path));
+    }
+
+    @Override
     // 使用凭证时检查 NBT 命途和玩家解锁状态；服务端成功启动试炼后才消耗凭证。
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
@@ -69,10 +78,20 @@ public final class PathTrialTokenItem extends Item {
         StarRailPath path = getPath(stack);
         if (path.isRealPath()) {
             tooltip.add(Component.translatable("tooltip.starrail_sim.path_trial_token.path",
-                    path.getDisplayName()).withStyle(ChatFormatting.AQUA));
+                    pathName(path)).withStyle(ChatFormatting.AQUA));
         }
         tooltip.add(Component.translatable("tooltip.starrail_sim.path_trial_token.use")
                 .withStyle(ChatFormatting.GRAY));
+        tooltip.add(Component.translatable("tooltip.starrail_sim.path_trial_token.conditions")
+                .withStyle(ChatFormatting.GRAY));
+        tooltip.add(Component.translatable("tooltip.starrail_sim.path_trial_token.consumption")
+                .withStyle(ChatFormatting.GRAY));
+        tooltip.add(Component.translatable("tooltip.starrail_sim.path_trial_token.timeout")
+                .withStyle(ChatFormatting.DARK_GRAY));
+    }
+
+    private static Component pathName(StarRailPath path) {
+        return Component.translatable("path.starrail_sim." + path.getId());
     }
 
     // 从物品 NBT 的 Path 字段解析命途；缺失或无效时返回 NONE。

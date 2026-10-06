@@ -396,8 +396,6 @@ public final class StarRailSimMod {
     private static ItemStack pathTrialTokenForCreative(StarRailPath path) {
         ItemStack stack = new ItemStack(PATH_TRIAL_TOKEN.get());
         stack.getOrCreateTag().putString(PathTrialTokenItem.PATH_TAG, path.getId());
-        stack.setHoverName(Component.translatable(
-                "item.starrail_sim.path_trial_token.named", path.getDisplayName()));
         return stack;
     }
 
