@@ -20,7 +20,7 @@ import java.util.EnumMap;
 import java.util.Map;
 
 /** Read-only in-game guide for paths, practice, and rank breakthroughs. */
-public final class StarRailGuideScreen extends Screen {
+public final class StarRailGuideScreen extends StarRailStyledScreen {
     private enum Page {
         CURRENT,
         PATHS,
@@ -44,17 +44,8 @@ public final class StarRailGuideScreen extends Screen {
     private final Button[] navigationButtons = new Button[
             StarRailUiStyle.CHARACTER_NAVIGATION_KEYS.length];
     private final Button[] tabButtons = new Button[4];
-    private Button rankPreviousButton;
-    private Button rankNextButton;
-    private Button pathPreviousButton;
-    private Button pathNextButton;
-    private Button helpPreviousButton;
-    private Button helpNextButton;
     private Page page = Page.CURRENT;
     private StarRailPath selectedPath = StarRailPath.HUNT;
-    private int rankPage;
-    private int pathDetailPage;
-    private int helpPage;
     private int panelLeft;
     private int panelTop;
     private int panelRight;
@@ -65,13 +56,26 @@ public final class StarRailGuideScreen extends Screen {
     private int pathGridTop;
     private int detailX;
     private boolean compactLayout;
+    private final StarRailSmoothScroll bodyScroll = new StarRailSmoothScroll();
+    private int bodyBottom;
+    private boolean initialPathSelection = true;
+    private Button openCurrentPath;
+    private long sectionChangedAt;
 
     public StarRailGuideScreen() {
         super(Component.translatable("screen.starrail_sim.guide"));
     }
 
+    public StarRailGuideScreen(StarRailPath path) {
+        this();
+        selectedPath = path;
+        page = Page.PATHS;
+        initialPathSelection = false;
+    }
+
     @Override
     protected void init() {
+        super.init();
         int panelWidth = StarRailUiStyle.panelWidth(width);
         int panelHeight = StarRailUiStyle.panelHeight(height);
         panelLeft = StarRailUiStyle.panelLeft(width);
@@ -81,12 +85,12 @@ public final class StarRailGuideScreen extends Screen {
         compactLayout = StarRailUiStyle.isCompact(panelWidth, panelHeight);
         contentLeft = panelLeft + (compactLayout ? 12 + 116 + 16 : 20 + 132 + 24);
         contentRight = panelRight - (compactLayout ? 12 : 20);
-        contentTop = panelTop + (compactLayout ? 92 : 70);
+        contentTop = panelTop + 100;
         pathGridTop = contentTop + 34;
         int pathColumns = 2;
         int pathColumnGap = compactLayout ? 6 : 8;
         int availableContentWidth = contentRight - contentLeft;
-        int pathSelectorWidth = Math.min(compactLayout ? 190 : 230,
+        int pathSelectorWidth = Math.min(compactLayout ? 180 : 198,
                 Math.max(150, availableContentWidth * 42 / 100));
         int pathButtonWidth = (pathSelectorWidth - pathColumnGap) / pathColumns;
         detailX = contentLeft + pathSelectorWidth + (compactLayout ? 12 : 16);
@@ -105,12 +109,13 @@ public final class StarRailGuideScreen extends Screen {
         }
 
         StarRailPath current = StarRailPathClientState.getCurrentPath();
-        if (current.isRealPath()) {
+        if (initialPathSelection && current.isRealPath()) {
             selectedPath = current;
         }
+        initialPathSelection = false;
 
         int tabGap = 6;
-        int tabWidth = Math.max(86, (panelWidth - 40 - tabGap * 3) / 4);
+        int tabWidth = (contentRight - contentLeft - tabGap * 3) / 4;
         String[] tabKeys = {
                 "screen.starrail_sim.guide_current",
                 "screen.starrail_sim.guide_paths",
@@ -119,45 +124,29 @@ public final class StarRailGuideScreen extends Screen {
         };
         for (int index = 0; index < tabButtons.length; index++) {
             int tabIndex = index;
-            tabButtons[index] = addRenderableWidget(StarRailUiStyle.button(
+            tabButtons[index] = addRenderableWidget(StarRailUiStyle.tabButton(
                             Component.translatable(tabKeys[index]),
                             ignored -> setPage(Page.values()[tabIndex]),
-                            panelLeft + 20 + index * (tabWidth + tabGap),
-                            panelTop + 28, tabWidth, 22));
+                            contentLeft + index * (tabWidth + tabGap),
+                            panelTop + 65, tabWidth, 24));
         }
 
         for (int index = 0; index < PATHS.length; index++) {
             StarRailPath path = PATHS[index];
             int column = index % pathColumns;
             int row = index / pathColumns;
-            Button button = addRenderableWidget(StarRailUiStyle.button(
-                            Component.literal(path.getDisplayName()),
-                            ignored -> selectedPath = path,
+            Button button = addRenderableWidget(StarRailUiStyle.pathCard(
+                            path,
+                            ignored -> { selectedPath = path; bodyScroll.reset(); sectionChangedAt = System.nanoTime(); },
                             contentLeft + column * (pathButtonWidth + pathColumnGap),
-                            pathGridTop + row * 30, pathButtonWidth, 22));
+                            pathGridTop + row * 43, pathButtonWidth, 36));
             pathButtons.put(path, button);
         }
 
-        int rankPageY = panelBottom - 30;
-        rankPreviousButton = addRenderableWidget(StarRailUiStyle.button(
-                Component.translatable("screen.starrail_sim.guide_previous_page"),
-                ignored -> setRankPage(rankPage - 1), panelLeft + 20, rankPageY, 100, 20));
-        rankNextButton = addRenderableWidget(StarRailUiStyle.button(
-                Component.translatable("screen.starrail_sim.guide_next_page"),
-                ignored -> setRankPage(rankPage + 1), panelLeft + 126, rankPageY, 100, 20));
-        pathPreviousButton = addRenderableWidget(StarRailUiStyle.button(
-                Component.translatable("screen.starrail_sim.guide_previous_page"),
-                ignored -> setPathDetailPage(pathDetailPage - 1), panelLeft + 20, rankPageY, 100, 20));
-        pathNextButton = addRenderableWidget(StarRailUiStyle.button(
-                Component.translatable("screen.starrail_sim.guide_next_page"),
-                ignored -> setPathDetailPage(pathDetailPage + 1), panelLeft + 126, rankPageY, 100, 20));
-        helpPreviousButton = addRenderableWidget(StarRailUiStyle.button(
-                Component.translatable("screen.starrail_sim.guide_previous_page"),
-                ignored -> setHelpPage(helpPage - 1), panelLeft + 20, rankPageY, 100, 20));
-        helpNextButton = addRenderableWidget(StarRailUiStyle.button(
-                Component.translatable("screen.starrail_sim.guide_next_page"),
-                ignored -> setHelpPage(helpPage + 1), panelLeft + 126, rankPageY, 100, 20));
-
+        openCurrentPath = addRenderableWidget(StarRailUiStyle.outlinedButton(
+                Component.translatable("ui.starrail_sim.guide.open_path"),
+                ignored -> minecraft.setScreen(new StarRailPathScreen()),
+                contentLeft, panelBottom - 65, detailX - contentLeft - 16, 24));
         StarRailNetwork.CHANNEL.sendToServer(
                 new PathActionPacket(PathActionPacket.Action.REQUEST_STATE));
         updateVisibility();
@@ -165,121 +154,135 @@ public final class StarRailGuideScreen extends Screen {
 
     private void setPage(Page nextPage) {
         page = nextPage;
+        sectionChangedAt = System.nanoTime();
+        bodyScroll.reset();
         updateVisibility();
     }
 
-    private void setRankPage(int nextPage) {
-        rankPage = Math.max(0, Math.min(1, nextPage));
-        updateVisibility();
-    }
 
-    private void setPathDetailPage(int nextPage) {
-        pathDetailPage = Math.max(0, Math.min(7, nextPage));
-        updateVisibility();
-    }
 
-    private void setHelpPage(int nextPage) {
-        helpPage = Math.max(0, Math.min(3, nextPage));
-        updateVisibility();
-    }
+
+
+
 
     private void updateVisibility() {
         boolean pathsVisible = page == Page.PATHS;
+        if (openCurrentPath != null) openCurrentPath.visible = page == Page.CURRENT;
         for (Button button : pathButtons.values()) {
             button.visible = pathsVisible;
             button.active = pathsVisible;
         }
         for (int index = 0; index < tabButtons.length; index++) {
             tabButtons[index].active = Page.values()[index] != page;
+            StarRailUiStyle.setSelected(tabButtons[index], Page.values()[index] == page);
         }
-        boolean ranksVisible = page == Page.RANKS;
-        if (rankPreviousButton != null) {
-            rankPreviousButton.visible = ranksVisible;
-            rankPreviousButton.active = ranksVisible && rankPage > 0;
-        }
-        if (rankNextButton != null) {
-            rankNextButton.visible = ranksVisible;
-            rankNextButton.active = ranksVisible && rankPage < 1;
-        }
-        if (pathPreviousButton != null) {
-            pathPreviousButton.visible = pathsVisible;
-            pathPreviousButton.active = pathsVisible && pathDetailPage > 0;
-        }
-        if (pathNextButton != null) {
-            pathNextButton.visible = pathsVisible;
-            pathNextButton.active = pathsVisible && pathDetailPage < 7;
-        }
-        boolean helpVisible = page == Page.HELP;
-        if (helpPreviousButton != null) {
-            helpPreviousButton.visible = helpVisible;
-            helpPreviousButton.active = helpVisible && helpPage > 0;
-        }
-        if (helpNextButton != null) {
-            helpNextButton.visible = helpVisible;
-            helpNextButton.active = helpVisible && helpPage < 3;
-        }
+        pathButtons.forEach((path, button) -> StarRailUiStyle.setSelected(button, path == selectedPath));
+
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+    protected void renderPage(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
         StarRailUiStyle.renderBackdrop(graphics, width, height);
         StarRailUiStyle.renderPanel(graphics, panelLeft, panelTop, panelRight, panelBottom);
-        graphics.drawCenteredString(font, title, width / 2, panelTop + 10,
-                StarRailUiStyle.VALUE_COLOR);
+        StarRailUiStyle.renderHeader(graphics, title, panelLeft, panelTop);
 
+        bodyScroll.advance();
+        if (page == Page.CURRENT) renderCurrentCard(graphics);
+        int clipLeft = page == Page.PATHS || page == Page.CURRENT ? detailX : contentLeft;
+        clip(graphics, clipLeft, contentTop, contentRight, panelBottom - 42);
+        graphics.pose().pushPose();
+        double entering = Math.min(1, (System.nanoTime() - sectionChangedAt) / 180_000_000.0);
+        graphics.pose().translate(0, -bodyScroll.position() + 5 * (1 - entering), 0);
+        bodyBottom = contentTop;
         switch (page) {
             case CURRENT -> renderCurrent(graphics);
             case PATHS -> renderPaths(graphics);
             case RANKS -> renderRanks(graphics);
             case HELP -> renderHelp(graphics);
         }
-        super.render(graphics, mouseX, mouseY, partialTick);
+        graphics.pose().popPose();
+        graphics.disableScissor();
+        bodyScroll.bounds(bodyBottom - (panelBottom - 42) + 16);
+        renderScrollBar(graphics, bodyScroll, contentRight - 2, contentTop, panelBottom - 42,
+                bodyBottom - contentTop + 16, mouseX, mouseY);
+        if (page == Page.PATHS) {
+            graphics.drawString(font, Component.translatable("guide.starrail_sim.paths.select"),
+                    contentLeft, contentTop, StarRailUiStyle.GOLD_ACCENT);
+        }
+        super.renderPage(graphics, mouseX, mouseY, partialTick);
+    }
+
+    @Override
+    protected boolean logicalMouseScrolled(double x, double y, double amount) {
+        int left = page == Page.PATHS || page == Page.CURRENT ? detailX : contentLeft;
+        if (x >= left && x <= contentRight && y >= contentTop && y < panelBottom - 42) {
+            bodyScroll.wheel(amount, 24);
+            return true;
+        }
+        return super.logicalMouseScrolled(x, y, amount);
+    }
+
+    /** Fixed identity card; it is padded and never uses article-heading underlines. */
+    private void renderCurrentCard(GuiGraphics graphics) {
+        int x = contentLeft, right = detailX - 16;
+        StarRailPath path = StarRailPathClientState.getCurrentPath();
+        Component status = path.isRealPath()
+                ? Component.translatable("guide.starrail_sim.current.path", path.getDisplayName())
+                : Component.translatable(StarRailPathClientState.isUnlocked()
+                        ? "guide.starrail_sim.current.unaligned" : "guide.starrail_sim.current.locked");
+        Component rank = Component.translatable("guide.starrail_sim.current.rank",
+                Component.translatable(StarRailPathClientState.getCurrentPathRank().getTranslationKey()));
+        Component progress = Component.translatable("guide.starrail_sim.current.practice",
+                path.getDisplayName(), StarRailPathClientState.getPracticeProgress(),
+                StarRailPathClientState.getPracticeTarget());
+        if (StarRailPathClientState.getCurrentPathRank() == StarRailPathRank.PATH_PINNACLE) {
+            progress = Component.translatable("guide.starrail_sim.current.pinnacle_practice",
+                    StarRailPathClientState.getPracticeProgress(), StarRailPathProgress.PINNACLE_PRACTICE_TARGET,
+                    StarRailPathClientState.getPinnaclePracticeCount(), StarRailPathClientState.getPinnaclePracticeMax());
+        }
+        int textWidth = right - x - 28;
+        int lines = font.split(Component.literal(StarRailUiStyle.readableText(status)), textWidth).size();
+        if (path.isRealPath()) lines += font.split(rank, textWidth).size()
+                + font.split(Component.literal(StarRailUiStyle.readableText(progress)), textWidth).size();
+        int cardHeight = 32 + lines * 14 + (path.isRealPath() ? 38 : 0);
+        graphics.fill(x, contentTop, right, contentTop + cardHeight, 0x282A3550);
+        graphics.fill(x, contentTop, x + 2, contentTop + cardHeight, StarRailUiStyle.GOLD_ACCENT);
+        int y = drawCardText(graphics, status, x + 14, contentTop + 14, textWidth, StarRailUiStyle.GOLD_ACCENT);
+        if (path.isRealPath()) {
+            y = drawCardText(graphics, rank, x + 14, y + 10, textWidth, StarRailUiStyle.VALUE_COLOR);
+            y = drawCardText(graphics, progress, x + 14, y + 10, textWidth, StarRailUiStyle.MUTED_COLOR);
+            int target = Math.max(1, StarRailPathClientState.getPracticeTarget());
+            int filled = (int) (textWidth * Math.min(1, StarRailPathClientState.getPracticeProgress() / (double) target));
+            graphics.fill(x + 14, y + 8, right - 14, y + 11, 0x40475770);
+            graphics.fill(x + 14, y + 8, x + 14 + filled, y + 11, StarRailUiStyle.GOLD_ACCENT);
+        }
+    }
+
+    private int drawCardText(GuiGraphics graphics, Component text, int x, int y, int width, int color) {
+        for (FormattedCharSequence line : font.split(Component.literal(StarRailUiStyle.readableText(text)), width)) {
+            graphics.drawString(font, line, x, y, color);
+            y += 14;
+        }
+        return y;
     }
 
     private void renderCurrent(GuiGraphics graphics) {
-        int x = contentLeft;
+        int x = detailX;
         int y = contentTop;
-        int textWidth = contentRight - contentLeft;
+        int textWidth = contentRight - detailX - 10;
         StarRailPath path = StarRailPathClientState.getCurrentPath();
         if (!path.isRealPath()) {
-            drawLine(graphics, Component.translatable(
-                    StarRailPathClientState.isUnlocked()
-                            ? "guide.starrail_sim.current.unaligned"
-                            : "guide.starrail_sim.current.locked"), x, y);
-            drawWrapped(graphics, Component.translatable("guide.starrail_sim.current.hint"),
-                    x, y + 30, textWidth, StarRailUiStyle.MUTED_COLOR);
+            drawLine(graphics, Component.translatable("guide.starrail_sim.current.next"), x, y);
+            drawGuideBody(graphics, Component.translatable("guide.starrail_sim.current.hint"),
+                    x + 8, y + 25, textWidth - 8, StarRailUiStyle.MUTED_COLOR);
             return;
         }
-
-        drawLine(graphics, Component.translatable("guide.starrail_sim.current.path",
-                path.getDisplayName()), x, y);
-        drawLine(graphics, Component.translatable("guide.starrail_sim.current.rank",
-                Component.translatable(StarRailPathClientState.getCurrentPathRank()
-                        .getTranslationKey())), x, y + 24);
-        if (StarRailPathClientState.getCurrentPathRank() == StarRailPathRank.PATH_PINNACLE) {
-            drawLine(graphics, Component.translatable(
-                    "guide.starrail_sim.current.pinnacle_practice",
-                    StarRailPathClientState.getPracticeProgress(),
-                    StarRailPathProgress.PINNACLE_PRACTICE_TARGET,
-                    StarRailPathClientState.getPinnaclePracticeCount(),
-                    StarRailPathClientState.getPinnaclePracticeMax()), x, y + 48);
-        } else {
-            drawLine(graphics, Component.translatable("guide.starrail_sim.current.practice",
-                    path.getDisplayName(), StarRailPathClientState.getPracticeProgress(),
-                    StarRailPathClientState.getPracticeTarget()), x, y + 48);
-        }
-
-        int detailY = y + 82;
+        int detailY = contentTop;
         int nextY = detailY;
-        drawLine(graphics, Component.translatable("guide.starrail_sim.current.core"), x, nextY);
-        nextY += 20;
-        nextY = drawWrapped(graphics, Component.translatable(coreKey(path)), x + 8, nextY,
-                textWidth - 16, StarRailUiStyle.MUTED_COLOR) + 8;
-        drawLine(graphics, Component.translatable("guide.starrail_sim.current.effect"), x,
-                nextY);
-        nextY += 20;
-        nextY = drawWrapped(graphics, Component.translatable(effectKey(path)), x + 8, nextY,
-                textWidth - 16, StarRailUiStyle.MUTED_COLOR) + 8;
+        nextY = drawArticle(graphics, Component.translatable("guide.starrail_sim.current.core"),
+                Component.translatable(coreKey(path)), x, nextY, textWidth) + 12;
+        nextY = drawArticle(graphics, Component.translatable("guide.starrail_sim.current.effect"),
+                currentRankEffect(path), x, nextY, textWidth) + 12;
 
         if (StarRailPathClientState.getTrialPath().isRealPath()) {
             drawLine(graphics, Component.translatable("guide.starrail_sim.current.trial",
@@ -305,80 +308,64 @@ public final class StarRailGuideScreen extends Screen {
         }
     }
 
+    private Component currentRankEffect(StarRailPath path) {
+        String[] rows = StarRailUiStyle.readableText(Component.translatable(effectKey(path))).split("\n");
+        int rank = StarRailPathClientState.getCurrentPathRank().getLevel();
+        for (String row : rows) {
+            if (row.startsWith(rank + "级：") || row.startsWith("R" + rank + ":")) {
+                return Component.literal(rows[0] + "\n" + row);
+            }
+        }
+        return Component.translatable(effectKey(path));
+    }
+
     private void renderPaths(GuiGraphics graphics) {
         int y = contentTop;
-        drawLine(graphics, Component.translatable("guide.starrail_sim.paths.select"),
-                contentLeft, y);
-        drawLine(graphics, Component.translatable("guide.starrail_sim.path.title",
-                selectedPath.getDisplayName()), detailX, y);
-        int detailY = y + 28;
-        int detailWidth = contentRight - detailX - 4;
-        switch (pathDetailPage) {
-            case 0 -> renderPathSection(graphics, "guide.starrail_sim.path.core",
-                    coreKey(selectedPath), detailX, detailY, detailWidth,
-                    StarRailUiStyle.MUTED_COLOR);
-            case 1 -> renderPathSection(graphics, "guide.starrail_sim.path.goals",
-                    goalKey(selectedPath), detailX, detailY, detailWidth,
-                    StarRailUiStyle.VALUE_COLOR);
-            case 2 -> renderPathSection(graphics, "guide.starrail_sim.path.practice",
-                    practiceKey(selectedPath), detailX, detailY, detailWidth,
-                    StarRailUiStyle.MUTED_COLOR);
-            case 3 -> renderPathMechanics(graphics, detailX, detailY, detailWidth, false);
-            case 4 -> renderPathMechanics(graphics, detailX, detailY, detailWidth, true);
-            case 5 -> renderPathSection(graphics, "guide.starrail_sim.path.effects",
-                    effectKey(selectedPath), detailX, detailY, detailWidth,
-                    StarRailUiStyle.VALUE_COLOR);
-            case 6 -> renderPathSection(graphics, "guide.starrail_sim.path.upgrade",
-                    "guide.starrail_sim.path.rank_rule", detailX, detailY, detailWidth,
-                    StarRailUiStyle.MUTED_COLOR);
-            case 7 -> renderPathSection(graphics, "guide.starrail_sim.path.tips",
-                    tipsKey(selectedPath), detailX, detailY, detailWidth,
-                    StarRailUiStyle.VALUE_COLOR);
-            default -> { }
-        }
-        drawLine(graphics, Component.translatable("screen.starrail_sim.guide_page",
-                pathDetailPage + 1, 8), contentRight - 80, panelBottom - 30);
-    }
-
-    private void renderPathMechanics(GuiGraphics graphics, int x, int y, int width,
-                                     boolean advanced) {
-        String titleKey = advanced
-                ? "guide.starrail_sim.path.mechanics_advanced"
-                : "guide.starrail_sim.path.mechanics_intro";
-        drawLine(graphics, Component.translatable(titleKey), x, y);
-        String text = Component.translatable(mechanicsKey(selectedPath)).getString()
-                .replace("\\n", "\n");
-        String[] paragraphs = text.split("\n", -1);
-        int splitAt = Math.max(1, (paragraphs.length + 1) / 2);
-        int start = advanced ? splitAt : 0;
-        int end = advanced ? paragraphs.length : splitAt;
-        StringBuilder pageText = new StringBuilder();
-        for (int index = start; index < end; index++) {
-            if (pageText.length() > 0) {
-                pageText.append('\n');
+        int textWidth = contentRight - detailX - 10;
+        drawLine(graphics, Component.translatable("guide.starrail_sim.path.title", selectedPath.getDisplayName()), detailX, y);
+        y += 28;
+        String[][] sections = {
+                {"guide.starrail_sim.path.core", coreKey(selectedPath)},
+                {"guide.starrail_sim.path.goals", goalKey(selectedPath)},
+                {"guide.starrail_sim.path.practice", practiceKey(selectedPath)},
+                {"guide.starrail_sim.path.mechanics_intro", mechanicsKey(selectedPath)},
+                {"guide.starrail_sim.path.effects", effectKey(selectedPath)},
+                {"guide.starrail_sim.path.upgrade", "guide.starrail_sim.path.rank_rule"},
+                {"guide.starrail_sim.path.tips", tipsKey(selectedPath)}
+        };
+        for (String[] section : sections) {
+            Component heading = Component.translatable(section[0]);
+            if (section[0].equals("guide.starrail_sim.path.goals")) {
+                heading = Component.translatable("ui.starrail_sim.guide.initial_trial",
+                        StarRailPathRules.trialTimeLimit(selectedPath, StarRailPathRank.UNALIGNED) / 20);
             }
-            pageText.append(paragraphs[index]);
+            y = drawArticle(graphics, heading, Component.translatable(section[1]),
+                    detailX, y, textWidth) + 14;
         }
-        graphics.enableScissor(x, y + 24, x + width, panelBottom - 42);
-        drawGuideBody(graphics, Component.literal(pageText.toString()), x + 8, y + 28,
-                width - 16, StarRailUiStyle.MUTED_COLOR);
-        graphics.disableScissor();
     }
 
-    private void renderPathSection(GuiGraphics graphics, String titleKey, String bodyKey,
-            int x, int y, int width, int color) {
-        drawLine(graphics, Component.translatable(titleKey), x, y);
-        graphics.enableScissor(x, y + 24, x + width, panelBottom - 42);
-        drawGuideBody(graphics, Component.translatable(bodyKey), x + 8, y + 28,
-                width - 16, color);
-        graphics.disableScissor();
+    private int drawArticle(GuiGraphics graphics, Component heading, Component body, int x, int y, int width) {
+        String[] paragraphs = StarRailUiStyle.readableText(body).split("\n", -1);
+        int bodyHeight = 0;
+        for (String paragraph : paragraphs) {
+            bodyHeight += paragraph.isBlank() ? 6
+                    : font.split(Component.literal(paragraph), width - 24).size() * 12 + 4;
+        }
+        int bottom = y + 35 + bodyHeight;
+        graphics.fill(x, y, x + width, bottom, 0x18263046);
+        graphics.fill(x, y, x + 2, bottom, 0x505C778F);
+        graphics.drawString(font, heading, x + 12, y + 10, StarRailUiStyle.GOLD_ACCENT);
+        graphics.fill(x + 12, y + 25, x + width - 12, y + 26, 0x3098A8C5);
+        drawGuideBody(graphics, body, x + 12, y + 35, width - 24, StarRailUiStyle.MUTED_COLOR);
+        bodyBottom = Math.max(bodyBottom, bottom);
+        return Math.max(bottom, bodyBottom) + 4;
     }
 
     /** Keeps intentional guide paragraphs visually distinct while wrapping them. */
     private int drawGuideBody(GuiGraphics graphics, Component text, int x, int y,
                               int maxWidth, int color) {
         int lineY = y;
-        String bodyText = text.getString().replace("\\n", "\n");
+        String bodyText = StarRailUiStyle.readableText(text);
         String[] paragraphs = bodyText.split("\n", -1);
         for (String paragraph : paragraphs) {
             if (paragraph.isBlank()) {
@@ -392,119 +379,83 @@ public final class StarRailGuideScreen extends Screen {
     }
 
     private void renderRanks(GuiGraphics graphics) {
-        int x = contentLeft;
-        int y = contentTop;
-        int textWidth = contentRight - contentLeft;
-        drawWrapped(graphics, Component.translatable("guide.starrail_sim.ranks.intro"),
-                x, y, textWidth, StarRailUiStyle.MUTED_COLOR);
-        int rowY = y + 34;
-        if (rankPage == 0) {
-            StarRailPath currentPath = StarRailPathClientState.getCurrentPath();
-            if (currentPath.isRealPath()) {
-                drawLine(graphics, Component.translatable(
-                        "guide.starrail_sim.ranks.current_path", currentPath.getDisplayName()),
-                        x, rowY);
-                rowY += 20;
-                rowY = drawWrapped(graphics, Component.translatable(
-                                "guide.starrail_sim.ranks.practice_method",
-                                Component.translatable(practiceKey(currentPath))),
-                        x + 8, rowY, textWidth - 16,
-                        StarRailUiStyle.VALUE_COLOR) + 10;
-            } else {
-                rowY = drawWrapped(graphics, Component.translatable(
-                                "guide.starrail_sim.ranks.unaligned"),
-                        x, rowY, textWidth,
-                        StarRailUiStyle.MUTED_COLOR) + 10;
-            }
+        int x = contentLeft, textWidth = contentRight - contentLeft - 10;
+        int y = drawGuideBody(graphics, Component.translatable("guide.starrail_sim.ranks.intro"),
+                x, contentTop, textWidth, StarRailUiStyle.MUTED_COLOR) + 18;
+        StarRailPath current = StarRailPathClientState.getCurrentPath();
+        if (current.isRealPath()) {
+            y = drawGuideBody(graphics, Component.translatable("guide.starrail_sim.ranks.practice_method",
+                    Component.translatable(practiceKey(current))), x, y, textWidth, StarRailUiStyle.MUTED_COLOR) + 18;
         }
-        StarRailPathRank currentRank = StarRailPathClientState.getCurrentPathRank();
-        int start = rankPage == 0 ? 0 : 4;
-        int end = rankPage == 0 ? 4 : RANKS.length;
-        for (int index = start; index < end; index++) {
-            StarRailPathRank rank = RANKS[index];
-            int target = practiceTarget(rank);
-            Component targetText = rank == StarRailPathRank.PATH_PINNACLE
-                    ? Component.translatable("guide.starrail_sim.ranks.pinnacle",
-                    StarRailPathProgress.PINNACLE_PRACTICE_TARGET,
-                    StarRailPathProgress.MAX_PINNACLE_PRACTICE_COUNT)
-                    : target > 0
-                    ? Component.translatable("guide.starrail_sim.ranks.practice", target)
-                    : Component.translatable("guide.starrail_sim.ranks.max");
-            int color = rank == currentRank
-                    ? StarRailUiStyle.VALUE_COLOR : StarRailUiStyle.MUTED_COLOR;
-            graphics.drawString(font, Component.literal(rank.getLevel() + ". ")
-                    .append(Component.translatable(rank.getTranslationKey()))
-                    .append("  ").append(targetText), x, rowY, color);
-            rowY += 25;
-        }
-        if (rankPage == 1) {
-            drawWrapped(graphics, Component.translatable("guide.starrail_sim.ranks.trials"),
-                    x, rowY + 4, textWidth,
+        int rankWidth = textWidth * 28 / 100;
+        int targetWidth = textWidth * 23 / 100;
+        int actionWidth = textWidth - rankWidth - targetWidth;
+        graphics.fill(x, y - 5, x + textWidth, y + 18, 0x303F4966);
+        graphics.drawString(font, Component.translatable("ui.starrail_sim.guide.rank_column"), x + 7, y,
+                StarRailUiStyle.GOLD_ACCENT);
+        graphics.drawString(font, Component.translatable("ui.starrail_sim.guide.target_column"), x + rankWidth + 7, y,
+                StarRailUiStyle.GOLD_ACCENT);
+        graphics.drawString(font, Component.translatable("ui.starrail_sim.guide.advance_column"),
+                x + rankWidth + targetWidth + 7, y, StarRailUiStyle.GOLD_ACCENT);
+        y += 26;
+        for (StarRailPathRank rank : RANKS) {
+            boolean pinnacle = rank == StarRailPathRank.PATH_PINNACLE;
+            Component name = Component.literal(rank.getLevel() + " · ")
+                    .append(Component.translatable(rank.getTranslationKey()));
+            Component target = Component.translatable(pinnacle
+                    ? "ui.starrail_sim.guide.pinnacle_target" : "ui.starrail_sim.guide.rank_target",
+                    StarRailPathProgress.targetFor(rank));
+            Component action = Component.translatable("ui.starrail_sim.guide." +
+                    (rank.getLevel() == 1 ? "direct_advance" : pinnacle ? "pinnacle_reward" : "trial_advance"));
+            int rowHeight = 10 + 12 * Math.max(font.split(name, rankWidth - 14).size(),
+                    Math.max(font.split(target, targetWidth - 14).size(), font.split(action, actionWidth - 14).size()));
+            graphics.fill(x, y - 4, x + textWidth, y + rowHeight - 4,
+                    rank.getLevel() % 2 == 1 ? 0x222A3550 : 0x122A3550);
+            drawWrapped(graphics, name, x + 7, y, rankWidth - 14, StarRailUiStyle.VALUE_COLOR);
+            drawWrapped(graphics, target, x + rankWidth + 7, y, targetWidth - 14, StarRailUiStyle.CYAN_ACCENT);
+            drawWrapped(graphics, action, x + rankWidth + targetWidth + 7, y, actionWidth - 14,
                     StarRailUiStyle.MUTED_COLOR);
+            y += rowHeight;
         }
-        drawLine(graphics, Component.translatable("screen.starrail_sim.guide_page",
-                rankPage + 1, 2), contentRight - 80, panelBottom - 30);
+        drawLine(graphics, Component.translatable("ui.starrail_sim.guide.trial_heading"), x, y + 18);
+        drawGuideBody(graphics, Component.translatable("guide.starrail_sim.ranks.trials"),
+                x, y + 44, textWidth, StarRailUiStyle.MUTED_COLOR);
     }
 
     private void renderHelp(GuiGraphics graphics) {
-        int x = contentLeft;
-        int y = contentTop;
-        int textWidth = contentRight - contentLeft;
-        String pageTitle = switch (helpPage) {
-            case 1 -> "guide.starrail_sim.help.combat_title";
-            case 2 -> "guide.starrail_sim.help.combat_title";
-            case 3 -> "guide.starrail_sim.help.interface_title";
-            default -> "guide.starrail_sim.help.title";
+        String[][] groups = {
+                {"title", "open_current", "path", "practice", "trial", "progress", "rollback"},
+                {"combat_title", "damage", "toughness", "break", "effect_hit", "effect_resistance", "knockback_resistance"},
+                {"interface_title", "attributes", "practice_detail", "path_switch", "notifications", "light_cone"}
         };
-        String[] keys = switch (helpPage) {
-            case 1 -> new String[] {
-                    "guide.starrail_sim.help.damage",
-                    "guide.starrail_sim.help.toughness",
-                    "guide.starrail_sim.help.break"
-            };
-            case 2 -> new String[] {
-                    "guide.starrail_sim.help.effect_hit",
-                    "guide.starrail_sim.help.effect_resistance",
-                    "guide.starrail_sim.help.knockback_resistance"
-            };
-            case 3 -> new String[] {
-                    "guide.starrail_sim.help.attributes",
-                    "guide.starrail_sim.help.practice_detail",
-                    "guide.starrail_sim.help.path_switch",
-                    "guide.starrail_sim.help.notifications",
-                    "guide.starrail_sim.help.light_cone"
-            };
-            default -> new String[] {
-                    "guide.starrail_sim.help.open_current",
-                    "guide.starrail_sim.help.path",
-                    "guide.starrail_sim.help.practice",
-                    "guide.starrail_sim.help.trial",
-                    "guide.starrail_sim.help.progress",
-                    "guide.starrail_sim.help.rollback"
-            };
-        };
-        drawLine(graphics, Component.translatable(pageTitle), x, y);
-        int lineY = y + 32;
-        for (String key : keys) {
-            lineY = drawWrapped(graphics, Component.translatable(key), x, lineY,
-                    textWidth, StarRailUiStyle.MUTED_COLOR);
-            lineY += 10;
+        int y = contentTop, textWidth = contentRight - contentLeft - 10;
+        for (String[] group : groups) {
+            drawLine(graphics, Component.translatable("guide.starrail_sim.help." + group[0]), contentLeft, y);
+            y += 24;
+            for (int i = 1; i < group.length; i++) {
+                y = drawGuideBody(graphics, Component.translatable("guide.starrail_sim.help." + group[i]),
+                        contentLeft, y, textWidth, StarRailUiStyle.MUTED_COLOR) + 12;
+            }
+            y += 14;
         }
-        drawLine(graphics, Component.translatable("screen.starrail_sim.guide_page",
-                helpPage + 1, 4), contentRight - 80, panelBottom - 30);
     }
 
     private void drawLine(GuiGraphics graphics, Component text, int x, int y) {
-        graphics.drawString(font, text, x, y, StarRailUiStyle.VALUE_COLOR);
+        bodyBottom = Math.max(bodyBottom, y + 12);
+        graphics.drawString(font, Component.literal(StarRailUiStyle.readableText(text)), x, y,
+                StarRailUiStyle.GOLD_ACCENT);
+        graphics.fill(x, y + 15, contentRight - 10, y + 16, 0x30A3B1CB);
+        bodyBottom = Math.max(bodyBottom, y + 20);
     }
 
     private int drawWrapped(GuiGraphics graphics, Component text, int x, int y,
                             int maxWidth, int color) {
         int lineY = y;
-        for (FormattedCharSequence line : font.split(text, Math.max(80, maxWidth))) {
+        for (FormattedCharSequence line : font.split(StarRailUiStyle.emphasizeNumbers(text), Math.max(24, maxWidth))) {
             graphics.drawString(font, line, x, lineY, color);
             lineY += 12;
         }
+        bodyBottom = Math.max(bodyBottom, lineY);
         return lineY;
     }
 

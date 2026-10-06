@@ -1,4 +1,15 @@
 {
+  "ui.starrail_sim.nav.details": "Details",
+  "ui.starrail_sim.nav.light_cone": "Light Cone",
+  "ui.starrail_sim.nav.traces": "Traces",
+  "ui.starrail_sim.nav.relics": "Relics",
+  "ui.starrail_sim.nav.paths": "Path",
+  "ui.starrail_sim.nav.guide": "Guide",
+  "ui.starrail_sim.path.seek_tab": "Ruin Seeking",
+  "ui.starrail_sim.path.browsing": "Browsing rank information; this does not rank up or start a trial.",
+  "ui.starrail_sim.cone.preview": "Front view",
+  "ui.starrail_sim.ui.close": "Back",
+
   "starrail_sim.path.remembrance.attack_damage": "Remembrance Attack Damage",
   "starrail_sim.path.remembrance.crit_damage": "Remembrance Critical Damage",
   "message.starrail_sim.remembrance_eternal_echo": "Remembrance: Eternal Echo!",
@@ -1957,4 +1968,35 @@
   ,"screen.starrail_sim.sought_ruin_hint": "Use the matching Trial Token from its chest; finish this clue before seeking again."
   ,"screen.starrail_sim.confirm_seek": "Confirm Path Search"
   ,"screen.starrail_sim.path_seek_selected": "%s selected. Click Confirm Path Search to place the ruin."
+  ,"ui.starrail_sim.path.current_path": "Current Path"
+  ,"ui.starrail_sim.path.current_stage": "Current Stage"
+  ,"ui.starrail_sim.path.stage_preview": "Stage Preview"
+  ,"ui.starrail_sim.path.first_stage": "Practice target: %s. Reaching it advances directly to Rank 2 without a trial."
+  ,"ui.starrail_sim.path.next_stage": "Practice target: %s. Reaching it starts the next rank breakthrough trial."
+  ,"ui.starrail_sim.path.pinnacle_stage": "Maximum rank. Every %s practice grants an additional +5%% attack damage, up to ten times (+50%%)."
+  ,"ui.starrail_sim.path.next_trial": "Next rank: %s. Trial limit: %s seconds; objective targets: %s and %s. Complete both to advance."
+  ,"ui.starrail_sim.path.pinnacle_count": "Pinnacle practice completions: %s / %s"
+  ,"ui.starrail_sim.path.bonuses": "Cumulative Bonuses at This Rank"
+  ,"ui.starrail_sim.path.cumulative_note": "These are cumulative bonuses, not bonuses added at every promotion. Adjacent ranks may share values."
+  ,"ui.starrail_sim.path.practice": "Practice"
+  ,"ui.starrail_sim.path.mechanics": "Path Mechanics · Rank Unlocks"
+  ,"ui.starrail_sim.path.selection_note": "Rank and practice are saved separately for each path. Only one path is active at a time. Select a rank to view its stage."
+  ,"ui.starrail_sim.path.open_guide": "View Path Guide →"
+  ,"ui.starrail_sim.guide.rank_column": "Rank"
+  ,"ui.starrail_sim.guide.target_column": "Practice Target"
+  ,"ui.starrail_sim.guide.advance_column": "On Completion"
+  ,"ui.starrail_sim.guide.rank_target": "%s points"
+  ,"ui.starrail_sim.guide.pinnacle_target": "Every %s points"
+  ,"ui.starrail_sim.guide.direct_advance": "Advance directly to Rank 2"
+  ,"ui.starrail_sim.guide.trial_advance": "Start next rank trial"
+  ,"ui.starrail_sim.guide.pinnacle_reward": "Attack damage +5%, up to ten times"
+  ,"ui.starrail_sim.guide.trial_heading": "Breakthrough Trials and Retries"
+  ,"ui.starrail_sim.guide.open_path": "Open Path Page →"
+  ,"ui.starrail_sim.attributes.basic": "Basic Attributes"
+  ,"ui.starrail_sim.attributes.advanced": "Advanced Attributes"
+  ,"ui.starrail_sim.attributes.help": "Click an attribute row or question mark to view its base value, bonus and final value."
+  ,"ui.starrail_sim.attributes.breakdown": "%s: base %s; bonus %s; final %s."
+  ,"ui.starrail_sim.attributes.health": "Current health %s / %s."
+  ,"ui.starrail_sim.path.current_marker": "Current"
+  ,"ui.starrail_sim.guide.initial_trial": "Initial Trial · %s seconds"
 }

@@ -82,15 +82,12 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.Locale;
+import com.mojang.math.Axis;
 
 /** Read-only light cone page connected to the character navigation. */
-public final class StarRailLightConeScreen extends Screen {
-    private static final int PAGE_COUNT = 2;
+public final class StarRailLightConeScreen extends StarRailStyledScreen {
     private final Button[] navigationButtons = new Button[
             StarRailUiStyle.CHARACTER_NAVIGATION_KEYS.length];
-    private Button previousPageButton;
-    private Button nextPageButton;
-    private int page;
     private int panelLeft;
     private int panelTop;
     private int panelRight;
@@ -101,6 +98,12 @@ public final class StarRailLightConeScreen extends Screen {
     private int centerRight;
     private int rightLeft;
     private boolean compactLayout;
+    private float coneAngle;
+    private float coneTargetAngle;
+    private long coneFrame;
+    private boolean draggingCone;
+    private final StarRailSmoothScroll detailsScroll = new StarRailSmoothScroll();
+    private int detailsBottom;
 
     public StarRailLightConeScreen() {
         super(Component.translatable("screen.starrail_sim.character_light_cone"));
@@ -108,6 +111,7 @@ public final class StarRailLightConeScreen extends Screen {
 
     @Override
     protected void init() {
+        super.init();
         int panelWidth = StarRailUiStyle.panelWidth(width);
         int panelHeight = StarRailUiStyle.panelHeight(height);
         panelLeft = StarRailUiStyle.panelLeft(width);
@@ -115,14 +119,13 @@ public final class StarRailLightConeScreen extends Screen {
         panelRight = panelLeft + panelWidth;
         panelBottom = panelTop + panelHeight;
         compactLayout = StarRailUiStyle.isCompact(panelWidth, panelHeight);
+        draggingCone = false;
         contentLeft = panelLeft + (compactLayout ? 12 + 116 + 16 : 20 + 132 + 24);
         contentRight = panelRight - (compactLayout ? 12 : 20);
         contentTop = panelTop + (compactLayout ? 92 : 74);
 
         int contentWidth = contentRight - contentLeft;
-        int minimumRightWidth = compactLayout ? 185 : 245;
-        rightLeft = Math.min(contentLeft + Math.max(compactLayout ? 195 : 250,
-                        contentWidth * 5 / 9), contentRight - minimumRightWidth);
+        rightLeft = contentRight - Math.min(245, Math.max(200, contentWidth * 33 / 100));
         centerRight = rightLeft - (compactLayout ? 12 : 18);
 
         Button[] createdNavigation = StarRailUiStyle.createCharacterNavigation(
@@ -140,77 +143,116 @@ public final class StarRailLightConeScreen extends Screen {
         }
 
         int pageY = panelBottom - (compactLayout ? 25 : 30);
-        previousPageButton = addRenderableWidget(StarRailUiStyle.button(
-                Component.translatable("screen.starrail_sim.guide_previous_page"),
-                ignored -> setPage(page - 1), contentLeft, pageY, compactLayout ? 92 : 105,
-                compactLayout ? 20 : 22));
-        nextPageButton = addRenderableWidget(StarRailUiStyle.button(
-                Component.translatable("screen.starrail_sim.guide_next_page"),
-                ignored -> setPage(page + 1), contentLeft + (compactLayout ? 98 : 111), pageY,
-                compactLayout ? 92 : 105, compactLayout ? 20 : 22));
-        updatePageButtons();
+        addRenderableWidget(StarRailUiStyle.outlinedButton(
+                Component.translatable("ui.starrail_sim.cone.preview"),
+                ignored -> minecraft.setScreen(new FrontView(this,
+                        StarRailLightConeClientData.findEquipped(minecraft.player).copy())),
+                centerRight - 88, pageY, 88, 22));
     }
 
-    private void setPage(int nextPage) {
-        page = Math.max(0, Math.min(PAGE_COUNT - 1, nextPage));
-        updatePageButtons();
+    private static final class FrontView extends StarRailModalScreen {
+        private final ItemStack stack;
+
+        private FrontView(StarRailLightConeScreen parent, ItemStack stack) {
+            super(stack.isEmpty() ? Component.translatable("ui.starrail_sim.cone.preview") : stack.getHoverName(), parent);
+            this.stack = stack;
+        }
+
+        @Override protected int preferredWidth() { return 400; }
+        @Override protected int preferredHeight() { return 390; }
+
+        @Override
+        protected void renderModal(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+            float h = Math.min(modalBottom - bodyTop - 26, (modalRight - modalLeft - 60) / .75F);
+            StarRailLightConeDisplay.draw(graphics, stack, (modalLeft + modalRight) / 2F,
+                    (bodyTop + modalBottom) / 2F, h, 0, true);
+        }
     }
 
-    private void updatePageButtons() {
-        if (previousPageButton != null) {
-            previousPageButton.active = page > 0;
-        }
-        if (nextPageButton != null) {
-            nextPageButton.active = page < PAGE_COUNT - 1;
-        }
-    }
+
+
+
+
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+    protected void renderPage(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
         StarRailUiStyle.renderBackdrop(graphics, width, height);
         StarRailUiStyle.renderPanel(graphics, panelLeft, panelTop, panelRight, panelBottom);
-        graphics.drawString(font, title, panelLeft + 24, panelTop + 10,
-                StarRailUiStyle.VALUE_COLOR);
-        graphics.fill(contentLeft - 12, panelTop + 52, contentRight,
-                panelTop + 53, StarRailUiStyle.DIVIDER_COLOR);
+        StarRailUiStyle.renderHeader(graphics, title, panelLeft, panelTop);
 
         Player player = Minecraft.getInstance().player;
         ItemStack stack = StarRailLightConeClientData.findEquipped(player);
+        detailsScroll.advance();
+        long now = System.nanoTime();
+        double dt = coneFrame == 0 ? 0 : Math.min(.1, (now - coneFrame) / 1_000_000_000.0);
+        coneFrame = now;
+        coneAngle += (coneTargetAngle - coneAngle) * (float) (1 - Math.exp(-dt / .035));
+        if (Math.abs(coneTargetAngle - coneAngle) < .01F) coneAngle = coneTargetAngle;
         renderCenter(graphics, stack);
+        clip(graphics, rightLeft, contentTop, contentRight, panelBottom - 42);
+        graphics.pose().pushPose();
+        graphics.pose().translate(0, -detailsScroll.position(), 0);
+        detailsBottom = contentTop;
         renderDetails(graphics, player, stack);
-        graphics.drawCenteredString(font,
-                Component.translatable("screen.starrail_sim.light_cone_page", page + 1,
-                        PAGE_COUNT), (contentLeft + contentRight) / 2,
-                panelBottom - (compactLayout ? 20 : 23), StarRailUiStyle.MUTED_COLOR);
+        graphics.pose().popPose();
+        graphics.disableScissor();
+        int visibleHeight = panelBottom - 42 - contentTop;
+        detailsScroll.bounds(detailsBottom - contentTop - visibleHeight + 14);
+        renderScrollBar(graphics, detailsScroll, contentRight - 2, contentTop, panelBottom - 42,
+                detailsBottom - contentTop + 14, mouseX, mouseY);
 
-        super.render(graphics, mouseX, mouseY, partialTick);
+
+        super.renderPage(graphics, mouseX, mouseY, partialTick);
     }
 
     private void renderCenter(GuiGraphics graphics, ItemStack stack) {
-        int bottom = panelBottom - (compactLayout ? 33 : 40);
-        graphics.fill(contentLeft, contentTop, centerRight, bottom,
-                StarRailUiStyle.PANEL_INNER);
-        int centerX = (contentLeft + centerRight) / 2;
+        int bottom = panelBottom - 42;
+        int centerX = (contentLeft + centerRight) / 2 - 24;
         if (stack.isEmpty()) {
-            graphics.drawCenteredString(font,
-                    Component.translatable("screen.starrail_sim.light_cone_empty"),
-                    centerX, contentTop + (bottom - contentTop) / 2 - 6,
-                    StarRailUiStyle.VALUE_COLOR);
+            graphics.drawCenteredString(font, Component.translatable("screen.starrail_sim.light_cone_empty"),
+                    centerX, (contentTop + bottom) / 2, StarRailUiStyle.VALUE_COLOR);
             return;
         }
+        float cardHeight = Math.min(bottom - contentTop - 42, (centerRight - contentLeft - 48) / .85F);
+        float centerY = (contentTop + bottom) / 2F - 8;
+        StarRailCosmicUi.prism(graphics, centerX + (int) (cardHeight * .5 * Math.sin(Math.toRadians(8))),
+                (int) (centerY + cardHeight * .5 * Math.cos(Math.toRadians(8))),
+                Math.max(70, (centerRight - contentLeft) / 2), coneAngle);
+        StarRailLightConeDisplay.draw(graphics, stack, centerX, centerY, cardHeight, coneAngle, false);
+    }
 
-        // The light cone is the visual focus of this page.  The item renderer
-        // keeps transparent margins from the card texture, so it needs a much
-        // larger GUI scale than a normal inventory slot to fill the preview.
-        float itemScale = compactLayout ? 12.0F : 16.0F;
-        int itemY = contentTop + (bottom - contentTop) / 2
-                - (int) (8.0F * itemScale)
-                - (compactLayout ? 20 : 30);
-        graphics.pose().pushPose();
-        graphics.pose().translate(centerX - 8.0F * itemScale, itemY, 0.0F);
-        graphics.pose().scale(itemScale, itemScale, 1.0F);
-        graphics.renderItem(stack, 0, 0);
-        graphics.pose().popPose();
+    @Override
+    protected boolean logicalMouseClicked(double x, double y, int button) {
+        if (button == 0 && x >= contentLeft && x < centerRight && y >= contentTop
+                && y < panelBottom - 40) {
+            draggingCone = true;
+            return true;
+        }
+        return super.logicalMouseClicked(x, y, button);
+    }
+
+    @Override
+    protected boolean logicalMouseDragged(double x, double y, int button, double dx, double dy) {
+        if (draggingCone && button == 0) {
+            coneTargetAngle = (float) Math.max(-30, Math.min(30, coneTargetAngle + dx * .3));
+            return true;
+        }
+        return super.logicalMouseDragged(x, y, button, dx, dy);
+    }
+
+    @Override
+    protected boolean logicalMouseReleased(double x, double y, int button) {
+        if (button == 0 && draggingCone) { draggingCone = false; return true; }
+        return super.logicalMouseReleased(x, y, button);
+    }
+
+    @Override
+    protected boolean logicalMouseScrolled(double x, double y, double amount) {
+        if (x >= rightLeft && x <= contentRight && y >= contentTop && y < panelBottom - 40) {
+            detailsScroll.wheel(amount, 24);
+            return true;
+        }
+        return super.logicalMouseScrolled(x, y, amount);
     }
 
     private void renderDetails(GuiGraphics graphics, Player player, ItemStack stack) {
@@ -228,8 +270,7 @@ public final class StarRailLightConeScreen extends Screen {
             return;
         }
 
-        graphics.drawString(font, stack.getHoverName(), x, y, StarRailUiStyle.VALUE_COLOR);
-        y += 18;
+        y = drawWrapped(graphics, stack.getHoverName(), x, y, width - 8, StarRailUiStyle.VALUE_COLOR) + 10;
         boolean destructionLightCone = isDestructionLightCone(stack);
         boolean eruditionLightCone = isEruditionLightCone(stack);
         boolean nihilityLightCone = isNihilityLightCone(stack);
@@ -278,7 +319,6 @@ public final class StarRailLightConeScreen extends Screen {
                 width);
         y += 28;
 
-        if (page == 0) {
             graphics.drawString(font,
                     Component.translatable("screen.starrail_sim.light_cone_basic"), x, y,
                     StarRailUiStyle.CYAN_ACCENT);
@@ -337,9 +377,9 @@ public final class StarRailLightConeScreen extends Screen {
                             ? "screen.starrail_sim.light_cone_remembrance_inactive"
                             : "screen.starrail_sim.light_cone_inactive")), x, y,
                     active ? StarRailUiStyle.GOLD_ACCENT : StarRailUiStyle.MUTED_COLOR);
-        } else {
-            renderSpecialEffect(graphics, player, stack, x, y, width);
-        }
+        detailsBottom = Math.max(detailsBottom, y + 12);
+        y += 28;
+        renderSpecialEffect(graphics, player, stack, x, y, width);
     }
 
     private void renderSpecialEffect(GuiGraphics graphics, Player player, ItemStack stack,
@@ -2774,9 +2814,10 @@ public final class StarRailLightConeScreen extends Screen {
 
     private int drawDetailLine(GuiGraphics graphics, String key, Component value, int x,
                                int y, int width) {
+        graphics.fill(x, y - 3, x + width - 4, y + 13, 0x1A35415E);
         Component label = Component.translatable(key);
-        graphics.drawString(font, label, x, y, StarRailUiStyle.MUTED_COLOR);
-        graphics.drawString(font, value, x + width - font.width(value), y,
+        graphics.drawString(font, label, x + 4, y, StarRailUiStyle.MUTED_COLOR);
+        graphics.drawString(font, value, x + width - 8 - font.width(value), y,
                 StarRailUiStyle.VALUE_COLOR);
         return y;
     }
@@ -2784,10 +2825,11 @@ public final class StarRailLightConeScreen extends Screen {
     private int drawWrapped(GuiGraphics graphics, Component text, int x, int y, int width,
                             int color) {
         int lineY = y;
-        for (FormattedCharSequence line : font.split(text, width)) {
+        for (FormattedCharSequence line : font.split(Component.literal(StarRailUiStyle.readableText(text)), width)) {
             graphics.drawString(font, line, x, lineY, color);
             lineY += font.lineHeight + 3;
         }
+        detailsBottom = Math.max(detailsBottom, lineY);
         return lineY;
     }
 

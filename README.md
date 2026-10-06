@@ -5,13 +5,13 @@
 ## 版本与依赖
 
 - Mod ID：`starrail_sim`
-- 当前版本：`1.3.0`（2026-10-05，正式发行）。
+- 当前正式版本：`1.4.0`（2026-10-06）。
 - Minecraft：`1.20.1`
 - Forge：`47.x`；发行包在 `47.4.13` 客户端上完成启动核验。
 - Java：`17`
-- 必需依赖：Curios API（Forge、Minecraft 1.20.1）；候选包使用 `5.14.1` 核验。
+- 必需依赖：Curios API（Forge、Minecraft 1.20.1）；发行包使用 `5.14.1` 核验。
 
-发行 JAR：[`starrail_sim-1.3.0.jar`](https://github.com/Seele1008611/starrail-sim/releases/download/v1.3.0/starrail_sim-1.3.0.jar)。
+发行 JAR：[starrail_sim-1.4.0.jar](https://github.com/Seele1008611/starrail-sim/releases/download/v1.4.0/starrail_sim-1.4.0.jar)。
 
 ## 功能概览
 
@@ -28,7 +28,7 @@
 
 1. 安装 Minecraft 1.20.1、Java 17 和 Forge 47.x。
 2. 安装适用于 Forge 1.20.1 的 Curios API 5.14.1 或更高版本。
-3. 将 `starrail_sim-1.3.0.jar` 和 Curios API JAR 放入游戏实例的 `mods` 文件夹。
+3. 将 `starrail_sim-1.4.0.jar` 和 Curios API JAR 放入游戏实例的 `mods` 文件夹。
 4. 启动 Forge 配置文件。
 
 建议先在新存档中体验。自然生成只会发生在首次生成的区块；已经生成过的区块不会因为安装模组而自动补出遗迹。普通遗迹会在满足高度和结构放置条件时尝试生成，命途主题遗迹由命途寻迹安排。
@@ -54,6 +54,6 @@ Windows 下可用项目自带 Gradle Wrapper 启动开发客户端或构建项�
 
 ## 项目文档
 
-项目文档与设计资料已按主题整理在 [`设计方案/README.md`](设计方案/README.md)：命途、战斗和版本规划见 [`项目文档`](设计方案/项目文档/README.md)；遗迹概念图、模型源文件和测试记录见 [`遗迹设计`](设计方案/遗迹设计/README.md)。当前版本的详细规则可从 [设计总纲](设计方案/项目文档/DESIGN.md)、[命途试炼与寻迹](设计方案/项目文档/PATH_TRIALS.md)、[命途等级](设计方案/项目文档/PATH_RANKS.md) 开始。版本记录见 [CHANGELOG.md](CHANGELOG.md)，1.3.0 规划草案见 [PLAN_1.3.0.md](设计方案/项目文档/PLAN_1.3.0.md)。
+项目文档与设计资料已按主题整理在 [`设计方案/README.md`](设计方案/README.md)：命途、战斗和版本规划见 [`项目文档`](设计方案/项目文档/README.md)；遗迹概念图、模型源文件和测试记录见 [`遗迹设计`](设计方案/遗迹设计/README.md)。当前版本的详细规则可从 [设计总纲](设计方案/项目文档/DESIGN.md)、[命途试炼与寻迹](设计方案/项目文档/PATH_TRIALS.md)、[命途等级](设计方案/项目文档/PATH_RANKS.md) 开始。版本记录见 [CHANGELOG.md](CHANGELOG.md)，1.3.0 规划与验收记录见 [PLAN_1.3.0.md](设计方案/项目文档/PLAN_1.3.0.md)；1.4.0 发布与验收记录见 [发行归档](releases/1.4.0.md)。
 
-`README.txt` 和根目录 `changelog.txt` 是 Forge MDK 上游模板文件；项目说明和版本记录以本文件及 `CHANGELOG.md` 为准。发布归档见 [releases/1.3.0.md](releases/1.3.0.md)、[releases/1.2.0.md](releases/1.2.0.md) 和 [releases/1.1.0.md](releases/1.1.0.md)。
+`README.txt` 和根目录 `changelog.txt` 是 Forge MDK 上游模板文件；项目说明和版本记录以本文件及 `CHANGELOG.md` 为准。发布归档见 [releases/1.4.0.md](releases/1.4.0.md)、[releases/1.3.0.md](releases/1.3.0.md)、[releases/1.2.0.md](releases/1.2.0.md) 和 [releases/1.1.0.md](releases/1.1.0.md)。

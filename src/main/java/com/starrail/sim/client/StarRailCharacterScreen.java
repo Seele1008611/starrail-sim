@@ -20,7 +20,7 @@ import net.minecraft.world.item.ItemStack;
 import java.util.Locale;
 
 /** Main character overview inspired by the compact character screens of RPGs. */
-public final class StarRailCharacterScreen extends Screen {
+public final class StarRailCharacterScreen extends StarRailStyledScreen {
     private final Button[] navigationButtons = new Button[
             StarRailUiStyle.CHARACTER_NAVIGATION_KEYS.length];
     private Button attributeDetailsButton;
@@ -43,6 +43,7 @@ public final class StarRailCharacterScreen extends Screen {
 
     @Override
     protected void init() {
+        super.init();
         int panelWidth = StarRailUiStyle.panelWidth(width);
         int panelHeight = StarRailUiStyle.panelHeight(height);
         panelLeft = StarRailUiStyle.panelLeft(width);
@@ -56,29 +57,22 @@ public final class StarRailCharacterScreen extends Screen {
         contentLeft = navLeft + navWidth + (compactLayout ? 16 : 24);
         contentRight = panelRight - (compactLayout ? 12 : 20);
         int contentWidth = contentRight - contentLeft;
-        int minimumRightWidth = compactLayout ? 170 : 230;
-        rightLeft = Math.min(contentLeft + Math.max(compactLayout ? 150 : 190,
-                        contentWidth * 5 / 9), contentRight - minimumRightWidth);
+        rightLeft = contentRight - Math.min(240, Math.max(195, contentWidth * 32 / 100));
 
-        int navTop = panelTop + (compactLayout ? 72 : 80);
-        int navHeight = compactLayout ? 21 : 24;
-        int navGap = compactLayout ? 5 : 8;
         Button[] createdNavigation = StarRailUiStyle.createCharacterNavigation(
                 panelLeft, panelTop, panelWidth, panelHeight, 0, this::openSection);
         for (int index = 0; index < navigationButtons.length; index++) {
             navigationButtons[index] = addRenderableWidget(createdNavigation[index]);
         }
 
-        int rowHeight = compactLayout ? 23 : 26;
-        lightConeHeadingY = panelTop + 70 + 20 + 18 + 18 + 28 + 20
-                + rowHeight * 3 + 14;
+        lightConeHeadingY = panelBottom - 76;
         lightConeBoxY = lightConeHeadingY;
-        int detailsY = lightConeHeadingY + 24;
-        attributeDetailsButton = addRenderableWidget(StarRailUiStyle.button(
+        int detailsY = panelTop + 150 + 21 * 7 + 16;
+        attributeDetailsButton = addRenderableWidget(StarRailUiStyle.outlinedButton(
                 Component.translatable("screen.starrail_sim.character_open_details"),
-                ignored -> minecraft.setScreen(new StarRailAttributeScreen()),
-                rightLeft, detailsY,
-                contentRight - rightLeft, compactLayout ? 21 : 23));
+                ignored -> minecraft.setScreen(new StarRailAttributeScreen(this)),
+                contentRight - 114, detailsY,
+                114, 22));
     }
 
     private void openSection(int index) {
@@ -92,43 +86,30 @@ public final class StarRailCharacterScreen extends Screen {
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+    protected void renderPage(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
         StarRailUiStyle.renderBackdrop(graphics, width, height);
         StarRailUiStyle.renderPanel(graphics, panelLeft, panelTop, panelRight, panelBottom);
 
         Player player = Minecraft.getInstance().player;
         StarRailPath path = StarRailPathClientState.getCurrentPath();
-        Component pathName = path.isRealPath()
-                ? Component.literal(path.getDisplayName())
-                : Component.translatable("screen.starrail_sim.character_unaligned");
-
-        graphics.drawString(font, Component.translatable(
-                "screen.starrail_sim.character_detail"), panelLeft + 24,
-                panelTop + 10, StarRailUiStyle.VALUE_COLOR);
-        graphics.drawString(font, Component.literal("✦ ").append(pathName),
-                panelLeft + 24, panelTop + 32, path.isRealPath()
-                        ? StarRailUiStyle.GOLD_ACCENT : StarRailUiStyle.MUTED_COLOR);
-        graphics.fill(contentLeft - 12, panelTop + 52, contentRight,
-                panelTop + 53, StarRailUiStyle.DIVIDER_COLOR);
+        StarRailUiStyle.renderHeader(graphics, title, panelLeft, panelTop);
 
         if (player != null) {
             renderPlayerModel(graphics, player, mouseX, mouseY);
-            renderPlayerSummary(graphics, player, path);
+            renderPlayerSummary(graphics, player, path, mouseX, mouseY);
         }
 
-        super.render(graphics, mouseX, mouseY, partialTick);
+        super.renderPage(graphics, mouseX, mouseY, partialTick);
     }
 
     private void renderPlayerModel(GuiGraphics graphics, Player player, int mouseX, int mouseY) {
         int modelCenter = (contentLeft + rightLeft) / 2;
         int modelBottom = panelBottom - (compactLayout ? 28 : 36);
         int modelTop = panelTop + 78;
-        int scale = compactLayout ? 62 : 82;
-        graphics.fill(contentLeft, modelTop, rightLeft - 12, modelBottom,
-                StarRailUiStyle.PANEL_INNER);
-        graphics.drawCenteredString(font,
-                Component.translatable("screen.starrail_sim.character_model"),
-                modelCenter, modelTop + 12, StarRailUiStyle.MUTED_COLOR);
+        int scale = Math.min((modelBottom - modelTop) / 3,
+                (rightLeft - contentLeft - 18) / 2);
+        StarRailCosmicUi.platform(graphics, modelCenter, modelBottom - 12,
+                Math.max(100, Math.min(220, (rightLeft - contentLeft) * 2 / 3)), width);
         Pose originalPose = player.getPose();
         boolean originalShiftKeyDown = player.isShiftKeyDown();
         player.setPose(Pose.STANDING);
@@ -142,11 +123,11 @@ public final class StarRailCharacterScreen extends Screen {
         }
     }
 
-    private void renderPlayerSummary(GuiGraphics graphics, Player player, StarRailPath path) {
+    private void renderPlayerSummary(GuiGraphics graphics, Player player, StarRailPath path, int mouseX, int mouseY) {
         int x = rightLeft;
         int width = contentRight - rightLeft;
         int y = panelTop + 70;
-        graphics.drawString(font, player.getName(), x, y, StarRailUiStyle.VALUE_COLOR);
+        StarRailUiStyle.fittedText(graphics, player.getName(), x, y, width, StarRailUiStyle.VALUE_COLOR);
         y += 20;
         drawSummaryLine(graphics, "screen.starrail_sim.character_current_path",
                 path.isRealPath() ? Component.literal(path.getDisplayName())
@@ -160,70 +141,88 @@ public final class StarRailCharacterScreen extends Screen {
                 x, y, width);
         y += 28;
 
-        graphics.drawString(font, Component.translatable(
-                "screen.starrail_sim.character_core_stats"), x, y,
-                StarRailUiStyle.CYAN_ACCENT);
+        graphics.fill(x, y - 2, contentRight, y + 13, 0x263D4764);
+        graphics.drawCenteredString(font, Component.translatable(
+                "screen.starrail_sim.character_core_stats"), (x + contentRight) / 2, y,
+                StarRailUiStyle.VALUE_COLOR);
         y += 20;
-        int rowHeight = compactLayout ? 23 : 26;
-        int columnGap = 8;
-        int columnWidth = (width - columnGap) / 2;
-        drawStat(graphics, x, y, columnWidth, "ui.starrail_sim.current_max_health",
+        int rowHeight = 21;
+        drawStat(graphics, x, y, width, "ui.starrail_sim.current_max_health",
                 format("%.1f", player.getAttributeValue(Attributes.MAX_HEALTH)));
-        drawStat(graphics, x + columnWidth + columnGap, y, columnWidth,
+        y += rowHeight;
+        drawStat(graphics, x, y, width,
                 "ui.starrail_sim.attack_damage",
                 format("%.1f", StarRailAttributes.getAttackDamage(player)));
         y += rowHeight;
-        drawStat(graphics, x, y, columnWidth, "ui.starrail_sim.armor",
+        drawStat(graphics, x, y, width, "ui.starrail_sim.armor",
                 format("%.1f", player.getAttributeValue(Attributes.ARMOR)));
-        drawStat(graphics, x + columnWidth + columnGap, y, columnWidth,
+        y += rowHeight;
+        drawStat(graphics, x, y, width, "ui.starrail_sim.armor_toughness",
+                format("%.1f", player.getAttributeValue(Attributes.ARMOR_TOUGHNESS)));
+        y += rowHeight;
+        drawStat(graphics, x, y, width, "ui.starrail_sim.movement_speed",
+                format("%.3f", player.getAttributeValue(Attributes.MOVEMENT_SPEED)));
+        y += rowHeight;
+        drawStat(graphics, x, y, width,
                 "ui.starrail_sim.crit_rate",
                 formatPercent(StarRailAttributes.getCritRate(player)));
         y += rowHeight;
-        drawStat(graphics, x, y, columnWidth, "ui.starrail_sim.crit_damage",
+        drawStat(graphics, x, y, width, "ui.starrail_sim.crit_damage",
                 formatPercent(StarRailAttributes.getCritDamage(player)));
-        drawStat(graphics, x + columnWidth + columnGap, y, columnWidth,
-                "ui.starrail_sim.movement_speed",
-                format("%.3f", player.getAttributeValue(Attributes.MOVEMENT_SPEED)));
         y = lightConeHeadingY;
-        Component lightConeLabel = Component.translatable(
-                "screen.starrail_sim.character_equipped_light_cone");
         ItemStack lightCone = StarRailLightConeClientData.findEquipped(player);
         Component lightConeValue = lightCone.isEmpty()
                 ? Component.translatable("screen.starrail_sim.character_no_light_cone")
                 : lightCone.getHoverName();
-        graphics.drawString(font, lightConeLabel, x, y, StarRailUiStyle.CYAN_ACCENT);
-        graphics.drawString(font, lightConeValue,
-                contentRight - font.width(lightConeValue), lightConeBoxY,
-                StarRailUiStyle.MUTED_COLOR);
+        boolean hovered = mouseX >= x && mouseX <= contentRight && mouseY >= y && mouseY <= y + 60;
+        graphics.fill(x, y, contentRight, y + 60, 0x303C4564);
+        clip(graphics, x + 1, y + 1, contentRight - 1, y + 59);
+        StarRailLightConeDisplay.banner(graphics, lightCone, x + 1, y + 1, width - 2, 42);
+        graphics.fillGradient(x + 1, y + 1, contentRight - 1, y + 59, 0x0010172A, 0x3510172A);
+        graphics.fill(x + 1, y + 43, contentRight - 1, y + 59, 0xA810172A);
+        graphics.drawString(font, font.plainSubstrByWidth(lightConeValue.getString(), width - 16),
+                x + 8, y + 47, StarRailUiStyle.VALUE_COLOR);
+        graphics.disableScissor();
+        int border = hovered ? StarRailUiStyle.GOLD_ACCENT : 0x809DAEC6;
+        graphics.renderOutline(x, y, width, 60, border);
+        if (hovered) {
+            graphics.drawString(font, Component.literal("→"), contentRight - 16, y + 7,
+                    StarRailUiStyle.GOLD_ACCENT);
+        }
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    protected boolean logicalMouseClicked(double mouseX, double mouseY, int button) {
         if (button == 0 && mouseX >= rightLeft && mouseX <= contentRight
-                && mouseY >= lightConeHeadingY - 3 && mouseY <= lightConeHeadingY + 20) {
+                && mouseY >= lightConeHeadingY && mouseY <= lightConeHeadingY + 60) {
             minecraft.setScreen(new StarRailLightConeScreen());
             return true;
         }
-        return super.mouseClicked(mouseX, mouseY, button);
+        return super.logicalMouseClicked(mouseX, mouseY, button);
     }
 
     private void drawSummaryLine(GuiGraphics graphics, String labelKey, Component value,
             int x, int y, int width) {
-        graphics.drawString(font, Component.translatable(labelKey), x, y,
-                StarRailUiStyle.MUTED_COLOR);
-        graphics.drawString(font, value, x + width - font.width(value), y,
-                StarRailUiStyle.VALUE_COLOR);
+        int valueWidth = Math.min(font.width(value), width / 2);
+        StarRailUiStyle.fittedText(graphics, Component.translatable(labelKey), x, y,
+                width - valueWidth - 10, StarRailUiStyle.MUTED_COLOR);
+        StarRailUiStyle.fittedText(graphics, value, x + width - valueWidth, y,
+                valueWidth, StarRailUiStyle.VALUE_COLOR);
     }
 
     private void drawStat(GuiGraphics graphics, int x, int y, int width, String labelKey,
             String value) {
-        graphics.fill(x, y, x + width, y + (compactLayout ? 20 : 22),
-                StarRailUiStyle.PANEL_INNER);
+        graphics.fill(x, y, x + width, y + 20, 0x142C3550);
         Component label = Component.translatable(labelKey);
-        graphics.drawString(font, label, x + 8, y + 6, StarRailUiStyle.MUTED_COLOR);
-        graphics.drawString(font, Component.literal(value),
-                x + width - font.width(value) - 8, y + 6,
-                StarRailUiStyle.VALUE_COLOR);
+        int icon = labelKey.endsWith("max_health") ? 0 : labelKey.endsWith("attack_damage") ? 1
+                : labelKey.endsWith("armor") ? 2 : labelKey.endsWith("armor_toughness") ? 3
+                : labelKey.endsWith("movement_speed") ? 4 : labelKey.endsWith("crit_rate") ? 5 : 6;
+        StarRailUiStyle.statIcon(graphics, icon, x + 8, y + 10, StarRailUiStyle.MUTED_COLOR);
+        int valueWidth = Math.min(font.width(value), width / 2 - 5);
+        StarRailUiStyle.fittedText(graphics, label, x + 20, y + 6,
+                width - valueWidth - 35, StarRailUiStyle.MUTED_COLOR);
+        StarRailUiStyle.fittedText(graphics, Component.literal(value), x + width - valueWidth - 5,
+                y + 6, valueWidth, StarRailUiStyle.VALUE_COLOR);
     }
 
     private static String formatPercent(double value) {

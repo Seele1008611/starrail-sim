@@ -1,252 +1,138 @@
 package com.starrail.sim.client;
 
-/**
- * 模组代码说明：客户端界面类，构建对应页面并处理玩家的界面交互。
- */
-
 import com.starrail.sim.StarRailAttributes;
-import com.starrail.sim.StarRailPath;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.components.Tooltip;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.FormattedCharSequence;
+import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
-
 import java.util.Locale;
 
-/** Read-only character attributes displayed with vanilla-style button frames. */
-public final class StarRailAttributeScreen extends Screen {
-    private static final int STAT_HEIGHT = 25;
-    private static final int ROW_GAP = 30;
+/** Read-only grouped attributes in the same light modal used by the HTML reference. */
+public final class StarRailAttributeScreen extends StarRailModalScreen {
+    private static final String[] LABELS = {
+        "current_max_health", "attack_damage", "armor", "armor_toughness", "movement_speed", "attack_speed",
+        "crit_rate", "crit_damage", "break_effect", "effect_hit_rate", "effect_resistance", "knockback_resistance", "healing_effect"
+    };
+    private final int[] rowPositions = new int[LABELS.length];
+    private final double[] values = new double[LABELS.length];
+    private final double[] bases = new double[LABELS.length];
+    private final StarRailSmoothScroll scroll = new StarRailSmoothScroll();
+    private int selected = -1;
+    private int contentHeight;
 
-    private final Button[] navigationButtons = new Button[
-            StarRailUiStyle.CHARACTER_NAVIGATION_KEYS.length];
-    private final Button[] statButtons = new Button[13];
-    private final String[] statDetails = new String[13];
-    private int selectedStat = -1;
-    private int leftColumn;
-    private int rightColumn;
-    private int panelLeft;
-    private int panelTop;
-    private int panelRight;
-    private int panelBottom;
-    private int contentLeft;
-    private int contentRight;
-    private int gridTop;
-    private int gridColumns;
-    private int statHeight;
-    private int rowStep;
-    private boolean compactLayout;
-
-    public StarRailAttributeScreen() {
-        super(Component.translatable("screen.starrail_sim.attributes"));
+    public StarRailAttributeScreen(StarRailStyledScreen parent) {
+        super(Component.translatable("screen.starrail_sim.attributes"), parent);
     }
 
-    @Override
-    protected void init() {
-        int panelWidth = StarRailUiStyle.panelWidth(width);
-        int panelHeight = StarRailUiStyle.panelHeight(height);
-        panelLeft = StarRailUiStyle.panelLeft(width);
-        panelTop = StarRailUiStyle.panelTop(height);
-        panelRight = panelLeft + panelWidth;
-        panelBottom = panelTop + panelHeight;
-
-        compactLayout = StarRailUiStyle.isCompact(panelWidth, panelHeight);
-        Button[] createdNavigation = StarRailUiStyle.createCharacterNavigation(
-                panelLeft, panelTop, panelWidth, panelHeight, 0, index -> {
-                    if (index == 1) {
-                        minecraft.setScreen(new StarRailLightConeScreen());
-                    } else if (index == 4) {
-                        minecraft.setScreen(new StarRailPathScreen());
-                    } else if (index == 5) {
-                        minecraft.setScreen(new StarRailGuideScreen());
-                    }
-                });
-        for (int index = 0; index < navigationButtons.length; index++) {
-            navigationButtons[index] = addRenderableWidget(createdNavigation[index]);
-        }
-        if (compactLayout) {
-            contentLeft = panelLeft + 12 + 116 + 16;
-            contentRight = panelRight - 12;
-            gridTop = panelTop + 130;
-            gridColumns = 2;
-        } else {
-            int contentWidthLeft = panelLeft + 20 + 132 + 24;
-            contentLeft = contentWidthLeft;
-            contentRight = panelRight - 22;
-            gridTop = panelTop + 114;
-            gridColumns = 2;
-        }
-
-        int columnGap = compactLayout ? 7 : 12;
-        int columnWidth = (contentRight - contentLeft - columnGap * (gridColumns - 1))
-                / gridColumns;
-        leftColumn = contentLeft;
-        rightColumn = leftColumn + columnWidth + columnGap;
-        int rows = (statButtons.length + gridColumns - 1) / gridColumns;
-        statHeight = compactLayout ? 20 : STAT_HEIGHT;
-        int availableHeight = panelBottom - 30 - gridTop - 8;
-        int maxStep = rows > 1 ? (availableHeight - statHeight) / (rows - 1) : statHeight;
-        int desiredStep = compactLayout ? 23 : ROW_GAP;
-        rowStep = Math.max(statHeight, Math.min(desiredStep, maxStep));
-
-        for (int index = 0; index < statButtons.length; index++) {
-            int column = index % gridColumns;
-            int row = index / gridColumns;
-            int statIndex = index;
-            statButtons[index] = addRenderableWidget(StarRailUiStyle.button(
-                            Component.empty(), ignored -> {
-                                selectedStat = statIndex;
-                    }, contentLeft + column * (columnWidth + columnGap),
-                            gridTop + row * rowStep, columnWidth, statHeight)
-                    );
-        }
-
+    private boolean percent(int index) { return index >= 6 && index != 11; }
+    private String number(int index, double value) {
+        return String.format(Locale.ROOT, percent(index) ? "%.1f%%" : index == 4 || index == 5 || index == 11
+                ? "%.3f" : "%.1f", percent(index) ? value * 100 : value);
     }
 
-    @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-        StarRailUiStyle.renderBackdrop(graphics, width, height);
-        StarRailUiStyle.renderPanel(graphics, panelLeft, panelTop, panelRight, panelBottom);
-        graphics.drawString(font, title, panelLeft + 24, panelTop + 10,
-                StarRailUiStyle.VALUE_COLOR);
-        int statusY = compactLayout ? panelTop + 82 : panelTop + 64;
-        graphics.drawString(font, Component.literal("STATUS"),
-                contentLeft, statusY, StarRailUiStyle.CYAN_ACCENT);
-        graphics.fill(contentLeft + 48, statusY + 4, contentRight,
-                statusY + 5, StarRailUiStyle.DIVIDER_COLOR);
-        int sectionY = compactLayout ? panelTop + 101 : panelTop + 82;
-        graphics.drawString(font, Component.translatable(
-                        "screen.starrail_sim.function_attributes"),
-                contentLeft, sectionY, StarRailUiStyle.VALUE_COLOR);
-        Player identityPlayer = Minecraft.getInstance().player;
-        if (identityPlayer != null) {
-            StarRailPath path = StarRailPathClientState.getCurrentPath();
-            Component pathText = path.isRealPath()
-                    ? Component.literal(path.getDisplayName() + " · ")
-                    .append(Component.translatable(StarRailPathClientState
-                            .getCurrentPathRank().getTranslationKey()))
-                    : Component.translatable("guide.starrail_sim.current.unaligned");
-            graphics.drawString(font, pathText, contentRight - font.width(pathText),
-                    sectionY, StarRailUiStyle.MUTED_COLOR);
-        }
-
-        Player player = Minecraft.getInstance().player;
-        if (player != null) {
-            setStat(0, "ui.starrail_sim.current_max_health",
-                    format("%.1f / %.1f", player.getHealth(),
-                            player.getAttributeValue(Attributes.MAX_HEALTH)),
-                    format("当前生命值 %.1f / 最大生命值 %.1f",
-                            player.getHealth(), player.getAttributeValue(Attributes.MAX_HEALTH)));
-            statDetails[0] = describeHealth(player);
-            statButtons[0].setTooltip(Tooltip.create(Component.translatable(
-                    "screen.starrail_sim.attribute_detail", statDetails[0])));
-            setStat(1, "ui.starrail_sim.attack_damage",
-                    format("%.1f", StarRailAttributes.getAttackDamage(player)),
-                    describeAttribute(player, Attributes.ATTACK_DAMAGE,
-                            StarRailAttributes.getAttackDamage(player), false));
-            setStat(2, "ui.starrail_sim.armor",
-                    format("%.1f", player.getAttributeValue(Attributes.ARMOR)),
-                    describeAttribute(player, Attributes.ARMOR,
-                            player.getAttributeValue(Attributes.ARMOR), false));
-            setStat(3, "ui.starrail_sim.armor_toughness",
-                    format("%.1f", player.getAttributeValue(Attributes.ARMOR_TOUGHNESS)),
-                    describeAttribute(player, Attributes.ARMOR_TOUGHNESS,
-                            player.getAttributeValue(Attributes.ARMOR_TOUGHNESS), false));
-            setStat(4, "ui.starrail_sim.movement_speed",
-                    format("%.3f", player.getAttributeValue(Attributes.MOVEMENT_SPEED)),
-                    describeAttribute(player, Attributes.MOVEMENT_SPEED,
-                            player.getAttributeValue(Attributes.MOVEMENT_SPEED), false));
-            setStat(5, "ui.starrail_sim.attack_speed",
-                    format("%.3f", player.getAttributeValue(Attributes.ATTACK_SPEED)),
-                    describeAttribute(player, Attributes.ATTACK_SPEED,
-                            player.getAttributeValue(Attributes.ATTACK_SPEED), false));
-
-            setPercentStat(6, "ui.starrail_sim.crit_rate",
-                    StarRailAttributes.getCritRate(player));
-            setPercentStat(7, "ui.starrail_sim.crit_damage",
-                    StarRailAttributes.getCritDamage(player));
-            setPercentStat(8, "ui.starrail_sim.break_effect",
-                    StarRailAttributes.getValue(player, StarRailAttributes.BREAK_EFFECT, 0.0D));
-            setPercentStat(9, "ui.starrail_sim.effect_hit_rate",
-                    StarRailAttributes.getValue(player, StarRailAttributes.EFFECT_HIT_RATE, 0.0D));
-            setPercentStat(10, "ui.starrail_sim.effect_resistance",
-                    StarRailAttributes.getValue(player, StarRailAttributes.EFFECT_RESISTANCE, 0.0D));
-            setStat(11, "ui.starrail_sim.knockback_resistance",
-                    format("%.3f", player.getAttributeValue(Attributes.KNOCKBACK_RESISTANCE)),
-                    describeAttribute(player, Attributes.KNOCKBACK_RESISTANCE,
-                            player.getAttributeValue(Attributes.KNOCKBACK_RESISTANCE), false));
-            setPercentStat(12, "ui.starrail_sim.healing_effect",
-                    StarRailAttributes.getValue(player, StarRailAttributes.HEALING_EFFECT, 0.0D));
-        }
-
-        super.render(graphics, mouseX, mouseY, partialTick);
-    }
-
-    private void setStat(int index, String labelKey, String value, String detail) {
-        statDetails[index] = detail;
-        statButtons[index].setMessage(Component.translatable(labelKey)
-                .append("    ").append(value));
-        statButtons[index].setTooltip(Tooltip.create(Component.translatable(
-                "screen.starrail_sim.attribute_detail", detail)));
-    }
-
-    private void setPercentStat(int index, String labelKey, double value) {
-        Player player = Minecraft.getInstance().player;
-        String detail = player == null ? format("最终值 %.1f%%", value * 100.0D)
-                : describeAttribute(player, customAttribute(index), value, true);
-        setStat(index, labelKey, format("%.1f%%", value * 100.0D), detail);
-    }
-
-    private static String describeHealth(Player player) {
-        double current = player.getHealth();
-        double maximum = player.getAttributeValue(Attributes.MAX_HEALTH);
-        var instance = player.getAttribute(Attributes.MAX_HEALTH);
-        if (instance == null) {
-            return format("当前生命值 %.1f / %.1f", current, maximum);
-        }
-        double base = instance.getBaseValue();
-        return format("当前生命值 %.1f / %.1f；基础最大值 %.1f，加成 %+.1f，最终最大值 %.1f",
-                current, maximum, base, maximum - base, maximum);
-    }
-
-    private net.minecraft.world.entity.ai.attributes.Attribute customAttribute(int index) {
-        return switch (index) {
-            case 6 -> StarRailAttributes.CRIT_RATE.get();
-            case 7 -> StarRailAttributes.CRIT_DAMAGE.get();
-            case 8 -> StarRailAttributes.BREAK_EFFECT.get();
-            case 9 -> StarRailAttributes.EFFECT_HIT_RATE.get();
-            case 10 -> StarRailAttributes.EFFECT_RESISTANCE.get();
-            case 12 -> StarRailAttributes.HEALING_EFFECT.get();
-            default -> throw new IllegalArgumentException("Unknown custom stat index: " + index);
+    private void refresh(Player player) {
+        Attribute[] attributes = {
+            Attributes.MAX_HEALTH, Attributes.ATTACK_DAMAGE, Attributes.ARMOR, Attributes.ARMOR_TOUGHNESS,
+            Attributes.MOVEMENT_SPEED, Attributes.ATTACK_SPEED,
+            StarRailAttributes.CRIT_RATE.get(), StarRailAttributes.CRIT_DAMAGE.get(), StarRailAttributes.BREAK_EFFECT.get(),
+            StarRailAttributes.EFFECT_HIT_RATE.get(), StarRailAttributes.EFFECT_RESISTANCE.get(),
+            Attributes.KNOCKBACK_RESISTANCE, StarRailAttributes.HEALING_EFFECT.get()
         };
-    }
-
-    private static String describeAttribute(Player player,
-                                            net.minecraft.world.entity.ai.attributes.Attribute attribute,
-                                            double effective, boolean percent) {
-        var instance = player.getAttribute(attribute);
-        if (instance == null) {
-            return format("最终值 %.1f", effective);
+        for (int i = 0; i < attributes.length; i++) {
+            var instance = player.getAttribute(attributes[i]);
+            values[i] = instance == null ? 0 : instance.getValue();
+            bases[i] = instance == null ? 0 : instance.getBaseValue();
         }
-        double base = instance.getBaseValue();
-        double bonus = effective - base;
-        if (percent) {
-            return format("基础值 %.1f%%，加成 %+.1f%%，最终值 %.1f%%",
-                    base * 100.0D, bonus * 100.0D, effective * 100.0D);
-        }
-        return format("基础值 %.3f，加成 %+.3f，最终值 %.3f", base, bonus, effective);
-    }
-
-    private static String format(String pattern, Object... args) {
-        return String.format(Locale.ROOT, pattern, args);
+        values[1] = StarRailAttributes.getAttackDamage(player);
+        values[6] = StarRailAttributes.getCritRate(player);
+        values[7] = StarRailAttributes.getCritDamage(player);
     }
 
     @Override
-    public boolean isPauseScreen() {
-        return false;
+    protected void renderModal(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+        Player player = minecraft.player;
+        if (player != null) refresh(player);
+        int left = modalLeft + 17, right = modalRight - 17;
+        int bottom = modalBottom - 68;
+        scroll.advance();
+        clip(graphics, left, bodyTop, right, bottom);
+        graphics.pose().pushPose();
+        graphics.pose().translate(0, -scroll.position(), 0);
+        int y = bodyTop + 7;
+        for (int i = 0; i < LABELS.length; i++) {
+            if (i == 0 || i == 6) {
+                graphics.drawString(font, Component.translatable(i == 0
+                        ? "ui.starrail_sim.attributes.basic" : "ui.starrail_sim.attributes.advanced"),
+                        left + 2, y, SECONDARY_INK, false);
+                y += 23;
+            }
+            rowPositions[i] = y;
+            boolean hovered = mouseX >= left && mouseX < right && mouseY >= bodyTop && mouseY < bottom
+                    && mouseY >= y - scroll.position() && mouseY < y - scroll.position() + 22;
+            graphics.fill(left, y, right, y + 22, selected == i || hovered ? 0x22627799
+                    : i % 2 == 0 ? 0x10707785 : 0x00707785);
+            int icon = i < 5 ? i : i == 6 ? 5 : 6;
+            StarRailUiStyle.statIcon(graphics, icon, left + 10, y + 11, SECONDARY_INK);
+            graphics.drawString(font, Component.translatable("ui.starrail_sim." + LABELS[i]),
+                    left + 24, y + 7, INK, false);
+            // Every row separates the base value from the total bonus, including advanced attributes.
+            String primary = number(i, bases[i]);
+            graphics.drawString(font, primary, right - 114 - font.width(primary), y + 7, INK, false);
+            double bonus = values[i] - bases[i];
+            if (Math.abs(bonus) > .00001) {
+                String extra = (bonus > 0 ? "+" : "") + number(i, bonus);
+                graphics.drawString(font, extra, right - 27 - font.width(extra), y + 7,
+                        bonus >= 0 ? 0xFF168EB9 : 0xFFA14A60, false);
+            }
+            StarRailCosmicUi.ellipse(graphics, right - 9, y + 11, 4, 4, 0xFF363945);
+            graphics.drawString(font, "?", right - 11, y + 7, 0xFFF4F4F7, false);
+            y += 25;
+        }
+        graphics.pose().popPose();
+        graphics.disableScissor();
+        contentHeight = y - bodyTop + 8;
+        scroll.bounds(contentHeight - (bottom - bodyTop));
+        renderScrollBar(graphics, scroll, modalRight - 10, bodyTop, bottom, contentHeight, mouseX, mouseY);
+        graphics.fill(left, bottom + 9, right, bottom + 10, 0x30707785);
+        Component help = Component.translatable("ui.starrail_sim.attributes.help");
+        if (selected >= 0) {
+            help = Component.translatable("ui.starrail_sim.attributes.breakdown",
+                    Component.translatable("ui.starrail_sim." + LABELS[selected]),
+                    number(selected, bases[selected]), number(selected, values[selected] - bases[selected]),
+                    number(selected, values[selected]));
+            if (selected == 0 && player != null) {
+                help = help.copy().append("  ").append(Component.translatable("ui.starrail_sim.attributes.health",
+                        String.format(Locale.ROOT, "%.1f", player.getHealth()), number(0, values[0])));
+            }
+        }
+        int helpY = bottom + 18;
+        for (FormattedCharSequence line : font.split(help, right - left)) {
+            graphics.drawString(font, line, left, helpY, SECONDARY_INK, false);
+            helpY += 12;
+        }
+    }
+
+    @Override
+    protected boolean logicalMouseClicked(double x, double y, int button) {
+        if (button == 0 && x >= modalLeft + 17 && x < modalRight - 17
+                && y >= bodyTop && y < modalBottom - 68) {
+            for (int i = 0; i < rowPositions.length; i++) {
+                if (y >= rowPositions[i] - scroll.position() && y < rowPositions[i] - scroll.position() + 22) {
+                    selected = i;
+                    return true;
+                }
+            }
+        }
+        return super.logicalMouseClicked(x, y, button);
+    }
+
+    @Override
+    protected boolean logicalMouseScrolled(double x, double y, double amount) {
+        if (x >= modalLeft && x <= modalRight && y >= bodyTop && y < modalBottom - 68) {
+            scroll.wheel(amount, 25);
+        }
+        return true;
     }
 }

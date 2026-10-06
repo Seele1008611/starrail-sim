@@ -1,4 +1,15 @@
 {
+  "ui.starrail_sim.nav.details": "详情",
+  "ui.starrail_sim.nav.light_cone": "光锥",
+  "ui.starrail_sim.nav.traces": "行迹",
+  "ui.starrail_sim.nav.relics": "遗器",
+  "ui.starrail_sim.nav.paths": "命途",
+  "ui.starrail_sim.nav.guide": "指南",
+  "ui.starrail_sim.path.seek_tab": "命途寻迹",
+  "ui.starrail_sim.path.browsing": "正在浏览等级说明；不会执行晋级或开始试炼。",
+  "ui.starrail_sim.cone.preview": "正面展示",
+  "ui.starrail_sim.ui.close": "返回",
+
   "starrail_sim.path.remembrance.attack_damage": "记忆·攻击力",
   "starrail_sim.path.remembrance.crit_damage": "记忆·暴击伤害",
   "message.starrail_sim.remembrance_eternal_echo": "记忆命途：永恒回响！",
@@ -163,8 +174,8 @@
   "screen.starrail_sim.attribute_detail": "\u5c5e\u6027\u8be6\u60c5\uff1a%s",
   "ui.starrail_sim.current_max_health": "\u751f\u547d\u503c",
   "ui.starrail_sim.attack_damage": "\u653b\u51fb\u529b",
-  "ui.starrail_sim.armor": "\u62a4\u7532",
-  "ui.starrail_sim.armor_toughness": "\u62a4\u7532\u97e7\u6027",
+  "ui.starrail_sim.armor": "护甲值",
+  "ui.starrail_sim.armor_toughness": "护甲韧性",
   "ui.starrail_sim.movement_speed": "\u79fb\u52a8\u901f\u5ea6",
   "ui.starrail_sim.attack_speed": "\u653b\u51fb\u901f\u5ea6",
   "ui.starrail_sim.knockback_resistance": "\u51fb\u9000\u6297\u6027",
@@ -1960,4 +1971,35 @@
   ,"screen.starrail_sim.sought_ruin_hint": "前往遗迹宝箱使用对应试炼凭证；当前线索处理完后可再次寻迹。"
   ,"screen.starrail_sim.confirm_seek": "确认开始寻迹"
   ,"screen.starrail_sim.path_seek_selected": "已选择%s命途；点击“确认开始寻迹”后才会安排遗迹。"
+  ,"ui.starrail_sim.path.current_path": "当前命途"
+  ,"ui.starrail_sim.path.current_stage": "当前阶段"
+  ,"ui.starrail_sim.path.stage_preview": "阶段说明"
+  ,"ui.starrail_sim.path.first_stage": "本阶段实践度目标：%s 点。达标后直接晋升 2 级，无需晋阶试炼。"
+  ,"ui.starrail_sim.path.next_stage": "本阶段实践度目标：%s 点。达标后自动开启下一等级的晋阶试炼。"
+  ,"ui.starrail_sim.path.pinnacle_stage": "已达到最高等级。每累计 %s 点实践度，额外获得攻击力 +5%%，最多十次（+50%%）。"
+  ,"ui.starrail_sim.path.next_trial": "下一等级：%s。试炼时限 %s 秒；两项目标分别为 %s、%s，全部完成后自动晋阶。"
+  ,"ui.starrail_sim.path.pinnacle_count": "极境践行次数：%s / %s"
+  ,"ui.starrail_sim.path.bonuses": "本等级累计属性加成"
+  ,"ui.starrail_sim.path.cumulative_note": "以上为本等级累计加成，并非每次晋级额外叠加。相邻等级的属性数值可能相同。"
+  ,"ui.starrail_sim.path.practice": "实践方式"
+  ,"ui.starrail_sim.path.mechanics": "专属机制 · 各等级解锁说明"
+  ,"ui.starrail_sim.path.selection_note": "每条命途分别保存等级与实践度。同一时间只能有一条当前命途。点击等级节点可查看对应阶段。"
+  ,"ui.starrail_sim.path.open_guide": "查看命途指南 →"
+  ,"ui.starrail_sim.guide.rank_column": "等级"
+  ,"ui.starrail_sim.guide.target_column": "实践度目标"
+  ,"ui.starrail_sim.guide.advance_column": "达标后"
+  ,"ui.starrail_sim.guide.rank_target": "%s 点"
+  ,"ui.starrail_sim.guide.pinnacle_target": "每 %s 点"
+  ,"ui.starrail_sim.guide.direct_advance": "直接升至 2 级"
+  ,"ui.starrail_sim.guide.trial_advance": "自动开启下一等级试炼"
+  ,"ui.starrail_sim.guide.pinnacle_reward": "攻击力 +5%，最多十次"
+  ,"ui.starrail_sim.guide.trial_heading": "晋阶试炼与重试"
+  ,"ui.starrail_sim.guide.open_path": "打开命途页面 →"
+  ,"ui.starrail_sim.attributes.basic": "基础属性"
+  ,"ui.starrail_sim.attributes.advanced": "进阶属性"
+  ,"ui.starrail_sim.attributes.help": "点击属性行或问号查看基础值、加成与最终值。"
+  ,"ui.starrail_sim.attributes.breakdown": "%s：基础值 %s；加成 %s；最终值 %s。"
+  ,"ui.starrail_sim.attributes.health": "当前生命值 %s / %s。"
+  ,"ui.starrail_sim.path.current_marker": "当前"
+  ,"ui.starrail_sim.guide.initial_trial": "初始试炼 · %s 秒"
 }
