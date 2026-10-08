@@ -12,6 +12,7 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -41,6 +42,16 @@ public final class StarRailPathCommands {
                                 .executes(StarRailPathCommands::abandon))
                         .then(Commands.literal("debug")
                                 .requires(source -> source.hasPermission(2))
+                                .then(Commands.literal("set")
+                                        .then(Commands.argument("path", StringArgumentType.word())
+                                                .suggests(StarRailPathCommands::suggestPaths)
+                                                .executes(StarRailPathCommands::debugSetPath)))
+                                .then(Commands.literal("prepare")
+                                        .then(Commands.argument("path", StringArgumentType.word())
+                                                .suggests(StarRailPathCommands::suggestPaths)
+                                                .executes(StarRailPathCommands::debugPreparePath)))
+                                .then(Commands.literal("clear")
+                                        .executes(StarRailPathCommands::debugClearPath))
                                 .then(Commands.literal("unlock")
                                         .executes(StarRailPathCommands::debugUnlock))
                                  .then(Commands.literal("complete_hunt")
@@ -125,6 +136,84 @@ public final class StarRailPathCommands {
             data.setPathUnlocked(true);
             context.getSource().sendSuccess(() -> Component.literal("已解锁命途入口。"), false);
         });
+        return 1;
+    }
+
+    /** Directly selects a path for administrator testing; the trial/token flow stays unchanged. */
+    private static int debugSetPath(CommandContext<CommandSourceStack> context) {
+        ServerPlayer player = getPlayer(context);
+        if (player == null) {
+            return 0;
+        }
+        StarRailPath path = StarRailPath.byId(StringArgumentType.getString(context, "path"));
+        if (!path.isRealPath()) {
+            context.getSource().sendFailure(Component.literal("未知命途。"));
+            return 0;
+        }
+        player.getCapability(StarRailPathCapability.PATH_DATA).ifPresent(data -> {
+            data.setPathUnlocked(true);
+            data.resetTrial();
+            data.clearSoughtRuin();
+            if (data.getPathRank(path) == StarRailPathRank.UNALIGNED) {
+                data.setPathRank(path, StarRailPathRank.PATHFARING);
+            }
+            data.setCurrentPath(path);
+            StarRailPathEffects.refresh(player, path);
+            StarRailPathService.sync(player);
+            context.getSource().sendSuccess(() -> Component.literal(
+                    "测试命令已切换至" + path.getDisplayName() + "命途。原有阶位和行迹记录已保留。"), false);
+        });
+        return 1;
+    }
+
+    /** Prepares a path for full trace-tree testing, including rank and only the missing materials. */
+    private static int debugPreparePath(CommandContext<CommandSourceStack> context) {
+        ServerPlayer player = getPlayer(context);
+        if (player == null) {
+            return 0;
+        }
+        StarRailPath path = StarRailPath.byId(StringArgumentType.getString(context, "path"));
+        if (!path.isRealPath()) {
+            context.getSource().sendFailure(Component.literal("未知命途。"));
+            return 0;
+        }
+        player.getCapability(StarRailPathCapability.PATH_DATA).ifPresent(data -> {
+            data.setPathUnlocked(true);
+            data.resetTrial();
+            data.clearSoughtRuin();
+            data.setCurrentPath(path);
+            data.setPathRank(path, StarRailPathRank.PATH_PINNACLE);
+            data.setPracticeProgress(path, 0);
+
+            int allNodes = (1 << StarRailTraces.nodes(path).length) - 1;
+            int missingMaterials = Math.max(0,
+                    StarRailTraces.cost(path, allNodes) - StarRailTraces.cost(path, data.getTraceMask(path)));
+            if (missingMaterials > 0) {
+                ItemStack materials = new ItemStack(StarRailTraceMaterials.get(path), missingMaterials);
+                if (!player.getInventory().add(materials)) {
+                    player.drop(materials, false);
+                }
+                player.getInventory().setChanged();
+                player.containerMenu.broadcastChanges();
+            }
+
+            StarRailPathEffects.refresh(player, path);
+            StarRailPathService.sync(player);
+            context.getSource().sendSuccess(() -> Component.literal(
+                    "已准备" + path.getDisplayName() + "行迹测试：命途极境、已有行迹保留，并补足解锁剩余节点所需材料。"), false);
+        });
+        return 1;
+    }
+
+    /** Returns to the no-path state without clearing any path rank or trace progress. */
+    private static int debugClearPath(CommandContext<CommandSourceStack> context) {
+        ServerPlayer player = getPlayer(context);
+        if (player == null) {
+            return 0;
+        }
+        StarRailPathService.resetPath(player);
+        context.getSource().sendSuccess(() -> Component.literal(
+                "测试状态已清除，当前回到未踏上命途；历史阶位和行迹记录保留。"), false);
         return 1;
     }
 

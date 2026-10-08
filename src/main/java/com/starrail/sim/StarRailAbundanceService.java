@@ -44,8 +44,11 @@ public final class StarRailAbundanceService {
         if (rank >= StarRailPathRank.PRACTICE.getLevel()
                 && healthBefore < maximum * 0.80F
                 && now >= state.getLong(REGEN_COOLDOWN_TAG)) {
+            boolean traceRegen = healthBefore < maximum * 0.50F
+                    && StarRailTraceService.hasPassive(player, StarRailPath.ABUNDANCE, 6);
             player.addEffect(new MobEffectInstance(
-                    MobEffects.REGENERATION, REGEN_DURATION, 0, false, true, true));
+                    MobEffects.REGENERATION, traceRegen ? 4 * 20 : REGEN_DURATION,
+                    0, false, true, true));
             state.putLong(REGEN_COOLDOWN_TAG, now + REGEN_COOLDOWN);
             StarRailPathMessages.send(player, StarRailPath.ABUNDANCE, Component.translatable(
                     "message.starrail_sim.abundance_lifeblood"));
@@ -54,8 +57,10 @@ public final class StarRailAbundanceService {
         if (rank >= StarRailPathRank.DEEP_PRACTICE.getLevel()) {
             float missing = Math.max(0.0F, maximum - healthBefore);
             float overflow = Math.max(0.0F, healingAmount - missing);
-            float absorption = Math.min(MAX_OVERFLOW_ABSORPTION,
-                    overflow * OVERFLOW_CONVERSION);
+            float conversion = OVERFLOW_CONVERSION
+                    + (StarRailTraceService.hasPassive(player, StarRailPath.ABUNDANCE, 7)
+                    ? 0.15F : 0.0F);
+            float absorption = Math.min(MAX_OVERFLOW_ABSORPTION, overflow * conversion);
             if (absorption > 0.0F) {
                 player.setAbsorptionAmount(player.getAbsorptionAmount() + absorption);
                 StarRailPathMessages.send(player, StarRailPath.ABUNDANCE, Component.translatable(
@@ -94,7 +99,9 @@ public final class StarRailAbundanceService {
         }
 
         player.setHealth(1.0F);
-        player.heal(player.getMaxHealth() * 0.20F);
+        float recovery = 0.20F + (StarRailTraceService.hasPassive(
+                player, StarRailPath.ABUNDANCE, 8) ? 0.10F : 0.0F);
+        player.heal(player.getMaxHealth() * recovery);
         player.setAbsorptionAmount(Math.max(
                 player.getAbsorptionAmount(), player.getMaxHealth() * 0.05F));
         state.putLong(SAVE_COOLDOWN_TAG, now + SAVE_COOLDOWN);

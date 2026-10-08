@@ -162,6 +162,7 @@ public final class StarRailPathService {
                     data.getSoughtX(),
                     data.getSoughtY(),
                     data.getSoughtZ()));
+            StarRailTraceService.sync(player, data);
         });
     }
 

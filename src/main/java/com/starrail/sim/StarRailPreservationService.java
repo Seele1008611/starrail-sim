@@ -13,6 +13,8 @@ import net.minecraft.world.entity.monster.Monster;
 
 /** Server-side state and combat rules for the Preservation path. */
 public final class StarRailPreservationService {
+    private static final String PASSIVE_GUARD_TAG = "trace_preservation_countershock";
+    private static final String PASSIVE_SHIELD_BARRIER_TAG = "trace_preservation_shield_barrier";
     private static final int MAX_GUARD_STACKS = 3;
     private static final long GUARD_DURATION = 8L * 20L;
     private static final long BARRIER_COOLDOWN = 6L * 20L;
@@ -52,11 +54,14 @@ public final class StarRailPreservationService {
         sendGuardProgress(player, stacks);
 
         boolean activatedBarrier = false;
-        if (stacks == MAX_GUARD_STACKS
+        boolean reducedThreshold = player.getPersistentData().getBoolean(PASSIVE_GUARD_TAG);
+        int requiredStacks = reducedThreshold ? MAX_GUARD_STACKS - 1 : MAX_GUARD_STACKS;
+        if (stacks >= requiredStacks
                 && level >= StarRailPathRank.DEEP_PRACTICE.getLevel()
                 && data.getPreservationBarrierCooldownTick() <= currentTick
                 && !barrierActive) {
             activateBarrier(player, data, currentTick, level);
+            player.getPersistentData().remove(PASSIVE_GUARD_TAG);
             activatedBarrier = true;
         }
 
@@ -66,7 +71,20 @@ public final class StarRailPreservationService {
             double armor = player.getAttributeValue(Attributes.ARMOR);
             float multiplier = level >= StarRailPathRank.PATH_PINNACLE.getLevel()
                     ? 0.50F : 0.20F;
+            if (StarRailTraceService.hasPassive(player, StarRailPath.PRESERVATION, 8)) {
+                multiplier *= 1.20F;
+            }
             float damage = (float) (armor * multiplier);
+            if (StarRailTraceService.hasPassive(player, StarRailPath.PRESERVATION, 7)) {
+                player.getPersistentData().putBoolean(PASSIVE_GUARD_TAG, true);
+            }
+            if (StarRailTraceService.hasPassive(player, StarRailPath.PRESERVATION, 6)
+                    && player.getPersistentData().getLong(PASSIVE_SHIELD_BARRIER_TAG)
+                    != data.getPreservationBarrierExpireTick()) {
+                player.setAbsorptionAmount(player.getAbsorptionAmount() + 1.0F);
+                player.getPersistentData().putLong(PASSIVE_SHIELD_BARRIER_TAG,
+                        data.getPreservationBarrierExpireTick());
+            }
             StarRailPathMessages.send(player, StarRailPath.PRESERVATION,
                     Component.translatable("message.starrail_sim.preservation_countershock",
                             String.format("%.2f", damage)));

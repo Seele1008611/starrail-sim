@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#080d20">
+  <title>1.6.0 · 九命途行迹设计图</title>
+  <link rel="stylesheet" href="巡猎行迹.css">
+  <script defer src="巡猎行迹.js"></script>
+</head>
+<body>
+  <div class="space-backdrop" aria-hidden="true">
+    <canvas id="starfield"></canvas>
+    <div class="nebula nebula-left"></div>
+    <div class="nebula nebula-right"></div>
+  </div>
+
+  <main class="app-shell">
+    <header class="topbar">
+      <div class="brand">
+        <img id="brand-icon" src="../../../崩铁/命途/巡猎命途.png" alt="巡猎命途图标">
+        <div>
+          <span class="overline">1.6.0 行迹系统 · 设计样机</span>
+          <h1 id="page-title">巡猎行迹</h1>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <span class="draft-pill"><i></i>设计草案</span>
+        <button class="close-button" type="button" aria-label="关闭预览">×</button>
+      </div>
+    </header>
+
+    <section class="layout" aria-label="九命途行迹预览">
+      <aside class="path-panel glass-panel">
+        <div class="panel-kicker">命途状态</div>
+        <div class="path-emblem">
+          <img id="aside-icon" src="../../../崩铁/命途/巡猎命途.png" alt="">
+        </div>
+        <h2 id="path-name">巡猎</h2>
+        <p class="rank-title"><span id="rank-name">深度践行</span><span>演示等级 5</span></p>
+        <div class="practice-label"><span>命途实践度</span><b>27 / 60</b></div>
+        <div class="progress-track"><i></i></div>
+        <div class="panel-divider"></div>
+        <div class="panel-kicker">现有命途加成</div>
+        <div id="path-bonuses"></div>
+        <div class="panel-divider"></div>
+        <p class="intent-note"><span class="intent-mark">✦</span><span id="path-mechanic">击败敌对生物积累猎意。满层后可触发追猎一击。</span></p>
+        <p class="tiny-note">左侧为当前等级已实现加成；行迹总量与被动效果已确认，单节点拆分仍待定。</p>
+      </aside>
+
+      <section class="tree-panel glass-panel">
+        <div class="tree-heading">
+          <div>
+            <span class="panel-kicker" id="path-kicker">PATH TRACE / HUNT</span>
+            <h2 id="tree-heading-title">循着猎意，锁定目标</h2>
+          </div>
+          <div class="tree-progress"><strong id="unlock-count">3 / 9</strong><span>节点点亮 <i id="progress-ring"></i></span></div>
+        </div>
+        <nav class="path-selector" id="path-selector" aria-label="选择命途"></nav>
+        <div class="tree-toolbar">
+          <div class="branch-legend" role="group" aria-label="节点类型筛选">
+            <button class="filter-button active" data-filter="all" type="button">全部</button>
+            <button class="filter-button" data-filter="attribute" type="button"><i class="legend-dot gold"></i>属性增益</button>
+            <button class="filter-button" data-filter="passive" type="button"><i class="legend-dot cyan"></i>被动能力</button>
+          </div>
+          <span class="shape-caption" id="shape-caption">贯穿主轴 · 中段下弧 · 下方双侧折枝</span>
+        </div>
+        <div class="aggregate-strip" id="aggregate-strip" aria-label="全部属性节点点亮后的提议加成"></div>
+        <div class="tree-stage" id="tree-stage">
+          <img class="emblem-watermark" id="emblem-watermark" src="../../../崩铁/命途/巡猎命途.png" alt="">
+          <svg class="tree-lines" viewBox="0 0 1000 760" role="presentation" aria-hidden="true">
+            <defs>
+              <linearGradient id="gold-line" x1="0" y1="1" x2="1" y2="0">
+                <stop offset="0" stop-color="#ad8b4f" stop-opacity=".22"/>
+                <stop offset=".55" stop-color="#f0d083" stop-opacity=".84"/>
+                <stop offset="1" stop-color="#fff0b7" stop-opacity=".3"/>
+              </linearGradient>
+              <linearGradient id="cyan-line" x1="0" y1="1" x2="0" y2="0">
+                <stop offset="0" stop-color="#67c7d8" stop-opacity=".25"/>
+                <stop offset="1" stop-color="#85fff0" stop-opacity=".9"/>
+              </linearGradient>
+              <filter id="line-glow" x="-40%" y="-40%" width="180%" height="180%">
+                <feGaussianBlur stdDeviation="4" result="blur"/>
+                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+            </defs>
+            <g id="tree-art"></g>
+          </svg>
+          <div class="tree-node-layer" id="tree-nodes"></div>
+          <div class="tree-caption tree-caption-left" id="caption-left">属性增益</div>
+          <div class="tree-caption tree-caption-right" id="caption-right">被动能力</div>
+        </div>
+        <div class="tree-footer">
+          <span><i class="state-dot lit"></i>已点亮</span>
+          <span><i class="state-dot ready"></i>可点亮</span>
+          <span><i class="state-dot locked"></i>等级 / 前置未满足</span>
+          <span class="scroll-hint">选择节点查看详情</span>
+        </div>
+      </section>
+
+      <aside class="detail-panel glass-panel" id="detail-panel" aria-live="polite">
+        <div class="detail-topline"><span class="panel-kicker">行迹节点</span><span class="node-id" id="node-id">H-P1</span></div>
+        <div class="detail-icon" id="detail-icon">✦</div>
+        <span class="type-pill passive-pill" id="node-type">被动能力</span>
+        <h2 id="node-title">精准追击</h2>
+        <p class="node-subtitle" id="node-subtitle">中央主轴 · 第一节点</p>
+        <div class="detail-rule"></div>
+        <div class="detail-label">节点效果</div>
+        <p class="node-effect" id="node-effect">追猎一击获得 +5% 暴击率。</p>
+        <div class="detail-meta">
+          <div><span>开放等级</span><b id="node-rank">命途等级 5</b></div>
+          <div><span>前置节点</span><b id="node-prerequisite">无</b></div>
+          <div><span>升级材料 · 消耗</span><b class="material-cost" id="node-cost"></b></div>
+        </div>
+        <div class="detail-status available" id="node-status"><i></i><span>等级已满足，可点亮</span></div>
+        <button class="unlock-button" id="unlock-button" type="button">在样机中点亮节点</button>
+        <button class="reset-button reset-node-button" id="reset-node-button" type="button" disabled>重置此节点及后续节点</button>
+        <button class="reset-button" id="reset-button" type="button">重置当前命途整棵树</button>
+        <p class="prototype-note">仅网页演示节点交互；材料数量与 1.6.0 游戏规则一致，不修改存档或实际消耗物品。</p>
+      </aside>
+    </section>
+
+    <dialog class="reset-dialog" id="reset-dialog" aria-labelledby="reset-title">
+      <div class="reset-dialog-header">
+        <span class="panel-kicker">TRACE RESET / PREVIEW</span>
+        <button class="dialog-close" id="reset-cancel-x" type="button" aria-label="关闭">×</button>
+      </div>
+      <h2 id="reset-title">确认重置行迹</h2>
+      <p class="reset-description" id="reset-description"></p>
+      <ul class="reset-preview-list" id="reset-preview-list"></ul>
+      <p class="reset-refund"><span>材料返还预览</span><b id="reset-refund-value"></b></p>
+      <div class="reset-dialog-actions">
+        <button class="dialog-cancel" id="reset-cancel" type="button">返回</button>
+        <button class="dialog-confirm" id="reset-confirm" type="button">确认重置</button>
+      </div>
+      <p class="reset-dialog-note">仅预览重置规则；此网页不会保存游戏进度或真实返还物品。返还数量与 1.6.0 游戏规则一致。</p>
+    </dialog>
+
+    <footer class="bottom-note"><span id="bottom-path-label">巡猎行迹 · 1.6.0 样机</span><span>每棵树全解锁消耗 33 个对应命途材料；节点成本与游戏规则一致</span></footer>
+  </main>
+</body>
+</html>

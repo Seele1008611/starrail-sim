@@ -11,7 +11,6 @@ import com.starrail.sim.StarRailPathRules;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.screens.ConfirmScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
@@ -46,6 +45,7 @@ public final class StarRailPathScreen extends StarRailStyledScreen {
     private int pathGridTop;
     private boolean compactLayout;
     private boolean growthPage = true;
+    private boolean resetConfirmation;
     private StarRailPath browsedPath = StarRailPath.HUNT;
     private int browsedRank = 1;
     private final Button[] rankButtons = new Button[7];
@@ -84,6 +84,8 @@ public final class StarRailPathScreen extends StarRailStyledScreen {
                         minecraft.setScreen(new StarRailCharacterScreen());
                     } else if (index == 1) {
                         minecraft.setScreen(new StarRailLightConeScreen());
+                    } else if (index == 2) {
+                        minecraft.setScreen(new StarRailTraceScreen());
                     } else if (index == 5) {
                         minecraft.setScreen(new StarRailGuideScreen());
                     }
@@ -176,7 +178,8 @@ public final class StarRailPathScreen extends StarRailStyledScreen {
     }
 
     private void resetPath() {
-        Minecraft.getInstance().setScreen(new ConfirmScreen(
+        resetConfirmation = true;
+        /* Minecraft.getInstance().setScreen(new ConfirmScreen(
                 confirmed -> {
                     if (confirmed) {
                         selectedSeekPath = StarRailPath.NONE;
@@ -187,7 +190,7 @@ public final class StarRailPathScreen extends StarRailStyledScreen {
                     Minecraft.getInstance().setScreen(this);
                 },
                 Component.translatable("screen.starrail_sim.reset_path_title"),
-                Component.translatable("screen.starrail_sim.reset_path_confirm")));
+                Component.translatable("screen.starrail_sim.reset_path_confirm"))); */
     }
 
     @Override
@@ -199,6 +202,71 @@ public final class StarRailPathScreen extends StarRailStyledScreen {
         else drawStatus(graphics);
         updateButtonStates();
         super.renderPage(graphics, mouseX, mouseY, partialTick);
+        if (resetConfirmation) drawResetConfirmation(graphics, mouseX, mouseY);
+    }
+
+    private void drawResetConfirmation(GuiGraphics graphics, int mouseX, int mouseY) {
+        graphics.fill(0, 0, width, height, 0xC0080D1C);
+        int dialogWidth = 340;
+        int dialogHeight = 136;
+        int left = width / 2 - dialogWidth / 2;
+        int top = height / 2 - dialogHeight / 2;
+        graphics.fill(left, top, left + dialogWidth, top + dialogHeight, 0xFF16263C);
+        graphics.renderOutline(left, top, dialogWidth, dialogHeight, 0xFF8EBCE3);
+        graphics.fill(left, top, left + dialogWidth, top + 2, StarRailUiStyle.GOLD_ACCENT);
+        graphics.drawCenteredString(font,
+                Component.translatable("screen.starrail_sim.reset_path_title"), width / 2, top + 15,
+                StarRailUiStyle.GOLD_ACCENT);
+
+        int messageY = top + 43;
+        for (var line : font.split(Component.translatable("screen.starrail_sim.reset_path_confirm"), dialogWidth - 28)) {
+            graphics.drawCenteredString(font, line, width / 2, messageY, StarRailUiStyle.VALUE_COLOR);
+            messageY += 12;
+        }
+
+        int buttonY = top + 94;
+        drawResetOption(graphics, left + 28, buttonY, 126, 24, "确认回退", mouseX, mouseY);
+        drawResetOption(graphics, left + 186, buttonY, 126, 24, "取消", mouseX, mouseY);
+    }
+
+    private void drawResetOption(GuiGraphics graphics, int x, int y, int buttonWidth, int buttonHeight,
+                                 String label, int mouseX, int mouseY) {
+        boolean hovered = mouseX >= x && mouseX <= x + buttonWidth && mouseY >= y && mouseY <= y + buttonHeight;
+        graphics.fill(x, y, x + buttonWidth, y + buttonHeight,
+                hovered ? 0x605D8CB6 : 0x30202F48);
+        graphics.renderOutline(x, y, buttonWidth, buttonHeight,
+                hovered ? StarRailUiStyle.GOLD_ACCENT : 0xFF73849D);
+        graphics.drawCenteredString(font, label, x + buttonWidth / 2, y + 8,
+                hovered ? StarRailUiStyle.GOLD_ACCENT : StarRailUiStyle.VALUE_COLOR);
+    }
+
+    @Override
+    protected boolean logicalMouseClicked(double x, double y, int button) {
+        if (resetConfirmation) {
+            if (button == 0) {
+                int left = width / 2 - 170;
+                int buttonY = height / 2 + 26;
+                if (y >= buttonY && y <= buttonY + 24 && x >= left + 28 && x <= left + 154) {
+                    resetConfirmation = false;
+                    selectedSeekPath = StarRailPath.NONE;
+                    StarRailNetwork.CHANNEL.sendToServer(new PathActionPacket(
+                            PathActionPacket.Action.RESET_PATH));
+                } else if (y >= buttonY && y <= buttonY + 24 && x >= left + 186 && x <= left + 312) {
+                    resetConfirmation = false;
+                }
+            }
+            return true;
+        }
+        return super.logicalMouseClicked(x, y, button);
+    }
+
+    @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        if (resetConfirmation && keyCode == 256) {
+            resetConfirmation = false;
+            return true;
+        }
+        return super.keyPressed(keyCode, scanCode, modifiers);
     }
 
     private void renderGrowth(GuiGraphics graphics, int mouseX, int mouseY) {

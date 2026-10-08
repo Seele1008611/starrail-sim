@@ -78,6 +78,8 @@ public final class StarRailCharacterScreen extends StarRailStyledScreen {
     private void openSection(int index) {
         if (index == 1) {
             minecraft.setScreen(new StarRailLightConeScreen());
+        } else if (index == 2) {
+            minecraft.setScreen(new StarRailTraceScreen());
         } else if (index == 4) {
             minecraft.setScreen(new StarRailPathScreen());
         } else if (index == 5) {

@@ -58,7 +58,7 @@ public final class StarRailHuntService {
         data.setHuntIntentExpireTick(-1L);
         boolean reversePursuit = rank >= StarRailPathRank.PATH_PINNACLE.getLevel();
         if (reversePursuit) {
-            data.setHuntFinisherCooldownTick(currentTick + REVERSE_PURSUIT_COOLDOWN);
+            data.setHuntFinisherCooldownTick(currentTick + (StarRailTraces.has(data.getTraceMask(StarRailPath.HUNT), 8) ? 12 * 20 : REVERSE_PURSUIT_COOLDOWN));
             StarRailPathMessages.send(player, StarRailPath.HUNT, Component.translatable(
                     "message.starrail_sim.hunt_reverse_pursuit"));
             return REVERSE_PURSUIT_MULTIPLIER;

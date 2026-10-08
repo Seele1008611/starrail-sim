@@ -77,6 +77,8 @@ public final class StarRailPathEffects {
                 .map(data -> data.getPinnaclePracticeCount(path))
                 .orElse(0);
         refresh(player, path, rank, pinnaclePracticeCount);
+        player.getCapability(StarRailPathCapability.PATH_DATA).ifPresent(data ->
+                StarRailTraceService.refresh(player, path, data.getTraceMask(path)));
     }
 
     public static void refresh(Player player, StarRailPath path, StarRailPathRank rank) {

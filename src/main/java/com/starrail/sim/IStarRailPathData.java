@@ -10,6 +10,10 @@ import java.util.UUID;
 
 /** Persistent player state for path selection and trial progress. */
 public interface IStarRailPathData {
+    int getTraceMask(StarRailPath path);
+
+    void setTraceMask(StarRailPath path, int mask);
+
     StarRailPath getCurrentPath();
 
     void setCurrentPath(StarRailPath path);

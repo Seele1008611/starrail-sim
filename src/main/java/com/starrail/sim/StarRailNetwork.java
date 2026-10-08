@@ -14,8 +14,8 @@ import net.minecraftforge.network.simple.SimpleChannel;
 
 /** Network channel for server-authoritative combat feedback. */
 public final class StarRailNetwork {
-    // 新版路径按钮改为寻迹；协议号递增以拒绝仍会直接开始试炼的旧客户端。
-    private static final String PROTOCOL_VERSION = "3";
+    // 行迹新增双向消息；旧版客户端和服务端需要升级到同一版本。
+    private static final String PROTOCOL_VERSION = "4";
 
     public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(
             new ResourceLocation(StarRailSimMod.MOD_ID, "main"),
@@ -29,6 +29,8 @@ public final class StarRailNetwork {
     }
 
     public static void register() {
+        CHANNEL.registerMessage(messageId++, TraceActionPacket.class, TraceActionPacket::encode, TraceActionPacket::decode, TraceActionPacket::handle, java.util.Optional.of(net.minecraftforge.network.NetworkDirection.PLAY_TO_SERVER));
+        CHANNEL.registerMessage(messageId++, TraceStatePacket.class, TraceStatePacket::encode, TraceStatePacket::decode, TraceStatePacket::handle, java.util.Optional.of(net.minecraftforge.network.NetworkDirection.PLAY_TO_CLIENT));
         CHANNEL.registerMessage(
                 messageId++,
                 DamageNumberPacket.class,

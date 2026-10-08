@@ -28,9 +28,20 @@ public final class StarRailElationService {
                 ? 7L * 20L : StarRailPathRules.ELATION_COMBO_WINDOW;
     }
 
+    public static long comboWindow(ServerPlayer player, int rank) {
+        return comboWindow(rank) + (StarRailTraceService.hasPassive(
+                player, StarRailPath.ELATION, 6) ? 2L * 20L : 0L);
+    }
+
     public static float burstBonus(int rank) {
         return rank >= StarRailPathRank.DEEP_PRACTICE.getLevel()
                 ? 4.0F : 2.0F;
+    }
+
+    public static float burstBonus(ServerPlayer player, int rank) {
+        float bonus = burstBonus(rank);
+        return StarRailTraceService.hasPassive(player, StarRailPath.ELATION, 7)
+                ? bonus * 1.15F : bonus;
     }
 
     /** Consumes one rank-six follow-up attack bonus. */
@@ -58,7 +69,9 @@ public final class StarRailElationService {
             return;
         }
         CompoundTag state = getState(player);
-        state.putInt(AFTERGLOW_HITS_TAG, AFTERGLOW_HITS);
+        int hits = AFTERGLOW_HITS + (StarRailTraceService.hasPassive(
+                player, StarRailPath.ELATION, 8) ? 2 : 0);
+        state.putInt(AFTERGLOW_HITS_TAG, hits);
         saveState(player, state);
         StarRailPathMessages.send(player, StarRailPath.ELATION, Component.translatable(
                 "message.starrail_sim.elation_afterglow"));

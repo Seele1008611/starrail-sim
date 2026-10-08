@@ -123,7 +123,7 @@ public final class StarRailUiStyle {
             ((StarRailButton) buttons[index]).navigationIndex = index;
             setSelected(buttons[index], index == selected);
         }
-        buttons[2].active = false;
+        buttons[2].active = true;
         buttons[3].active = false;
         return buttons;
     }

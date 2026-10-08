@@ -78,6 +78,9 @@ public final class StarRailDebuffService {
                 false,
                 true,
                 true));
+        if (StarRailTraceService.hasPassive(owner, StarRailPath.NIHILITY, 7)) {
+            damage *= 1.15F;
+        }
         applyDamageOverTime(target, NIHILITY_MARK_KEY, owner,
                 damage, duration, NIHILITY_DAMAGE_INTERVAL);
 
@@ -108,10 +111,13 @@ public final class StarRailDebuffService {
                 monster -> monster.isAlive()
                         && monster != source
                         && !hasNihilityMark(monster));
-        if (nearby.isEmpty()) {
-            return;
+        int targetCount = StarRailTraceService.hasPassive(owner, StarRailPath.NIHILITY, 6) ? 2 : 1;
+        int applied = 0;
+        for (Monster nearbyTarget : nearby) {
+            if (applyNihilityMark(nearbyTarget, owner, rank, false)) applied++;
+            if (applied >= targetCount) break;
         }
-        if (applyNihilityMark(nearby.get(0), owner, rank, false)) {
+        if (applied > 0) {
             StarRailPathMessages.send(owner, StarRailPath.NIHILITY,
                     Component.translatable("message.starrail_sim.nihility_diffusion"));
         }
@@ -149,6 +155,10 @@ public final class StarRailDebuffService {
             if (hurt) {
                 StarRailNetwork.sendDamageNumber(owner, target,
                         NIHILITY_FINAL_DAMAGE, false);
+            }
+            if (StarRailTraceService.hasPassive(owner, StarRailPath.NIHILITY, 8)
+                    && target.isAlive()) {
+                target.hurt(owner.damageSources().magic(), NIHILITY_FINAL_DAMAGE * 0.5F);
             }
         }
     }

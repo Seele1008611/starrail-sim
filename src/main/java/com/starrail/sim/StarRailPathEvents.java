@@ -8,6 +8,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -98,10 +100,30 @@ public final class StarRailPathEvents {
         if (!(event.getEntity() instanceof ServerPlayer player)) {
             return;
         }
+        initializeBaseDefenseAttributes(player);
         player.getCapability(StarRailPathCapability.PATH_DATA).ifPresent(data ->
                 StarRailPathEffects.refresh(player, data.getCurrentPath()));
         StarRailLightConeService.refresh(player);
         StarRailPathService.sync(player);
+    }
+
+    @SubscribeEvent
+    public static void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event) {
+        if (event.getEntity() instanceof ServerPlayer player) {
+            initializeBaseDefenseAttributes(player);
+        }
+    }
+
+    private static void initializeBaseDefenseAttributes(ServerPlayer player) {
+        AttributeInstance armor = player.getAttribute(Attributes.ARMOR);
+        if (armor != null && armor.getBaseValue() != 2.0D) {
+            armor.setBaseValue(2.0D);
+        }
+
+        AttributeInstance armorToughness = player.getAttribute(Attributes.ARMOR_TOUGHNESS);
+        if (armorToughness != null && armorToughness.getBaseValue() != 1.0D) {
+            armorToughness.setBaseValue(1.0D);
+        }
     }
 
     @SubscribeEvent
@@ -368,7 +390,7 @@ public final class StarRailPathEvents {
             boolean sameTarget = target.getUUID().equals(data.getRemembranceTargetId())
                     && data.getRemembranceTargetTick() >= 0L
                     && currentTick - data.getRemembranceTargetTick()
-                    <= StarRailRemembranceService.memoryWindow(rank)
+                    <= StarRailRemembranceService.memoryWindow(player, rank)
                     && StarRailRemembranceService.canEcho(player, rank);
             if (sameTarget) {
                 event.setAmount(event.getAmount()
@@ -401,7 +423,7 @@ public final class StarRailPathEvents {
                 data.setRemembranceTargetId(target.getUUID());
                 data.setRemembranceTargetTick(currentTick);
                 target.addEffect(new MobEffectInstance(
-                        MobEffects.GLOWING, StarRailRemembranceService.memoryWindow(rank),
+                        MobEffects.GLOWING, StarRailRemembranceService.memoryWindow(player, rank),
                         0, false, false, true));
                 if (active && rank >= StarRailPathRank.PRACTICE.getLevel()) {
                     StarRailPathMessages.send(player, StarRailPath.REMEMBRANCE,
@@ -443,7 +465,7 @@ public final class StarRailPathEvents {
                     ? data.getPathRank(StarRailPath.ELATION).getLevel() : 0;
             int combo = data.getElationLastHitTick() >= 0L
                     && currentTick - data.getElationLastHitTick()
-                    <= StarRailElationService.comboWindow(rank)
+                    <= StarRailElationService.comboWindow(player, rank)
                     ? data.getElationCombo() + 1 : 1;
             data.setElationCombo(combo);
             data.setElationLastHitTick(currentTick);
@@ -460,7 +482,7 @@ public final class StarRailPathEvents {
 
             if (combo % 3 == 0) {
                 event.setAmount(event.getAmount()
-                        + StarRailElationService.burstBonus(rank));
+                        + StarRailElationService.burstBonus(player, rank));
                 if (trial) {
                     recordObjective2(player, data, 1);
                 } else {

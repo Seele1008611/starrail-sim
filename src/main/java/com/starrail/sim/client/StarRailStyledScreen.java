@@ -25,6 +25,9 @@ public abstract class StarRailStyledScreen extends Screen {
 
     protected boolean showGlobalClose() { return true; }
 
+    /** Scale from this screen's responsive logical coordinates to framebuffer pixels. */
+    protected final double uiScaleFactor() { return uiScale; }
+
     @Override
     public final void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
         scrollPanels.forEach(StarRailSmoothScroll::hideBar);

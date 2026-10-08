@@ -33,6 +33,9 @@ public final class StarRailHarmonyService {
     public static void startResonance(ServerPlayer player, int rank) {
         int duration = rank >= StarRailPathRank.PRACTICE.getLevel()
                 ? HARMONY_RESONANCE_DURATION : BASE_RESONANCE_DURATION;
+        if (StarRailTraceService.hasPassive(player, StarRailPath.HARMONY, 6)) {
+            duration += 4 * 20;
+        }
         player.addEffect(new MobEffectInstance(
                 MobEffects.DAMAGE_RESISTANCE, duration, 0, false, true, true));
         if (rank >= StarRailPathRank.PRACTICE.getLevel()) {
@@ -42,7 +45,9 @@ public final class StarRailHarmonyService {
 
         CompoundTag state = getState(player);
         if (rank >= StarRailPathRank.DEEP_PRACTICE.getLevel()) {
-            state.putInt(AFTERGLOW_HITS_TAG, 3);
+            int hits = 3 + (StarRailTraceService.hasPassive(
+                    player, StarRailPath.HARMONY, 7) ? 1 : 0);
+            state.putInt(AFTERGLOW_HITS_TAG, hits);
         }
         if (rank >= StarRailPathRank.PATH_PINNACLE.getLevel()) {
             grantAbsorption(player, state);
@@ -83,7 +88,9 @@ public final class StarRailHarmonyService {
         long now = player.level().getGameTime();
         if (rank >= StarRailPathRank.HIGH_PATHSTRIDER.getLevel()
                 && now >= state.getLong(LAST_RESTORE_TICK_TAG)) {
-            player.heal(player.getMaxHealth() * 0.025F);
+            float heal = 0.025F + (StarRailTraceService.hasPassive(
+                    player, StarRailPath.HARMONY, 8) ? 0.05F : 0.0F);
+            player.heal(player.getMaxHealth() * heal);
             state.putLong(LAST_RESTORE_TICK_TAG, now + KILL_HEAL_COOLDOWN);
             StarRailPathMessages.send(player, StarRailPath.HARMONY, Component.translatable(
                     "message.starrail_sim.harmony_concert_echo"));

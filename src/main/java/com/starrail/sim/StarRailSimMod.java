@@ -317,6 +317,7 @@ public final class StarRailSimMod {
                     .title(Component.translatable("itemGroup.starrail_sim.main"))
                     .icon(() -> new ItemStack(STAR_RAIL_LOGO.get()))
                     .displayItems((parameters, output) -> {
+                        for (StarRailPath path : StarRailPath.values()) if (path.isRealPath()) output.accept(StarRailTraceMaterials.get(path));
                         output.accept(IN_THE_NIGHT.get());
                         output.accept(I_WILL_HUNT.get());
                         output.accept(WORRISOME_BLISSFUL.get());
@@ -406,6 +407,7 @@ public final class StarRailSimMod {
         StarRailNetwork.register();
         StarRailAttributes.ATTRIBUTES.register(modEventBus);
         EFFECTS.register(modEventBus);
+        StarRailTraceMaterials.register();
         ITEMS.register(modEventBus);
         CREATIVE_TABS.register(modEventBus);
         RECIPE_SERIALIZERS.register(modEventBus);

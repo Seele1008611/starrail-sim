@@ -14,6 +14,12 @@ import java.util.UUID;
 
 /** Default implementation of the player's persistent path state. */
 public final class StarRailPathData implements IStarRailPathData {
+    private final EnumMap<StarRailPath, Integer> traceMasks = new EnumMap<>(StarRailPath.class);
+    @Override public int getTraceMask(StarRailPath path) { return traceMasks.getOrDefault(path, 0); }
+    @Override public void setTraceMask(StarRailPath path, int mask) {
+        if (path != null && path.isRealPath()) traceMasks.put(path, mask & 511);
+    }
+
     private StarRailPath currentPath = StarRailPath.NONE;
     private StarRailPath trialPath = StarRailPath.NONE;
     private StarRailPathRank trialRank = StarRailPathRank.UNALIGNED;
@@ -555,11 +561,13 @@ public final class StarRailPathData implements IStarRailPathData {
         pathUnlocked = other.isPathUnlocked();
         setSoughtRuin(other.getSoughtPath(), other.getSoughtX(), other.getSoughtY(),
                 other.getSoughtZ());
+        traceMasks.clear();
         pathRanks.clear();
         practiceProgress.clear();
         pinnaclePracticeCount.clear();
         for (StarRailPath path : StarRailPath.values()) {
             if (path.isRealPath()) {
+                setTraceMask(path, other.getTraceMask(path));
                 setPathRank(path, other.getPathRank(path));
                 setPracticeProgress(path, other.getPracticeProgress(path));
                 setPinnaclePracticeCount(path, other.getPinnaclePracticeCount(path));
@@ -624,6 +632,9 @@ public final class StarRailPathData implements IStarRailPathData {
             }
         }
         tag.put("path_ranks", rankTag);
+        CompoundTag traces = new CompoundTag();
+        for (StarRailPath path : StarRailPath.values()) if (path.isRealPath()) traces.putInt(path.getId(), getTraceMask(path));
+        tag.put("path_traces", traces);
         CompoundTag practiceTag = new CompoundTag();
         for (StarRailPath path : StarRailPath.values()) {
             if (path.isRealPath()) {
@@ -687,6 +698,9 @@ public final class StarRailPathData implements IStarRailPathData {
 
     @Override
     public void deserializeNBT(CompoundTag tag) {
+        traceMasks.clear();
+        CompoundTag traces = tag.getCompound("path_traces");
+        for (StarRailPath path : StarRailPath.values()) if (path.isRealPath()) setTraceMask(path, traces.getInt(path.getId()));
         currentPath = StarRailPath.byId(tag.getString("current_path"));
         trialPath = StarRailPath.byId(tag.getString("trial_path"));
         trialRank = tag.contains("trial_rank")

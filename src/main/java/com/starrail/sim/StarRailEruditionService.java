@@ -65,11 +65,18 @@ public final class StarRailEruditionService {
                 && currentTick >= data.getEruditionEchoCooldownTick()) {
             double echoRadius = level >= StarRailPathRank.DEEP_PRACTICE.getLevel()
                     ? 3.0D : 2.5D;
+            boolean expandedEcho = player.getPersistentData().getBoolean("trace_erudition_expanded_echo")
+                    && StarRailTraceService.hasPassive(player, StarRailPath.ERUDITION, 8);
+            if (expandedEcho) echoRadius += 1.5D;
             List<Monster> nearby = nearbyMonsters(target, echoRadius);
-            int maximumTargets = level >= StarRailPathRank.DEEP_PRACTICE.getLevel() ? 2 : 1;
+            int maximumTargets = (level >= StarRailPathRank.DEEP_PRACTICE.getLevel() ? 2 : 1)
+                    + (StarRailTraceService.hasPassive(player, StarRailPath.ERUDITION, 6) ? 1 : 0);
             if (!nearby.isEmpty()) {
                 double multiplier = level >= StarRailPathRank.DEEP_PRACTICE.getLevel()
                         ? 0.20D : 0.15D;
+                if (StarRailTraceService.hasPassive(player, StarRailPath.ERUDITION, 7)) {
+                    multiplier *= 1.15D;
+                }
                 int affected = 0;
                 for (Monster secondary : nearby) {
                     dealSecondaryDamage(player, secondary,
@@ -79,6 +86,7 @@ public final class StarRailEruditionService {
                     }
                 }
                 data.setEruditionEchoCooldownTick(currentTick + ECHO_COOLDOWN);
+                if (expandedEcho) player.getPersistentData().remove("trace_erudition_expanded_echo");
                 StarRailPathMessages.send(player, StarRailPath.ERUDITION, Component.translatable(
                         "message.starrail_sim.erudition_echo"));
             }
@@ -137,6 +145,9 @@ public final class StarRailEruditionService {
             data.clearEruditionAnalysisTargets();
             data.setEruditionAnalysisWindowExpireTick(-1L);
             data.setEruditionAnalysisExpireTick(currentTick + ANALYSIS_DURATION);
+            if (StarRailTraceService.hasPassive(player, StarRailPath.ERUDITION, 8)) {
+                player.getPersistentData().putBoolean("trace_erudition_expanded_echo", true);
+            }
             StarRailPathMessages.send(player, StarRailPath.ERUDITION, Component.translatable(
                     "message.starrail_sim.erudition_analysis"));
         }

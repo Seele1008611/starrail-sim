@@ -48,6 +48,9 @@ public final class StarRailCombatEvents {
         if (player == null) {
             return;
         }
+        if (player.getPersistentData().getBoolean("trace_destruction_splash_active")) {
+            return;
+        }
 
         if (event.getSource().getDirectEntity() instanceof Projectile) {
             double projectileAttackMultiplier =
@@ -57,8 +60,12 @@ public final class StarRailCombatEvents {
             }
         }
 
+        final float pursuit = event.getEntity() instanceof Monster
+                ? player.getCapability(StarRailPathCapability.PATH_DATA).map(data -> StarRailHuntService.consumePursuitStrike(player, data)).orElse(1.0F) : 1.0F;
+        double echoBonus = StarRailTraceService.consumeEcho(player, event.getEntity());
+        double traceCritBonus = pursuit > 1.0F && StarRailTraces.has(StarRailTraceService.mask(player), 6) ? .05 : 0;
         double critRate = Mth.clamp(
-                StarRailAttributes.getCritRate(player)
+                StarRailAttributes.getCritRate(player) + traceCritBonus
                         + StarRailLightConeService.rainNeverStopsCritRateBonus(
                                 player, event.getEntity()), 0.0D, 1.0D);
         StarRailLightConeService.onAttack(player);
@@ -66,19 +73,23 @@ public final class StarRailCombatEvents {
         if (!critical) {
             StarRailLightConeService.onNonCriticalAttack(player);
         }
-        final float[] pursuitMultiplier = {1.0F};
+        final float[] pursuitMultiplier = {pursuit};
         final float[] destructionMultiplier = {1.0F};
         final float[] eruditionMultiplier = {1.0F};
         final float[] harmonyMultiplier = {1.0F};
+        final boolean[] destructionTraceCritBonus = {false};
+        final boolean[] destructionBlast = {false};
         if (event.getEntity() instanceof Monster) {
             player.getCapability(StarRailPathCapability.PATH_DATA).ifPresent(data -> {
-                pursuitMultiplier[0] = StarRailHuntService.consumePursuitStrike(player, data);
+                // Pursuit was resolved before the critical roll above.
                 destructionMultiplier[0] = StarRailDestructionService.consumeAttackMultiplier(
                         player, data);
                 eruditionMultiplier[0] = StarRailEruditionService.consumeAttackMultiplier(
                         player, data);
                 harmonyMultiplier[0] = StarRailHarmonyService.consumeAttackMultiplier(
                         player, data);
+                destructionTraceCritBonus[0] = StarRailDestructionService.consumeWrathCritBonus(player);
+                destructionBlast[0] = StarRailDestructionService.consumeDesperationBlast(player);
                 if (critical && pursuitMultiplier[0] == 1.0F) {
                     StarRailHuntService.onCriticalHit(player, data);
                 }
@@ -86,7 +97,8 @@ public final class StarRailCombatEvents {
         }
         if (critical) {
             double bonusCritDamage = Mth.clamp(
-                    StarRailAttributes.getCritDamage(player)
+                    StarRailAttributes.getCritDamage(player) + echoBonus
+                            + (destructionTraceCritBonus[0] ? 0.10D : 0.0D)
                             + StarRailLightConeService.infernoCritDamageBonus(
                                     player, event.getEntity())
                             + StarRailLightConeService.tamedCritDamageBonus(
@@ -101,6 +113,7 @@ public final class StarRailCombatEvents {
             player.crit(event.getEntity());
         }
 
+        if (pursuit > 1.0F) StarRailTraceService.armEcho(player, event.getEntity());
         if (pursuitMultiplier[0] > 1.0F) {
             event.setAmount(event.getAmount() * pursuitMultiplier[0]);
         }
@@ -138,6 +151,23 @@ public final class StarRailCombatEvents {
 
         StarRailNetwork.sendDamageNumber(
                 player, event.getEntity(), event.getAmount(), critical);
+
+        if (destructionBlast[0] && event.getEntity() instanceof Monster target) {
+            float splashDamage = Math.max(0.1F, event.getAmount() * 0.20F);
+            var tag = player.getPersistentData();
+            tag.putBoolean("trace_destruction_splash_active", true);
+            try {
+                for (Monster nearby : target.level().getEntitiesOfClass(
+                        Monster.class, target.getBoundingBox().inflate(2.5D),
+                        monster -> monster.isAlive() && monster != target)) {
+                    if (nearby.hurt(player.damageSources().generic(), splashDamage)) {
+                        StarRailNetwork.sendDamageNumber(player, nearby, splashDamage, false);
+                    }
+                }
+            } finally {
+                tag.remove("trace_destruction_splash_active");
+            }
+        }
     }
 
     /** The rainbow cone counts each landed player hit exactly once, melee or projectile. */

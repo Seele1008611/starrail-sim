@@ -132,6 +132,8 @@ public final class StarRailLightConeScreen extends StarRailStyledScreen {
                 panelLeft, panelTop, panelWidth, panelHeight, 1, index -> {
                     if (index == 0) {
                         minecraft.setScreen(new StarRailCharacterScreen());
+                    } else if (index == 2) {
+                        minecraft.setScreen(new StarRailTraceScreen());
                     } else if (index == 4) {
                         minecraft.setScreen(new StarRailPathScreen());
                     } else if (index == 5) {

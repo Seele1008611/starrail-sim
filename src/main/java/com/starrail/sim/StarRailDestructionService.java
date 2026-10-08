@@ -11,6 +11,8 @@ import net.minecraft.world.effect.MobEffects;
 
 /** Server-side state and combat rules for the Destruction path. */
 public final class StarRailDestructionService {
+    private static final String WRATH_CRIT_TAG = "trace_destruction_wrath_crit";
+    private static final String DESPERATION_BLAST_TAG = "trace_destruction_desperation_blast";
     private static final long WRATH_DURATION = 8L * 20L;
     private static final long EMPOWERED_ATTACK_DURATION = 8L * 20L;
     private static final long DESPERATION_COOLDOWN = 30L * 20L;
@@ -50,6 +52,22 @@ public final class StarRailDestructionService {
         return multiplier;
     }
 
+    /** Consumes the rank-six trace's critical-damage rider for this attack. */
+    public static boolean consumeWrathCritBonus(ServerPlayer player) {
+        boolean ready = player.getPersistentData().getBoolean(WRATH_CRIT_TAG)
+                && StarRailTraceService.hasPassive(player, StarRailPath.DESTRUCTION, 7);
+        player.getPersistentData().remove(WRATH_CRIT_TAG);
+        return ready;
+    }
+
+    /** Consumes the rank-seven trace's one-shot splash after Desperation. */
+    public static boolean consumeDesperationBlast(ServerPlayer player) {
+        boolean ready = player.getPersistentData().getBoolean(DESPERATION_BLAST_TAG)
+                && StarRailTraceService.hasPassive(player, StarRailPath.DESTRUCTION, 8);
+        player.getPersistentData().remove(DESPERATION_BLAST_TAG);
+        return ready;
+    }
+
     /** Records hostile damage taken while entering or remaining in low health. */
     public static void onHostileDamage(ServerPlayer player, IStarRailPathData data,
                                        float amount) {
@@ -71,16 +89,20 @@ public final class StarRailDestructionService {
                 ? data.getDestructionWrathStacks() : 0;
         stacks = Math.min(3, stacks + 1);
         data.setDestructionWrathStacks(stacks);
-        data.setDestructionWrathExpireTick(currentTick + WRATH_DURATION);
+        long wrathDuration = WRATH_DURATION
+                + (StarRailTraceService.hasPassive(player, StarRailPath.DESTRUCTION, 6)
+                ? 2L * 20L : 0L);
+        data.setDestructionWrathExpireTick(currentTick + wrathDuration);
         StarRailPathMessages.send(player, StarRailPath.DESTRUCTION,
                 Component.translatable("message.starrail_sim.destruction_wrath",
-                        stacks, 3, (WRATH_DURATION + 19L) / 20L));
+                        stacks, 3, (wrathDuration + 19L) / 20L));
 
         if (stacks == 3 && data.getCurrentPathRank().getLevel()
                 >= StarRailPathRank.HIGH_PATHSTRIDER.getLevel()) {
             data.setDestructionWrathStacks(0);
             data.setDestructionWrathExpireTick(-1L);
             data.setDestructionAttackBonus(0.35D);
+            player.getPersistentData().putBoolean(WRATH_CRIT_TAG, true);
             data.setDestructionAttackBonusExpireTick(
                     currentTick + EMPOWERED_ATTACK_DURATION);
             StarRailPathMessages.send(player, StarRailPath.DESTRUCTION,
@@ -116,6 +138,7 @@ public final class StarRailDestructionService {
             data.setDestructionAttackBonus(0.50D);
             data.setDestructionAttackBonusExpireTick(
                     currentTick + EMPOWERED_ATTACK_DURATION);
+            player.getPersistentData().putBoolean(DESPERATION_BLAST_TAG, true);
             player.addEffect(new MobEffectInstance(
                     MobEffects.DAMAGE_RESISTANCE,
                     (int) DESPERATION_RESISTANCE_DURATION, 0,
