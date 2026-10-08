@@ -11,7 +11,7 @@
 - Java：`17`
 - 必需依赖：Curios API（Forge、Minecraft 1.20.1）；发行包使用 `5.14.1` 核验。
 
-发行 JAR：[starrail_sim-1.6.0.jar](https://github.com/Seele1008611/starrail-sim/releases/download/v1.6.0/starrail_sim-1.6.0.jar)。
+发行 JAR：[starrail_sim-1.6.0.jar](https://raw.githubusercontent.com/Seele1008611/starrail-sim/release-assets/v1.6.0/dist/1.6.0/starrail_sim-1.6.0.jar)。
 
 ## 功能概览
 

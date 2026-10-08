@@ -18,7 +18,7 @@
 - 最终发行包使用 Java 17.0.20、Gradle 8.8 执行 `reobfJar` 构建；发行文件 `starrail_sim-1.6.0.jar`（38,939,924 字节），SHA-256：`8EABA958504F0141441F6A0BFBCB7FB3892FCEDE68F73330AD7A2C1CE33F0053`。已核对版本元数据、九种材料模型/纹理、九张行迹背景与双语文本。
 - 发行文件及 SHA-256 见 [1.6.0 发布归档](releases/1.6.0.md)。
 
-发行文件：[starrail_sim-1.6.0.jar](https://github.com/Seele1008611/starrail-sim/releases/download/v1.6.0/starrail_sim-1.6.0.jar)。
+发行文件：[starrail_sim-1.6.0.jar](https://raw.githubusercontent.com/Seele1008611/starrail-sim/release-assets/v1.6.0/dist/1.6.0/starrail_sim-1.6.0.jar)。
 
 ## 1.5.0 — 正式版（2026-10-06）
 
