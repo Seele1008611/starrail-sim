@@ -149,7 +149,9 @@ public final class StarRailPathEvents {
             if (countershockDamage > 0.0F) {
                 // Countershock is a fixed armor-based effect; do not let it roll
                 // the player's critical-hit formula a second time.
-                attacker.hurt(player.damageSources().generic(), countershockDamage);
+                if (attacker.hurt(player.damageSources().generic(), countershockDamage))
+                    StarRailCombatVfx.emit(player, player, attacker, CombatVfxPacket.Kind.PRESERVATION_COUNTER,
+                            event.getSource().getDirectEntity() instanceof net.minecraft.world.entity.projectile.Projectile);
             }
         });
     }
@@ -286,7 +288,7 @@ public final class StarRailPathEvents {
             if (!trial && !active) {
                 return;
             }
-            if (StarRailDebuffService.applyNihilityMark(target, player)) {
+            if (StarRailDebuffService.applyNihilityMark(target, player, event.getSource())) {
                 if (trial) {
                     recordObjective1(player, data, 1);
                     completeOrSync(player, data);
@@ -406,6 +408,8 @@ public final class StarRailPathEvents {
                     event.setAmount(event.getAmount() * 1.50F);
                     StarRailRemembranceService.sendEternalEcho(player);
                 }
+                if (active) StarRailCombatVfx.stage(player, target, event.getSource(), eternalEcho
+                        ? CombatVfxPacket.Kind.REMEMBRANCE_ETERNAL : CombatVfxPacket.Kind.REMEMBRANCE_ECHO);
                 StarRailRemembranceService.lockEcho(player, rank);
                 if (active && rank >= StarRailPathRank.HIGH_PATHSTRIDER.getLevel()) {
                     data.setRemembranceTargetId(target.getUUID());
@@ -422,6 +426,7 @@ public final class StarRailPathEvents {
             } else {
                 data.setRemembranceTargetId(target.getUUID());
                 data.setRemembranceTargetTick(currentTick);
+                if (active) StarRailCombatVfx.stage(player, target, event.getSource(), CombatVfxPacket.Kind.REMEMBRANCE_RECORD);
                 target.addEffect(new MobEffectInstance(
                         MobEffects.GLOWING, StarRailRemembranceService.memoryWindow(player, rank),
                         0, false, false, true));
@@ -491,6 +496,7 @@ public final class StarRailPathEvents {
                                 Component.translatable(
                                         "message.starrail_sim.elation_combo_burst"));
                     }
+                    StarRailCombatVfx.stage(player, event.getEntity(), event.getSource(), CombatVfxPacket.Kind.ELATION_BURST);
                     StarRailElationService.rollJoyDice(player, rank);
                     StarRailElationService.startAfterglow(player, rank);
                     if (combo % 6 == 0
@@ -499,6 +505,7 @@ public final class StarRailPathEvents {
                         StarRailElationService.rollJoyDice(player, rank);
                         StarRailElationService.rollJoyDice(player, rank);
                         StarRailElationService.sendGrandBurst(player);
+                        StarRailCombatVfx.stage(player, event.getEntity(), event.getSource(), CombatVfxPacket.Kind.ELATION_GRAND);
                     }
                 }
             }

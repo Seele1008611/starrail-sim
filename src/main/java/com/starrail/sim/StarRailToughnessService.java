@@ -36,6 +36,12 @@ public final class StarRailToughnessService {
      * One landed attack removes one toughness point in this first pass.
      */
     public static boolean onPlayerAttack(ServerPlayer player, LivingEntity target) {
+        return onPlayerAttack(player, target, ignored -> {});
+    }
+
+    /** Reports whether this hit actually reduced toughness, without repeating the calculation. */
+    public static boolean onPlayerAttack(ServerPlayer player, LivingEntity target,
+                                         java.util.function.IntConsumer visualResult) {
         if (player == null || !isToughnessTarget(target) || !target.isAlive()
                 || target.level().isClientSide()) {
             return false;
@@ -52,6 +58,7 @@ public final class StarRailToughnessService {
         float next = Math.max(0.0F, current - TOUGHNESS_PER_HIT);
         state.putFloat(CURRENT_TAG, next);
         boolean finalHit = next <= 0.0F;
+        visualResult.accept(finalHit ? 2 : 1);
         StarRailNetwork.sendToughnessNumber(
                 player, target, TOUGHNESS_PER_HIT, finalHit);
         if (finalHit) {

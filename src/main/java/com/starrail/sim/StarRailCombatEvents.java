@@ -79,9 +79,13 @@ public final class StarRailCombatEvents {
         final float[] harmonyMultiplier = {1.0F};
         final boolean[] destructionTraceCritBonus = {false};
         final boolean[] destructionBlast = {false};
+        final double[] destructionCharge = {0};
         if (event.getEntity() instanceof Monster) {
             player.getCapability(StarRailPathCapability.PATH_DATA).ifPresent(data -> {
                 // Pursuit was resolved before the critical roll above.
+                if (data.getCurrentPath() == StarRailPath.DESTRUCTION
+                        && data.getDestructionAttackBonusExpireTick() > player.level().getGameTime())
+                    destructionCharge[0] = data.getDestructionAttackBonus();
                 destructionMultiplier[0] = StarRailDestructionService.consumeAttackMultiplier(
                         player, data);
                 eruditionMultiplier[0] = StarRailEruditionService.consumeAttackMultiplier(
@@ -139,11 +143,12 @@ public final class StarRailCombatEvents {
         if (event.getEntity() instanceof Monster target) {
             player.getCapability(StarRailPathCapability.PATH_DATA).ifPresent(data ->
                     StarRailEruditionService.onPlayerAttack(
-                            player, target, event.getAmount(), data));
+                            player, target, event.getAmount(), data, event.getSource()));
         }
 
+        final int[] toughnessVisual = {0};
         boolean toughnessBroken = StarRailToughnessService.onPlayerAttack(
-                player, event.getEntity());
+                player, event.getEntity(), result -> toughnessVisual[0] = result);
         StarRailLightConeService.onToughnessBreak(
                 player, event.getEntity(), toughnessBroken);
 
@@ -151,6 +156,13 @@ public final class StarRailCombatEvents {
 
         StarRailNetwork.sendDamageNumber(
                 player, event.getEntity(), event.getAmount(), critical);
+
+        StarRailCombatVfx.queue(player, event.getEntity(), event.getSource(),
+                pursuit, toughnessVisual[0]);
+        if (destructionCharge[0] > 0) StarRailCombatVfx.stage(player, event.getEntity(), event.getSource(),
+                destructionCharge[0] >= .5 ? CombatVfxPacket.Kind.DESTRUCTION_DESPERATE : CombatVfxPacket.Kind.DESTRUCTION_BURN);
+        if (harmonyMultiplier[0] > 1) StarRailCombatVfx.stage(player, event.getEntity(), event.getSource(),
+                CombatVfxPacket.Kind.HARMONY_AFTERGLOW);
 
         if (destructionBlast[0] && event.getEntity() instanceof Monster target) {
             float splashDamage = Math.max(0.1F, event.getAmount() * 0.20F);

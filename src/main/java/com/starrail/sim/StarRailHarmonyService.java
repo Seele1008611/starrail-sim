@@ -38,6 +38,7 @@ public final class StarRailHarmonyService {
         }
         player.addEffect(new MobEffectInstance(
                 MobEffects.DAMAGE_RESISTANCE, duration, 0, false, true, true));
+        StarRailCombatVfx.self(player, rank >= StarRailPathRank.PATH_PINNACLE.getLevel() ? CombatVfxPacket.Kind.HARMONY_UNISON : CombatVfxPacket.Kind.HARMONY_RESONANCE);
         if (rank >= StarRailPathRank.PRACTICE.getLevel()) {
             StarRailPathMessages.send(player, StarRailPath.HARMONY, Component.translatable(
                     "message.starrail_sim.harmony_resonance_started"));
@@ -92,6 +93,7 @@ public final class StarRailHarmonyService {
                     player, StarRailPath.HARMONY, 8) ? 0.05F : 0.0F);
             player.heal(player.getMaxHealth() * heal);
             state.putLong(LAST_RESTORE_TICK_TAG, now + KILL_HEAL_COOLDOWN);
+            StarRailCombatVfx.self(player, CombatVfxPacket.Kind.HARMONY_CONCERT);
             StarRailPathMessages.send(player, StarRailPath.HARMONY, Component.translatable(
                     "message.starrail_sim.harmony_concert_echo"));
         }

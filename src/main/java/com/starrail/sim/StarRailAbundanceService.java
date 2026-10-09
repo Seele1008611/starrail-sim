@@ -50,6 +50,7 @@ public final class StarRailAbundanceService {
                     MobEffects.REGENERATION, traceRegen ? 4 * 20 : REGEN_DURATION,
                     0, false, true, true));
             state.putLong(REGEN_COOLDOWN_TAG, now + REGEN_COOLDOWN);
+            StarRailCombatVfx.self(player, CombatVfxPacket.Kind.ABUNDANCE_HEAL);
             StarRailPathMessages.send(player, StarRailPath.ABUNDANCE, Component.translatable(
                     "message.starrail_sim.abundance_lifeblood"));
         }
@@ -63,6 +64,7 @@ public final class StarRailAbundanceService {
             float absorption = Math.min(MAX_OVERFLOW_ABSORPTION, overflow * conversion);
             if (absorption > 0.0F) {
                 player.setAbsorptionAmount(player.getAbsorptionAmount() + absorption);
+                StarRailCombatVfx.self(player, CombatVfxPacket.Kind.ABUNDANCE_MANNA);
                 StarRailPathMessages.send(player, StarRailPath.ABUNDANCE, Component.translatable(
                         "message.starrail_sim.abundance_manna"));
             }
@@ -105,6 +107,7 @@ public final class StarRailAbundanceService {
         player.setAbsorptionAmount(Math.max(
                 player.getAbsorptionAmount(), player.getMaxHealth() * 0.05F));
         state.putLong(SAVE_COOLDOWN_TAG, now + SAVE_COOLDOWN);
+        StarRailCombatVfx.self(player, CombatVfxPacket.Kind.ABUNDANCE_MERCY);
         saveState(player, state);
         StarRailPathMessages.send(player, StarRailPath.ABUNDANCE, Component.translatable(
                 "message.starrail_sim.abundance_emergency"));

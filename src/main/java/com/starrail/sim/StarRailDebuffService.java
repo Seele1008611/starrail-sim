@@ -51,14 +51,25 @@ public final class StarRailDebuffService {
      * which prevents repeated hits from inflating a trial objective.
      */
     public static boolean applyNihilityMark(LivingEntity target, ServerPlayer owner) {
+        return applyNihilityMark(target, owner, null);
+    }
+
+    public static boolean applyNihilityMark(LivingEntity target, ServerPlayer owner,
+                                           net.minecraft.world.damagesource.DamageSource attackSource) {
         int rank = owner == null ? 0 : owner.getCapability(StarRailPathCapability.PATH_DATA)
                 .map(data -> data.getPathRank(StarRailPath.NIHILITY).getLevel())
                 .orElse(0);
-        return applyNihilityMark(target, owner, rank, true);
+        return applyNihilityMark(target, owner, rank, true, attackSource);
     }
 
     private static boolean applyNihilityMark(LivingEntity target, ServerPlayer owner,
                                              int rank, boolean allowDiffusion) {
+        return applyNihilityMark(target, owner, rank, allowDiffusion, null);
+    }
+
+    private static boolean applyNihilityMark(LivingEntity target, ServerPlayer owner,
+                                             int rank, boolean allowDiffusion,
+                                             net.minecraft.world.damagesource.DamageSource attackSource) {
         if (target.level().isClientSide()) {
             return false;
         }
@@ -85,6 +96,12 @@ public final class StarRailDebuffService {
                 damage, duration, NIHILITY_DAMAGE_INTERVAL);
 
         if (!wasMarked && owner != null) {
+            boolean active = owner.getCapability(StarRailPathCapability.PATH_DATA)
+                    .map(data -> data.getCurrentPath() == StarRailPath.NIHILITY).orElse(false);
+            if (active) {
+                if (attackSource != null) StarRailCombatVfx.stage(owner, target, attackSource, CombatVfxPacket.Kind.NIHILITY_MARK);
+                else StarRailCombatVfx.emit(owner, owner, target, CombatVfxPacket.Kind.NIHILITY_MARK, false);
+            }
             if (rank >= StarRailPathRank.HIGH_PATHSTRIDER.getLevel()) {
                 StarRailPathMessages.send(owner, StarRailPath.NIHILITY,
                         Component.translatable("message.starrail_sim.nihility_pain_echo"));
@@ -114,7 +131,10 @@ public final class StarRailDebuffService {
         int targetCount = StarRailTraceService.hasPassive(owner, StarRailPath.NIHILITY, 6) ? 2 : 1;
         int applied = 0;
         for (Monster nearbyTarget : nearby) {
-            if (applyNihilityMark(nearbyTarget, owner, rank, false)) applied++;
+            if (applyNihilityMark(nearbyTarget, owner, rank, false)) {
+                applied++;
+                StarRailCombatVfx.emit(owner, source, nearbyTarget, CombatVfxPacket.Kind.NIHILITY_SPREAD, false);
+            }
             if (applied >= targetCount) break;
         }
         if (applied > 0) {
@@ -153,6 +173,7 @@ public final class StarRailDebuffService {
             boolean hurt = target.hurt(owner.damageSources().magic(), NIHILITY_FINAL_DAMAGE);
             target.getPersistentData().remove(FINAL_BURST_GUARD_KEY);
             if (hurt) {
+                StarRailCombatVfx.emit(owner, deceased, target, CombatVfxPacket.Kind.NIHILITY_END, false);
                 StarRailNetwork.sendDamageNumber(owner, target,
                         NIHILITY_FINAL_DAMAGE, false);
             }

@@ -179,6 +179,7 @@ public final class StarRailPreservationService {
         player.addEffect(new MobEffectInstance(
                 MobEffects.DAMAGE_RESISTANCE, duration, fortress ? 2 : 1,
                 false, true, true));
+        StarRailCombatVfx.self(player, CombatVfxPacket.Kind.PRESERVATION_WALL);
         if (fortress) {
             StarRailPathMessages.send(player, StarRailPath.PRESERVATION,
                     Component.translatable(

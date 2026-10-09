@@ -47,7 +47,7 @@ public final class StarRailEruditionService {
 
     /** Processes one player attack after the normal damage multipliers. */
     public static void onPlayerAttack(ServerPlayer player, Monster target,
-                                      float finalDamage, IStarRailPathData data) {
+                                      float finalDamage, IStarRailPathData data, net.minecraft.world.damagesource.DamageSource source) {
         if (data.getCurrentPath() != StarRailPath.ERUDITION
                 || !target.isAlive()
                 || finalDamage <= 0.0F) {
@@ -79,8 +79,10 @@ public final class StarRailEruditionService {
                 }
                 int affected = 0;
                 for (Monster secondary : nearby) {
-                    dealSecondaryDamage(player, secondary,
-                            Math.max(0.1F, (float) (finalDamage * multiplier)));
+                    if (dealSecondaryDamage(player, secondary,
+                            Math.max(0.1F, (float) (finalDamage * multiplier))))
+                        StarRailCombatVfx.emit(player, target, secondary, CombatVfxPacket.Kind.ERUDITION_ECHO,
+                                source.getDirectEntity() instanceof net.minecraft.world.entity.projectile.Projectile);
                     if (++affected >= maximumTargets) {
                         break;
                     }
@@ -97,8 +99,10 @@ public final class StarRailEruditionService {
             List<Monster> crowd = nearbyMonsters(target, 3.0D);
             if (crowd.size() >= 2) {
                 for (Monster secondary : nearbyMonsters(target, 4.0D)) {
-                    dealSecondaryDamage(player, secondary,
-                            Math.max(0.1F, finalDamage * 0.45F));
+                    if (dealSecondaryDamage(player, secondary,
+                            Math.max(0.1F, finalDamage * 0.45F)))
+                        StarRailCombatVfx.emit(player, target, secondary, CombatVfxPacket.Kind.ERUDITION_FINAL,
+                                source.getDirectEntity() instanceof net.minecraft.world.entity.projectile.Projectile);
                 }
                 data.setEruditionFinalCooldownTick(currentTick + FINAL_COOLDOWN);
                 StarRailPathMessages.send(player, StarRailPath.ERUDITION, Component.translatable(
@@ -159,10 +163,8 @@ public final class StarRailEruditionService {
                 monster -> monster.isAlive() && monster != target);
     }
 
-    private static void dealSecondaryDamage(ServerPlayer player, Monster target,
+    private static boolean dealSecondaryDamage(ServerPlayer player, Monster target,
                                             float amount) {
-        if (target.isAlive()) {
-            target.hurt(player.damageSources().generic(), amount);
-        }
+        return target.isAlive() && target.hurt(player.damageSources().generic(), amount);
     }
 }

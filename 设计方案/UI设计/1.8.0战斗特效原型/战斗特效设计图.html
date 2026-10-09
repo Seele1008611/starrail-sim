@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#080e1c">
+  <title>1.8.0 · 九命途战斗特效</title>
+  <link rel="stylesheet" href="战斗特效.css">
+  <script defer src="命途特效配置.js"></script>
+  <script defer src="命途华彩.js"></script>
+  <script defer src="巡猎矢冠.js"></script>
+  <script defer src="战斗网格.js"></script>
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <div class="brand"><span class="brand-star" aria-hidden="true">✧</span><div><span class="eyebrow">崩铁小模拟 · 1.8.0</span><h1>战斗特效设计室</h1></div></div>
+      <span class="draft"><i></i>HTML 动效原型</span>
+    </header>
+    <div class="workspace">
+      <aside class="panel paths-panel">
+        <div class="section-label">命途选择 <span>01 — 09</span></div>
+        <nav id="paths" aria-label="切换命途"></nav>
+        <div class="path-footnote">连续光带 · 几何模型 · 分段动画<br>以主体中心与脚下为对齐基准</div>
+      </aside>
+      <section class="preview-panel panel" aria-label="战斗特效预览">
+        <div class="preview-heading"><div><span class="eyebrow" id="scene-kicker">巡猎 · 单体追击</span><h2 id="scene-title">逆时追猎</h2></div><span class="live-label" id="play-state">播放中</span></div>
+        <div class="stage-wrap">
+          <canvas id="stage" width="1120" height="720" aria-label="九命途自定义网格动画与主体对齐预览"></canvas>
+          <div class="stage-top"><span id="mesh-phase">等待触发</span><span id="camera-note">标准视距</span></div>
+          <div class="target-hud"><div><span>训练目标</span><span id="toughness-value">韧性 10 / 10</span></div><div class="health-bar"><i></i></div><div class="toughness-bar"><i id="toughness-fill"></i></div></div>
+          <div class="stage-caption" id="stage-caption" role="status" aria-live="polite">猎意满层 · 强化攻击命中</div>
+          <div class="stage-legend"><span><i class="player-dot"></i>玩家</span><span><i class="enemy-dot"></i>目标</span><span id="particle-count">0 个面片</span></div>
+        </div>
+        <div class="playback">
+          <div class="playback-top"><button id="replay" class="primary" type="button">↻ 重新播放</button><button id="pause" class="secondary" type="button">暂停</button><label class="loop-toggle"><input id="loop" type="checkbox" checked>循环预览</label><span class="time-readout" id="time">0.00 / 3.00 秒</span></div>
+          <input id="timeline" type="range" min="0" max="3000" step="10" value="0" aria-label="拖动查看特效时间点">
+          <div class="timeline-labels"><span>蓄势</span><span>触发 / 命中</span><span>余韵消散</span></div>
+        </div>
+        <div class="preview-options">
+          <label>攻击方式<select id="attack-mode"><option value="melee">近战 · 挥击</option><option value="ranged">远程 · 射击</option></select></label>
+          <label>播放速度<select id="speed"><option value="0.5">0.5× 慢放</option><option value="1" selected>1× 正常</option><option value="1.5">1.5×</option></select></label>
+          <label>网格精度<select id="density"><option value="1.25">完整 · 精细</option><option value="0.4">简化 · 低开销</option></select></label>
+          <label>观察距离<select id="camera"><option value="1">标准视距</option><option value="1.35">近距离</option><option value="0.72">远距离</option></select></label>
+          <label>视角<select id="view"><option value="iso">斜侧视角</option><option value="front">正面视角</option><option value="side">侧面视角</option></select></label>
+          <label>锚点模式<select id="anchor-mode"><option value="follow">跟随主体</option><option value="snapshot">命中位置固定</option></select></label>
+          <label class="crowd-label"><input id="anchors" type="checkbox" checked>显示对齐基准</label>
+          <label class="crowd-label"><input id="movement" type="checkbox">目标受击移动</label>
+          <label class="crowd-label"><input id="crowd" type="checkbox">多目标场景</label>
+        </div>
+      </section>
+      <aside class="panel details-panel">
+        <div class="path-brand"><img id="path-icon" alt="巡猎命途图标"><div><span class="eyebrow">命途特效</span><h2 id="path-name">巡猎</h2></div></div>
+        <div class="palette-note"><span id="palette-name"></span><span id="palette-swatches" aria-label="主色、高光和辅助色"></span></div>
+        <div class="section-label trigger-label">触发效果</div><div id="effects" class="effect-list" role="group" aria-label="选择命途触发效果"></div>
+        <div class="divider"></div>
+        <div class="section-label combat-label">通用战斗反馈</div>
+        <div class="common-effects"><button type="button" data-common="hit">韧性削减</button><button type="button" data-common="break">韧性击破</button></div>
+        <label class="combo-label"><input id="combo" type="checkbox">触发技同时击破韧性</label>
+        <div class="divider"></div>
+        <span class="eyebrow condition-label">触发条件</span><p id="condition" class="condition"></p>
+        <span class="eyebrow visual-label">表现设计</span><p id="visual" class="visual"></p>
+        <div class="design-note">主体光带、晶体、符文均用网格表现。<br>增益跟随玩家，命中轮廓跟随目标，地面层锁定脚下。</div>
+      </aside>
+    </div>
+    <footer><span>自定义网格 · 九命途差异 · 通用击破反馈</span><span>先确认形状与对齐，再接入游戏 · 时间轴可拖动</span></footer>
+  </main>
+</body>
+</html>

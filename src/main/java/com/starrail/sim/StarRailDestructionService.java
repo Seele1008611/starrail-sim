@@ -93,6 +93,7 @@ public final class StarRailDestructionService {
                 + (StarRailTraceService.hasPassive(player, StarRailPath.DESTRUCTION, 6)
                 ? 2L * 20L : 0L);
         data.setDestructionWrathExpireTick(currentTick + wrathDuration);
+        StarRailCombatVfx.self(player, CombatVfxPacket.Kind.DESTRUCTION_RAGE);
         StarRailPathMessages.send(player, StarRailPath.DESTRUCTION,
                 Component.translatable("message.starrail_sim.destruction_wrath",
                         stacks, 3, (wrathDuration + 19L) / 20L));
@@ -139,6 +140,7 @@ public final class StarRailDestructionService {
             data.setDestructionAttackBonusExpireTick(
                     currentTick + EMPOWERED_ATTACK_DURATION);
             player.getPersistentData().putBoolean(DESPERATION_BLAST_TAG, true);
+            StarRailCombatVfx.self(player, CombatVfxPacket.Kind.DESTRUCTION_DESPERATE);
             player.addEffect(new MobEffectInstance(
                     MobEffects.DAMAGE_RESISTANCE,
                     (int) DESPERATION_RESISTANCE_DURATION, 0,
