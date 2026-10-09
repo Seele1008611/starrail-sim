@@ -10,6 +10,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.warden.Warden;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
@@ -18,6 +19,7 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityLeaveLevelEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.event.level.ChunkEvent;
@@ -39,6 +41,7 @@ public final class StarRailRuinGuardService extends SavedData {
     private static final String NAME = "starrail_sim_ruin_guards";
     private static final String ORIGIN_TAG = "StarRailGuardOrigin";
     private static final String VARIANT_TAG = "StarRailGuardVariant";
+    private static final long SUMMON_COOLDOWN_TICKS = 20L * 30L;
     // 世界生成可能在工作线程执行，只排队；SavedData 和实体操作留给服务器主线程。
     private static final Map<ServerLevel, Set<BlockPos>> QUEUED = new ConcurrentHashMap<>();
     private final Map<BlockPos, Guard> guards = new HashMap<>();
@@ -50,6 +53,9 @@ public final class StarRailRuinGuardService extends SavedData {
         boolean defeated;
         boolean rewarded;
         boolean respawn;
+        boolean summonActive;
+        boolean anchorInstalled;
+        long summonCooldownUntil;
         int openedGate;
     }
 
@@ -69,6 +75,10 @@ public final class StarRailRuinGuardService extends SavedData {
             guard.defeated = entry.getBoolean("Defeated");
             guard.rewarded = entry.getBoolean("Rewarded");
             guard.respawn = entry.getBoolean("Respawn");
+            guard.summonActive = entry.getBoolean("SummonActive");
+            guard.anchorInstalled = entry.contains("AnchorInstalled")
+                    ? entry.getBoolean("AnchorInstalled") : entry.getBoolean("HuntAnchorInstalled");
+            guard.summonCooldownUntil = entry.getLong("SummonCooldownUntil");
             guard.openedGate = entry.getInt("OpenedGate");
             data.guards.put(BlockPos.of(entry.getLong("Origin")), guard);
             LOGGER.debug("Ruin guard restored: origin={}, variant={}, uuid={}, respawn={}, defeated={}",
@@ -89,6 +99,9 @@ public final class StarRailRuinGuardService extends SavedData {
             entry.putBoolean("Defeated", guard.defeated);
             entry.putBoolean("Rewarded", guard.rewarded);
             entry.putBoolean("Respawn", guard.respawn);
+            entry.putBoolean("SummonActive", guard.summonActive);
+            entry.putBoolean("AnchorInstalled", guard.anchorInstalled);
+            entry.putLong("SummonCooldownUntil", guard.summonCooldownUntil);
             entry.putInt("OpenedGate", guard.openedGate);
             list.add(entry);
         });
@@ -132,21 +145,85 @@ public final class StarRailRuinGuardService extends SavedData {
             }
         }
         if (nearest == null) {
-            source.sendFailure(Component.literal("水平 160 格内没有已登记的普通遗迹守卫室。"));
+            source.sendFailure(Component.literal("水平 160 格内没有已登记的遗迹守卫室。"));
             return 0;
         }
         Guard guard = get(level).guards.get(nearest);
         Entity entity = guard.entity == null ? null : level.getEntity(guard.entity);
-        String state = guard.defeated ? "已击败" : guard.entity == null || guard.respawn
+        String state = guard.summonActive ? "重复挑战进行中" : guard.defeated ? "首次挑战已完成" : guard.entity == null || guard.respawn
                 ? "等待生成（和平难度不会生成）" : entity == null ? "实体未加载，不能据此判断死亡" : "守卫在场";
         BlockPos origin = nearest;
         source.sendSuccess(() -> Component.literal("遗迹守卫室锚点 " + origin.toShortString()
                 + "；" + state + "；UUID=" + guard.entity + "；奖励已解锁=" + guard.rewarded
+                + "；召唤冷却剩余=" + Math.max(0L,
+                        (guard.summonCooldownUntil - level.getGameTime() + 19L) / 20L) + "秒"
                 + "；已处理门格=" + Integer.bitCount(guard.openedGate) + "/25"), false);
         return 1;
     }
 
     private static BlockPos chestPos(BlockPos origin) { return origin.offset(0, 10, -21); }
+    private static BlockPos summonAnchorPos(BlockPos origin) { return origin.offset(-2, 10, -21); }
+
+    /** Activates only the matching path anchor generated inside its registered ruin. */
+    public static boolean trySummonGuardian(ServerLevel level, BlockPos anchor,
+            net.minecraft.world.entity.player.Player player, StarRailPath path) {
+        BlockPos origin = anchor.offset(2, -10, 21);
+        StarRailRuinGuardService data = get(level);
+        Guard guard = data.guards.get(origin);
+        if (guard == null || !guard.variantId.equals(path.getId())
+                || !summonAnchorPos(origin).equals(anchor)) {
+            player.displayClientMessage(Component.translatable(
+                    "message.starrail_sim.ruin_anchor.unbound",
+                    StarRailRuinContent.pathName(path)), true);
+            return false;
+        }
+        if (!guard.defeated) {
+            player.displayClientMessage(Component.translatable(
+                    "message.starrail_sim.ruin_anchor.first_clear",
+                    StarRailRuinContent.pathName(path)), true);
+            return false;
+        }
+        if (level.getDifficulty() == Difficulty.PEACEFUL) {
+            player.displayClientMessage(Component.translatable(
+                    "message.starrail_sim.ruin_anchor.peaceful"), true);
+            return false;
+        }
+        if (guard.summonActive) {
+            player.displayClientMessage(Component.translatable(
+                    "message.starrail_sim.ruin_anchor.active"), true);
+            return false;
+        }
+        long remaining = guard.summonCooldownUntil - level.getGameTime();
+        if (remaining > 0) {
+            player.displayClientMessage(Component.translatable("message.starrail_sim.ruin_anchor.cooldown",
+                    Math.max(1L, (remaining + 19L) / 20L)), true);
+            return false;
+        }
+
+        Entity existing = guard.entity == null ? null : level.getEntity(guard.entity);
+        if (existing instanceof Warden warden && !warden.isDeadOrDying()) {
+            guard.summonActive = true;
+            data.setDirty();
+            player.displayClientMessage(Component.translatable(
+                    "message.starrail_sim.ruin_anchor.active"), true);
+            return false;
+        }
+        guard.summonActive = true;
+        guard.respawn = true;
+        data.setDirty();
+        if (!data.spawnGuardian(level, origin, guard)) {
+            guard.summonActive = false;
+            guard.respawn = false;
+            data.setDirty();
+            player.displayClientMessage(Component.translatable(
+                    "message.starrail_sim.ruin_anchor.failed"), true);
+            return false;
+        }
+        player.displayClientMessage(Component.translatable(
+                "message.starrail_sim.ruin_anchor.summoned",
+                StarRailRuinContent.pathName(path)), true);
+        return true;
+    }
 
     /** 载入已标记的宝箱即可恢复登记；旧版普通宝箱没有标记，不参与守卫机制。 */
     @SubscribeEvent
@@ -156,7 +233,8 @@ public final class StarRailRuinGuardService extends SavedData {
             for (var blockEntity : chunk.getBlockEntities().values()) {
                 if (blockEntity instanceof ChestBlockEntity chest
                         && chest.getPersistentData().contains(ORIGIN_TAG)) {
-                    queue(level, BlockPos.of(chest.getPersistentData().getLong(ORIGIN_TAG)));
+                    BlockPos origin = BlockPos.of(chest.getPersistentData().getLong(ORIGIN_TAG));
+                    queue(level, origin);
                 }
             }
         }
@@ -188,32 +266,47 @@ public final class StarRailRuinGuardService extends SavedData {
             }
         }
         data.guards.forEach((origin, guard) -> {
-            if (guard.defeated) {
-                data.unlock(level, origin, guard);
-                return;
-            }
-            BlockPos spawn = origin.offset(-2, 8, -10);
-            if ((guard.entity == null || guard.respawn) && level.hasChunkAt(spawn)
-                    && level.hasChunkAt(chestPos(origin)) && level.getDifficulty() != Difficulty.PEACEFUL) {
-                Warden warden = EntityType.WARDEN.create(level);
-                if (warden == null) return;
-                warden.moveTo(spawn.getX() + .5, spawn.getY(), spawn.getZ() + .5, 0, 0);
-                // 执行原版出生初始化，否则 DIG_COOLDOWN 未建立，命名守卫仍会立刻钻地。
-                warden.finalizeSpawn(level, level.getCurrentDifficultyAt(spawn),
-                        net.minecraft.world.entity.MobSpawnType.STRUCTURE, null, null);
-                // 固定名称阻止原版空闲钻地消失；不改属性、AI、装备或攻击技能。
-                warden.setCustomName(Component.literal("遗迹监守者"));
-                warden.setPersistenceRequired();
-                warden.getPersistentData().putLong(ORIGIN_TAG, origin.asLong());
-                if (level.addFreshEntity(warden)) {
-                    LOGGER.debug("Ruin guard spawned: origin={}, previous={}, respawn={}, uuid={}",
-                            origin, guard.entity, guard.respawn, warden.getUUID());
-                    guard.entity = warden.getUUID();
-                    guard.respawn = false;
+            StarRailPath path = StarRailPath.byId(guard.variantId);
+            if (path.isRealPath() && !guard.anchorInstalled) {
+                BlockPos anchor = summonAnchorPos(origin);
+                if (level.hasChunkAt(anchor)) {
+                    // 新蓝图已含锚点；旧结构只在空位补建，并且只执行一次。
+                    if (level.getBlockState(anchor).isAir()) level.setBlockAndUpdate(anchor,
+                            StarRailRuinContent.anchor(path).get().defaultBlockState());
+                    guard.anchorInstalled = true;
                     data.setDirty();
                 }
             }
+            if (guard.defeated) {
+                data.unlock(level, origin, guard);
+                if (guard.summonActive && (guard.entity == null || guard.respawn))
+                    data.spawnGuardian(level, origin, guard);
+                return;
+            }
+            if (guard.entity == null || guard.respawn) data.spawnGuardian(level, origin, guard);
         });
+    }
+
+    private boolean spawnGuardian(ServerLevel level, BlockPos origin, Guard guard) {
+        BlockPos spawn = origin.offset(-2, 8, -10);
+        if (!level.hasChunkAt(spawn) || !level.hasChunkAt(chestPos(origin))
+                || level.getDifficulty() == Difficulty.PEACEFUL) return false;
+        Warden warden = EntityType.WARDEN.create(level);
+        if (warden == null) return false;
+        warden.moveTo(spawn.getX() + .5, spawn.getY(), spawn.getZ() + .5, 0, 0);
+        // 执行原版出生初始化，否则 DIG_COOLDOWN 未建立，命名守卫仍会立刻钻地。
+        warden.finalizeSpawn(level, level.getCurrentDifficultyAt(spawn),
+                net.minecraft.world.entity.MobSpawnType.STRUCTURE, null, null);
+        warden.setCustomName(Component.literal("遗迹监守者"));
+        warden.setPersistenceRequired();
+        warden.getPersistentData().putLong(ORIGIN_TAG, origin.asLong());
+        if (!level.addFreshEntity(warden)) return false;
+        LOGGER.debug("Ruin guard spawned: origin={}, previous={}, respawn={}, uuid={}",
+                origin, guard.entity, guard.respawn, warden.getUUID());
+        guard.entity = warden.getUUID();
+        guard.respawn = false;
+        setDirty();
+        return true;
     }
 
     /** 修复早期原型保存的缺失出生记忆，仅作用于本模组已标记守卫。 */
@@ -237,9 +330,30 @@ public final class StarRailRuinGuardService extends SavedData {
         var data = get(level);
         BlockPos origin = BlockPos.of(warden.getPersistentData().getLong(ORIGIN_TAG));
         Guard guard = data.guards.get(origin);
-        if (guard == null || !warden.getUUID().equals(guard.entity) || guard.defeated) return;
+        if (guard == null || !warden.getUUID().equals(guard.entity)
+                || (guard.defeated && !guard.summonActive)) return;
         // 等事件分发结束后核对真实死亡，避免别的监听器取消死亡时提前发奖。
         data.pendingDeaths.put(warden.getUUID(), warden);
+    }
+
+    /** Each path guardian death gets one server-side roll for its matching material. */
+    @SubscribeEvent
+    public static void onGuardDrops(LivingDropsEvent event) {
+        if (event.isCanceled() || !(event.getEntity() instanceof Warden warden)
+                || !(warden.level() instanceof ServerLevel level)
+                || !warden.getPersistentData().contains(ORIGIN_TAG)) return;
+        BlockPos origin = BlockPos.of(warden.getPersistentData().getLong(ORIGIN_TAG));
+        Guard guard = get(level).guards.get(origin);
+        StarRailPath path = guard == null ? StarRailPath.NONE : StarRailPath.byId(guard.variantId);
+        if (guard == null || !path.isRealPath()
+                || !warden.getUUID().equals(guard.entity)
+                || (guard.defeated && !guard.summonActive)
+                || level.getRandom().nextFloat() >= 0.30F) return;
+        ItemEntity drop = new ItemEntity(level, warden.getX(), warden.getY() + 0.5D,
+                warden.getZ(), new net.minecraft.world.item.ItemStack(
+                        StarRailTraceMaterials.get(path)));
+        drop.setDefaultPickUpDelay();
+        event.getDrops().add(drop);
     }
 
     private void confirmDeaths(ServerLevel level) {
@@ -247,13 +361,25 @@ public final class StarRailRuinGuardService extends SavedData {
             if (warden.getHealth() > 0 || !warden.isDeadOrDying()) continue;
             BlockPos origin = BlockPos.of(warden.getPersistentData().getLong(ORIGIN_TAG));
             Guard guard = guards.get(origin);
-            if (guard == null || guard.defeated || !warden.getUUID().equals(guard.entity)) continue;
-            guard.defeated = true;
-            setDirty();
-            unlock(level, origin, guard);
-            for (var player : level.players()) if (player.distanceToSqr(
-                    origin.getX(), origin.getY() + 8, origin.getZ()) <= 96 * 96)
-                player.sendSystemMessage(Component.literal("遗迹监守者已被击败，宝箱室已开放。"));
+            if (guard == null || !warden.getUUID().equals(guard.entity)
+                    || (guard.defeated && !guard.summonActive)) continue;
+            if (!guard.defeated) {
+                guard.defeated = true;
+                setDirty();
+                unlock(level, origin, guard);
+                for (var player : level.players()) if (player.distanceToSqr(
+                        origin.getX(), origin.getY() + 8, origin.getZ()) <= 96 * 96)
+                    player.sendSystemMessage(Component.literal("遗迹监守者已被击败，宝箱室已开放。"));
+            } else {
+                guard.summonActive = false;
+                guard.respawn = false;
+                guard.summonCooldownUntil = level.getGameTime() + SUMMON_COOLDOWN_TICKS;
+                setDirty();
+                for (var player : level.players()) if (player.distanceToSqr(
+                        origin.getX(), origin.getY() + 8, origin.getZ()) <= 96 * 96)
+                    player.sendSystemMessage(Component.translatable(
+                            "message.starrail_sim.ruin_anchor.defeated"));
+            }
         }
         pendingDeaths.clear();
     }
@@ -275,7 +401,8 @@ public final class StarRailRuinGuardService extends SavedData {
                 || !entity.getPersistentData().contains(ORIGIN_TAG)) return;
         var data = get(level);
         Guard guard = data.guards.get(BlockPos.of(entity.getPersistentData().getLong(ORIGIN_TAG)));
-        if (guard != null && !guard.defeated && entity.getUUID().equals(guard.entity)) {
+        if (guard != null && (!guard.defeated || guard.summonActive)
+                && entity.getUUID().equals(guard.entity)) {
             guard.respawn = true;
             data.setDirty();
         }
@@ -311,8 +438,11 @@ public final class StarRailRuinGuardService extends SavedData {
     }
 
     private static boolean locked(ServerLevel level, BlockPos pos, boolean includeGate) {
+        if (includeGate && StarRailRuinContent.isAnchor(level.getBlockState(pos).getBlock())) return true;
         var data = get(level);
         for (var entry : data.guards.entrySet()) {
+            if (includeGate && StarRailPath.byId(entry.getValue().variantId).isRealPath()
+                    && pos.equals(summonAnchorPos(entry.getKey()))) return true;
             if (entry.getValue().defeated) continue;
             BlockPos origin = entry.getKey();
             if (pos.equals(chestPos(origin))) return true;

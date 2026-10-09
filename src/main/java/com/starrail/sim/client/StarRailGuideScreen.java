@@ -344,6 +344,9 @@ public final class StarRailGuideScreen extends StarRailStyledScreen {
             y = drawArticle(graphics, heading, Component.translatable(section[1]),
                     detailX, y, textWidth) + 14;
         }
+        drawArticle(graphics, Component.translatable("guide.starrail_sim.path.materials"),
+                Component.translatable("guide.starrail_sim.path.material_source"),
+                detailX, y, textWidth);
     }
 
     private int drawArticle(GuiGraphics graphics, Component heading, Component body, int x, int y, int width) {

@@ -6,11 +6,16 @@ package com.starrail.sim;
 
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.SimpleCraftingRecipeSerializer;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.material.PushReaction;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraft.world.effect.MobEffect;
@@ -30,6 +35,8 @@ public final class StarRailSimMod {
     public static final String MOD_ID = "starrail_sim";
 
     // 延迟注册器：先声明注册表，再在模组构造阶段挂接 Forge 生命周期。
+    public static final DeferredRegister<Block> BLOCKS =
+            DeferredRegister.create(ForgeRegistries.BLOCKS, MOD_ID);
     public static final DeferredRegister<Item> ITEMS =
             DeferredRegister.create(ForgeRegistries.ITEMS, MOD_ID);
     public static final DeferredRegister<MobEffect> EFFECTS =
@@ -38,6 +45,21 @@ public final class StarRailSimMod {
             DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MOD_ID);
     public static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZERS =
             DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, MOD_ID);
+
+    public static final RegistryObject<Block> HUNT_RUIN_ANCHOR = BLOCKS.register(
+            "hunt_ruin_anchor", () -> new PathRuinAnchorBlock(StarRailPath.HUNT,
+                    BlockBehaviour.Properties.of()
+                    .mapColor(MapColor.COLOR_BLUE).strength(3.5F, 6.0F)
+                    .requiresCorrectToolForDrops().pushReaction(PushReaction.BLOCK)));
+    public static final RegistryObject<Item> HUNT_RUIN_SUMMON_KEY = ITEMS.register(
+            "hunt_ruin_summon_key", () -> new PathRuinSummonKeyItem(
+                    StarRailPath.HUNT, new Item.Properties().stacksTo(1)));
+    public static final RegistryObject<Item> HUNT_RUIN_ANCHOR_ITEM = ITEMS.register(
+            "hunt_ruin_anchor", () -> new BlockItem(HUNT_RUIN_ANCHOR.get(), new Item.Properties()));
+
+    static {
+        StarRailRuinContent.registerOtherPaths();
+    }
 
     // 以下按命途注册自定义光锥；注册 ID 必须与模型、语言文件和战利品表一致。
     public static final RegistryObject<InTheNightItem> IN_THE_NIGHT = ITEMS.register(
@@ -317,7 +339,11 @@ public final class StarRailSimMod {
                     .title(Component.translatable("itemGroup.starrail_sim.main"))
                     .icon(() -> new ItemStack(STAR_RAIL_LOGO.get()))
                     .displayItems((parameters, output) -> {
-                        for (StarRailPath path : StarRailPath.values()) if (path.isRealPath()) output.accept(StarRailTraceMaterials.get(path));
+                        for (StarRailPath path : StarRailPath.values()) if (path.isRealPath()) {
+                            output.accept(StarRailRuinContent.key(path).get());
+                            output.accept(StarRailRuinContent.anchorItem(path).get());
+                            output.accept(StarRailTraceMaterials.get(path));
+                        }
                         output.accept(IN_THE_NIGHT.get());
                         output.accept(I_WILL_HUNT.get());
                         output.accept(WORRISOME_BLISSFUL.get());
@@ -408,6 +434,7 @@ public final class StarRailSimMod {
         StarRailAttributes.ATTRIBUTES.register(modEventBus);
         EFFECTS.register(modEventBus);
         StarRailTraceMaterials.register();
+        BLOCKS.register(modEventBus);
         ITEMS.register(modEventBus);
         CREATIVE_TABS.register(modEventBus);
         RECIPE_SERIALIZERS.register(modEventBus);

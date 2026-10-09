@@ -5,13 +5,13 @@
 ## 版本与依赖
 
 - Mod ID：`starrail_sim`
-- 当前正式版本：`1.6.0`（2026-10-08）。
+- 当前正式版本：`1.7.0`（2026-10-09）。
 - Minecraft：`1.20.1`
 - Forge：`47.x`；发行包在 `47.4.13` 客户端上完成启动核验。
 - Java：`17`
 - 必需依赖：Curios API（Forge、Minecraft 1.20.1）；发行包使用 `5.14.1` 核验。
 
-发行 JAR：[starrail_sim-1.6.0.jar](https://raw.githubusercontent.com/Seele1008611/starrail-sim/release-assets/v1.6.0/dist/1.6.0/starrail_sim-1.6.0.jar)。
+发行 JAR：[starrail_sim-1.7.0.jar](https://raw.githubusercontent.com/Seele1008611/starrail-sim/release-assets/v1.7.0/dist/1.7.0/starrail_sim-1.7.0.jar)。
 
 ## 功能概览
 
@@ -22,6 +22,8 @@
 - Curios 光锥栏位使用专属空槽图标；九种命途试炼凭证各有辨识图案、名称和使用说明。
 - 九条命途各有独立行迹树，包含属性节点与被动节点；命途切换保留各自进度，材料校验、节点回退和重置由服务端处理。
 - 九种行迹材料配有像素风图标和完整物品说明；行迹树采用各自命途图标背景与独立分支布局。
+- 九种命途守卫遗迹各有专属召唤锚点与可重复使用的钥印；首次通关宝箱提供对应钥印，后续挑战成功后冷却 30 秒。
+- 命途遗迹监守者每次死亡有 30% 概率掉落 1 个对应命途的行迹材料；普通遗迹不掉落命途专属材料。
 - 玩家基础护甲值为 2、护甲韧性为 1，便于辨认行迹与装备带来的属性加成。
 - 初始命途流程：发现线索 → 选择命途 → 确认寻迹 → 前往遗迹 → 打开宝箱并使用匹配凭证 → 完成试炼后自动踏上命途。
 - 命途指南、九种遗迹材料表和可逐层查看的建造蓝图。
@@ -32,7 +34,7 @@
 
 1. 安装 Minecraft 1.20.1、Java 17 和 Forge 47.x。
 2. 安装适用于 Forge 1.20.1 的 Curios API 5.14.1 或更高版本。
-3. 将 `starrail_sim-1.6.0.jar` 和 Curios API JAR 放入游戏实例的 `mods` 文件夹。
+3. 将 `starrail_sim-1.7.0.jar` 和 Curios API JAR 放入游戏实例的 `mods` 文件夹。
 4. 启动 Forge 配置文件。
 
 建议先在新存档中体验。自然生成只会发生在首次生成的区块；已经生成过的区块不会因为安装模组而自动补出遗迹。普通遗迹会在满足高度和结构放置条件时尝试生成，命途主题遗迹由命途寻迹安排。
@@ -51,6 +53,7 @@ Windows 下可用项目自带 Gradle Wrapper 启动开发客户端或构建项�
 - 用户已在 Forge 1.20.1 客户端验证遗迹生成、九种变体、宝箱凭证、寻迹坐标和命途试炼流程。
 - 1.5.0 客户端确认光锥空槽图标、九种凭证图案/命途对应、物品提示与指南说明；Forge GameTestServer 六项凭证逻辑验收全部通过。
 - 1.6.0 用户确认九条命途行迹树切换、节点解锁、属性与被动效果及材料说明等游戏内验收通过。
+- 1.7.0 用户确认九命途遗迹召唤、重复挑战、材料对应关系与 30% 材料掉率等游戏内验收通过。
 - `1.3.0` 发行 JAR 已在 Forge 47.4.13、Java 17、Curios 5.14.1 专用服务端中加载；普通母体及九种更新后的守卫室蓝图均成功放置。
 - `1.2.0` 发行 JAR 已在 Forge 47.4.13、Java 17、Curios 5.14.1 独立专用服务端中加载；普通母体放置、守卫与宝箱状态通过，服务端重启后守卫 UUID 保持一致。
 - `1.1.0` 发行 JAR 已在 Forge 47.4.13 正式客户端运行环境中，以隔离游戏目录加载，并完成 Forge、模组资源、音频和渲染初始化。
@@ -62,4 +65,4 @@ Windows 下可用项目自带 Gradle Wrapper 启动开发客户端或构建项�
 
 项目文档与设计资料已按主题整理在 [`设计方案/README.md`](设计方案/README.md)：命途、战斗和版本记录见 [`项目文档`](设计方案/项目文档/README.md)；遗迹概念图、模型源文件和测试记录见 [`遗迹设计`](设计方案/遗迹设计/README.md)。当前版本的详细规则可从 [设计总纲](设计方案/项目文档/DESIGN.md)、[命途试炼与寻迹](设计方案/项目文档/PATH_TRIALS.md)、[命途等级](设计方案/项目文档/PATH_RANKS.md) 开始。版本记录见 [CHANGELOG.md](CHANGELOG.md)；1.6.0 行迹设计与验收记录见 [1.6.0 版本计划](设计方案/项目文档/PLAN_1.6.0.md) 和 [九命途行迹设计表](设计方案/项目文档/1.6.0巡猎行迹设计表.md)。
 
-`README.txt` 和根目录 `changelog.txt` 是 Forge MDK 上游模板文件；项目说明和版本记录以本文件及 `CHANGELOG.md` 为准。发布归档见 [releases/1.6.0.md](releases/1.6.0.md)、[releases/1.5.0.md](releases/1.5.0.md)、[releases/1.4.0.md](releases/1.4.0.md)、[releases/1.3.0.md](releases/1.3.0.md)、[releases/1.2.0.md](releases/1.2.0.md) 和 [releases/1.1.0.md](releases/1.1.0.md)。
+`README.txt` 和根目录 `changelog.txt` 是 Forge MDK 上游模板文件；项目说明和版本记录以本文件及 `CHANGELOG.md` 为准。发布归档见 [releases/1.7.0.md](releases/1.7.0.md)、[releases/1.6.0.md](releases/1.6.0.md)、[releases/1.5.0.md](releases/1.5.0.md)、[releases/1.4.0.md](releases/1.4.0.md)、[releases/1.3.0.md](releases/1.3.0.md)、[releases/1.2.0.md](releases/1.2.0.md) 和 [releases/1.1.0.md](releases/1.1.0.md)。

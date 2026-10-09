@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/lodestone",
+  "textures": {
+    "particle": "starrail_sim:block/remembrance_ruin_anchor",
+    "end": "starrail_sim:block/remembrance_ruin_anchor",
+    "side": "starrail_sim:block/remembrance_ruin_anchor"
+  }
+}
