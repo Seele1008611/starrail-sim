@@ -170,7 +170,7 @@ public final class StarRailDebuffService {
         for (Monster target : nearby) {
             applyNihilityMark(target, owner, rank, false);
             target.getPersistentData().putBoolean(FINAL_BURST_GUARD_KEY, true);
-            boolean hurt = target.hurt(owner.damageSources().magic(), NIHILITY_FINAL_DAMAGE);
+            boolean hurt = StarRailOwnedDamage.hurt(owner, target, NIHILITY_FINAL_DAMAGE, false);
             target.getPersistentData().remove(FINAL_BURST_GUARD_KEY);
             if (hurt) {
                 StarRailCombatVfx.emit(owner, deceased, target, CombatVfxPacket.Kind.NIHILITY_END, false);
@@ -179,7 +179,7 @@ public final class StarRailDebuffService {
             }
             if (StarRailTraceService.hasPassive(owner, StarRailPath.NIHILITY, 8)
                     && target.isAlive()) {
-                target.hurt(owner.damageSources().magic(), NIHILITY_FINAL_DAMAGE * 0.5F);
+                StarRailOwnedDamage.hurt(owner, target, NIHILITY_FINAL_DAMAGE * 0.5F, false);
             }
         }
     }
@@ -261,21 +261,18 @@ public final class StarRailDebuffService {
         for (String key : keys) {
             CompoundTag dot = dots.getCompound(key);
             int remaining = dot.getInt(REMAINING_TICKS) - 1;
-            if (remaining <= 0) {
-                dots.remove(key);
-                continue;
-            }
 
             int nextDamage = dot.getInt(NEXT_DAMAGE_TICKS) - 1;
             if (nextDamage <= 0 && dot.getFloat(DAMAGE) > 0.0F && target.isAlive()) {
                 float damage = dot.getFloat(DAMAGE);
                 ServerPlayer owner = getDamageOverTimeOwner(target, dot);
-                if (target.hurt(target.damageSources().magic(), damage)
+                if (StarRailOwnedDamage.hurt(owner, target, damage, false)
                         && owner != null) {
                     StarRailNetwork.sendDamageNumber(owner, target, damage, false);
                 }
                 nextDamage = Math.max(1, dot.getInt(INTERVAL));
             }
+            if (remaining <= 0) { dots.remove(key); continue; }
             dot.putInt(REMAINING_TICKS, remaining);
             dot.putInt(NEXT_DAMAGE_TICKS, nextDamage);
             dots.put(key, dot);

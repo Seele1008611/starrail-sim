@@ -157,6 +157,7 @@ public final class StarRailPathCommands {
             if (data.getPathRank(path) == StarRailPathRank.UNALIGNED) {
                 data.setPathRank(path, StarRailPathRank.PATHFARING);
             }
+            StarRailPathTemporaryState.clear(player);
             data.setCurrentPath(path);
             StarRailPathEffects.refresh(player, path);
             StarRailPathService.sync(player);
@@ -181,6 +182,7 @@ public final class StarRailPathCommands {
             data.setPathUnlocked(true);
             data.resetTrial();
             data.clearSoughtRuin();
+            StarRailPathTemporaryState.clear(player);
             data.setCurrentPath(path);
             data.setPathRank(path, StarRailPathRank.PATH_PINNACLE);
             data.setPracticeProgress(path, 0);

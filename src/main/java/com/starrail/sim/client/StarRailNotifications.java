@@ -39,22 +39,36 @@ public final class StarRailNotifications {
     private static QueuedNotification current;
     private static int remainingTicks;
     private static int combatRemainingTicks;
+    private static net.minecraft.client.multiplayer.ClientLevel notificationWorld;
 
     private StarRailNotifications() {
     }
 
     public static void add(Component message) {
+        add(message, DISPLAY_TICKS);
+    }
+
+    public static void add(Component message, int displayTicks) {
+        syncWorld();
+        int duration = Math.max(DISPLAY_TICKS, Math.min(100, displayTicks));
         if (message == null || message.getString().isBlank()) {
             return;
         }
         if (current != null && !current.combat()
                 && current.message().getString().equals(message.getString())) {
-            remainingTicks = DISPLAY_TICKS;
-            current = new QueuedNotification(message, false, "", 1);
+            remainingTicks = duration;
+            current = new QueuedNotification(message, false, "", 1, duration);
             return;
         }
-        QueuedNotification notification = new QueuedNotification(message, false, "", 1);
+        QueuedNotification notification = new QueuedNotification(message, false, "", 1, duration);
         if (containsMessage(notification)) {
+            return;
+        }
+        // Ruin start/result notices must not wait behind continuous combat feedback.
+        if (duration > DISPLAY_TICKS) {
+            if (current != null && current.displayTicks() <= DISPLAY_TICKS) enqueue(current, false);
+            current = notification;
+            remainingTicks = duration;
             return;
         }
         enqueue(notification, false);
@@ -63,6 +77,7 @@ public final class StarRailNotifications {
 
     /** Shows one short batch of distinct combat feedback instead of a long backlog. */
     public static void addCombat(Component message, String mergeKey, boolean priority) {
+        syncWorld();
         if (message == null || message.getString().isBlank()) {
             return;
         }
@@ -96,6 +111,16 @@ public final class StarRailNotifications {
         if (event.phase != net.minecraftforge.event.TickEvent.Phase.END) {
             return;
         }
+        syncWorld();
+        if (Minecraft.getInstance().isPaused()) return;
+        if (current != null && current.displayTicks() > DISPLAY_TICKS) {
+            if (combatRemainingTicks > 0 && --combatRemainingTicks <= 0) COMBAT_NOTICES.clear();
+            if (--remainingTicks <= 0) {
+                current = null;
+                advanceIfNeeded();
+            }
+            return;
+        }
         if (!COMBAT_NOTICES.isEmpty()) {
             if (--combatRemainingTicks <= 0) {
                 COMBAT_NOTICES.clear();
@@ -121,13 +146,15 @@ public final class StarRailNotifications {
         }
 
         Minecraft minecraft = Minecraft.getInstance();
+        if (minecraft.player == null || minecraft.level == null || minecraft.options.hideGui
+                || minecraft.screen != null) return;
         Font font = minecraft.font;
         int screenWidth = event.getWindow().getGuiScaledWidth();
         int screenHeight = event.getWindow().getGuiScaledHeight();
         int maxWidth = Math.min(MAX_TEXT_WIDTH, screenWidth - 32);
         List<FormattedCharSequence> lines = new ArrayList<>();
         boolean truncated = false;
-        if (!COMBAT_NOTICES.isEmpty()) {
+        if (!COMBAT_NOTICES.isEmpty() && !(current != null && current.displayTicks() > DISPLAY_TICKS)) {
             List<CombatNotice> notices = new ArrayList<>(COMBAT_NOTICES.values());
             notices.sort((first, second) ->
                     Boolean.compare(second.priority(), first.priority()));
@@ -179,7 +206,17 @@ public final class StarRailNotifications {
     private static void advanceIfNeeded() {
         if (COMBAT_NOTICES.isEmpty() && current == null && !QUEUE.isEmpty()) {
             current = QUEUE.removeFirst();
-            remainingTicks = DISPLAY_TICKS;
+            remainingTicks = current.displayTicks();
+        }
+    }
+
+    private static void syncWorld() {
+        var mc = Minecraft.getInstance();
+        var world = mc.level;
+        if (world != notificationWorld || world == null || (mc.player != null && !mc.player.isAlive())) {
+            QUEUE.clear(); COMBAT_NOTICES.clear(); current = null;
+            remainingTicks = 0; combatRemainingTicks = 0;
+            notificationWorld = world;
         }
     }
 
@@ -212,7 +249,7 @@ public final class StarRailNotifications {
     }
 
     private record QueuedNotification(Component message, boolean combat,
-                                      String mergeKey, int occurrences) {
+                                      String mergeKey, int occurrences, int displayTicks) {
         private Component visibleMessage() {
             if (occurrences <= 1) {
                 return message;

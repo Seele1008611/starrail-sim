@@ -82,14 +82,25 @@ public final class StarRailElationService {
         if (rank < StarRailPathRank.PRACTICE.getLevel()) {
             return;
         }
-        switch (player.getRandom().nextInt(4)) {
-            case 0 -> player.addEffect(new MobEffectInstance(
+        grantDice(player, player.getRandom().nextInt(4));
+    }
+
+    public static void rollDistinctJoyDice(ServerPlayer player, int rank) {
+        if (rank < 7) return;
+        int first = player.getRandom().nextInt(4);
+        int second = (first + 1 + player.getRandom().nextInt(3)) % 4;
+        grantDice(player, first); grantDice(player, second);
+    }
+
+    private static void grantDice(ServerPlayer player, int choice) {
+        switch (choice) {
+            case 0 -> StarRailRankRuntime.grantEffect(player, new MobEffectInstance(
                     MobEffects.DAMAGE_BOOST, 5 * 20, 0, false, true, true));
-            case 1 -> player.addEffect(new MobEffectInstance(
+            case 1 -> StarRailRankRuntime.grantEffect(player, new MobEffectInstance(
                     MobEffects.REGENERATION, 3 * 20, 0, false, true, true));
-            case 2 -> player.addEffect(new MobEffectInstance(
+            case 2 -> StarRailRankRuntime.grantEffect(player, new MobEffectInstance(
                     MobEffects.LUCK, 10 * 20, 0, false, true, true));
-            default -> player.addEffect(new MobEffectInstance(
+            default -> StarRailRankRuntime.grantEffect(player, new MobEffectInstance(
                     MobEffects.DAMAGE_RESISTANCE, 2 * 20, 0, false, true, true));
         }
         StarRailPathMessages.send(player, StarRailPath.ELATION,
@@ -103,10 +114,11 @@ public final class StarRailElationService {
         }
         CompoundTag state = getState(player);
         long now = player.level().getGameTime();
-        if (now < state.getLong(GRAND_COOLDOWN_TAG)) {
+        if (!StarRailRankRuntime.ready(player, "skill_elation_grand")) {
             return false;
         }
         state.putLong(GRAND_COOLDOWN_TAG, now + GRAND_COOLDOWN);
+        StarRailRankRuntime.cooldown(player, "skill_elation_grand", GRAND_COOLDOWN);
         saveState(player, state);
         return true;
     }

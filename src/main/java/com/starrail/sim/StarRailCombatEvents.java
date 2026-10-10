@@ -45,7 +45,7 @@ public final class StarRailCombatEvents {
             return;
         }
         ServerPlayer player = getPlayerAttacker(event.getSource());
-        if (player == null) {
+        if (player == null || StarRailOwnedDamage.isSecondary(player)) {
             return;
         }
         if (player.getPersistentData().getBoolean("trace_destruction_splash_active")) {
@@ -140,11 +140,6 @@ public final class StarRailCombatEvents {
             event.setAmount(event.getAmount() * (float) lightConeMultiplier);
         }
 
-        if (event.getEntity() instanceof Monster target) {
-            player.getCapability(StarRailPathCapability.PATH_DATA).ifPresent(data ->
-                    StarRailEruditionService.onPlayerAttack(
-                            player, target, event.getAmount(), data, event.getSource()));
-        }
 
         final int[] toughnessVisual = {0};
         boolean toughnessBroken = StarRailToughnessService.onPlayerAttack(
@@ -190,7 +185,7 @@ public final class StarRailCombatEvents {
             return;
         }
         ServerPlayer player = getPlayerAttacker(event.getSource());
-        if (player == null) {
+        if (player == null || StarRailOwnedDamage.isSecondary(player)) {
             return;
         }
         StarRailLightConeService.onMayRainbowStayInTheSkyAttack(player, event.getEntity());
@@ -224,7 +219,7 @@ public final class StarRailCombatEvents {
             return;
         }
         ServerPlayer player = getPlayerAttacker(event.getSource());
-        if (player == null) {
+        if (player == null || StarRailOwnedDamage.isSecondary(player)) {
             return;
         }
         double bonus = StarRailLightConeService.echoesOfTheCoffinBonusDamage(player);

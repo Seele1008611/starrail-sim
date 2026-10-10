@@ -14,8 +14,8 @@ import net.minecraftforge.network.simple.SimpleChannel;
 
 /** Network channel for server-authoritative combat feedback. */
 public final class StarRailNetwork {
-    // 战斗特效新增服务端消息；客户端和服务端需要使用同一协议版本。
-    private static final String PROTOCOL_VERSION = "7";
+    // 增加玩家状态快照及客户端就绪请求；客户端和服务端需要使用同一协议版本。
+    private static final String PROTOCOL_VERSION = "10";
 
     public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(
             new ResourceLocation(StarRailSimMod.MOD_ID, "main"),
@@ -29,6 +29,18 @@ public final class StarRailNetwork {
     }
 
     public static void register() {
+        CHANNEL.registerMessage(messageId++, PlayerStatusRequestPacket.class,
+                PlayerStatusRequestPacket::encode, PlayerStatusRequestPacket::decode, PlayerStatusRequestPacket::handle,
+                java.util.Optional.of(net.minecraftforge.network.NetworkDirection.PLAY_TO_SERVER));
+        CHANNEL.registerMessage(messageId++, PlayerStatusPacket.class,
+                PlayerStatusPacket::encode, PlayerStatusPacket::decode, PlayerStatusPacket::handle,
+                java.util.Optional.of(net.minecraftforge.network.NetworkDirection.PLAY_TO_CLIENT));
+        CHANNEL.registerMessage(messageId++, RuinAnchorPacket.class,
+                RuinAnchorPacket::encode, RuinAnchorPacket::decode, RuinAnchorPacket::handle,
+                java.util.Optional.of(net.minecraftforge.network.NetworkDirection.PLAY_TO_CLIENT));
+        CHANNEL.registerMessage(messageId++, RuinBattlePacket.class,
+                RuinBattlePacket::encode, RuinBattlePacket::decode, RuinBattlePacket::handle,
+                java.util.Optional.of(net.minecraftforge.network.NetworkDirection.PLAY_TO_CLIENT));
         CHANNEL.registerMessage(messageId++, CombatVfxPacket.class,
                 CombatVfxPacket::encode, CombatVfxPacket::decode, CombatVfxPacket::handle,
                 java.util.Optional.of(net.minecraftforge.network.NetworkDirection.PLAY_TO_CLIENT));
@@ -57,7 +69,8 @@ public final class StarRailNetwork {
                 NotificationPacket.class,
                 NotificationPacket::encode,
                 NotificationPacket::decode,
-                NotificationPacket::handle);
+                NotificationPacket::handle,
+                java.util.Optional.of(net.minecraftforge.network.NetworkDirection.PLAY_TO_CLIENT));
     }
 
     public static void sendDamageNumber(ServerPlayer player, LivingEntity target,
@@ -81,6 +94,10 @@ public final class StarRailNetwork {
     public static void sendNotification(ServerPlayer player, Component message) {
         CHANNEL.send(PacketDistributor.PLAYER.with(() -> player),
                 NotificationPacket.queued(message));
+    }
+
+    public static void sendRuinNotification(ServerPlayer player, Component message) {
+        CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), NotificationPacket.ruin(message));
     }
 
     public static void sendCombatNotification(ServerPlayer player, Component message) {

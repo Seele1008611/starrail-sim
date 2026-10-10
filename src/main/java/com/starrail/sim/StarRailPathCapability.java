@@ -52,6 +52,7 @@ public final class StarRailPathCapability {
 
         @SubscribeEvent
         public static void clone(PlayerEvent.Clone event) {
+            StarRailRankRuntime.copy(event.getOriginal(), event.getEntity());
             event.getOriginal().reviveCaps();
             event.getOriginal().getCapability(PATH_DATA).ifPresent(oldData ->
                     event.getEntity().getCapability(PATH_DATA).ifPresent(newData ->

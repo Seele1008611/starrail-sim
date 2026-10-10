@@ -33,6 +33,7 @@ public final class StarRailPathRules {
 
     // 按命途和试炼阶位取得第一项目标数量。
     public static int objective1Target(StarRailPath path, StarRailPathRank trialRank) {
+        if (trialRank != null && trialRank.getLevel() >= 3) return breakthroughTarget(path, trialRank, 1);
         int base = switch (path) {
             case HUNT -> 5;
             case PRESERVATION -> 3;
@@ -45,7 +46,7 @@ public final class StarRailPathRules {
             case ELATION -> 8;
             default -> 0;
         };
-        return scaleTarget(base, trialRank);
+        return base;
     }
 
     public static int objective2Target(StarRailPath path) {
@@ -54,6 +55,7 @@ public final class StarRailPathRules {
 
     // 按命途和试炼阶位取得第二项目标数量。
     public static int objective2Target(StarRailPath path, StarRailPathRank trialRank) {
+        if (trialRank != null && trialRank.getLevel() >= 3) return breakthroughTarget(path, trialRank, 2);
         int base = switch (path) {
             case HUNT -> 2;
             case PRESERVATION -> 5;
@@ -66,28 +68,24 @@ public final class StarRailPathRules {
             case ELATION -> 2;
             default -> 0;
         };
-        return scaleTarget(base, trialRank);
+        return base;
     }
 
-    /**
-     * Later breakthrough trials grow gradually instead of multiplying the
-     * two objectives by the same raw number. This keeps the first trial
-     * values unchanged while making higher ranks long-term goals.
-     */
-    // 把基础目标数量按试炼阶位缩放，并向上取整。
-    private static int scaleTarget(int base, StarRailPathRank trialRank) {
-        if (base <= 0 || trialRank == null) {
-            return base;
-        }
-        double multiplier = switch (trialRank) {
-            case RESONANCE -> 1.5D;
-            case PRACTICE -> 2.0D;
-            case DEEP_PRACTICE -> 3.0D;
-            case HIGH_PATHSTRIDER -> 4.0D;
-            case PATH_PINNACLE -> 5.0D;
-            default -> 1.0D;
+    private static int breakthroughTarget(StarRailPath path, StarRailPathRank rank, int objective) {
+        int index = Math.max(0, Math.min(4, rank.getLevel() - 3));
+        int[] targets = switch (path) {
+            case HUNT -> new int[]{8,10,15,20,25 , 2,3,4,5,6};
+            case PRESERVATION -> new int[]{5,6,9,12,15 , 8,10,15,20,25};
+            case ABUNDANCE -> new int[]{15,20,30,40,50 , 4,5,6,8,10};
+            case DESTRUCTION -> new int[]{5,6,9,12,15 , 15,20,30,40,50};
+            case ERUDITION -> new int[]{2,3,4,5,6 , 3,4,5,6,8};
+            case NIHILITY -> new int[]{8,10,15,20,25 , 5,6,9,12,15};
+            case HARMONY -> new int[]{2,3,3,4,5 , 5,6,9,12,15};
+            case REMEMBRANCE -> new int[]{5,6,9,12,15 , 3,4,6,8,10};
+            case ELATION -> new int[]{8,10,12,15,18 , 3,4,6,8,10};
+            default -> new int[10];
         };
-        return (int) Math.ceil(base * multiplier);
+        return targets[index + (objective == 2 ? 5 : 0)];
     }
 
     public static long trialTimeLimit(StarRailPathRank trialRank) {

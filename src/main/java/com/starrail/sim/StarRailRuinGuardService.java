@@ -46,6 +46,8 @@ public final class StarRailRuinGuardService extends SavedData {
     private static final Map<ServerLevel, Set<BlockPos>> QUEUED = new ConcurrentHashMap<>();
     private final Map<BlockPos, Guard> guards = new HashMap<>();
     private final Map<UUID, Warden> pendingDeaths = new HashMap<>();
+    private record DropRoll(LivingDropsEvent event, ItemEntity material, StarRailPath path) {}
+    private final Map<UUID, DropRoll> pendingDrops = new HashMap<>();
 
     private static final class Guard {
         UUID entity;
@@ -164,6 +166,54 @@ public final class StarRailRuinGuardService extends SavedData {
     private static BlockPos chestPos(BlockPos origin) { return origin.offset(0, 10, -21); }
     private static BlockPos summonAnchorPos(BlockPos origin) { return origin.offset(-2, 10, -21); }
 
+    public enum AnchorPhase { UNBOUND, FIRST_CLEAR, READY, ACTIVE, COOLDOWN, WAITING, PEACEFUL }
+    public record AnchorView(StarRailPath path, AnchorPhase phase, int remainingTicks) {}
+
+    /** Read-only state shared by the look-at HUD and interaction validation. */
+    public static AnchorView anchorView(ServerLevel level, BlockPos anchor, StarRailPath path) {
+        Guard guard = get(level).guards.get(anchor.offset(2, -10, 21));
+        if (guard == null || !guard.variantId.equals(path.getId()))
+            return new AnchorView(path, AnchorPhase.UNBOUND, 0);
+        if (level.getDifficulty() == Difficulty.PEACEFUL)
+            return new AnchorView(path, AnchorPhase.PEACEFUL, 0);
+        Entity found = guard.entity == null ? null : level.getEntity(guard.entity);
+        boolean alive = found instanceof Warden warden && warden.isAlive() && !warden.isRemoved();
+        if (guard.respawn || ((!guard.defeated || guard.summonActive) && !alive))
+            return new AnchorView(path, AnchorPhase.WAITING, 0);
+        if (!guard.defeated) return new AnchorView(path, AnchorPhase.FIRST_CLEAR, 0);
+        if (guard.summonActive || alive) return new AnchorView(path, AnchorPhase.ACTIVE, 0);
+        long remaining = guard.summonCooldownUntil - level.getGameTime();
+        if (remaining > 0) return new AnchorView(path, AnchorPhase.COOLDOWN,
+                (int) Math.min(SUMMON_COOLDOWN_TICKS, remaining));
+        return new AnchorView(path, AnchorPhase.READY, 0);
+    }
+
+    public record BattleGuard(Warden entity, StarRailPath path, boolean rematch) {}
+    public static final double BATTLE_VIEW_RANGE = 48.0;
+
+    /** Only registered, living guards; UUID lookups do not load chunks or invent a victory. */
+    public static BattleGuard battleGuard(net.minecraft.server.level.ServerPlayer player) {
+        if (!player.isAlive() || player.isSpectator()) return null;
+        ServerLevel level = player.serverLevel();
+        BattleGuard nearest = null;
+        double distance = BATTLE_VIEW_RANGE * BATTLE_VIEW_RANGE;
+        UUID attacked = StarRailRuinBattleSync.preferredTarget(player);
+        for (Guard guard : get(level).guards.values()) {
+            if ((guard.defeated && !guard.summonActive) || guard.entity == null) continue;
+            Entity found = level.getEntity(guard.entity);
+            if (!(found instanceof Warden warden) || !warden.isAlive() || warden.isRemoved()) continue;
+            double candidateDistance = player.distanceToSqr(warden);
+            if (candidateDistance > BATTLE_VIEW_RANGE * BATTLE_VIEW_RANGE) continue;
+            BattleGuard candidate = new BattleGuard(warden, StarRailPath.byId(guard.variantId), guard.summonActive);
+            if (found.getUUID().equals(attacked)) return candidate;
+            if (candidateDistance < distance) {
+                nearest = candidate;
+                distance = candidateDistance;
+            }
+        }
+        return nearest;
+    }
+
     /** Activates only the matching path anchor generated inside its registered ruin. */
     public static boolean trySummonGuardian(ServerLevel level, BlockPos anchor,
             net.minecraft.world.entity.player.Player player, StarRailPath path) {
@@ -186,6 +236,11 @@ public final class StarRailRuinGuardService extends SavedData {
         if (level.getDifficulty() == Difficulty.PEACEFUL) {
             player.displayClientMessage(Component.translatable(
                     "message.starrail_sim.ruin_anchor.peaceful"), true);
+            return false;
+        }
+        if (anchorView(level, anchor, path).phase() == AnchorPhase.WAITING) {
+            player.displayClientMessage(Component.translatable(
+                    "message.starrail_sim.ruin_anchor.waiting"), true);
             return false;
         }
         if (guard.summonActive) {
@@ -219,9 +274,8 @@ public final class StarRailRuinGuardService extends SavedData {
                     "message.starrail_sim.ruin_anchor.failed"), true);
             return false;
         }
-        player.displayClientMessage(Component.translatable(
-                "message.starrail_sim.ruin_anchor.summoned",
-                StarRailRuinContent.pathName(path)), true);
+        notifyNearby(level, origin, Component.translatable(
+                "message.starrail_sim.ruin_anchor.summoned", StarRailRuinContent.pathName(path)));
         return true;
     }
 
@@ -337,23 +391,35 @@ public final class StarRailRuinGuardService extends SavedData {
     }
 
     /** Each path guardian death gets one server-side roll for its matching material. */
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void onGuardDrops(LivingDropsEvent event) {
         if (event.isCanceled() || !(event.getEntity() instanceof Warden warden)
                 || !(warden.level() instanceof ServerLevel level)
                 || !warden.getPersistentData().contains(ORIGIN_TAG)) return;
         BlockPos origin = BlockPos.of(warden.getPersistentData().getLong(ORIGIN_TAG));
-        Guard guard = get(level).guards.get(origin);
+        var data = get(level);
+        Guard guard = data.guards.get(origin);
         StarRailPath path = guard == null ? StarRailPath.NONE : StarRailPath.byId(guard.variantId);
         if (guard == null || !path.isRealPath()
                 || !warden.getUUID().equals(guard.entity)
                 || (guard.defeated && !guard.summonActive)
-                || level.getRandom().nextFloat() >= 0.30F) return;
-        ItemEntity drop = new ItemEntity(level, warden.getX(), warden.getY() + 0.5D,
+                || data.pendingDrops.containsKey(warden.getUUID())) return;
+        ItemEntity drop = null;
+        if (level.getRandom().nextFloat() < 0.30F) {
+            drop = new ItemEntity(level, warden.getX(), warden.getY() + 0.5D,
                 warden.getZ(), new net.minecraft.world.item.ItemStack(
                         StarRailTraceMaterials.get(path)));
-        drop.setDefaultPickUpDelay();
-        event.getDrops().add(drop);
+            drop.setDefaultPickUpDelay();
+            event.getDrops().add(drop);
+        }
+        // Keep the event reference until confirmation, so later cancellation/removal is respected.
+        data.pendingDrops.put(warden.getUUID(), new DropRoll(event, drop, path));
+    }
+
+    private static void notifyNearby(ServerLevel level, BlockPos origin, Component message) {
+        for (var player : level.players()) if (player.isAlive() && player.distanceToSqr(
+                origin.getX(), origin.getY() + 8, origin.getZ()) <= 96 * 96)
+            StarRailNetwork.sendRuinNotification(player, message);
     }
 
     private void confirmDeaths(ServerLevel level) {
@@ -363,25 +429,35 @@ public final class StarRailRuinGuardService extends SavedData {
             Guard guard = guards.get(origin);
             if (guard == null || !warden.getUUID().equals(guard.entity)
                     || (guard.defeated && !guard.summonActive)) continue;
+            Component result;
             if (!guard.defeated) {
                 guard.defeated = true;
                 setDirty();
                 unlock(level, origin, guard);
-                for (var player : level.players()) if (player.distanceToSqr(
-                        origin.getX(), origin.getY() + 8, origin.getZ()) <= 96 * 96)
-                    player.sendSystemMessage(Component.literal("遗迹监守者已被击败，宝箱室已开放。"));
+                result = Component.translatable("message.starrail_sim.ruin_anchor.first_victory");
             } else {
                 guard.summonActive = false;
                 guard.respawn = false;
                 guard.summonCooldownUntil = level.getGameTime() + SUMMON_COOLDOWN_TICKS;
                 setDirty();
-                for (var player : level.players()) if (player.distanceToSqr(
-                        origin.getX(), origin.getY() + 8, origin.getZ()) <= 96 * 96)
-                    player.sendSystemMessage(Component.translatable(
-                            "message.starrail_sim.ruin_anchor.defeated"));
+                result = Component.translatable("message.starrail_sim.ruin_anchor.defeated");
             }
+            DropRoll roll = pendingDrops.get(warden.getUUID());
+            if (roll != null) {
+                boolean dropped = !roll.event().isCanceled() && roll.material() != null
+                        && roll.event().getDrops().contains(roll.material());
+                result = result.copy().append("\n").append(dropped
+                        ? Component.translatable("message.starrail_sim.ruin_anchor.material_drop",
+                            new net.minecraft.world.item.ItemStack(StarRailTraceMaterials.get(roll.path())).getHoverName())
+                        : Component.translatable("message.starrail_sim.ruin_anchor.no_material"));
+            } else if (StarRailPath.byId(guard.variantId).isRealPath()) {
+                result = result.copy().append("\n").append(Component.translatable(
+                        "message.starrail_sim.ruin_anchor.no_material"));
+            }
+            notifyNearby(level, origin, result);
         }
         pendingDeaths.clear();
+        pendingDrops.clear();
     }
 
     /** 正常退出时先确认本 tick 的死亡，避免死亡与保存相邻时丢失通关状态。 */

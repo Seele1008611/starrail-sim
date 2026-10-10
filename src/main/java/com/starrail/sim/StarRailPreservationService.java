@@ -58,7 +58,7 @@ public final class StarRailPreservationService {
         int requiredStacks = reducedThreshold ? MAX_GUARD_STACKS - 1 : MAX_GUARD_STACKS;
         if (stacks >= requiredStacks
                 && level >= StarRailPathRank.DEEP_PRACTICE.getLevel()
-                && data.getPreservationBarrierCooldownTick() <= currentTick
+                && StarRailRankRuntime.ready(player, "skill_preservation_barrier")
                 && !barrierActive) {
             activateBarrier(player, data, currentTick, level);
             player.getPersistentData().remove(PASSIVE_GUARD_TAG);
@@ -93,17 +93,6 @@ public final class StarRailPreservationService {
         return 0.0F;
     }
 
-    /** Records hostile damage for Preservation practice, excluding blocks. */
-    public static void onUnblockedDamage(ServerPlayer player, IStarRailPathData data,
-                                         float amount) {
-        if (data.getCurrentPath() != StarRailPath.PRESERVATION
-                || data.getTrialPath().isRealPath()
-                || amount < 2.0F) {
-            return;
-        }
-        int practice = Math.min(3, (int) Math.floor(amount / 2.0F));
-        StarRailPathProgress.record(player, data, StarRailPath.PRESERVATION, practice);
-    }
 
     /** Expires temporary Preservation state on the server tick. */
     public static void tick(ServerPlayer player, IStarRailPathData data) {
@@ -175,8 +164,9 @@ public final class StarRailPreservationService {
         data.setPreservationGuardStacks(0);
         data.setPreservationGuardExpireTick(-1L);
         data.setPreservationBarrierCooldownTick(currentTick + BARRIER_COOLDOWN);
+        StarRailRankRuntime.cooldown(player, "skill_preservation_barrier", BARRIER_COOLDOWN);
         data.setPreservationBarrierExpireTick(currentTick + duration);
-        player.addEffect(new MobEffectInstance(
+        StarRailRankRuntime.grantEffect(player, new MobEffectInstance(
                 MobEffects.DAMAGE_RESISTANCE, duration, fortress ? 2 : 1,
                 false, true, true));
         StarRailCombatVfx.self(player, CombatVfxPacket.Kind.PRESERVATION_WALL);

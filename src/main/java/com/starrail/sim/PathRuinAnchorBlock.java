@@ -21,6 +21,8 @@ public final class PathRuinAnchorBlock extends Block {
         this.path = path;
     }
 
+    public StarRailPath path() { return path; }
+
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player,
             InteractionHand hand, BlockHitResult hit) {
@@ -28,8 +30,10 @@ public final class PathRuinAnchorBlock extends Block {
         ItemStack held = player.getItemInHand(hand);
         if (!held.is(StarRailRuinContent.key(path).get())) {
             if (!level.isClientSide) player.displayClientMessage(Component.translatable(
-                    "message.starrail_sim.ruin_anchor.need_key",
-                    StarRailRuinContent.pathName(path)), true);
+                    held.getItem() instanceof PathRuinSummonKeyItem
+                            ? "message.starrail_sim.ruin_anchor.wrong_key"
+                            : "message.starrail_sim.ruin_anchor.need_key",
+                    StarRailRuinContent.pathName(path), held.getHoverName()), true);
             return InteractionResult.sidedSuccess(level.isClientSide);
         }
         if (level.isClientSide) return InteractionResult.SUCCESS;

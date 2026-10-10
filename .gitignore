@@ -32,3 +32,10 @@ forge*changelog.txt
 
 # Dedicated-server test installation and generated test world
 /设计方案/服务端测试/
+
+# Local UI reference materials are not distributed with the public repository.
+/设计方案/UI设计/原作UI模板/
+/设计方案/UI设计/分辨率适配版/
+/设计方案/UI设计/原作参考素材/
+/设计方案/UI设计/预览图/
+/设计方案/UI设计/工具/

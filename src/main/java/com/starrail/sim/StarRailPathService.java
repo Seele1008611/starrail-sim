@@ -82,6 +82,7 @@ public final class StarRailPathService {
             if (data.getPathRank(path) == StarRailPathRank.UNALIGNED) {
                 data.setPathRank(path, StarRailPathRank.PATHFARING);
             }
+            StarRailPathTemporaryState.clear(player);
             data.setCurrentPath(path);
             data.resetTrial();
             StarRailPathEffects.refresh(player, path);
@@ -103,6 +104,7 @@ public final class StarRailPathService {
             StarRailPathRank nextRank = data.getTrialRank();
             data.setPathRank(path, nextRank);
             data.setPracticeProgress(path, 0);
+            StarRailPracticeService.clearAccumulation(player);
             data.resetTrial();
             StarRailPathEffects.refresh(player, path);
             StarRailPathMessages.sendQueued(player, path, Component.translatable(
@@ -123,6 +125,7 @@ public final class StarRailPathService {
             }
 
             StarRailPath previousPath = data.getCurrentPath();
+            StarRailPathTemporaryState.clear(player);
             StarRailPreservationService.clear(data);
             StarRailDestructionService.clear(data);
             StarRailEruditionService.clear(data);

@@ -72,10 +72,10 @@
   "screen.starrail_sim.path_practice_progress": "\u547d\u9014\u8df5\u884c\u5ea6\uff1a%s/%s",
   "screen.starrail_sim.path_practice_locked": "\u4e0b\u4e00\u9636\u6bb5\u664b\u9636\u8bd5\u70bc\u5c1a\u672a\u5f00\u653e",
   "screen.starrail_sim.path_practice_max": "\u5df2\u8fbe\u5230\u547d\u9014\u6781\u5883",
-  "screen.starrail_sim.path_pinnacle_practice": "\u6781\u5883\u8df5\u884c\uff1a%s/%s\uff1b\u989d\u5916\u653b\u51fb\u529b\u52a0\u6210\uff1a%s/%s \u6b21\uff08\u6bcf\u6b21+5%%\uff09",
+  "screen.starrail_sim.path_pinnacle_practice": "极境践行：%s/%s；额外攻击力加成：%s/%s 次（每次+10%%）",
   "screen.starrail_sim.rank_trial_status": "\u664b\u9636\u8bd5\u70bc\uff1a\u76ee\u6807\u7b49\u7ea7 %s",
   "screen.starrail_sim.hunt_kills": "\u5de1\u730e\u8bd5\u70bc\uff1a\u51fb\u8d25\u654c\u5bf9\u751f\u7269 %s/%s",
-  "screen.starrail_sim.hunt_streak": "\u8fde\u7eed\u72e9\u730e\uff1a%s/%s",
+  "screen.starrail_sim.hunt_streak": "连续狩猎：%s/%s",
   "screen.starrail_sim.hunt_time": "\u5269\u4f59\u65f6\u95f4\uff1a%s \u79d2",
   "screen.starrail_sim.choose_path": "\u9009\u62e9\u547d\u9014\u540e\u70b9\u51fb\u786e\u8ba4\u5bfb\u8ff9\uff1b\u5230\u8fbe\u9057\u8ff9\u540e\u4f7f\u7528\u5b9d\u7bb1\u4e2d\u5bf9\u5e94\u51ed\u8bc1\u5f00\u542f\u8bd5\u70bc",
   "screen.starrail_sim.confirm_path": "\u786e\u8ba4\u8e0f\u4e0a\u547d\u9014",
@@ -96,7 +96,7 @@
   "screen.starrail_sim.harmony_kills": "\u5171\u9e23\u72b6\u6001\u51fb\u8d25\u654c\u4eba\uff1a%s/%s",
   "screen.starrail_sim.remembrance_records": "\u8bb0\u5f55\u8bb0\u5fc6\uff1a%s/%s",
   "screen.starrail_sim.remembrance_echoes": "\u89e6\u53d1\u8bb0\u5fc6\u56de\u54cd\uff1a%s/%s",
-  "screen.starrail_sim.elation_hits": "\u6b22\u6109\u8fde\u51fb\u547d\u4e2d\uff1a%s/%s",
+  "screen.starrail_sim.elation_hits": "最高连续命中：%s/%s",
   "screen.starrail_sim.elation_bursts": "\u6b22\u6109\u7206\u53d1\uff1a%s/%s",
   "screen.starrail_sim.trial_time": "\u5269\u4f59\u65f6\u95f4\uff1a%s \u79d2",
   "message.starrail_sim.path_locked": "\u8bf7\u5148\u89e3\u9501\u547d\u9014\u7ebf\u7d22\u3002",
@@ -136,7 +136,7 @@
   "message.starrail_sim.destruction_wrath": "\u6012\u706b\uff1a%s/%s\uff08\u5269\u4f59%s\u79d2\uff09",
   "message.starrail_sim.destruction_wrath_expired": "\u6012\u706b\u5df2\u6d88\u6563\u3002",
   "message.starrail_sim.destruction_burning": "\u711a\u8eab\u89e6\u53d1\uff01\u4e0b\u4e00\u6b21\u653b\u51fb\u4f24\u5bb3\u63d0\u5347\u0033\u0035\u0025\u3002",
-  "message.starrail_sim.destruction_desperation": "\u7edd\u5883\u7206\u53d1\uff01\u83b7\u5f97\u4f24\u5bb3\u6297\u6027\uff0c\u4e0b\u4e00\u6b21\u653b\u51fb\u4f24\u5bb3\u63d0\u5347\u0035\u0030\u0025\u3002",
+  "message.starrail_sim.destruction_desperation": "绝境触发！8秒内造成伤害+50%，抗性Ⅰ8秒，冷却12秒。",
   "message.starrail_sim.destruction_empowered_attack": "\u6bc1\u706d\u5f3a\u5316\u653b\u51fb\u89e6\u53d1\uff01",
   "message.starrail_sim.destruction_empowered_expired": "\u6bc1\u706d\u5f3a\u5316\u5df2\u6d88\u6563\u3002",
   "message.starrail_sim.destruction_confirmed": "\u4f60\u5df2\u6b63\u5f0f\u8e0f\u4e0a\u6bc1\u706d\u547d\u9014\uff0c\u66b4\u51fb\u4f24\u5bb3\u002b\u0031\u0030\u0025\u3002",
@@ -209,7 +209,7 @@
   ,"guide.starrail_sim.current.hint": "打开命途寻迹页面，选中命途后点击“确认开始寻迹”。前往界面坐标处的遗迹，打开宝箱并使用对应试炼凭证；完成两个目标后会自动踏上命途。"
   ,"guide.starrail_sim.current.path": "当前命途：%s"
   ,"guide.starrail_sim.current.rank": "命途等级：%s"
-  ,"guide.starrail_sim.current.practice": "当前实践度（%s）：%s/%s"
+  ,"guide.starrail_sim.current.practice": "当前践行度（%s）：%s/%s"
   ,"guide.starrail_sim.current.max": "当前已达到命途极境。"
   ,"guide.starrail_sim.current.core": "核心玩法"
   ,"guide.starrail_sim.current.effect": "当前效果"
@@ -219,81 +219,81 @@
   ,"guide.starrail_sim.path.title": "%s命途"
   ,"guide.starrail_sim.path.core": "核心玩法"
   ,"guide.starrail_sim.path.goals": "初始试炼目标"
-  ,"guide.starrail_sim.path.practice": "如何获得实践度"
+  ,"guide.starrail_sim.path.practice": "如何获得践行度"
   ,"guide.starrail_sim.path.effects": "等级属性加成"
   ,"guide.starrail_sim.path.tips": "实践建议"
   ,"guide.starrail_sim.path.mechanics": "专属机制：触发、效果与时限"
   ,"guide.starrail_sim.path.mechanics_intro": "触发条件与基础机制"
   ,"guide.starrail_sim.path.mechanics_advanced": "高阶能力与冷却"
   ,"guide.starrail_sim.path.upgrade": "升级规则"
-  ,"guide.starrail_sim.path.rank_rule": "实践度达到当前目标后会自动开始晋阶试炼。试炼期间需要完成两个符合命途特色的目标；全部完成后自动提升一级。试炼超时只会重置当前试炼目标，不会清除已经累计的实践度。"
-  ,"guide.starrail_sim.ranks.intro": "命途等级会随着实践逐步提升。达到实践度目标后会自动开启晋阶试炼。"
+
+  ,"guide.starrail_sim.ranks.intro": "命途等级会随着实践逐步提升。达到践行度目标后会自动开启晋阶试炼。"
   ,"guide.starrail_sim.ranks.current_path": "当前命途：%s"
   ,"guide.starrail_sim.ranks.practice_method": "实践方式：%s"
   ,"guide.starrail_sim.ranks.unaligned": "踏上命途后，这里会显示对应命途的实践方式。"
-  ,"guide.starrail_sim.ranks.practice": "实践度目标：%s"
+  ,"guide.starrail_sim.ranks.practice": "践行度目标：%s"
   ,"guide.starrail_sim.ranks.max": "最高等级"
-  ,"guide.starrail_sim.ranks.trials": "等级越高，晋阶试炼的目标数量越多、时间越长。试炼超时只会重置试炼目标，不会清除已经积累的实践度。"
+
   ,"guide.starrail_sim.help.title": "命途系统说明"
   ,"guide.starrail_sim.help.path": "选中命途后还要点击“确认开始寻迹”才会安排遗迹。前往界面记录的锚点，打开对应宝箱并使用匹配的试炼凭证，才会开启该命途的初始试炼；每名玩家同时只能有一条待处理遗迹线索。凭证只在成功开启试炼时消耗。"
-  ,"guide.starrail_sim.help.practice": "完成符合命途特色的行为可以获得实践度。当前实践度和目标会显示在命途界面。"
-  ,"guide.starrail_sim.help.trial": "匹配的遗迹试炼凭证用于开启初始试炼；完成两个目标后自动踏上命途。初始试炼失败或超时后凭证不返还，需重新寻迹并取得新凭证再试。踏上命途后，实践度达到阶段目标会自动开启晋阶试炼，完成后自动晋阶。"
+
+  ,"guide.starrail_sim.help.trial": "匹配的遗迹试炼凭证用于开启初始试炼；完成两个目标后自动踏上命途。初始试炼失败或超时后凭证不返还，需重新寻迹并取得新凭证再试。踏上命途后，践行度达到阶段目标会自动开启晋阶试炼，完成后自动晋阶。"
   ,"guide.starrail_sim.help.progress": "寻迹锚点会持续显示在左下角和命途寻迹页面。当前遗迹线索处理完前不能开始另一条寻迹；找不到满足400格水平间距的位置时，请移动到更远处重试。命途指南会说明每个试炼目标。"
-  ,"guide.starrail_sim.help.rollback": "回退命途只移除当前命途效果，已经获得的等级和实践度会保留。"
+
   ,"guide.starrail_sim.path.preservation.core": "通过格挡和承受伤害践行存护，强调防御、格挡与生存。"
   ,"guide.starrail_sim.path.preservation.goals": "格挡3次攻击，并承受5点敌对伤害后存活。"
-  ,"guide.starrail_sim.path.preservation.practice": "格挡攻击、承受敌对伤害并保持生存。"
-  ,"guide.starrail_sim.path.preservation.effect": "常驻累计加成（护甲/护甲韧性）：\\n1级：10%/0%\\n2级：10%/10%\\n3级：15%/10%\\n4级：15%/10%\\n5级：20%/15%\\n6级：20%/20%\\n7级：25%/25%"
+  ,"guide.starrail_sim.path.preservation.practice": "累计真实格挡3次，或累计承受6点实际敌对伤害，获得1点践行度；共用12秒奖励间隔。奖励后两种累计同时清零。"
+  ,"guide.starrail_sim.path.preservation.effect": "常驻累计加成（护甲值／护甲韧性）：\\n1级：10%/0%\\n2级：15%/5%\\n3级：20%/10%\\n4级：30%/12%\\n5级：40%/15%\\n6级：45%/20%\\n7级：55%/25%"
   ,"guide.starrail_sim.path.preservation.tips": "2级起每10秒获得一次护盾，黄心可叠加至当前护甲值的2.5倍。4级起用盾成功格挡敌对生物攻击来积累护卫；普通受击、玩家攻击或未成功格挡不计层。护卫最多3层，8秒不再成功格挡就会清空。护壁冷却为6秒。"
-  ,"guide.starrail_sim.path.preservation.mechanics": "2级护盾：每10秒获得相当于当前护甲值100%的伤害吸收（黄心），可叠加至当前护甲值的250%。\\n4级护卫：成功格挡敌对生物攻击获得1层，最多3层；每次格挡刷新8秒计时。\\n5级护壁：护卫叠满且冷却结束时触发，获得抗性提升2级，持续10秒；冷却6秒。\\n6级反震：护壁期间每次成功格挡，反弹相当于当前护甲值20%的伤害。\\n7级强化：反震伤害提高至当前护甲值的50%；护壁提供抗性提升3级，持续15秒。"
+  ,"guide.starrail_sim.path.preservation.mechanics": "2级护盾：每10秒补充当前护甲值等量黄心，命途护盾上限为护甲值×2.5。\\n4级守御：真实格挡积1层，最多3层，有效8秒。\\n5级护壁：满层给予抗性Ⅱ10秒，冷却6秒；护壁期间不能再次触发。\\n6级反震：护壁期间后续格挡造成护甲值×20%的伤害。\\n7级护壁：抗性Ⅲ15秒，反震提高至护甲值×50%。"
   ,"guide.starrail_sim.path.destruction.core": "在危险和低生命值状态下战斗，以承伤换取毁灭力量。"
   ,"guide.starrail_sim.path.destruction.goals": "生命值低于50%时击杀3个敌对生物，并承受10点伤害。"
-  ,"guide.starrail_sim.path.destruction.practice": "在低生命值状态下击杀敌人或承受伤害。"
-  ,"guide.starrail_sim.path.destruction.effect": "常驻累计加成（暴击伤害/攻击力）：\\n1级：10%/0%\\n2级：10%/5%\\n3级：20%/5%\\n4级：20%/10%\\n5级：30%/10%\\n6级：30%/15%\\n7级：40%/20%"
-  ,"guide.starrail_sim.path.destruction.tips": "毁灭鼓励在危险中战斗。生命值较低时击败敌人或承受伤害都能获得实践度；不要只追求无伤通关。高阶机制会把受伤转化为怒火、焚身等强化，但仍要留意生命值，避免在强化生效前倒下。"
-  ,"guide.starrail_sim.path.destruction.mechanics": "4级血战：生命≤50%时，近战或远程命中敌对生物伤害+10%，无冷却。\\n5级怒火：生命≤50%或该次伤害将生命压至50%以下时，每次承受敌对伤害叠1层，最多3层；层数持续8秒。\\n6级焚身：叠满怒火后转为下一击+35%，持续8秒。\\n7级绝境：生命≤25%时，下一击+50%且抗性持续3秒；冷却30秒。"
+  ,"guide.starrail_sim.path.destruction.practice": "生命≤50%时击败敌人获得1点践行度。低血累计承受8点实际敌对伤害也可获得1点，辅助奖励间隔15秒；击杀会清零受伤累计并重新开始辅助间隔。"
+  ,"guide.starrail_sim.path.destruction.effect": "常驻累计加成（暴击伤害／攻击力）：\\n1级：10%/5%\\n2级：15%/10%\\n3级：20%/15%\\n4级：25%/20%\\n5级：30%/25%\\n6级：35%/30%\\n7级：40%/40%"
+  ,"guide.starrail_sim.path.destruction.tips": "毁灭鼓励在危险中战斗。生命值较低时击败敌人或承受伤害都能获得践行度；不要只追求无伤通关。高阶机制会把受伤转化为怒火、焚身等强化，但仍要留意生命值，避免在强化生效前倒下。"
+  ,"guide.starrail_sim.path.destruction.mechanics": "4级血战：生命≤50%时直接攻击伤害+10%。\\n5级怒意：低血受到实际敌对伤害积层，最多3层，有效8秒。\\n6级焚身：满层转为8秒内下一击+35%。\\n7级绝境：生命≤25%时自动触发，8秒内造成伤害+50%，抗性Ⅰ8秒，冷却12秒。回血不会提前移除增益。\\n血战、怒意和绝境对同次直接攻击相加，最多+95%；附加伤害不重复放大。"
   ,"guide.starrail_sim.path.hunt.core": "专注于击杀敌人和连续狩猎，强调单体输出与暴击。"
   ,"guide.starrail_sim.path.hunt.goals": "击败5个敌对生物，并完成2次连续狩猎。"
-  ,"guide.starrail_sim.path.hunt.practice": "击杀敌对生物累计猎意；玩家近战和自己发射的投射物击杀都计数。只命中未击杀不会加猎意。"
-  ,"guide.starrail_sim.path.hunt.effect": "常驻累计加成（暴击率/暴击伤害/攻击力）：\\n1级：5%/0%/0%\\n2级：5%/10%/0%\\n3级：5%/10%/10%\\n4级：10%/10%/10%\\n5级：10%/20%/10%\\n6级：10%/20%/20%\\n7级：15%/30%/30%"
-  ,"guide.starrail_sim.path.hunt.tips": "击杀敌人会推进连续狩猎；猎意最多叠加3层，超过8秒没有继续击杀会失去连贯节奏。5级后，带有猎意时的下一次攻击会获得追猎一击；6级暴击可以延续猎意；7级的逆时追猎有独立冷却。"
-  ,"guide.starrail_sim.path.hunt.mechanics": "4级猎意：每击杀1只敌对生物得1层，最多3层；8秒未续层则清空。\\n5级追猎一击：满3层后下一次命中消耗猎意，该击伤害×1.25。\\n6级强化：暴击可把猎意计时刷新为8秒。\\n7级逆时追猎：满层攻击伤害×1.5，触发后冷却15秒；冷却中仍可获得猎意，但不会触发逆时追猎。"
+  ,"guide.starrail_sim.path.hunt.practice": "击败敌人获得1点践行度，无额外奖励间隔。同一攻击多杀合计最多1点；猎意仍每次击杀增加1层。"
+  ,"guide.starrail_sim.path.hunt.effect": "常驻累计加成（暴击率／暴击伤害／攻击力）：\\n1级：5%/5%/5%\\n2级：6%/10%/10%\\n3级：8%/15%/15%\\n4级：10%/20%/20%\\n5级：11%/25%/25%\\n6级：13%/30%/30%\\n7级：15%/40%/35%"
+  ,"guide.starrail_sim.path.hunt.tips": "击杀敌人会推进连续狩猎；猎意最多叠加3层，超过8秒没有继续击杀会失去连贯节奏。5级后，满层猎意时的下一次攻击会获得追猎一击；6级暴击可以延续猎意；7级的逆时追猎有独立冷却。"
+  ,"guide.starrail_sim.path.hunt.mechanics": "4级猎意：每击杀得1层，最多3层，持续8秒。\\n5级追猎一击：满层实际命中的下一击×1.25并消耗猎意，空挥和射空不消耗。\\n6级：有猎意时暴击续时至8秒。\\n7级逆时追猎：满层下一击×1.50，冷却8秒；冷却中不消耗猎意，也不降级触发追猎一击。行迹的冷却缩减仍适用。"
   ,"guide.starrail_sim.path.erudition.core": "通过群体命中、连锁伤害和范围战斗践行智识。"
   ,"guide.starrail_sim.path.erudition.goals": "完成1次群体命中，并在30秒内累计完成3次群体命中。"
-  ,"guide.starrail_sim.path.erudition.practice": "一次近战或远程攻击同时对至少2个敌对生物造成伤害，可获得实践度；重复击中同一只不算群体命中。"
-  ,"guide.starrail_sim.path.erudition.effect": "常驻累计加成（暴击率/暴击伤害/攻击力）：\\n1级：0%/0%/5%\\n2级：0%/5%/5%\\n3级：0%/5%/10%\\n4级：5%/5%/10%\\n5级：5%/5%/15%\\n6级：5%/15%/15%\\n7级：10%/25%/25%"
+  ,"guide.starrail_sim.path.erudition.practice": "同次直接攻击实际命中至少2个不同敌人可得1点；六级完成三目标分析也可得1点。两种方式共用8秒奖励间隔，同次攻击最多1点，技能二次伤害不计。"
+  ,"guide.starrail_sim.path.erudition.effect": "常驻累计加成（暴击率／暴击伤害／攻击力）：\\n1级：0%/5%/5%\\n2级：2%/10%/10%\\n3级：3%/15%/15%\\n4级：5%/20%/20%\\n5级：6%/25%/25%\\n6级：8%/30%/30%\\n7级：10%/35%/35%"
   ,"guide.starrail_sim.path.erudition.tips": "智识需要一次攻击同时命中至少2个敌人。使用范围攻击、穿透攻击或主动聚怪更容易完成目标；单独反复攻击一个敌人不会推进智识的多目标实践。高阶后，多目标命中会积累分析并触发知识回响，终局推演会强化一次范围输出。"
-  ,"guide.starrail_sim.path.erudition.mechanics": "4级知识回响：命中目标后，对其2.5格内最多1只敌人追加本次最终伤害的15%；冷却1.2秒。\\n5级强化：范围增至3格、最多2只、追加20%。\\n6级解构弱点：5秒内命中三只不同敌人，获得一次攻击+20%的强化；6秒内不用会过期。\\n7级终局推演：冷却12秒；主目标周围3格内至少另有2只敌人时触发，对4格内敌人追加本次最终伤害的45%。"
+  ,"guide.starrail_sim.path.erudition.mechanics": "4级回响：2.5格范围1个其他目标受该击15%伤害，冷却1.2秒。\\n5级：范围3格、2个目标、20%伤害。\\n6级分析：5秒内直接命中3个不同敌人，获得6秒内下一击×1.20。\\n7级终局推演：主目标周围3格至少2个其他敌人时，对4格其他敌人造成该击45%伤害，冷却12秒。二次伤害不递归触发技能或增加分析计数。"
   ,"guide.starrail_sim.path.harmony.core": "通过食物和共鸣状态支援战斗，强调增益与团队协同。"
   ,"guide.starrail_sim.path.harmony.goals": "吃下3份食物触发共鸣，并在共鸣状态下击败3个敌人。"
-  ,"guide.starrail_sim.path.harmony.practice": "触发共鸣状态，并在共鸣状态下完成战斗。"
-  ,"guide.starrail_sim.path.harmony.effect": "常驻累计加成（护甲/最大生命/护甲韧性）：\\n1级：2%/0%/0%\\n2级：2%/3%/0%\\n3级：2%/3%/2%\\n4级：5%/3%/2%\\n5级：5%/3%/2%\\n6级：5%/6%/4%\\n7级：10%/11%/4%"
+  ,"guide.starrail_sim.path.harmony.practice": "命途共鸣中击败敌人得1点。战斗中累计3次有效进食共鸣也可得1点，辅助奖励间隔30秒；有效进食间隔10秒，且此前10秒内曾命中敌人或受敌对伤害。击杀清零辅助累计。"
+  ,"guide.starrail_sim.path.harmony.effect": "常驻累计加成（护甲值／最大生命值／护甲韧性）：\\n1级：3%/3%/0%\\n2级：6%/6%/3%\\n3级：9%/9%/6%\\n4级：12%/12%/9%\\n5级：16%/16%/12%\\n6级：20%/20%/16%\\n7级：25%/25%/20%"
   ,"guide.starrail_sim.path.harmony.tips": "食用食物可以积累共鸣，进入共鸣后继续战斗才能完成试炼。同谐的强化偏向持续支援：5级余响会强化共鸣期间接下来的3次攻击；6级协奏回响会在共鸣期间击杀敌人时恢复生命；7级万众同调会在食用时提供吸收，并通过击杀延长共鸣。"
-  ,"guide.starrail_sim.path.harmony.mechanics": "触发条件：食用食物获得共鸣；基础持续15秒，4级起20秒。\\n5级余响：共鸣期间接下来3次对敌攻击各增伤5%。\\n6级协奏回响：共鸣期间击杀每5秒最多恢复最大生命值的2.5%。\\n7级万众同调：食用时获最大生命值2.5%的吸收盾、持续5秒；共鸣期间每次击杀延长3秒，最长30秒。"
+  ,"guide.starrail_sim.path.harmony.mechanics": "进食共鸣：抗性Ⅰ15秒，4级起20秒；共鸣独立记录，其他抗性不算共鸣。\\n5级：共鸣中后续3击各+5%。\\n6级：共鸣击杀治疗最大生命2.5%，冷却5秒。\\n7级：进食补护盾至最大生命2.5%，有效5秒；共鸣击杀延长3秒，剩余最多30秒。重复进食刷新而非无限叠加，护盾到期仅清除剩余授予部分。"
   ,"guide.starrail_sim.path.nihility.core": "施加虚无侵蚀、弱化敌人并造成持续伤害，强调负面效果。"
   ,"guide.starrail_sim.path.nihility.goals": "施加5次虚无侵蚀，并击败3个受侵蚀的敌人。"
-  ,"guide.starrail_sim.path.nihility.practice": "近战或远程命中未被标记的敌对生物，且侵蚀通过效果命中判定后，才记录一次实践度。"
-  ,"guide.starrail_sim.path.nihility.effect": "常驻累计加成（效果命中/攻击力/击破特攻）：\\n1级：10%/0%/0%\\n2级：10%/5%/0%\\n3级：15%/5%/0%\\n4级：15%/10%/0%\\n5级：20%/10%/0%\\n6级：20%/15%/0%\\n7级：30%/20%/10%"
+  ,"guide.starrail_sim.path.nihility.practice": "主目标成功新侵蚀可得1点，施加奖励间隔10秒；击败自己侵蚀且尚未贡献践行度的敌人也可得1点。同一敌人一生最多贡献1点，扩散、刷新和持续伤害不计。"
+  ,"guide.starrail_sim.path.nihility.effect": "常驻累计加成（效果命中／攻击力／击破特攻）：\\n1级：10%/5%/0%\\n2级：12%/10%/0%\\n3级：15%/20%/5%\\n4级：18%/30%/5%\\n5级：22%/40%/10%\\n6级：25%/50%/15%\\n7级：30%/60%/20%"
   ,"guide.starrail_sim.path.nihility.tips": "虚无的核心是先施加负面效果，再利用持续伤害和回响扩大优势。效果命中越高，侵蚀越不容易被敌人的效果抵抗挡住；侵蚀通常会持续造成伤害，部分高阶机制会扩散到附近敌人或在结束时爆发。"
-  ,"guide.starrail_sim.path.nihility.mechanics": "触发条件：近战或远程命中敌对生物后进行效果命中判定；成功即施加虚弱和侵蚀，每秒1点伤害，4级起持续7秒（此前5秒）。\\n5级侵蚀扩散：首次标记时，尝试扩散给目标2.5格内1只未标记敌人。\\n6级痛苦回响：侵蚀伤害提高至每秒1.5点。\\n7级虚无终局：侵蚀伤害提高至每秒2点；击杀自己标记的敌人时，对3格内存活敌人施加侵蚀并造成2点伤害，无额外冷却。"
+  ,"guide.starrail_sim.path.nihility.mechanics": "侵蚀：施加虚弱Ⅰ，每秒1点魔法伤害，持续5秒；4级起7秒，完整结算5／7次。\\n5级：新侵蚀向2.5格范围最多1个未标记敌人扩散，不递归扩散。\\n6级：每秒侵蚀伤害提高至1.5点。\\n7级：自己侵蚀的敌人死亡时，对3格范围敌人造成2点魔法伤害并尝试施加侵蚀，无独立冷却，同次爆炸不递归连锁。"
   ,"guide.starrail_sim.path.abundance.core": "通过恢复生命和多次治疗践行丰饶，强调续航与生命上限。"
   ,"guide.starrail_sim.path.abundance.goals": "累计恢复10点生命值，并完成3次独立治疗。"
-  ,"guide.starrail_sim.path.abundance.practice": "恢复生命值、完成独立治疗事件。"
-  ,"guide.starrail_sim.path.abundance.effect": "常驻累计加成（最大生命/治疗效果）：\\n1级：2%/0%\\n2级：2%/5%\\n3级：5%/5%\\n4级：5%/10%\\n5级：10%/10%\\n6级：10%/15%\\n7级：15%/20%"
-  ,"guide.starrail_sim.path.abundance.tips": "治疗自己或队友会推进丰饶实践度，分开的治疗事件也能单独计数。溢出的治疗量可以转化为伤害吸收；6级回春按最大生命值恢复，7级慈航会在危险时提供更强的保命效果，但紧急救援存在较长冷却。"
-  ,"guide.starrail_sim.path.abundance.mechanics": "4级生生不息：开始治疗前生命低于80%时，获得生命恢复3秒；冷却5秒。\\n5级甘露：每次治疗溢出部分的50%转为吸收盾，单次最多4点，无持续时间/冷却。\\n6级回春：开始治疗前生命低于50%时，获得抗性2秒；冷却8秒。\\n7级慈航：受到致死伤害时保留1点生命，再恢复最大生命20%并获得5%吸收；冷却60秒。"
+  ,"guide.starrail_sim.path.abundance.practice": "累计恢复敌人实际造成的6点生命损失，获得1点践行度，奖励间隔12秒。伤害凭据30秒有效；环境自伤、满血和溢出护盾不计，同tick治疗合并计数。"
+  ,"guide.starrail_sim.path.abundance.effect": "常驻累计加成（最大生命值／治疗效果）：\\n1级：5%/0%\\n2级：10%/5%\\n3级：20%/8%\\n4级：30%/10%\\n5级：40%/12%\\n6级：50%/15%\\n7级：60%/20%"
+  ,"guide.starrail_sim.path.abundance.tips": "治疗自己或队友会推进丰饶践行度，分开的治疗事件也能单独计数。溢出的治疗量可以转化为伤害吸收；6级回春按最大生命值恢复，7级慈航会在危险时提供更强的保命效果，但紧急救援存在较长冷却。"
+  ,"guide.starrail_sim.path.abundance.mechanics": "4级：治疗前生命<80%时再生Ⅰ3秒，冷却5秒，再生链不反复续时。\\n5级：溢出治疗50%转黄心，单次最多4点，命途溢出护盾累计上限为最大生命值20%。\\n6级：治疗前生命<50%时抗性Ⅰ2秒，冷却8秒。\\n7级慈航：抵挡一次致命伤，设为1点生命，再治疗最大生命20%（受治疗效果加成），护盾最低补至最大生命5%；冷却60秒。"
   ,"guide.starrail_sim.path.remembrance.core": "记录战斗记忆并触发回响，强调重复命中和记忆积累。"
   ,"guide.starrail_sim.path.remembrance.goals": "记录3次记忆，并在8秒内再次命中同一敌人以触发2次回响。"
-  ,"guide.starrail_sim.path.remembrance.practice": "用近战或远程攻击记录目标；在记忆窗口内再次命中同一目标触发回响并累计实践度。"
-  ,"guide.starrail_sim.path.remembrance.effect": "常驻累计加成（攻击力/暴击伤害）：\\n1级：5%/0%\\n2级：5%/5%\\n3级：10%/5%\\n4级：10%/10%\\n5级：15%/10%\\n6级：15%/15%\\n7级：25%/25%"
-  ,"guide.starrail_sim.path.remembrance.tips": "记忆要求围绕同一个目标重复建立联系：记录记忆后，在记忆窗口内再次命中目标即可触发回响。基础窗口为8秒，5级后延长到12秒；优先锁定同一目标，不要在目标之间频繁切换。"
-  ,"guide.starrail_sim.path.remembrance.mechanics": "触发条件：命中敌人记录目标；在8秒内（5级起12秒）再次命中同一目标，触发回响并额外造成1点伤害（4级起为2点）。\\n5级追忆：回响后5秒内，下一次命中该目标伤害×1.1。\\n6级轮回记忆：每次回响后进入全局3秒间隔，期间对任何目标都不能触发回响。\\n7级永恒回响：累计3次回响后，下一次可触发的回响伤害×1.5；触发后冷却10秒。"
+  ,"guide.starrail_sim.path.remembrance.practice": "有效触发一次回响获得1点践行度，奖励间隔8秒；记录、刷新以及永恒回响强化不另加奖励。"
+  ,"guide.starrail_sim.path.remembrance.effect": "常驻累计加成（攻击力／暴击伤害）：\\n1级：5%/5%\\n2级：10%/10%\\n3级：15%/15%\\n4级：20%/20%\\n5级：25%/25%\\n6级：30%/30%\\n7级：40%/40%"
+  ,"guide.starrail_sim.path.remembrance.tips": "记忆要求围绕同一个目标重复建立联系：记录记忆后，在记忆窗口内再次命中目标即可触发回响。基础窗口为8秒，4级起延长到12秒；优先锁定同一目标，不要在目标之间频繁切换。"
+  ,"guide.starrail_sim.path.remembrance.mechanics": "记录后8秒内再击同目标回响，附加1点；4级起窗口12秒、附加2点。\\n5级：回响后5秒内同目标下一击×1.10。\\n6级：保留记录，回响间隔3秒，间隔中命中可刷新记录。\\n7级永恒回响：累积3次回响后该击×1.50，冷却10秒。冷却中最多储存3次，结束后下一次回响触发。"
   ,"guide.starrail_sim.path.elation.core": "通过连续命中和欢愉爆发积累节奏，强调连击与随机爆发。"
   ,"guide.starrail_sim.path.elation.goals": "完成8次连续命中，并触发2次欢愉爆发；连续命中间隔不要超过5秒。"
-  ,"guide.starrail_sim.path.elation.practice": "近战或远程有效命中都能续连击；中断超过5秒会重置连击，5级起窗口延长至7秒。"
-  ,"guide.starrail_sim.path.elation.effect": "常驻累计加成（暴击率/攻击力/暴击伤害）：\\n1级：3%/0%/0%\\n2级：3%/5%/0%\\n3级：3%/5%/5%\\n4级：6%/5%/5%\\n5级：6%/5%/5%\\n6级：6%/10%/10%\\n7级：9%/15%/15%"
+  ,"guide.starrail_sim.path.elation.practice": "触发普通三连击爆发获得1点践行度，奖励间隔8秒；普通命中和终极欢愉不重复奖励。"
+  ,"guide.starrail_sim.path.elation.effect": "常驻累计加成（暴击率／攻击力／暴击伤害）：\\n1级：3%/5%/5%\\n2级：4%/10%/10%\\n3级：5%/15%/15%\\n4级：6%/20%/20%\\n5级：7%/25%/25%\\n6级：8%/30%/30%\\n7级：10%/35%/35%"
   ,"guide.starrail_sim.path.elation.tips": "欢愉依靠连续命中积累节奏，并在节奏达到条件后触发爆发。每次命中之间不要停顿太久；先用稳定的快速攻击保持连击，再利用欢愉爆发扩大伤害。高阶后连击窗口和爆发次数会得到强化。"
-  ,"guide.starrail_sim.path.elation.mechanics": "触发条件：连续命中敌对生物，每次间隔≤5秒；5级起窗口为7秒。\\n每第3次命中：追加2点伤害（5级起4点）；4级起随机获得攻击提升5秒、生命恢复3秒、幸运10秒或抗性2秒。\\n6级狂欢回响：爆发后接下来2次攻击各增伤10%。\\n7级终极欢愉：每第6次连击可使该击伤害×1.5，冷却10秒，并额外掷骰2次。"
+  ,"guide.starrail_sim.path.elation.mechanics": "连击间隔5秒，5级起7秒；每第3击附加2点，5级起4点。\\n4级：爆发随机给予力量Ⅰ5秒、再生Ⅰ3秒、幸运Ⅰ10秒或抗性Ⅰ2秒，各25%概率。\\n6级：爆发后两击各×1.10，刷新次数而非累计。\\n7级：每第6击可×1.50，冷却10秒，额外获得两种不同随机增益；冷却中仍可普通爆发。"
   ,"guide.starrail_sim.help.combat_title": "战斗机制说明"
   ,"guide.starrail_sim.help.interface_title": "界面与数据说明"
   ,"guide.starrail_sim.help.damage": "伤害数字：普通伤害显示为白色负数；暴击显示为白色负数并带感叹号；持续伤害同样使用白色数字。削减敌人韧性时显示红色数字，打出破韧一击时显示红色数字并带感叹号。"
@@ -303,16 +303,16 @@
   ,"guide.starrail_sim.help.effect_resistance": "效果抵抗：目标抵抗负面效果的能力。效果抵抗只影响负面效果的施加，不会让已经成功存在的效果立刻消失；当提示效果被抵抗时，本次效果没有生效。"
   ,"guide.starrail_sim.help.knockback_resistance": "击退抗性：降低受到攻击时被击退的距离或概率。它与护甲、护甲韧性、效果抵抗是不同属性，主要影响站位和战斗节奏。"
   ,"guide.starrail_sim.help.attributes": "属性详情：点击角色属性中的任意属性框，可以查看基础值、命途或其他来源提供的加成，以及最终计算值。百分比属性会根据对应的基础属性进行计算。"
-  ,"guide.starrail_sim.help.practice_detail": "实践度：每条命途只统计符合自身主题的行为。命途界面会显示当前命途的实践度和目标，命途指南中的“九条命途”页面会说明具体的实践方式。"
-  ,"guide.starrail_sim.help.path_switch": "命途切换：完成初始试炼后会自动踏上选定命途。玩家同时只能拥有一条当前命途；回退会移除当前命途效果，但保留已经获得的等级和实践度。"
-  ,"guide.starrail_sim.help.notifications": "通知与进度：命途技能提示使用对应命途颜色，显示在玩家状态栏上方；试炼进度提示会实时更新。命途实践度可在命途界面查看，不会逐次弹出通知。"
-  ,"guide.starrail_sim.help.future": "光锥系统已经开放。进入角色详情后，点击左侧“光锥”按钮即可查看当前佩戴的光锥、基础属性、叠影等级和命途专属效果；只有对应命途的专属效果会被激活。技能树、遗器和饰品系统仍在后续开发中。"
+  ,"guide.starrail_sim.help.practice_detail": "践行度：每条命途只统计符合自身主题的行为。命途界面会显示当前命途的践行度和目标，命途指南中的“九条命途”页面会说明具体的实践方式。"
+  ,"guide.starrail_sim.help.path_switch": "命途切换：完成初始试炼后会自动踏上选定命途。玩家同时只能拥有一条当前命途；回退会移除当前命途效果，但保留已经获得的等级和践行度。"
+  ,"guide.starrail_sim.help.notifications": "通知与进度：命途技能提示使用对应命途颜色，显示在玩家状态栏上方；试炼进度提示会实时更新。命途践行度可在命途界面查看，不会逐次弹出通知。"
+  ,"guide.starrail_sim.help.future": "光锥与九命途行迹系统均已开放。通过角色界面左侧“光锥”和“行迹”查看装备与成长节点；对应行迹材料可通过命途遗迹监守者及重复挑战获取。遗器和饰品系统仍在后续开发中。"
   ,"starrail_sim.path.pinnacle_practice_attack_damage": "\u547d\u9014\u6781\u5883\u8df5\u884c\u653b\u51fb\u529b"
-  ,"guide.starrail_sim.current.pinnacle_practice": "\u547d\u9014\u6781\u5883\u8df5\u884c\uff1a%s/%s\uff1b\u989d\u5916\u653b\u51fb\u529b\u52a0\u6210\uff1a%s/%s \u6b21\uff08\u6bcf\u6b21+5%%\uff09"
+  ,"guide.starrail_sim.current.pinnacle_practice": "命途极境践行：%s/%s；额外攻击力加成：%s/%s 次（每次+10%%）"
   ,"guide.starrail_sim.ranks.pinnacle": "\u6bcf\u8f6e\u6781\u5883\u8df5\u884c\u76ee\u6807\uff1a%s\uff1b\u6700\u591a\u989d\u5916\u52a0\u6210\uff1a%s \u6b21"
-  ,"guide.starrail_sim.path.rank_rule": "\u5b9e\u8df5\u5ea6\u8fbe\u5230\u5f53\u524d\u76ee\u6807\u540e\u81ea\u52a8\u5f00\u59cb\u664b\u9636\u8bd5\u70bc\u3002\u8bd5\u70bc\u671f\u95f4\u9700\u8981\u5b8c\u6210\u4e24\u4e2a\u7b26\u5408\u547d\u9014\u7279\u8272\u7684\u76ee\u6807\uff1b\u5168\u90e8\u5b8c\u6210\u540e\u81ea\u52a8\u5347\u7ea7\u3002\u8bd5\u70bc\u8d85\u65f6\u53ea\u4f1a\u91cd\u7f6e\u8bd5\u70bc\u76ee\u6807\uff0c\u4e0d\u4f1a\u6e05\u9664\u5df2\u7ecf\u7d2f\u79ef\u7684\u5b9e\u8df5\u5ea6\u3002\u8fbe\u5230\u7b2c7\u7ea7\u547d\u9014\u6781\u5883\u540e\uff0c\u4e0d\u518d\u5f00\u542f\u65b0\u7684\u664b\u9636\u8bd5\u70bc\uff1b\u6bcf\u7d2f\u8ba1120\u70b9\u6781\u5883\u8df5\u884c\u4f1a\u989d\u5916\u83b7\u5f97+5%%\u653b\u51fb\u529b\uff0c\u6700\u591a\u8ba1\u7b9710\u6b21\uff08\u6700\u591a+50%%\uff09\u3002"
-  ,"guide.starrail_sim.ranks.trials": "\u7b49\u7ea7\u8d8a\u9ad8\uff0c\u664b\u9636\u8bd5\u70bc\u7684\u76ee\u6807\u6570\u91cf\u8d8a\u591a\u3001\u65f6\u95f4\u8d8a\u957f\u3002\u8bd5\u70bc\u8d85\u65f6\u53ea\u4f1a\u91cd\u7f6e\u8bd5\u70bc\u76ee\u6807\uff0c\u4e0d\u4f1a\u6e05\u9664\u5df2\u7ecf\u79ef\u7d2f\u7684\u5b9e\u8df5\u5ea6\u3002\u7b2c7\u7ea7\u4e4b\u540e\u8fdb\u5165\u65e0\u5c3d\u8df5\u884c\uff0c\u6bcf120\u70b9\u8df5\u884c\u5ea6\u8ba1\u4e3a1\u6b21\u989d\u5916\u653b\u51fb\u529b+5%%\uff0c\u6700\u591a10\u6b21\u3002"
-  ,"guide.starrail_sim.help.practice": "\u5b8c\u6210\u7b26\u5408\u547d\u9014\u7279\u8272\u7684\u884c\u4e3a\u53ef\u4ee5\u83b7\u5f97\u5b9e\u8df5\u5ea6\u3002\u5f53\u524d\u5b9e\u8df5\u5ea6\u548c\u76ee\u6807\u4f1a\u663e\u793a\u5728\u547d\u9014\u754c\u9762\u3002\u8fbe\u5230\u547d\u9014\u6781\u5883\u540e\uff0c\u5b9e\u8df5\u5ea6\u4f9d\u7136\u53ef\u4ee5\u7d2f\u79ef\uff1b\u6bcf120\u70b9\u6362\u7b971\u6b21+5%%\u653b\u51fb\u529b\uff0c\u6700\u591a10\u6b21\u3002"
+  ,"guide.starrail_sim.path.rank_rule": "践行度阶段目标为40、80、120、160、200、240。一级满40直接升二级，之后完成晋阶试炼自动升级；试炼期间暂停常规践行度，超时保留门槛进度。七级每300践行度额外攻击力+10%%，最多十次、+100%%，与命途常驻攻击力相加。"
+  ,"guide.starrail_sim.ranks.trials": "晋阶时限：升三级180秒、四级300秒、五级480秒、六级600秒、七级900秒。目标按命途独立配置。七级每300践行度额外攻击力+10%%，最多十次。"
+  ,"guide.starrail_sim.help.practice": "所有命途单次践行度最多+1，同一攻击的命中、技能及击杀不重复奖励。不同命途使用独立有效行为门槛和奖励间隔。七级每300践行度获得攻击力+10%%，最多十次。"
   ,"guide.starrail_sim.help.rollback": "\u56de\u9000\u547d\u9014\u53ea\u79fb\u9664\u5f53\u524d\u547d\u9014\u6548\u679c\uff0c\u5df2\u7ecf\u83b7\u5f97\u7684\u7b49\u7ea7\u3001\u5b9e\u8df5\u5ea6\u548c\u547d\u9014\u6781\u5883\u989d\u5916\u52a0\u6210\u6b21\u6570\u90fd\u4f1a\u4fdd\u7559\u3002"
   ,"item.starrail_sim.in_the_night": "于夜色中"
   ,"item.starrail_sim.i_will_hunt": "我将，巡征追猎"
@@ -538,7 +538,7 @@
   ,"tooltip.starrail_sim.in_the_night.story_3": "「此时此刻此地，明明只有我一个人……」"
   ,"tooltip.starrail_sim.in_the_night.story_4": "「却感觉…很热闹呢。」"
   ,"message.starrail_sim.flowing_light": "流光：%s/%s层（持续30秒）"
-  ,"guide.starrail_sim.help.light_cone": "光锥系统已经开放。进入角色详情后，点击左侧“光锥”按钮即可查看当前佩戴的光锥、基础属性、叠影等级和命途专属效果；只有对应命途的专属效果会被激活。技能树、遗器和饰品系统仍在后续开发中。"
+  ,"guide.starrail_sim.help.light_cone": "光锥系统已经开放。进入角色详情后，点击左侧“光锥”按钮，可查看当前佩戴光锥的基础属性、叠影等级和命途专属效果；专属效果仅在对应命途下激活。行迹系统也已开放，点击左侧“行迹”可查看当前命途的行迹树，消耗对应材料解锁节点；支持回退节点和重置行迹，返还已消耗材料。未踏上命途时不显示行迹树。遗器和饰品系统仍在后续开发中。"
   ,"item.starrail_sim.something_irreplaceable": "\u65e0\u53ef\u53d6\u4ee3\u7684\u4e1c\u897f"
   ,"tooltip.starrail_sim.something_irreplaceable.superimposition": "\u53e0\u5f71\uff1aS%s"
   ,"tooltip.starrail_sim.something_irreplaceable.base_header": "\u57fa\u7840\u5c5e\u6027"
@@ -1986,25 +1986,25 @@
   ,"ui.starrail_sim.path.current_path": "当前命途"
   ,"ui.starrail_sim.path.current_stage": "当前阶段"
   ,"ui.starrail_sim.path.stage_preview": "阶段说明"
-  ,"ui.starrail_sim.path.first_stage": "本阶段实践度目标：%s 点。达标后直接晋升 2 级，无需晋阶试炼。"
-  ,"ui.starrail_sim.path.next_stage": "本阶段实践度目标：%s 点。达标后自动开启下一等级的晋阶试炼。"
-  ,"ui.starrail_sim.path.pinnacle_stage": "已达到最高等级。每累计 %s 点实践度，额外获得攻击力 +5%%，最多十次（+50%%）。"
+  ,"ui.starrail_sim.path.first_stage": "本阶段践行度目标：%s 点。达标后直接晋升 2 级，无需晋阶试炼。"
+  ,"ui.starrail_sim.path.next_stage": "本阶段践行度目标：%s 点。达标后自动开启下一等级的晋阶试炼。"
+  ,"ui.starrail_sim.path.pinnacle_stage": "已达最高等级：每 %s 践行度攻击力 +10%%，最多十次（+100%%）；与命途常驻攻击力相加。"
   ,"ui.starrail_sim.path.next_trial": "下一等级：%s。试炼时限 %s 秒；两项目标分别为 %s、%s，全部完成后自动晋阶。"
   ,"ui.starrail_sim.path.pinnacle_count": "极境践行次数：%s / %s"
   ,"ui.starrail_sim.path.bonuses": "本等级累计属性加成"
   ,"ui.starrail_sim.path.cumulative_note": "以上为本等级累计加成，并非每次晋级额外叠加。相邻等级的属性数值可能相同。"
   ,"ui.starrail_sim.path.practice": "实践方式"
   ,"ui.starrail_sim.path.mechanics": "专属机制 · 各等级解锁说明"
-  ,"ui.starrail_sim.path.selection_note": "每条命途分别保存等级与实践度。同一时间只能有一条当前命途。点击等级节点可查看对应阶段。"
+  ,"ui.starrail_sim.path.selection_note": "每条命途分别保存等级与践行度。同一时间只能有一条当前命途。点击等级节点可查看对应阶段。"
   ,"ui.starrail_sim.path.open_guide": "查看命途指南 →"
   ,"ui.starrail_sim.guide.rank_column": "等级"
-  ,"ui.starrail_sim.guide.target_column": "实践度目标"
+  ,"ui.starrail_sim.guide.target_column": "践行度目标"
   ,"ui.starrail_sim.guide.advance_column": "达标后"
   ,"ui.starrail_sim.guide.rank_target": "%s 点"
   ,"ui.starrail_sim.guide.pinnacle_target": "每 %s 点"
   ,"ui.starrail_sim.guide.direct_advance": "直接升至 2 级"
   ,"ui.starrail_sim.guide.trial_advance": "自动开启下一等级试炼"
-  ,"ui.starrail_sim.guide.pinnacle_reward": "攻击力 +5%，最多十次"
+  ,"ui.starrail_sim.guide.pinnacle_reward": "攻击力 +10%，最多十次"
   ,"ui.starrail_sim.guide.trial_heading": "晋阶试炼与重试"
   ,"ui.starrail_sim.guide.open_path": "打开命途页面 →"
   ,"ui.starrail_sim.attributes.basic": "基础属性"
@@ -2111,6 +2111,40 @@
   "message.starrail_sim.ruin_anchor.failed": "无法在此处召唤监守者，请确认遗迹区域已加载。",
   "message.starrail_sim.ruin_anchor.summoned": "%s遗迹召唤锚点已启动，监守者再次出现！",
   "message.starrail_sim.ruin_anchor.defeated": "再次挑战成功！召唤锚点将在 30 秒后恢复。",
+  "message.starrail_sim.ruin_anchor.encounter": "遭遇%s遗迹监守者。击败守卫后，宝箱室将开放。",
+  "message.starrail_sim.ruin_anchor.ordinary_encounter": "遭遇遗迹监守者。击败守卫后，宝箱室将开放。",
+  "message.starrail_sim.ruin_anchor.waiting": "正在等待守卫加载或恢复，请稍候；这不代表挑战已完成。",
+  "message.starrail_sim.ruin_anchor.wrong_key": "此锚点需要%s命途钥印；你手持的%s不匹配。",
+  "message.starrail_sim.ruin_anchor.first_victory": "遗迹监守者已被击败，宝箱室已开放。",
+  "message.starrail_sim.ruin_anchor.material_drop": "本次掉落：%s ×1（地面物品）",
+  "message.starrail_sim.ruin_anchor.no_material": "本次未掉落行迹材料。",
+  "ui.starrail_sim.ruin_anchor.title": "%s · 召唤锚点",
+  "ui.starrail_sim.ruin_anchor.unbound": "锚点未绑定有效遗迹",
+  "ui.starrail_sim.ruin_anchor.first_clear": "需先击败首次守卫并开启宝箱",
+  "ui.starrail_sim.ruin_anchor.ready": "可召唤 · 开启重复挑战",
+  "ui.starrail_sim.ruin_anchor.active": "战斗中 · 不能重复召唤",
+  "ui.starrail_sim.ruin_anchor.cooldown": "冷却中 · 剩余 %s 秒",
+  "ui.starrail_sim.ruin_anchor.waiting": "等待守卫加载或恢复",
+  "ui.starrail_sim.ruin_anchor.peaceful": "和平难度下无法召唤",
+  "ui.starrail_sim.ruin_anchor.required_key": "需持有：%s",
+  "ui.starrail_sim.ruin_anchor.wrong_key": "钥印命途不匹配",
+  "ui.starrail_sim.ruin_anchor.matched_key": "钥印已匹配 · 不消耗",
+  "ui.starrail_sim.ruin_anchor.use_key": "钥印已匹配 · 右键召唤（不消耗）",
+  "ui.starrail_sim.ruin_battle.path_guard": "%s · %s",
+  "ui.starrail_sim.ruin_battle.health": "生命值",
+  "ui.starrail_sim.ruin_battle.toughness": "韧性",
+  "ui.starrail_sim.ruin_battle.normal": "韧性正常",
+  "ui.starrail_sim.ruin_battle.broken": "韧性已击破 · %s 秒",
+  "ui.starrail_sim.ruin_battle.recovering": "韧性恢复中 · %s 秒",
   "guide.starrail_sim.path.materials": "行迹材料获取",
   "guide.starrail_sim.path.material_source": "击杀这条命途遗迹的监守者，有 30% 概率掉落 1 个对应行迹材料。首次击败后，宝箱会提供专属召唤钥印；使用宝箱旁的锚点可再次挑战。每次重复击杀后，锚点冷却 30 秒。普通遗迹不掉落命途专属行迹材料。"
+,
+  "screen.starrail_sim.erudition_unique_hits": "直接命中过的不同敌人：%s/%s",
+  "key.starrail_sim.toggle_status": "切换玩家状态栏",
+  "ui.starrail_sim.status.enabled": "已启用模组玩家状态栏",
+  "ui.starrail_sim.status.disabled": "已恢复原版玩家状态栏",
+  "guide.starrail_sim.help.hud_title": "玩家状态栏",
+  "guide.starrail_sim.help.hud_values": "状态栏：默认位于经验条上方，数字紧跟对应图标。绿色主条显示当前生命/最大生命，金色主条显示饱食度；蓝色副条显示伤害吸收，浅绿色副条显示饱和度。吸收生命是独立护盾，不计入最大生命；吸收条相对最大生命绘制，超过条长时仍显示实际数值。护甲与护甲韧性显示实际属性值。低生命、低饱食度及受伤/恢复时会出现对应提示。",
+  "guide.starrail_sim.help.hud_context": "情境状态：水下或氧气未满时显示泡泡图标与剩余呼吸秒数；骑乘生物时显示坐骑当前/最大生命，可跳跃坐骑另显示蓄力短条。情境信息与吸收生命共用下方一行。中间留出经验等级空间，等级数字过长发生重叠时优先显示状态栏。创造与旁观模式不显示该生存状态栏，F1隐藏HUD。",
+  "guide.starrail_sim.help.hud_settings": "显示设置：默认按F8切换模组状态栏与原版状态栏，可在按键设置中修改快捷键，切换结果会保存。客户端配置starrail_sim-client.toml支持经验条上方/左下角位置、75%～100%缩放及精确数字；大数默认使用K/M缩写。显示设置只改变界面，不改变玩家属性或能力。"
 }

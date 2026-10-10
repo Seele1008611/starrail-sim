@@ -19,6 +19,9 @@ import org.lwjgl.glfw.GLFW;
         bus = Mod.EventBusSubscriber.Bus.MOD,
         value = Dist.CLIENT)
 public final class StarRailClient {
+    public static final KeyMapping TOGGLE_STATUS = new KeyMapping(
+            "key.starrail_sim.toggle_status", InputConstants.Type.KEYSYM,
+            GLFW.GLFW_KEY_F8, "key.categories.starrail_sim");
     public static final KeyMapping OPEN_CHARACTER = new KeyMapping(
             "key.starrail_sim.open_character",
             InputConstants.Type.KEYSYM,
@@ -31,5 +34,6 @@ public final class StarRailClient {
     @SubscribeEvent
     public static void registerKeyMappings(RegisterKeyMappingsEvent event) {
         event.register(OPEN_CHARACTER);
+        event.register(TOGGLE_STATUS);
     }
 }

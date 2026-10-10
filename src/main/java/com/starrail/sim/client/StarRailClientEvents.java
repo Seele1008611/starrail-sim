@@ -27,6 +27,14 @@ public final class StarRailClientEvents {
         }
 
         Minecraft minecraft = Minecraft.getInstance();
+        while (StarRailClient.TOGGLE_STATUS.consumeClick()) {
+            if (minecraft.player == null || minecraft.screen != null) continue;
+            boolean enabled = !com.starrail.sim.StarRailStatusConfig.HUD.get();
+            com.starrail.sim.StarRailStatusConfig.HUD.set(enabled);
+            com.starrail.sim.StarRailStatusConfig.CLIENT.save();
+            minecraft.player.displayClientMessage(net.minecraft.network.chat.Component.translatable(
+                    enabled ? "ui.starrail_sim.status.enabled" : "ui.starrail_sim.status.disabled"), true);
+        }
         while (StarRailClient.OPEN_CHARACTER.consumeClick()
                 && minecraft.player != null && minecraft.screen == null) {
             minecraft.setScreen(new StarRailCharacterScreen());

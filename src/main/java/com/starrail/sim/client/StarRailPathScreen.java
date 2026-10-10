@@ -345,20 +345,26 @@ public final class StarRailPathScreen extends StarRailStyledScreen {
         String[] names = new String[0];
         if (rows.length > 0) {
             java.util.regex.Matcher labels = java.util.regex.Pattern.compile("[（(]([^）)]+)[）)]").matcher(rows[0]);
-            if (labels.find()) names = labels.group(1).split("/");
+            if (labels.find()) names = labels.group(1).split("[/／]");
         }
         String prefix = browsedRank + "级";
         for (String row : rows) {
             if (!row.startsWith(prefix + "：") && !row.startsWith("R" + browsedRank + ":")) continue;
-            String[] values = row.substring(Math.max(row.indexOf('：'), row.indexOf(':')) + 1).trim().split("/");
+            String[] values = row.substring(Math.max(row.indexOf('：'), row.indexOf(':')) + 1).trim().split("[/／]");
             for (int i = 0; i < values.length; i++) {
-                graphics.fill(detailLeft, y - 3, right, y + 15, i % 2 == 0 ? 0x202A3550 : 0x102A3550);
-                graphics.drawString(font, i < names.length ? names[i] : "", detailLeft + 7, y,
-                        StarRailUiStyle.MUTED_COLOR);
                 String value = "+" + values[i].trim();
+                int labelWidth = Math.max(24, right - detailLeft - font.width(value) - 28);
+                var labelLines = font.split(Component.literal(i < names.length ? names[i].trim() : ""), labelWidth);
+                int rowHeight = Math.max(23, labelLines.size() * 12 + 8);
+                graphics.fill(detailLeft, y - 3, right, y + rowHeight - 8,
+                        i % 2 == 0 ? 0x202A3550 : 0x102A3550);
+                for (int line = 0; line < labelLines.size(); line++) {
+                    graphics.drawString(font, labelLines.get(line), detailLeft + 7, y + line * 12,
+                            StarRailUiStyle.MUTED_COLOR);
+                }
                 graphics.drawString(font, value, right - 7 - font.width(value), y,
                         StarRailUiStyle.CYAN_ACCENT);
-                y += 23;
+                y += rowHeight;
             }
             break;
         }
@@ -489,7 +495,8 @@ public final class StarRailPathScreen extends StarRailStyledScreen {
             case PRESERVATION -> "screen.starrail_sim.preservation_damage";
             case ABUNDANCE -> "screen.starrail_sim.abundance_events";
             case DESTRUCTION -> "screen.starrail_sim.destruction_damage";
-            case ERUDITION -> "screen.starrail_sim.erudition_multi_hit";
+            case ERUDITION -> StarRailPathClientState.getTrialRank().getLevel() >= 3
+                    ? "screen.starrail_sim.erudition_unique_hits" : "screen.starrail_sim.erudition_multi_hit";
             case NIHILITY -> "screen.starrail_sim.nihility_kills";
             case HARMONY -> "screen.starrail_sim.harmony_kills";
             case REMEMBRANCE -> "screen.starrail_sim.remembrance_echoes";

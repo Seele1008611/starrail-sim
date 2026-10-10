@@ -9,21 +9,21 @@ import net.minecraft.server.level.ServerPlayer;
 
 /** Tracks per-rank practice and starts automatic breakthrough trials. */
 public final class StarRailPathProgress {
-    public static final int PINNACLE_PRACTICE_TARGET = 120;
+    public static final int PINNACLE_PRACTICE_TARGET = 300;
     public static final int MAX_PINNACLE_PRACTICE_COUNT = 10;
-    public static final double PINNACLE_ATTACK_BONUS_PER_COUNT = 0.05D;
+    public static final double PINNACLE_ATTACK_BONUS_PER_COUNT = 0.10D;
 
     private StarRailPathProgress() {
     }
 
     public static int targetFor(StarRailPathRank rank) {
         return switch (rank) {
-            case PATHFARING -> 5;
-            case GLIMPSE -> 8;
-            case RESONANCE -> 12;
-            case PRACTICE -> 30;
-            case DEEP_PRACTICE -> 60;
-            case HIGH_PATHSTRIDER -> 120;
+            case PATHFARING -> 40;
+            case GLIMPSE -> 80;
+            case RESONANCE -> 120;
+            case PRACTICE -> 160;
+            case DEEP_PRACTICE -> 200;
+            case HIGH_PATHSTRIDER -> 240;
             case PATH_PINNACLE -> PINNACLE_PRACTICE_TARGET;
             default -> 0;
         };
@@ -59,6 +59,7 @@ public final class StarRailPathProgress {
             return;
         }
 
+        amount = 1; // Every authorized practice event is capped at one point.
         if (rank == StarRailPathRank.PATH_PINNACLE) {
             int completed = data.getPinnaclePracticeCount(path);
             if (completed >= MAX_PINNACLE_PRACTICE_COUNT) {
@@ -98,6 +99,8 @@ public final class StarRailPathProgress {
         if (rank == StarRailPathRank.PATHFARING && after >= target) {
             data.setPathRank(path, StarRailPathRank.GLIMPSE);
             data.setPracticeProgress(path, 0);
+            StarRailPracticeService.clearAccumulation(player);
+            StarRailPathEffects.refresh(player, path);
         } else if (after >= target) {
             beginRankTrial(player, data, path, rank);
         }

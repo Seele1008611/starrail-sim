@@ -8,14 +8,12 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.ai.attributes.AttributeInstance;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.living.LivingAttackEvent;
+import net.minecraftforge.event.entity.living.ShieldBlockEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
@@ -84,6 +82,7 @@ public final class StarRailPathEvents {
                 StarRailPathService.sync(player);
             }
 
+            StarRailPathTemporaryState.tick(player, data);
             StarRailPreservationService.tick(player, data);
             StarRailDestructionService.tick(player, data);
             StarRailEruditionService.tick(player, data);
@@ -100,107 +99,38 @@ public final class StarRailPathEvents {
         if (!(event.getEntity() instanceof ServerPlayer player)) {
             return;
         }
-        initializeBaseDefenseAttributes(player);
         player.getCapability(StarRailPathCapability.PATH_DATA).ifPresent(data ->
                 StarRailPathEffects.refresh(player, data.getCurrentPath()));
         StarRailLightConeService.refresh(player);
         StarRailPathService.sync(player);
     }
 
-    @SubscribeEvent
-    public static void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event) {
-        if (event.getEntity() instanceof ServerPlayer player) {
-            initializeBaseDefenseAttributes(player);
-        }
-    }
-
-    private static void initializeBaseDefenseAttributes(ServerPlayer player) {
-        AttributeInstance armor = player.getAttribute(Attributes.ARMOR);
-        if (armor != null && armor.getBaseValue() != 2.0D) {
-            armor.setBaseValue(2.0D);
-        }
-
-        AttributeInstance armorToughness = player.getAttribute(Attributes.ARMOR_TOUGHNESS);
-        if (armorToughness != null && armorToughness.getBaseValue() != 1.0D) {
-            armorToughness.setBaseValue(1.0D);
-        }
-    }
-
-    @SubscribeEvent
-    public static void onLivingAttack(LivingAttackEvent event) {
-        if (event.getEntity().level().isClientSide()
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public static void onLivingAttack(ShieldBlockEvent event) {
+        if (event.isCanceled() || event.getEntity().level().isClientSide()
                 || !(event.getEntity() instanceof ServerPlayer player)
-                || !(event.getSource().getEntity() instanceof Monster attacker)
-                || !player.isBlocking()) {
-            return;
-        }
-
-            player.getCapability(StarRailPathCapability.PATH_DATA).ifPresent(data -> {
-            if (data.getTrialPath() == StarRailPath.PRESERVATION) {
-                recordObjective1(player, data, 1);
-                completeOrSync(player, data);
-            }
-            if (!data.getTrialPath().isRealPath()
-                    && data.getCurrentPath() == StarRailPath.PRESERVATION) {
-                StarRailPathProgress.record(player, data, StarRailPath.PRESERVATION, 1);
-            }
-            float countershockDamage = StarRailPreservationService.onBlockedAttack(
-                    player, data, attacker);
-            if (countershockDamage > 0.0F) {
-                // Countershock is a fixed armor-based effect; do not let it roll
-                // the player's critical-hit formula a second time.
-                if (attacker.hurt(player.damageSources().generic(), countershockDamage))
-                    StarRailCombatVfx.emit(player, player, attacker, CombatVfxPacket.Kind.PRESERVATION_COUNTER,
-                            event.getSource().getDirectEntity() instanceof net.minecraft.world.entity.projectile.Projectile);
-            }
-        });
-    }
-
-    @SubscribeEvent
-    public static void onLivingHurt(LivingHurtEvent event) {
-        if (event.getEntity().level().isClientSide()
-                || !(event.getEntity() instanceof ServerPlayer player)
-                || event.getAmount() <= 0.0F) {
-            return;
-        }
-
-        StarRailLightConeService.onPlayerDamaged(player);
-        if (event.getSource().getEntity() != null) {
-            StarRailLightConeService.onMomentOfVictoryAttacked(player);
-        }
-        if (!(event.getSource().getEntity() instanceof Monster)) {
-            return;
-        }
-
-        // Destruction light cones trigger from a real hostile hit, including
-        // hits that are subsequently handled by the Preservation block logic.
-        StarRailLightConeService.onPlayerAttacked(player);
-        if (player.isBlocking()) {
-            return;
-        }
-
+                || !(event.getDamageSource().getEntity() instanceof Monster attacker)
+                || event.getBlockedDamage() <= 0) return;
         player.getCapability(StarRailPathCapability.PATH_DATA).ifPresent(data -> {
-            StarRailPath trialPath = data.getTrialPath();
-            if (trialPath == StarRailPath.DESTRUCTION
-                    && player.getHealth() <= player.getMaxHealth() * 0.5F) {
-                recordObjective2(player, data,
-                        Math.max(1, (int) Math.ceil(event.getAmount())));
-                completeOrSync(player, data);
-            } else if (trialPath == StarRailPath.PRESERVATION) {
-                recordObjective2(player, data,
-                        Math.max(1, (int) Math.ceil(event.getAmount())));
-                completeOrSync(player, data);
-            }
-            if (!trialPath.isRealPath()
-                    && data.getCurrentPath() == StarRailPath.DESTRUCTION
-                    && (player.getHealth() <= player.getMaxHealth() * 0.5F
-                    || player.getHealth() - event.getAmount()
-                    <= player.getMaxHealth() * 0.5F)) {
-                StarRailPathProgress.record(player, data, StarRailPath.DESTRUCTION, 1);
-            }
-            StarRailDestructionService.onHostileDamage(player, data, event.getAmount());
-            StarRailPreservationService.onUnblockedDamage(player, data, event.getAmount());
+            StarRailPracticeService.combat(player);
+            StarRailRankTrialService.blocked(player, data);
+            float damage = StarRailPreservationService.onBlockedAttack(player, data, attacker);
+            if (damage > 0 && StarRailOwnedDamage.hurt(player, attacker, damage, false))
+                StarRailCombatVfx.emit(player, player, attacker, CombatVfxPacket.Kind.PRESERVATION_COUNTER,
+                        event.getDamageSource().getDirectEntity() instanceof net.minecraft.world.entity.projectile.Projectile);
         });
+    }
+
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public static void onLivingHurt(LivingHurtEvent event) {
+        if (event.isCanceled() || event.getEntity().level().isClientSide()
+                || !(event.getEntity() instanceof ServerPlayer player) || event.getAmount() <= 0) return;
+        StarRailLightConeService.onPlayerDamaged(player);
+        if (event.getSource().getEntity() != null) StarRailLightConeService.onMomentOfVictoryAttacked(player);
+        player.getPersistentData().remove("starrail_absorption_before_hit");
+        if (!(event.getSource().getEntity() instanceof Monster)) return;
+        StarRailLightConeService.onPlayerAttacked(player);
+        player.getPersistentData().putFloat("starrail_absorption_before_hit", player.getAbsorptionAmount());
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
@@ -213,166 +143,69 @@ public final class StarRailPathEvents {
         StarRailLightConeService.onSheHasClosedHerEyesHealthLost(player);
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void onLivingDamage(LivingDamageEvent event) {
-        if (event.getEntity().level().isClientSide()
-                || !(event.getEntity() instanceof ServerPlayer player)
-                || event.getAmount() <= 0.0F) {
-            return;
+        if (event.isCanceled() || event.getEntity().level().isClientSide()) return;
+        if (event.getEntity() instanceof ServerPlayer player) {
+            float beforeAbsorption = player.getPersistentData().getFloat("starrail_absorption_before_hit");
+            player.getPersistentData().remove("starrail_absorption_before_hit");
+            float absorbed = Math.max(0, beforeAbsorption - player.getAbsorptionAmount());
+            player.getCapability(StarRailPathCapability.PATH_DATA).ifPresent(data -> {
+                if (event.getAmount() > 0 && StarRailAbundanceService.tryEmergencyRecovery(player, data, event.getAmount()))
+                    event.setAmount(0);
+                float healthDamage = Math.min(player.getHealth(), Math.max(0, event.getAmount()));
+                if (!(event.getSource().getEntity() instanceof Monster) || healthDamage + absorbed <= 0) return;
+                boolean low = player.getHealth() <= player.getMaxHealth() * .5F
+                        || player.getHealth() - healthDamage <= player.getMaxHealth() * .5F;
+                StarRailPracticeService.hurt(player, data, healthDamage, absorbed, low);
+                StarRailRankTrialService.hurt(player, data, healthDamage + absorbed, low);
+                StarRailDestructionService.onHostileDamage(player, data, healthDamage);
+            });
+        } else if (event.getEntity() instanceof Monster target && event.getAmount() > 0) {
+            ServerPlayer player = StarRailCombatEvents.getPlayerAttacker(event.getSource());
+            if (player != null && !StarRailOwnedDamage.isSecondary(player) && !player.getPersistentData().getBoolean("trace_destruction_splash_active"))
+                player.getCapability(StarRailPathCapability.PATH_DATA).ifPresent(data ->
+                        StarRailPracticeService.duringAttack(event.getSource(), () ->
+                                StarRailRankTrialService.hit(player, data, target, event.getSource(), event.getAmount())));
         }
-
-        player.getCapability(StarRailPathCapability.PATH_DATA).ifPresent(data -> {
-            if (StarRailAbundanceService.tryEmergencyRecovery(
-                    player, data, event.getAmount())) {
-                event.setAmount(0.0F);
-            }
-        });
     }
 
-    @SubscribeEvent
-    public static void onEruditionMultiHit(LivingHurtEvent event) {
-        if (event.getEntity().level().isClientSide()
-                || event.getAmount() <= 0.0F
-                || !(event.getEntity() instanceof Monster)) {
-            return;
-        }
-        ServerPlayer player = StarRailCombatEvents.getPlayerAttacker(event.getSource());
-        if (player == null) {
-            return;
-        }
 
-        player.getCapability(StarRailPathCapability.PATH_DATA).ifPresent(data -> {
-            boolean trial = data.getTrialPath() == StarRailPath.ERUDITION;
-            boolean active = data.getCurrentPath() == StarRailPath.ERUDITION;
-            if (!trial && !active) {
-                return;
-            }
 
-            long currentTick = player.level().getGameTime();
-            if (data.getEruditionHitTick() != currentTick) {
-                data.setEruditionHitTick(currentTick);
-                data.setEruditionHitCount(0);
-            }
-            if (data.getEruditionHitCount() < 2) {
-                data.setEruditionHitCount(data.getEruditionHitCount() + 1);
-            }
-            if (data.getEruditionHitCount() >= 2
-                    && data.getLastEruditionMultiHitTick() != currentTick) {
-                data.setLastEruditionMultiHitTick(currentTick);
-                if (trial) {
-                    recordObjective1(player, data, 1);
-                    recordObjective2(player, data, 1);
-                    completeOrSync(player, data);
-                } else {
-                    StarRailPathProgress.record(player, data, StarRailPath.ERUDITION, 1);
-                }
-            }
-        });
-    }
-
-    @SubscribeEvent
-    public static void onNihilityAttack(LivingHurtEvent event) {
-        if (event.getEntity().level().isClientSide()
-                || event.getAmount() <= 0.0F
-                || !(event.getEntity() instanceof Monster target)) {
-            return;
-        }
-        ServerPlayer player = StarRailCombatEvents.getPlayerAttacker(event.getSource());
-        if (player == null) {
-            return;
-        }
-
-        player.getCapability(StarRailPathCapability.PATH_DATA).ifPresent(data -> {
-            boolean trial = data.getTrialPath() == StarRailPath.NIHILITY;
-            boolean active = data.getCurrentPath() == StarRailPath.NIHILITY;
-            if (!trial && !active) {
-                return;
-            }
-            if (StarRailDebuffService.applyNihilityMark(target, player, event.getSource())) {
-                if (trial) {
-                    recordObjective1(player, data, 1);
-                    completeOrSync(player, data);
-                } else {
-                    StarRailPathProgress.record(player, data, StarRailPath.NIHILITY, 1);
-                }
-            }
-        });
-    }
-
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void onLivingHeal(LivingHealEvent event) {
-        if (event.getEntity().level().isClientSide()
-                || !(event.getEntity() instanceof ServerPlayer player)
-                || event.getAmount() <= 0.0F) {
-            return;
-        }
-
-        final float amount = event.getAmount()
-                * (float) (1.0D + Math.max(0.0D, StarRailAttributes.getValue(
-                player, StarRailAttributes.HEALING_EFFECT, 0.0D)));
+        if (event.isCanceled() || event.getEntity().level().isClientSide()
+                || !(event.getEntity() instanceof ServerPlayer player) || event.getAmount() <= 0) return;
+        float amount = event.getAmount() * (float) (1 + Math.max(0,
+                StarRailAttributes.getValue(player, StarRailAttributes.HEALING_EFFECT, 0)));
         event.setAmount(amount);
-
         player.getCapability(StarRailPathCapability.PATH_DATA).ifPresent(data -> {
-            boolean trial = data.getTrialPath() == StarRailPath.ABUNDANCE;
-            boolean active = data.getCurrentPath() == StarRailPath.ABUNDANCE;
-            if (!trial && !active) {
-                return;
-            }
-            if (active) {
-                StarRailAbundanceService.onHealing(player, data, amount);
-            }
-            float actualHealing = Math.min(amount,
-                    Math.max(0.0F, player.getMaxHealth() - player.getHealth()));
-            if (actualHealing <= 0.0F) {
-                return;
-            }
-            if (trial) {
-                recordObjective1(player, data,
-                        Math.max(1, (int) Math.ceil(actualHealing)));
-                recordObjective2(player, data, 1);
-                completeOrSync(player, data);
-            } else {
-                StarRailPathProgress.record(player, data, StarRailPath.ABUNDANCE, 1);
-            }
+            if (data.getCurrentPath() == StarRailPath.ABUNDANCE) StarRailAbundanceService.onHealing(player, data, amount);
+            float actual = Math.min(amount, Math.max(0, player.getMaxHealth() - player.getHealth()));
+            if (actual > 0) StarRailRankTrialService.healing(player, data, actual);
         });
     }
 
     @SubscribeEvent
     public static void onHarmonyFood(LivingEntityUseItemEvent.Finish event) {
-        if (event.getEntity().level().isClientSide()
-                || !(event.getEntity() instanceof ServerPlayer player)
-                || !event.getItem().isEdible()) {
-            return;
-        }
-
+        if (event.getEntity().level().isClientSide() || !(event.getEntity() instanceof ServerPlayer player)
+                || !event.getItem().isEdible()) return;
         player.getCapability(StarRailPathCapability.PATH_DATA).ifPresent(data -> {
-            boolean trial = data.getTrialPath() == StarRailPath.HARMONY;
-            boolean active = data.getCurrentPath() == StarRailPath.HARMONY;
-            if (!trial && !active) {
-                return;
-            }
-            if (trial) {
-                recordObjective1(player, data, 1);
-            } else {
-                StarRailPathProgress.record(player, data, StarRailPath.HARMONY, 1);
-            }
-            int rank = data.getPathRank(StarRailPath.HARMONY).getLevel();
-            StarRailHarmonyService.startResonance(player, rank);
-            if (trial) {
-                completeOrSync(player, data);
-            }
+            if (data.getCurrentPath() != StarRailPath.HARMONY && data.getTrialPath() != StarRailPath.HARMONY) return;
+            StarRailHarmonyService.startResonance(player, data.getPathRank(StarRailPath.HARMONY).getLevel());
+            StarRailRankTrialService.food(player, data);
         });
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onRemembranceAttack(LivingHurtEvent event) {
-        if (event.getEntity().level().isClientSide()
+        if (event.isCanceled() || event.getEntity().level().isClientSide()
                 || event.getAmount() <= 0.0F
                 || !(event.getEntity() instanceof Monster target)) {
             return;
         }
         ServerPlayer player = StarRailCombatEvents.getPlayerAttacker(event.getSource());
-        if (player == null) {
+        if (player == null || StarRailOwnedDamage.isSecondary(player)) {
             return;
         }
 
@@ -389,6 +222,8 @@ public final class StarRailPathEvents {
                 event.setAmount(event.getAmount()
                         * StarRailRemembranceService.consumeAfterglow(player, target, data));
             }
+            boolean alreadyRecorded = target.getUUID().equals(data.getRemembranceTargetId())
+                    && currentTick - data.getRemembranceTargetTick() <= StarRailRemembranceService.memoryWindow(player, rank);
             boolean sameTarget = target.getUUID().equals(data.getRemembranceTargetId())
                     && data.getRemembranceTargetTick() >= 0L
                     && currentTick - data.getRemembranceTargetTick()
@@ -418,11 +253,7 @@ public final class StarRailPathEvents {
                     data.setRemembranceTargetId(null);
                     data.setRemembranceTargetTick(-1L);
                 }
-                if (trial) {
-                    recordObjective2(player, data, 1);
-                } else {
-                    StarRailPathProgress.record(player, data, StarRailPath.REMEMBRANCE, 1);
-                }
+                StarRailRankTrialService.queue(player, target, "echo", 1);
             } else {
                 data.setRemembranceTargetId(target.getUUID());
                 data.setRemembranceTargetTick(currentTick);
@@ -434,27 +265,23 @@ public final class StarRailPathEvents {
                     StarRailPathMessages.send(player, StarRailPath.REMEMBRANCE,
                             Component.translatable("message.starrail_sim.remembrance_marked"));
                 }
-                if (trial) {
-                    recordObjective1(player, data, 1);
-                } else {
-                    StarRailPathProgress.record(player, data, StarRailPath.REMEMBRANCE, 1);
-                }
+                if (!alreadyRecorded)
+                    StarRailRankTrialService.queue(player, target, "record", 1);
+
             }
-            if (trial) {
-                completeOrSync(player, data);
-            }
+
         });
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onElationAttack(LivingHurtEvent event) {
-        if (event.getEntity().level().isClientSide()
+        if (event.isCanceled() || event.getEntity().level().isClientSide()
                 || event.getAmount() <= 0.0F
                 || !(event.getEntity() instanceof Monster)) {
             return;
         }
         ServerPlayer player = StarRailCombatEvents.getPlayerAttacker(event.getSource());
-        if (player == null) {
+        if (player == null || StarRailOwnedDamage.isSecondary(player)) {
             return;
         }
 
@@ -466,7 +293,7 @@ public final class StarRailPathEvents {
             }
 
             long currentTick = player.level().getGameTime();
-            int rank = active
+            int rank = active || data.isRankTrial()
                     ? data.getPathRank(StarRailPath.ELATION).getLevel() : 0;
             int combo = data.getElationLastHitTick() >= 0L
                     && currentTick - data.getElationLastHitTick()
@@ -474,11 +301,7 @@ public final class StarRailPathEvents {
                     ? data.getElationCombo() + 1 : 1;
             data.setElationCombo(combo);
             data.setElationLastHitTick(currentTick);
-            if (trial) {
-                recordObjective1(player, data, 1);
-            } else {
-                StarRailPathProgress.record(player, data, StarRailPath.ELATION, 1);
-            }
+            StarRailRankTrialService.queue(player, event.getEntity(), "combo", combo);
 
             if (active) {
                 event.setAmount(event.getAmount()
@@ -488,9 +311,8 @@ public final class StarRailPathEvents {
             if (combo % 3 == 0) {
                 event.setAmount(event.getAmount()
                         + StarRailElationService.burstBonus(player, rank));
-                if (trial) {
-                    recordObjective2(player, data, 1);
-                } else {
+                StarRailRankTrialService.queue(player, event.getEntity(), "burst", 1);
+                if (!trial) {
                     if (rank >= StarRailPathRank.DEEP_PRACTICE.getLevel()) {
                         StarRailPathMessages.send(player, StarRailPath.ELATION,
                                 Component.translatable(
@@ -502,98 +324,37 @@ public final class StarRailPathEvents {
                     if (combo % 6 == 0
                             && StarRailElationService.tryGrandBurst(player, rank)) {
                         event.setAmount(event.getAmount() * 1.50F);
-                        StarRailElationService.rollJoyDice(player, rank);
-                        StarRailElationService.rollJoyDice(player, rank);
+                        StarRailElationService.rollDistinctJoyDice(player, rank);
                         StarRailElationService.sendGrandBurst(player);
                         StarRailCombatVfx.stage(player, event.getEntity(), event.getSource(), CombatVfxPacket.Kind.ELATION_GRAND);
                     }
                 }
             }
-            if (trial) {
-                completeOrSync(player, data);
-            }
+
         });
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void onLivingDeath(LivingDeathEvent event) {
-        if (event.getEntity().level().isClientSide()
-                || !(event.getEntity() instanceof Monster)) {
-            return;
-        }
-
-        ServerPlayer creditedPlayer = StarRailCombatEvents.getPlayerAttacker(event.getSource());
-        if (creditedPlayer == null) {
-            creditedPlayer = StarRailDebuffService.getNihilityMarkOwner(event.getEntity());
-        }
-        final ServerPlayer player = creditedPlayer;
-        if (player == null) {
-            return;
-        }
-
+        if (event.isCanceled() || event.getEntity().level().isClientSide()) return;
+        if (event.getEntity() instanceof ServerPlayer dead) { StarRailPathTemporaryState.clear(dead, false); return; }
+        if (!(event.getEntity() instanceof Monster)) return;
+        ServerPlayer credited = StarRailCombatEvents.getPlayerAttacker(event.getSource());
+        if (credited == null) credited = StarRailDebuffService.getNihilityMarkOwner(event.getEntity());
+        final ServerPlayer player = credited;
+        if (player == null) return;
+        String paid = "starrail_death_recorded_" + player.getUUID();
+        if (event.getEntity().getPersistentData().getBoolean(paid)) return;
+        event.getEntity().getPersistentData().putBoolean(paid, true);
         player.getCapability(StarRailPathCapability.PATH_DATA).ifPresent(data -> {
-            if (data.getCurrentPath() == StarRailPath.HARMONY
-                    || data.getTrialPath() == StarRailPath.HARMONY) {
+            if (data.getCurrentPath() == StarRailPath.HARMONY || data.getTrialPath() == StarRailPath.HARMONY)
                 StarRailHarmonyService.onResonanceKill(player, data);
-            }
-            StarRailDebuffService.onNihilityMarkedDeath(player, event.getEntity());
+            StarRailPracticeService.duringAttack(event.getSource(), () -> {
+                StarRailRankTrialService.killed(player, data, event.getEntity());
+                StarRailDebuffService.onNihilityMarkedDeath(player, event.getEntity());
+            });
             StarRailHuntService.onMonsterKilled(player, data);
             StarRailLightConeService.onMonsterKilled(player);
-            if (!data.getTrialPath().isRealPath()) {
-                StarRailPath currentPath = data.getCurrentPath();
-                if (currentPath == StarRailPath.HUNT) {
-                    StarRailPathProgress.record(player, data, currentPath, 1);
-                } else if (currentPath == StarRailPath.DESTRUCTION
-                        && player.getHealth() <= player.getMaxHealth() * 0.5F) {
-                    StarRailPathProgress.record(player, data, currentPath, 1);
-                } else if (currentPath == StarRailPath.NIHILITY
-                        && StarRailDebuffService.isNihilityMarkOwnedBy(
-                        event.getEntity(), player.getUUID())) {
-                    StarRailPathProgress.record(player, data, currentPath, 1);
-                } else if (currentPath == StarRailPath.HARMONY
-                        && player.hasEffect(MobEffects.DAMAGE_RESISTANCE)) {
-                    StarRailPathProgress.record(player, data, currentPath, 1);
-                }
-                return;
-            }
-            if (data.getTrialPath() == StarRailPath.ERUDITION) {
-                return;
-            }
-            if (data.getTrialPath() == StarRailPath.NIHILITY) {
-                if (StarRailDebuffService.isNihilityMarkOwnedBy(
-                        event.getEntity(), player.getUUID())) {
-                    recordObjective2(player, data, 1);
-                    completeOrSync(player, data);
-                }
-                return;
-            }
-            if (data.getTrialPath() == StarRailPath.HARMONY) {
-                if (player.hasEffect(MobEffects.DAMAGE_RESISTANCE)) {
-                    recordObjective2(player, data, 1);
-                    completeOrSync(player, data);
-                }
-                return;
-            }
-            if (data.getTrialPath() == StarRailPath.DESTRUCTION) {
-                if (player.getHealth() <= player.getMaxHealth() * 0.5F) {
-                    recordObjective1(player, data, 1);
-                    completeOrSync(player, data);
-                }
-                return;
-            }
-            if (data.getTrialPath() != StarRailPath.HUNT) {
-                return;
-            }
-
-            long currentTick = player.level().getGameTime();
-            recordObjective1(player, data, 1);
-            if (data.getLastHuntKillTick() >= data.getTrialStartTick()
-                    && currentTick - data.getLastHuntKillTick()
-                    <= StarRailPathRules.HUNT_STREAK_WINDOW) {
-                recordObjective2(player, data, 1);
-            }
-            data.setLastHuntKillTick(currentTick);
-            completeOrSync(player, data);
         });
     }
 

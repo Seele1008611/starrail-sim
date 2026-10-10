@@ -89,13 +89,14 @@ public final class StarRailRemembranceService {
         }
         CompoundTag state = getState(player);
         long now = player.level().getGameTime();
-        int count = state.getInt(ECHO_COUNT_TAG) + 1;
+        int count = Math.min(3, state.getInt(ECHO_COUNT_TAG) + 1);
         int requiredEchoes = StarRailTraceService.hasPassive(
                 player, StarRailPath.REMEMBRANCE, 8) ? 2 : 3;
-        boolean eternal = count >= requiredEchoes && now >= state.getLong(ETERNAL_COOLDOWN_TAG);
+        boolean eternal = count >= requiredEchoes && StarRailRankRuntime.ready(player, "skill_remembrance_eternal");
         if (eternal) {
             state.putInt(ECHO_COUNT_TAG, 0);
             state.putLong(ETERNAL_COOLDOWN_TAG, now + ETERNAL_COOLDOWN);
+            StarRailRankRuntime.cooldown(player, "skill_remembrance_eternal", ETERNAL_COOLDOWN);
         } else {
             state.putInt(ECHO_COUNT_TAG, count);
         }

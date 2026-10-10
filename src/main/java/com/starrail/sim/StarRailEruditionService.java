@@ -62,7 +62,7 @@ public final class StarRailEruditionService {
         }
 
         if (level >= StarRailPathRank.PRACTICE.getLevel()
-                && currentTick >= data.getEruditionEchoCooldownTick()) {
+                && StarRailRankRuntime.ready(player, "skill_erudition_echo")) {
             double echoRadius = level >= StarRailPathRank.DEEP_PRACTICE.getLevel()
                     ? 3.0D : 2.5D;
             boolean expandedEcho = player.getPersistentData().getBoolean("trace_erudition_expanded_echo")
@@ -88,6 +88,7 @@ public final class StarRailEruditionService {
                     }
                 }
                 data.setEruditionEchoCooldownTick(currentTick + ECHO_COOLDOWN);
+                StarRailRankRuntime.cooldown(player, "skill_erudition_echo", ECHO_COOLDOWN);
                 if (expandedEcho) player.getPersistentData().remove("trace_erudition_expanded_echo");
                 StarRailPathMessages.send(player, StarRailPath.ERUDITION, Component.translatable(
                         "message.starrail_sim.erudition_echo"));
@@ -95,7 +96,7 @@ public final class StarRailEruditionService {
         }
 
         if (level >= StarRailPathRank.PATH_PINNACLE.getLevel()
-                && currentTick >= data.getEruditionFinalCooldownTick()) {
+                && StarRailRankRuntime.ready(player, "skill_erudition_final")) {
             List<Monster> crowd = nearbyMonsters(target, 3.0D);
             if (crowd.size() >= 2) {
                 for (Monster secondary : nearbyMonsters(target, 4.0D)) {
@@ -105,6 +106,7 @@ public final class StarRailEruditionService {
                                 source.getDirectEntity() instanceof net.minecraft.world.entity.projectile.Projectile);
                 }
                 data.setEruditionFinalCooldownTick(currentTick + FINAL_COOLDOWN);
+                StarRailRankRuntime.cooldown(player, "skill_erudition_final", FINAL_COOLDOWN);
                 StarRailPathMessages.send(player, StarRailPath.ERUDITION, Component.translatable(
                         "message.starrail_sim.erudition_final"));
             }
@@ -149,6 +151,7 @@ public final class StarRailEruditionService {
             data.clearEruditionAnalysisTargets();
             data.setEruditionAnalysisWindowExpireTick(-1L);
             data.setEruditionAnalysisExpireTick(currentTick + ANALYSIS_DURATION);
+            StarRailPracticeService.signal(player, data, StarRailPath.ERUDITION);
             if (StarRailTraceService.hasPassive(player, StarRailPath.ERUDITION, 8)) {
                 player.getPersistentData().putBoolean("trace_erudition_expanded_echo", true);
             }
@@ -165,6 +168,6 @@ public final class StarRailEruditionService {
 
     private static boolean dealSecondaryDamage(ServerPlayer player, Monster target,
                                             float amount) {
-        return target.isAlive() && target.hurt(player.damageSources().generic(), amount);
+        return target.isAlive() && StarRailOwnedDamage.hurt(player, target, amount, true);
     }
 }

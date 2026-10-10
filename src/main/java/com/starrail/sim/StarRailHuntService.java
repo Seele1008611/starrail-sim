@@ -11,7 +11,7 @@ import net.minecraft.server.level.ServerPlayer;
 public final class StarRailHuntService {
     public static final int MAX_INTENT_STACKS = 3;
     public static final long INTENT_DURATION = 8L * 20L;
-    public static final long REVERSE_PURSUIT_COOLDOWN = 15L * 20L;
+    public static final long REVERSE_PURSUIT_COOLDOWN = 8L * 20L;
 
     private static final float PURSUIT_STRIKE_MULTIPLIER = 1.25F;
     private static final float REVERSE_PURSUIT_MULTIPLIER = 1.50F;
@@ -50,7 +50,7 @@ public final class StarRailHuntService {
             return 1.0F;
         }
         if (rank >= StarRailPathRank.PATH_PINNACLE.getLevel()
-                && data.getHuntFinisherCooldownTick() > currentTick) {
+                && !StarRailRankRuntime.ready(player, "skill_hunt_reverse")) {
             return 1.0F;
         }
 
@@ -58,7 +58,8 @@ public final class StarRailHuntService {
         data.setHuntIntentExpireTick(-1L);
         boolean reversePursuit = rank >= StarRailPathRank.PATH_PINNACLE.getLevel();
         if (reversePursuit) {
-            data.setHuntFinisherCooldownTick(currentTick + (StarRailTraces.has(data.getTraceMask(StarRailPath.HUNT), 8) ? 12 * 20 : REVERSE_PURSUIT_COOLDOWN));
+            data.setHuntFinisherCooldownTick(currentTick + (StarRailTraces.has(data.getTraceMask(StarRailPath.HUNT), 8) ? 5 * 20 : REVERSE_PURSUIT_COOLDOWN));
+            StarRailRankRuntime.cooldown(player, "skill_hunt_reverse", StarRailTraces.has(data.getTraceMask(StarRailPath.HUNT), 8) ? 5 * 20 : REVERSE_PURSUIT_COOLDOWN);
             StarRailPathMessages.send(player, StarRailPath.HUNT, Component.translatable(
                     "message.starrail_sim.hunt_reverse_pursuit"));
             return REVERSE_PURSUIT_MULTIPLIER;

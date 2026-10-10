@@ -67,7 +67,7 @@ public final class StarRailToughnessService {
         return finalHit;
     }
 
-    /** Advances the post-break recovery without showing a separate toughness bar. */
+    /** Advances the existing post-break recovery rules. */
     public static void tick(LivingEntity target) {
         if (target.level().isClientSide()) {
             return;
@@ -77,6 +77,31 @@ public final class StarRailToughnessService {
             return;
         }
         tickState(root.getCompound(TOUGHNESS_TAG), target.level().getGameTime());
+    }
+
+    public enum Phase { NORMAL, BROKEN, RECOVERING }
+
+    public record View(float current, float max, Phase phase, int remainingTicks) {}
+
+    /** Read-only HUD snapshot: displaying a guard must not initialize or alter its combat state. */
+    public static View view(LivingEntity target) {
+        float max = maxToughness(target);
+        CompoundTag root = target.getPersistentData();
+        if (!root.contains(TOUGHNESS_TAG)) return new View(max, max, Phase.NORMAL, 0);
+        CompoundTag state = root.getCompound(TOUGHNESS_TAG);
+        if (state.getFloat(MAX_TAG) != max) return new View(max, max, Phase.NORMAL, 0);
+        long now = target.level().getGameTime();
+        long brokenUntil = state.getLong(BROKEN_UNTIL_TAG);
+        if (brokenUntil > now) return new View(0, max, Phase.BROKEN,
+                (int) Math.min(BROKEN_DURATION, brokenUntil - now));
+        long recoveryStart = state.getLong(RECOVERY_START_TAG);
+        if (recoveryStart > 0 && now >= recoveryStart) {
+            long remaining = recoveryStart + RECOVERY_DURATION - now;
+            if (remaining > 0) return new View(state.getFloat(CURRENT_TAG), max,
+                    Phase.RECOVERING, (int) Math.min(RECOVERY_DURATION, remaining));
+            return new View(max, max, Phase.NORMAL, 0);
+        }
+        return new View(state.getFloat(CURRENT_TAG), max, Phase.NORMAL, 0);
     }
 
     private static void breakTarget(ServerPlayer player, LivingEntity target,

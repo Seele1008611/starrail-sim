@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>星穹 · 玩家状态栏设计室</title><link rel="stylesheet" href="玩家状态栏.css">
+</head>
+<body>
+<svg class="symbols" aria-hidden="true"><defs>
+  <symbol id="icon-heart" viewBox="0 0 24 24"><path d="M12 20 3.8 12C-2 6.4 5.8-.8 12 5.5 18.2-.8 26 6.4 20.2 12Z"/></symbol>
+  <symbol id="icon-shield" viewBox="0 0 24 24"><path d="m12 2 9 4-1 9-8 7-8-7-1-9Z"/></symbol>
+  <symbol id="icon-armor" viewBox="0 0 24 24"><path d="m8 3-5 3 2 6 3-1v10h8V11l3 1 2-6-5-3c0 5-8 5-8 0Z"/></symbol>
+  <symbol id="icon-toughness" viewBox="0 0 24 24"><path d="m12 2 9 4-1 9-8 7-8-7-1-9Z M12 6v12 M8 10l4-4 4 4"/></symbol>
+  <symbol id="icon-food" viewBox="0 0 24 24"><path d="M4 3v7m4-7v7M2 6h8M6 10v11m10 0V3c7 0 7 12 0 12"/></symbol>
+  <symbol id="icon-spark" viewBox="0 0 24 24"><path d="m12 2 3 7 7 3-7 3-3 7-3-7-7-3 7-3Z"/></symbol>
+  <symbol id="icon-air" viewBox="0 0 24 24"><circle cx="8" cy="15" r="6"/><circle cx="18" cy="5" r="3"/></symbol>
+</defs></svg>
+<main class="shell">
+  <header class="page-head"><div><div class="eyebrow">STAR RAIL / PLAYER HUD</div><h1>玩家状态栏设计室</h1><p>看清每一份成长，也看清每一刻战况。</p></div><span class="draft">1.9.0 · 交互原型</span></header>
+  <div class="workspace">
+    <aside class="controls">
+      <h2>预览设置</h2>
+      <label>成长阶段<select id="preset"><option value="early">初入命途</option><option value="late" selected>后期成长</option><option value="extreme">百万数值展示</option></select></label>
+      <label>显示模式<select id="mode"><option value="survival">生存</option><option value="creative">创造</option><option value="spectator">旁观</option></select></label>
+      <label>预览画面<select id="aspect"><option value="wide">16 : 9</option><option value="classic">4 : 3</option><option value="ultra">21 : 9</option></select></label>
+      <label>状态栏位置<select id="position"><option value="center">经验条上方</option><option value="left">左下角</option></select></label>
+      <label>状态栏缩放 <output id="scaleLabel">100%</output><input id="scale" type="range" min="75" max="100" value="100"></label>
+      <div class="toggles">
+        <label><input id="exact" type="checkbox" checked>完整数值</label>
+        <label><input id="underwater" type="checkbox">水下</label>
+        <label><input id="mounted" type="checkbox">骑乘</label>
+        <label><input id="native" type="checkbox">切回原版状态栏</label>
+        <label><input id="hidden" type="checkbox">隐藏界面（F1）</label>
+      </div>
+      <p class="control-note">此页使用模拟数值。两行悬浮读数，无整块背景。饱和度用浅绿细线补充饥饿条，吸收生命为零时自动隐藏。</p>
+    </aside>
+    <section class="preview">
+      <div class="preview-head"><div><span class="eyebrow">LIVE PREVIEW</span><h2>探索与战斗视野</h2></div><span id="sceneLabel">后期成长 · 生存</span></div>
+      <div class="stage" id="stage">
+        <canvas id="world" aria-hidden="true"></canvas><div class="vignette"></div>
+        <div class="scene-title">遗迹 · 星穹回廊<span>玩家状态预览</span></div>
+        <div class="crosshair" aria-hidden="true">+</div>
+        <div class="boss" id="boss"><span>遗迹监守者</span><div><i></i></div><small>生命 386 / 500 · 韧性 18 / 30</small></div>
+        <div class="status-icons" title="原版药水图标保留"><span>抗</span><span>速</span></div>
+        <div class="hud-anchor" id="hudAnchor"><section class="player-hud" id="hud" aria-label="玩家状态">
+          <div class="vital-tile" title="生命值"><div class="vital-row"><svg class="icon"><use href="#icon-heart"/></svg><strong id="hpText"></strong></div><div class="meter health" id="healthMeter" role="progressbar" aria-label="生命值"><div class="echo" id="hpEcho"></div><div class="fill" id="hpFill"></div></div><div class="meter absorption" id="shieldMeter" role="progressbar" aria-label="伤害吸收相对最大生命值"><div class="fill" id="shieldFill"></div></div></div>
+          <div class="need-tile" id="nutritionTile" title="饱食度与饱和度"><div class="need-label"><svg class="icon food-icon"><use href="#icon-food"/></svg><strong id="foodText"></strong><svg class="icon saturation-icon"><use href="#icon-spark"/></svg><strong id="satText"></strong></div><div class="meter food"><div class="fill" id="foodFill"></div></div><div class="meter saturation"><div class="fill" id="satFill"></div></div></div>
+          <div class="state-strip"><div class="survival-strip"><div class="absorption-line" id="absorptionReadout" title="伤害吸收"><svg class="icon"><use href="#icon-shield"/></svg><strong id="shieldText"></strong></div><div class="context-line" id="airLine" title="氧气"><svg class="icon"><use href="#icon-air"/></svg><strong id="airText"></strong><div class="meter air"><div class="fill" id="airFill"></div></div></div><div class="context-line" id="mountLine" title="坐骑生命"><svg class="icon"><use href="#icon-heart"/></svg><strong id="mountText"></strong><div class="meter health"><div class="fill" id="mountFill"></div></div></div></div><div class="defense-strip"><div class="defense" title="护甲值"><svg class="icon"><use href="#icon-armor"/></svg><strong id="armorText"></strong></div><div class="defense" title="护甲韧性"><svg class="icon"><use href="#icon-toughness"/></svg><strong id="toughText"></strong></div></div></div>
+        </section></div>
+        <div class="vanilla" id="vanilla"><div>♥ ♥ ♥ ♥ ♥ ♥ ♥ ♥ ♥ ♥</div><div>♜ ♜ ♜ ♜ ♜ ♜ ♜ ♜ ♜ ♜</div><small>原版状态栏布局示意</small></div>
+        <div class="hotbar-zone"><div class="offhand" title="副手槽">♜</div><div class="jump" id="jump" title="跳跃蓄力 0%" role="progressbar" aria-label="跳跃蓄力" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div><i id="jumpFill"></i></div></div><div class="xp"><i></i><span>28</span></div><div class="hotbar" id="hotbar"><span class="selected">⚔</span><span>➶</span><span>✧</span><span>◈</span><span>▧</span><span>♧</span><span></span><span></span><span></span></div></div>
+        <div class="toast" id="toast" role="status"></div>
+      </div>
+      <div class="actions"><button id="hit">受到伤害</button><button id="heal">恢复生命</button><button id="shield" title="增加玩家的伤害吸收血量">获得护盾</button><button id="eat">进食</button><button id="danger">低血预览</button><button id="charge" hidden>蓄力跳跃</button><button id="loop" aria-pressed="false">战斗循环</button><button id="reset">重置状态</button></div>
+      <div class="readouts"><span>实际生命 <b id="rawHP"></b></span><span>实际吸收 <b id="rawShield"></b></span><span>饱和度 <b id="rawSat"></b></span><span>防御 <b id="rawDefense"></b></span></div>
+    </section>
+  </div>
+  <section class="notes"><article><span>01 / 数值完整</span><h3>成长不会挤满屏幕</h3><p>血量与吸收生命分开显示。百万数值可切换完整读数与简写；护甲和韧性直接显示实际值。</p></article><article><span>02 / 战况清楚</span><h3>重要变化立即可见</h3><p>受击时条尾留下短暂残影，护盾优先消耗并闪动。低血与低饱食度分别提示，治疗与进食反馈各自对应。</p></article><article><span>03 / 情境适配</span><h3>只展示当前需要的状态</h3><p>水下显示氧气，骑乘显示坐骑与跳跃蓄力。吸收生命为零时隐藏，氧气与坐骑状态仅在需要时出现。</p></article></section>
+  <footer>本地设计原型 · 游戏内实现将在布局确认后接入 <a href="../../项目文档/系统设计/属性上限扩展与玩家状态栏方案.md">查看属性上限与实现计划 ↗</a></footer>
+</main>
+<script src="玩家状态栏.js"></script>
+</body></html>

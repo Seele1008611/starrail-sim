@@ -45,22 +45,30 @@ public final class StarRailAttributes {
             "crit_rate", "attribute.starrail_sim.crit_rate", DEFAULT_CRIT_RATE, 1.0D);
 
     public static final RegistryObject<Attribute> CRIT_DAMAGE = register(
-            "crit_damage", "attribute.starrail_sim.crit_damage", DEFAULT_CRIT_DAMAGE, 10.0D);
+            "crit_damage", "attribute.starrail_sim.crit_damage", DEFAULT_CRIT_DAMAGE, 10_000.0D);
 
     public static final RegistryObject<Attribute> BREAK_EFFECT = register(
-            "break_effect", "attribute.starrail_sim.break_effect", 0.0D, 10.0D);
+            "break_effect", "attribute.starrail_sim.break_effect", 0.0D, 10_000.0D);
 
     public static final RegistryObject<Attribute> EFFECT_HIT_RATE = register(
-            "effect_hit_rate", "attribute.starrail_sim.effect_hit_rate", 0.0D, 10.0D);
+            "effect_hit_rate", "attribute.starrail_sim.effect_hit_rate", 0.0D, 1.0D);
 
     public static final RegistryObject<Attribute> EFFECT_RESISTANCE = register(
-            "effect_resistance", "attribute.starrail_sim.effect_resistance", 0.0D, 10.0D);
+            "effect_resistance", "attribute.starrail_sim.effect_resistance", 0.0D, 1.0D);
 
     /** Bonus to healing received, stored as a fraction: +5% is 0.05. */
     public static final RegistryObject<Attribute> HEALING_EFFECT = register(
-            "healing_effect", "attribute.starrail_sim.healing_effect", 0.0D, 10.0D);
+            "healing_effect", "attribute.starrail_sim.healing_effect", 0.0D, 10_000.0D);
 
     private StarRailAttributes() {
+    }
+
+    /** Enable vanilla attribute packets for combat values read by client stat screens.
+     * Must run before worlds create attribute instances, regardless of limit configuration. */
+    public static void enableVanillaCombatSync() {
+        Attributes.ATTACK_DAMAGE.setSyncable(true);
+        Attributes.ATTACK_KNOCKBACK.setSyncable(true);
+        Attributes.KNOCKBACK_RESISTANCE.setSyncable(true);
     }
 
     private static RegistryObject<Attribute> register(
@@ -71,6 +79,10 @@ public final class StarRailAttributes {
 
     /** Adds every custom combat attribute to players with its defined base value. */
     public static void addPlayerAttributes(EntityAttributeModificationEvent event) {
+        // Entity defaults apply before saved attributes are loaded. Login must not overwrite
+        // base values changed by commands or other progression systems.
+        event.add(EntityType.PLAYER, Attributes.ARMOR, 2.0D);
+        event.add(EntityType.PLAYER, Attributes.ARMOR_TOUGHNESS, 1.0D);
         event.add(EntityType.PLAYER, CRIT_RATE.get(), DEFAULT_CRIT_RATE);
         event.add(EntityType.PLAYER, CRIT_DAMAGE.get(), DEFAULT_CRIT_DAMAGE);
         event.add(EntityType.PLAYER, BREAK_EFFECT.get(), 0.0D);

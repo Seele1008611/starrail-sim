@@ -72,10 +72,10 @@
   "screen.starrail_sim.path_practice_progress": "Path practice: %s/%s",
   "screen.starrail_sim.path_practice_locked": "The next advancement trial is not available yet",
   "screen.starrail_sim.path_practice_max": "Path Pinnacle reached",
-  "screen.starrail_sim.path_pinnacle_practice": "Pinnacle practice: %s/%s; bonus Attack Damage: %s/%s times (+5%% each)",
+  "screen.starrail_sim.path_pinnacle_practice": "Pinnacle practice: %s/%s; bonus Attack Damage: %s/%s times (+10%% each)",
   "screen.starrail_sim.rank_trial_status": "Breakthrough Trial: Target Rank %s",
   "screen.starrail_sim.hunt_kills": "Hunt Trial: Defeat hostile mobs %s/%s",
-  "screen.starrail_sim.hunt_streak": "Hunt streak: %s/%s",
+  "screen.starrail_sim.hunt_streak": "Consecutive hunt: %s/%s",
   "screen.starrail_sim.hunt_time": "Time remaining: %s seconds",
   "screen.starrail_sim.choose_path": "Select a Path and confirm the search; use its chest token to start the trial.",
   "screen.starrail_sim.confirm_path": "Confirm Path",
@@ -96,7 +96,7 @@
   "screen.starrail_sim.harmony_kills": "Kills while resonating: %s/%s",
   "screen.starrail_sim.remembrance_records": "Memories recorded: %s/%s",
   "screen.starrail_sim.remembrance_echoes": "Memory echoes: %s/%s",
-  "screen.starrail_sim.elation_hits": "Elation combo hits: %s/%s",
+  "screen.starrail_sim.elation_hits": "Best hit combo: %s/%s",
   "screen.starrail_sim.elation_bursts": "Elation bursts: %s/%s",
   "screen.starrail_sim.trial_time": "Time remaining: %s seconds",
   "message.starrail_sim.path_locked": "Unlock the path clue first.",
@@ -136,7 +136,7 @@
   "message.starrail_sim.destruction_wrath": "Wrath: %s/%s (%s seconds remaining)",
   "message.starrail_sim.destruction_wrath_expired": "Wrath faded.",
   "message.starrail_sim.destruction_burning": "Burning Soul activated! Your next attack deals 35% more damage.",
-  "message.starrail_sim.destruction_desperation": "Desperation Burst activated! Resistance gained; your next attack deals 50% more damage.",
+  "message.starrail_sim.destruction_desperation": "Desperation! +50% damage and Resistance I for 8s; cooldown 12s.",
   "message.starrail_sim.destruction_empowered_attack": "Destruction-enhanced attack activated!",
   "message.starrail_sim.destruction_empowered_expired": "Destruction enhancement faded.",
   "message.starrail_sim.destruction_confirmed": "You have officially entered the Destruction path. Critical Damage +10%.",
@@ -211,7 +211,7 @@
   ,"guide.starrail_sim.current.rank": "Path Rank: %s"
   ,"guide.starrail_sim.current.practice": "Current Practice (%s): %s/%s"
   ,"guide.starrail_sim.current.max": "You have reached the Path Pinnacle."
-  ,"guide.starrail_sim.current.pinnacle_practice": "Pinnacle practice: %s/%s; bonus Attack Damage: %s/%s times (+5%% each)"
+  ,"guide.starrail_sim.current.pinnacle_practice": "Pinnacle practice: %s/%s; bonus Attack Damage: %s/%s times (+10%% each)"
   ,"guide.starrail_sim.current.core": "Core Gameplay"
   ,"guide.starrail_sim.current.effect": "Current Effect"
   ,"guide.starrail_sim.current.trial": "Breakthrough Trial in Progress; Target Rank: %s"
@@ -227,7 +227,7 @@
   ,"guide.starrail_sim.path.mechanics_intro": "Triggers & Core Mechanics"
   ,"guide.starrail_sim.path.mechanics_advanced": "Advanced Abilities & Cooldowns"
   ,"guide.starrail_sim.path.upgrade": "Rank-up Rules"
-  ,"guide.starrail_sim.path.rank_rule": "When practice reaches the current target, a breakthrough trial starts automatically. During the trial, complete two objectives that match the path theme; completing both raises the path by one rank. A timeout resets only the current trial objectives and does not erase accumulated practice. After Rank 7, no new breakthrough trial starts: every 120 Pinnacle practice grants another +5% Attack Damage, up to 10 times (+50% total)."
+  ,"guide.starrail_sim.path.rank_rule": "Stage practice targets: 40,80,120,160,200,240. Rank 1 advances directly; later ranks require trials. Trials pause normal practice; timeout retains stage practice. At R7 each 300 practice adds +10%% Attack, max 10 times (+100%%), additive with rank Attack."
   ,"guide.starrail_sim.ranks.intro": "Path ranks grow through practice. Reaching a practice target automatically starts a breakthrough trial."
   ,"guide.starrail_sim.ranks.current_path": "Current Path: %s"
   ,"guide.starrail_sim.ranks.practice_method": "Practice Method: %s"
@@ -235,68 +235,68 @@
   ,"guide.starrail_sim.ranks.practice": "Practice target: %s"
   ,"guide.starrail_sim.ranks.pinnacle": "Pinnacle practice per milestone: %s; extra bonuses: up to %s"
   ,"guide.starrail_sim.ranks.max": "Highest rank"
-  ,"guide.starrail_sim.ranks.trials": "Higher ranks increase trial objectives and time limits. A timeout resets only trial objectives; accumulated practice is kept. After Rank 7, practice becomes endless: each 120 practice grants +5% Attack Damage, up to 10 times."
+  ,"guide.starrail_sim.ranks.trials": "Breakthrough limits R3-R7:180,300,480,600,900s. Each path has separate objectives. At R7,300 practice grants +10%% Attack, up to 10 times."
   ,"guide.starrail_sim.help.title": "Path System Guide"
   ,"guide.starrail_sim.help.open_current": "Press P to open the character attributes screen."
   ,"guide.starrail_sim.help.path": "Selecting a Path does not place a ruin until you click Confirm Path Search. Travel to the displayed anchor, open its chest, and use the matching Trial Token to start that Path's initial trial. Each player can have only one pending ruin clue at a time. The token is consumed only after the trial starts successfully."
-  ,"guide.starrail_sim.help.practice": "Path-themed actions grant practice. Current practice and its target are shown on the Paths screen. After the Path Pinnacle, practice continues: every 120 points become one +5% Attack Damage milestone, up to 10 milestones."
+  ,"guide.starrail_sim.help.practice": "Every practice reward is at most +1; a hit, skill and kill from one attack never pay twice. Paths use separate eligibility and reward intervals. R7:each 300 practice grants +10%% Attack, max 10 times."
   ,"guide.starrail_sim.help.trial": "The matching ruin Trial Token starts the initial trial; completing both objectives enters the Path automatically. The token is not returned after an initial trial fails or times out; seek again and obtain a new one to retry. Afterward, reaching a practice target automatically starts a rank-up trial, which also ranks up automatically when both objectives are complete."
   ,"guide.starrail_sim.help.progress": "The ruin anchor stays visible in the lower-left messages and on the Path Search screen. You cannot seek another ruin while a clue is pending. If no site meets the 400-block horizontal spacing, move farther away and retry. The Path Guide explains each trial objective."
   ,"guide.starrail_sim.help.rollback": "Resetting a path removes its current effects, but keeps its unlocked rank, practice progress, and completed Pinnacle bonus milestones."
   ,"guide.starrail_sim.path.preservation.core": "Practice Preservation through blocking and enduring damage, focusing on defense and survival."
   ,"guide.starrail_sim.path.preservation.goals": "Block 3 attacks and survive after taking 5 hostile damage."
-  ,"guide.starrail_sim.path.preservation.practice": "Block attacks, take hostile damage, and stay alive."
-  ,"guide.starrail_sim.path.preservation.effect": "Cumulative rank bonuses (Armor/Armor Toughness):\\nR1: 10%/0%\\nR2: 10%/10%\\nR3: 15%/10%\\nR4: 15%/10%\\nR5: 20%/15%\\nR6: 20%/20%\\nR7: 25%/25%"
+  ,"guide.starrail_sim.path.preservation.practice": "Accumulate 3 actual blocks or 6 actual hostile damage for +1, sharing a 12s reward interval. Both tallies reset on reward."
+  ,"guide.starrail_sim.path.preservation.effect": "Cumulative rank bonuses (Armor / Toughness):\\nR1:10%/0%\\nR2:15%/5%\\nR3:20%/10%\\nR4:30%/12%\\nR5:40%/15%\\nR6:45%/20%\\nR7:55%/25%"
   ,"guide.starrail_sim.path.preservation.tips": "From R2, gain a shield every 10 seconds; yellow hearts can stack up to 2.5 times your current Armor. From R4, successfully block hostile mob attacks with your shield to build Guard. Ordinary hits, player attacks, and failed blocks do not count. Guard stacks to 3 and expires if you do not block again for 8 seconds. Barrier has a 6-second cooldown."
-  ,"guide.starrail_sim.path.preservation.mechanics": "R2 Shield: every 10 seconds, gain Absorption equal to 100% of current Armor (yellow hearts), stacking up to 250% of current Armor.\\nR4 Guard: each successful block of a hostile mob grants 1 stack, up to 3; each block refreshes an 8-second timer.\\nR5 Barrier: at 3 stacks, when ready, gain Resistance II for 10 seconds; 6-second cooldown.\\nR6 Countershock: every successful block during Barrier reflects damage equal to 20% of current Armor.\\nR7 Upgrade: reflected damage becomes 50% of current Armor; Barrier grants Resistance III for 15 seconds."
+  ,"guide.starrail_sim.path.preservation.mechanics": "R2: every 10s gain absorption equal to armor, capped at armor x2.5.\\nR4: actual blocks build 3 Guard stacks for 8s.\\nR5: barrier gives Resistance II for 10s, cooldown 6s; cannot retrigger while active.\\nR6: later barrier blocks counter for armor x20%.\\nR7: Resistance III for 15s and armor x50% counter."
   ,"guide.starrail_sim.path.destruction.core": "Fight while endangered or at low health, turning damage taken into destructive power."
   ,"guide.starrail_sim.path.destruction.goals": "Defeat 3 hostile mobs below 50% health and take 10 damage."
-  ,"guide.starrail_sim.path.destruction.practice": "Defeat enemies or take damage while at low health."
-  ,"guide.starrail_sim.path.destruction.effect": "Cumulative rank bonuses (Critical Damage/Attack Damage):\\nR1: 10%/0%\\nR2: 10%/5%\\nR3: 20%/5%\\nR4: 20%/10%\\nR5: 30%/10%\\nR6: 30%/15%\\nR7: 40%/20%"
+  ,"guide.starrail_sim.path.destruction.practice": "Kill at <=50% health for +1. Accumulate 8 actual hostile damage at low health for an auxiliary +1, every 15s. A kill clears the damage tally and restarts that interval."
+  ,"guide.starrail_sim.path.destruction.effect": "Cumulative rank bonuses (Crit damage / Attack):\\nR1:10%/5%\\nR2:15%/10%\\nR3:20%/15%\\nR4:25%/20%\\nR5:30%/25%\\nR6:35%/30%\\nR7:40%/40%"
   ,"guide.starrail_sim.path.destruction.tips": "Destruction rewards fighting while endangered. Defeating enemies or taking damage at low health grants practice; a flawless fight is not the only way to progress. Higher-rank mechanics turn damage taken into Wrath and Burning Soul, but watch your health so you do not fall before the bonuses activate."
-  ,"guide.starrail_sim.path.destruction.mechanics": "R4 Blood Battle: at 50% health or less, melee or ranged hits on hostile mobs deal +10%; no cooldown.\\nR5 Wrath: hostile damage taken at/below 50% health, or damage that drops you below it, builds up to 3 stacks; stacks last 8 seconds.\\nR6 Burning Soul: at 3 stacks, gain +35% damage on your next hit for 8 seconds.\\nR7 Desperation: at 25% health or less, gain +50% next-hit damage and Resistance for 3 seconds; 30-second cooldown."
+  ,"guide.starrail_sim.path.destruction.mechanics": "R4: <=50% health grants +10% direct damage.\\nR5: low-health hostile damage builds 3 Wrath stacks for 8s.\\nR6: full Wrath grants next-hit +35%, usable within 8s.\\nR7: <=25% health starts +50% damage and Resistance I for 8s, cooldown 12s. Healing does not cancel the buff. Direct skill bonuses add up to +95%; derived damage is never multiplied twice."
   ,"guide.starrail_sim.path.hunt.core": "Focus on defeating enemies and maintaining a hunting streak, emphasizing single-target damage and critical hits."
   ,"guide.starrail_sim.path.hunt.goals": "Defeat 5 hostile mobs and complete 2 hunting streaks."
-  ,"guide.starrail_sim.path.hunt.practice": "Hunt Intent stacks on hostile mob kills; melee and your own projectile kills count. A hit without a kill grants no Intent."
-  ,"guide.starrail_sim.path.hunt.effect": "Cumulative rank bonuses (Critical Rate/Critical Damage/Attack Damage):\\nR1: 5%/0%/0%\\nR2: 5%/10%/0%\\nR3: 5%/10%/10%\\nR4: 10%/10%/10%\\nR5: 10%/20%/10%\\nR6: 10%/20%/20%\\nR7: 15%/30%/30%"
+  ,"guide.starrail_sim.path.hunt.practice": "Defeat a hostile for +1 practice. No extra cooldown; one attack with multiple kills pays at most once."
+  ,"guide.starrail_sim.path.hunt.effect": "Cumulative rank bonuses (Crit rate / Crit damage / Attack):\\nR1:5%/5%/5%\\nR2:6%/10%/10%\\nR3:8%/15%/15%\\nR4:10%/20%/20%\\nR5:11%/25%/25%\\nR6:13%/30%/30%\\nR7:15%/40%/35%"
   ,"guide.starrail_sim.path.hunt.tips": "Kills advance the hunting streak. Hunt Intent stacks up to 3 times, and the rhythm is lost after 8 seconds without another kill. From Rank 5, the next attack while Intent is active gains Pursuit Strike; Rank 6 critical hits can maintain Intent; Rank 7 Reverse Pursuit has its own cooldown."
-  ,"guide.starrail_sim.path.hunt.mechanics": "R4 Hunt Intent: each hostile mob kill grants 1 stack, up to 3; stacks expire after 8 seconds without another kill.\\nR5 Pursuit Strike: at 3 stacks, your next hit consumes them and deals ×1.25 damage.\\nR6 upgrade: critical hits refresh the 8-second timer.\\nR7 Reverse Pursuit: a max-stack hit deals ×1.5 damage, then starts a 15-second cooldown. Stacks still build during cooldown, but Reverse Pursuit will not trigger."
+  ,"guide.starrail_sim.path.hunt.mechanics": "R4: kills build up to 3 intent stacks for 8s.\\nR5: full intent empowers the next landed direct hit x1.25.\\nR6: critical hits refresh active intent.\\nR7: Reverse Pursuit x1.50, 8s cooldown; no weaker pursuit during cooldown. Trace cooldown reduction still applies."
   ,"guide.starrail_sim.path.erudition.core": "Practice Erudition through multi-target hits, chain damage, and area combat."
   ,"guide.starrail_sim.path.erudition.goals": "Complete 1 multi-target hit, then complete 3 multi-target hits within 30 seconds."
-  ,"guide.starrail_sim.path.erudition.practice": "One melee or ranged attack must damage at least 2 hostile mobs to grant practice; hitting the same mob repeatedly is not a multi-target hit."
-  ,"guide.starrail_sim.path.erudition.effect": "Cumulative rank bonuses (Critical Rate/Critical Damage/Attack Damage):\\nR1: 0%/0%/5%\\nR2: 0%/5%/5%\\nR3: 0%/5%/10%\\nR4: 5%/5%/10%\\nR5: 5%/5%/15%\\nR6: 5%/15%/15%\\nR7: 10%/25%/25%"
+  ,"guide.starrail_sim.path.erudition.practice": "Hit >=2 distinct hostiles in one direct attack, or complete rank-six analysis, for +1. Both share an 8s interval; secondary damage never counts."
+  ,"guide.starrail_sim.path.erudition.effect": "Cumulative rank bonuses (Crit rate / Crit damage / Attack):\\nR1:0%/5%/5%\\nR2:2%/10%/10%\\nR3:3%/15%/15%\\nR4:5%/20%/20%\\nR5:6%/25%/25%\\nR6:8%/30%/30%\\nR7:10%/35%/35%"
   ,"guide.starrail_sim.path.erudition.tips": "Erudition requires one attack to hit at least 2 enemies. Area attacks, piercing attacks, and controlled grouping make this easier; repeatedly hitting one enemy does not advance multi-target practice. At higher ranks, multi-target hits build Analysis and trigger Knowledge Echo, while Final Calculation strengthens one area attack."
-  ,"guide.starrail_sim.path.erudition.mechanics": "R4 Knowledge Echo: after a hit, deal 15% of that hit's final damage to up to 1 other mob within 2.5 blocks; 1.2-second cooldown.\\nR5 upgrade: 3-block range, up to 2 mobs, for 20%.\\nR6 Weakness Deconstruction: hit 3 different mobs within 5 seconds to gain one +20% damage attack; it expires after 6 seconds.\\nR7 Final Calculation: 12-second cooldown; if at least 2 other mobs are within 3 blocks of the main target, deal 45% of final damage to mobs within 4 blocks."
+  ,"guide.starrail_sim.path.erudition.mechanics": "R4: echo hits 1 other enemy within 2.5 blocks for 15% of direct-hit damage, cooldown 1.2s.\\nR5:3 blocks,2 enemies,20%.\\nR6: directly hit 3 distinct enemies within 5s for next-hit x1.20 within 6s.\\nR7: >=2 other enemies within 3 blocks triggers 45% damage within 4 blocks, cooldown 12s. Secondary hits cannot retrigger skills or analysis."
   ,"guide.starrail_sim.path.harmony.core": "Use food and resonance states to support combat, emphasizing buffs and cooperation."
   ,"guide.starrail_sim.path.harmony.goals": "Eat 3 food items to trigger resonance and defeat 3 enemies while resonating."
-  ,"guide.starrail_sim.path.harmony.practice": "Trigger resonance and fight while the resonance state is active."
-  ,"guide.starrail_sim.path.harmony.effect": "Cumulative rank bonuses (Armor/Max Health/Armor Toughness):\\nR1: 2%/0%/0%\\nR2: 2%/3%/0%\\nR3: 2%/3%/2%\\nR4: 5%/3%/2%\\nR5: 5%/3%/2%\\nR6: 5%/6%/4%\\nR7: 10%/11%/4%"
+  ,"guide.starrail_sim.path.harmony.practice": "A kill during path resonance grants +1. Three combat food uses can grant auxiliary +1 every 30s; eligible food uses are >=10s apart and require combat within 10s. Kills clear auxiliary progress."
+  ,"guide.starrail_sim.path.harmony.effect": "Cumulative rank bonuses (Armor / Max health / Toughness):\\nR1:3%/3%/0%\\nR2:6%/6%/3%\\nR3:9%/9%/6%\\nR4:12%/12%/9%\\nR5:16%/16%/12%\\nR6:20%/20%/16%\\nR7:25%/25%/20%"
   ,"guide.starrail_sim.path.harmony.tips": "Food builds Resonance, and continuing to fight while resonating completes the trial. Harmony focuses on sustained support: Rank 5 Afterglow strengthens the next 3 attacks during Resonance, Rank 6 Concert Echo restores health after a kill during Resonance, and Rank 7 Unified Resonance grants Absorption and extends Resonance on kills."
-  ,"guide.starrail_sim.path.harmony.mechanics": "Trigger: eat food to gain Resonance; it lasts 15 seconds, or 20 seconds from R4.\\nR5 Afterglow: your next 3 attacks during Resonance each deal +5%.\\nR6 Concert Echo: a kill during Resonance restores 2.5% max health, at most once every 5 seconds.\\nR7 Unified Resonance: eating grants Absorption equal to 2.5% max health for 5 seconds; kills during Resonance add 3 seconds, up to 30 seconds total."
+  ,"guide.starrail_sim.path.harmony.mechanics": "Food grants path resonance for 15s, R4:20s. Other Resistance sources are not resonance.\\nR5: next 3 attacks +5%.\\nR6: resonance kill heals 2.5% max health, cooldown 5s.\\nR7: food ensures 2.5% absorption for 5s; kills extend resonance by 3s, up to 30s remaining. Repeated food refreshes, not stacks; expiry removes only remaining owned shield."
   ,"guide.starrail_sim.path.nihility.core": "Apply Nihility Erosion, weaken enemies, and deal damage over time through negative effects."
   ,"guide.starrail_sim.path.nihility.goals": "Apply Nihility Erosion 5 times and defeat 3 eroded enemies."
-  ,"guide.starrail_sim.path.nihility.practice": "Hit an unmarked hostile mob in melee or at range, then pass the Effect Hit check to record practice."
-  ,"guide.starrail_sim.path.nihility.effect": "Cumulative rank bonuses (Effect Hit Rate/Attack Damage/Break Effect):\\nR1: 10%/0%/0%\\nR2: 10%/5%/0%\\nR3: 15%/5%/0%\\nR4: 15%/10%/0%\\nR5: 20%/10%/0%\\nR6: 20%/15%/0%\\nR7: 30%/20%/10%"
+  ,"guide.starrail_sim.path.nihility.practice": "New main-target erosion grants +1 at most every 10s. Killing your eroded enemy pays +1 only if it has never paid before. Each enemy grants at most one point in its lifetime."
+  ,"guide.starrail_sim.path.nihility.effect": "Cumulative rank bonuses (Effect hit / Attack / Break effect):\\nR1:10%/5%/0%\\nR2:12%/10%/0%\\nR3:15%/20%/5%\\nR4:18%/30%/5%\\nR5:22%/40%/10%\\nR6:25%/50%/15%\\nR7:30%/60%/20%"
   ,"guide.starrail_sim.path.nihility.tips": "Nihility first applies negative effects, then uses damage over time and echoes to gain an advantage. Higher Effect Hit Rate makes Erosion less likely to be blocked by enemy Effect Resistance. Erosion deals periodic damage, while higher-rank mechanics can spread it or trigger a burst when it ends."
-  ,"guide.starrail_sim.path.nihility.mechanics": "Trigger: melee or ranged hit on a hostile mob, followed by an Effect Hit check. On success, apply Weakness and Erosion: 1 damage per second, lasting 5 seconds (7 seconds from R4).\\nR5 Erosion Diffusion: on the first mark, attempt to spread it to 1 unmarked mob within 2.5 blocks.\\nR6 Pain Echo: Erosion damage increases to 1.5 per second.\\nR7 Nihility End: Erosion damage increases to 2 per second; killing your marked mob applies Erosion to living mobs within 3 blocks and deals 2 damage; no extra cooldown."
+  ,"guide.starrail_sim.path.nihility.mechanics": "Erosion: Weakness I and 1 magic damage each second for 5s; R4:7s, with all scheduled pulses.\\nR5: new erosion spreads within 2.5 blocks to 1 unmarked enemy, without recursive spread.\\nR6: periodic damage 1.5.\\nR7: your eroded enemy death applies erosion and 2 magic damage within 3 blocks; no cooldown, no recursive same-burst chain."
   ,"guide.starrail_sim.path.abundance.core": "Practice Abundance through healing and repeated recovery, focusing on sustain and max health."
   ,"guide.starrail_sim.path.abundance.goals": "Restore 10 health in total and complete 3 separate healing events."
-  ,"guide.starrail_sim.path.abundance.practice": "Restore health and complete separate healing events."
-  ,"guide.starrail_sim.path.abundance.effect": "Cumulative rank bonuses (Max Health/Healing Effect):\\nR1: 2%/0%\\nR2: 2%/5%\\nR3: 5%/5%\\nR4: 5%/10%\\nR5: 10%/10%\\nR6: 10%/15%\\nR7: 15%/20%"
+  ,"guide.starrail_sim.path.abundance.practice": "Restore 6 health actually lost to hostiles for +1 every 12s. Injury credit expires after 30s; environmental self-harm, overhealing and shields do not count. Same-tick healing is merged."
+  ,"guide.starrail_sim.path.abundance.effect": "Cumulative rank bonuses (Max health / Healing):\\nR1:5%/0%\\nR2:10%/5%\\nR3:20%/8%\\nR4:30%/10%\\nR5:40%/12%\\nR6:50%/15%\\nR7:60%/20%"
   ,"guide.starrail_sim.path.abundance.tips": "Healing yourself or allies advances Abundance practice, and separate healing events count separately. Excess healing can become damage absorption; Rank 6 Renewal heals based on max health, while Rank 7 Mercy provides stronger emergency protection with a long cooldown."
-  ,"guide.starrail_sim.path.abundance.mechanics": "R4 Everflow: if your health is below 80% before healing, gain Regeneration for 3 seconds; 5-second cooldown.\\nR5 Dew: 50% of each overheal becomes Absorption, up to 4 points per event; no timer or cooldown.\\nR6 Renewal: if below 50% health before healing, gain Resistance for 2 seconds; 8-second cooldown.\\nR7 Mercy: lethal damage leaves you at 1 health, restores 20% max health, and grants Absorption equal to 5% max health; 60-second cooldown."
+  ,"guide.starrail_sim.path.abundance.mechanics": "R4: healing below 80% health grants Regeneration I for 3s, cooldown 5s; regeneration cannot perpetually refresh itself.\\nR5: convert 50% overhealing to absorption, max 4 per event; owned overflow shield capped at 20% max health.\\nR6: healing below 50% grants Resistance I for 2s, cooldown 8s.\\nR7: prevent lethal damage, set health to 1, heal 20% max health (healing bonuses apply) and ensure 5% absorption, cooldown 60s."
   ,"guide.starrail_sim.path.remembrance.core": "Record combat memories and trigger echoes, emphasizing repeated hits and memory buildup."
   ,"guide.starrail_sim.path.remembrance.goals": "Record 3 memories and hit the same enemy again within 8 seconds to trigger 2 echoes."
-  ,"guide.starrail_sim.path.remembrance.practice": "Record a target with a melee or ranged hit, then hit the same target again within the memory window to echo and gain practice."
-  ,"guide.starrail_sim.path.remembrance.effect": "Cumulative rank bonuses (Attack Damage/Critical Damage):\\nR1: 5%/0%\\nR2: 5%/5%\\nR3: 10%/5%\\nR4: 10%/10%\\nR5: 15%/10%\\nR6: 15%/15%\\nR7: 25%/25%"
-  ,"guide.starrail_sim.path.remembrance.tips": "Remembrance rewards repeatedly connecting with the same target: after recording a memory, hit that target again within the memory window to trigger an echo. The base window is 8 seconds and becomes 12 seconds at Rank 5; keep one target selected instead of switching constantly."
-  ,"guide.starrail_sim.path.remembrance.mechanics": "Trigger: hit a mob to record it; hit the same target again within 8 seconds (12 seconds from R5) to echo and deal +1 flat damage (+2 from R4).\\nR5 Aftermemory: an echo empowers your next hit on that target within 5 seconds to ×1.1 damage.\\nR6 Memory Cycle: each echo starts a global 3-second interval during which no target can trigger another echo.\\nR7 Eternal Echo: after 3 echoes, the next available echo deals ×1.5 damage; 10-second cooldown."
+  ,"guide.starrail_sim.path.remembrance.practice": "A valid echo grants +1 every 8s. Recording, refreshing and Eternal Echo do not add duplicate rewards."
+  ,"guide.starrail_sim.path.remembrance.effect": "Cumulative rank bonuses (Attack / Crit damage):\\nR1:5%/5%\\nR2:10%/10%\\nR3:15%/15%\\nR4:20%/20%\\nR5:25%/25%\\nR6:30%/30%\\nR7:40%/40%"
+  ,"guide.starrail_sim.path.remembrance.tips": "Remembrance rewards repeatedly connecting with the same target: after recording a memory, hit that target again within the memory window to trigger an echo. The base window is 8 seconds and becomes 12 seconds at Rank 4; keep one target selected instead of switching constantly."
+  ,"guide.starrail_sim.path.remembrance.mechanics": "Record, then echo on same target within 8s for +1 damage; R4:12s and +2.\\nR5: same-target follow-up x1.10 within 5s.\\nR6: retain memory, echo interval 3s.\\nR7: every 3 echoes x1.50, cooldown 10s; at most 3 stored echoes while cooling down."
   ,"guide.starrail_sim.path.elation.core": "Build momentum through consecutive hits and Elation bursts, emphasizing combos and unexpected bursts."
   ,"guide.starrail_sim.path.elation.goals": "Complete 8 consecutive hits and trigger 2 Elation bursts; do not wait more than 5 seconds between hits."
-  ,"guide.starrail_sim.path.elation.practice": "Melee and ranged hits both continue the combo; a gap over 5 seconds resets it (7 seconds from Rank 5)."
-  ,"guide.starrail_sim.path.elation.effect": "Cumulative rank bonuses (Critical Rate/Attack Damage/Critical Damage):\\nR1: 3%/0%/0%\\nR2: 3%/5%/0%\\nR3: 3%/5%/5%\\nR4: 6%/5%/5%\\nR5: 6%/5%/5%\\nR6: 6%/10%/10%\\nR7: 9%/15%/15%"
+  ,"guide.starrail_sim.path.elation.practice": "A three-hit burst grants +1 every 8s. Ordinary hits and the grand burst do not pay extra."
+  ,"guide.starrail_sim.path.elation.effect": "Cumulative rank bonuses (Crit rate / Attack / Crit damage):\\nR1:3%/5%/5%\\nR2:4%/10%/10%\\nR3:5%/15%/15%\\nR4:6%/20%/20%\\nR5:7%/25%/25%\\nR6:8%/30%/30%\\nR7:10%/35%/35%"
   ,"guide.starrail_sim.path.elation.tips": "Elation builds momentum through consecutive hits and triggers bursts when the rhythm reaches its conditions. Keep attacks close together, then use the burst to amplify damage. Higher ranks improve the combo window and the number or strength of burst triggers."
-  ,"guide.starrail_sim.path.elation.mechanics": "Trigger: keep hits within 5 seconds (7 seconds from R5).\\nEvery 3rd hit: add 2 flat damage (4 from R5); from R4, also roll one buff: Strength 5s, Regeneration 3s, Luck 10s, or Resistance 2s.\\nR6 Carnival Echo: your next 2 attacks after a burst each deal +10%.\\nR7 Ultimate Elation: every 6th combo hit can deal ×1.5 damage; 10-second cooldown, and roll the dice twice more."
+  ,"guide.starrail_sim.path.elation.mechanics": "Combo window 5s, R5:7s. Every third hit adds 2 damage, R5:4.\\nR4: equal chance for Strength I 5s, Regeneration I 3s, Luck I 10s or Resistance I 2s.\\nR6: next 2 hits x1.10, refreshed rather than stacked.\\nR7: every sixth hit x1.50, cooldown 10s and 2 distinct extra random buffs; ordinary bursts still trigger during cooldown."
   ,"guide.starrail_sim.help.combat_title": "Combat Mechanics"
   ,"guide.starrail_sim.help.interface_title": "Interface and Data"
   ,"guide.starrail_sim.help.damage": "Damage numbers: normal damage is a white negative number; critical damage is a white negative number with an exclamation mark; damage over time also uses white numbers. Toughness damage is red, and a break hit is red with an exclamation mark."
@@ -309,8 +309,8 @@
   ,"guide.starrail_sim.help.practice_detail": "Practice: each path counts actions that match its own theme. The Paths screen shows current practice and its target; the Nine Paths page explains the specific way to practice each path."
   ,"guide.starrail_sim.help.path_switch": "Path switching: after the initial trial, you automatically enter the selected path. You can have only one current path; resetting it removes current path effects but keeps unlocked ranks and practice."
   ,"guide.starrail_sim.help.notifications": "Path skill notices use their path color and appear above the player HUD; trial progress updates in real time. View practice totals in the Paths screen instead of expecting a notice for each point."
-  ,"guide.starrail_sim.help.future": "The Light Cone system is now available. From Character Details, use the Light Cone button on the left to view the equipped cone, base attributes, superimposition, and Path-exclusive effects; only the matching Path activates the exclusive effect. Skill Tree, Relics, and accessories are still planned for a later phase."
-  ,"guide.starrail_sim.help.light_cone": "The Light Cone system is now available. From Character Details, use the Light Cone button on the left to view the equipped cone, base attributes, superimposition, and Path-exclusive effects; only the matching Path activates the exclusive effect. Skill Tree, Relics, and accessories are still planned for a later phase."
+  ,"guide.starrail_sim.help.future": "Light Cones and all nine Path Trace trees are available through the character screen. Matching Trace materials can be obtained from Path ruin guardians and repeat challenges. Relics and accessories remain planned."
+  ,"guide.starrail_sim.help.light_cone": "Light Cones are available. Open Light Cone from Character Details to inspect base stats, superimposition and Path-exclusive effects; exclusive effects activate only on the matching Path. Traces are also available: open Traces to inspect your current Path tree and spend matching materials to unlock nodes. Rolling back nodes or resetting Traces refunds spent materials. No Trace tree appears while unaligned. Relics and accessories remain planned."
   ,"item.starrail_sim.in_the_night": "In the Night"
   ,"item.starrail_sim.i_will_hunt": "I Venture Forth to Hunt"
   ,"item.starrail_sim.worrisome_blissful": "Worrisome, Blissful"
@@ -1985,7 +1985,7 @@
   ,"ui.starrail_sim.path.stage_preview": "Stage Preview"
   ,"ui.starrail_sim.path.first_stage": "Practice target: %s. Reaching it advances directly to Rank 2 without a trial."
   ,"ui.starrail_sim.path.next_stage": "Practice target: %s. Reaching it starts the next rank breakthrough trial."
-  ,"ui.starrail_sim.path.pinnacle_stage": "Maximum rank. Every %s practice grants an additional +5%% attack damage, up to ten times (+50%%)."
+  ,"ui.starrail_sim.path.pinnacle_stage": "Highest rank: each %s practice adds +10%% Attack, max 10 (+100%%); additive with rank Attack."
   ,"ui.starrail_sim.path.next_trial": "Next rank: %s. Trial limit: %s seconds; objective targets: %s and %s. Complete both to advance."
   ,"ui.starrail_sim.path.pinnacle_count": "Pinnacle practice completions: %s / %s"
   ,"ui.starrail_sim.path.bonuses": "Cumulative Bonuses at This Rank"
@@ -2001,7 +2001,7 @@
   ,"ui.starrail_sim.guide.pinnacle_target": "Every %s points"
   ,"ui.starrail_sim.guide.direct_advance": "Advance directly to Rank 2"
   ,"ui.starrail_sim.guide.trial_advance": "Start next rank trial"
-  ,"ui.starrail_sim.guide.pinnacle_reward": "Attack damage +5%, up to ten times"
+  ,"ui.starrail_sim.guide.pinnacle_reward": "Attack +10%, up to 10 times"
   ,"ui.starrail_sim.guide.trial_heading": "Breakthrough Trials and Retries"
   ,"ui.starrail_sim.guide.open_path": "Open Path Page →"
   ,"ui.starrail_sim.attributes.basic": "Basic Attributes"
@@ -2108,6 +2108,40 @@
   "message.starrail_sim.ruin_anchor.failed": "The guardian could not be summoned. Make sure the ruin area is loaded.",
   "message.starrail_sim.ruin_anchor.summoned": "The %s ruin anchor awakens. Its guardian has returned!",
   "message.starrail_sim.ruin_anchor.defeated": "The rematch is won! The anchor will recover in 30 seconds.",
+  "message.starrail_sim.ruin_anchor.encounter": "Encountered a %s ruin guardian. Defeat it to open the treasure chamber.",
+  "message.starrail_sim.ruin_anchor.ordinary_encounter": "Encountered a ruin guardian. Defeat it to open the treasure chamber.",
+  "message.starrail_sim.ruin_anchor.waiting": "Waiting for the guardian to load or recover. This does not count as a victory.",
+  "message.starrail_sim.ruin_anchor.wrong_key": "This anchor needs a %s seal; the %s you are holding does not match.",
+  "message.starrail_sim.ruin_anchor.first_victory": "The ruin guardian is defeated. The treasure chamber is now open.",
+  "message.starrail_sim.ruin_anchor.material_drop": "Dropped: %s x1 (ground item)",
+  "message.starrail_sim.ruin_anchor.no_material": "No Trace material dropped this time.",
+  "ui.starrail_sim.ruin_anchor.title": "%s · Summoning Anchor",
+  "ui.starrail_sim.ruin_anchor.unbound": "Anchor is not bound to a valid ruin",
+  "ui.starrail_sim.ruin_anchor.first_clear": "Defeat the first guardian and open its chest",
+  "ui.starrail_sim.ruin_anchor.ready": "Ready · Start a rematch",
+  "ui.starrail_sim.ruin_anchor.active": "Battle in progress · Cannot summon again",
+  "ui.starrail_sim.ruin_anchor.cooldown": "Cooldown · %ss remaining",
+  "ui.starrail_sim.ruin_anchor.waiting": "Waiting for the guardian to load or recover",
+  "ui.starrail_sim.ruin_anchor.peaceful": "Cannot summon in Peaceful difficulty",
+  "ui.starrail_sim.ruin_anchor.required_key": "Required: %s",
+  "ui.starrail_sim.ruin_anchor.wrong_key": "Seal belongs to a different path",
+  "ui.starrail_sim.ruin_anchor.matched_key": "Matching seal · Reusable",
+  "ui.starrail_sim.ruin_anchor.use_key": "Matching seal · Right-click to summon (reusable)",
+  "ui.starrail_sim.ruin_battle.path_guard": "%s · %s",
+  "ui.starrail_sim.ruin_battle.health": "Health",
+  "ui.starrail_sim.ruin_battle.toughness": "Toughness",
+  "ui.starrail_sim.ruin_battle.normal": "Toughness intact",
+  "ui.starrail_sim.ruin_battle.broken": "Toughness broken · %ss",
+  "ui.starrail_sim.ruin_battle.recovering": "Recovering toughness · %ss",
   "guide.starrail_sim.path.materials": "Trace Material Acquisition",
   "guide.starrail_sim.path.material_source": "Defeating this path ruin guardian has a 30% chance to drop 1 matching Trace material. The first-clear chest supplies a dedicated reusable seal; use the anchor beside the chest to challenge the guardian again. Each rematch kill starts a 30-second cooldown. Ordinary ruins do not drop path-specific Trace materials."
+,
+  "screen.starrail_sim.erudition_unique_hits": "Distinct directly hit enemies: %s/%s",
+  "key.starrail_sim.toggle_status": "Toggle Player Status HUD",
+  "ui.starrail_sim.status.enabled": "Mod player status HUD enabled",
+  "ui.starrail_sim.status.disabled": "Vanilla player HUD restored",
+  "guide.starrail_sim.help.hud_title": "Player Status HUD",
+  "guide.starrail_sim.help.hud_values": "Status bars: by default, the HUD sits above experience, with each number following its icon. The green main bar shows current/max health and the gold main bar shows hunger; blue and pale-green secondary bars show absorption and saturation. Absorption is a separate shield, not maximum health. Its bar is relative to maximum health; the actual amount remains visible even when the bar is full. Armor and toughness show actual attribute values. Low health, low hunger, damage and recovery have local visual feedback.",
+  "guide.starrail_sim.help.hud_context": "Context: bubbles and remaining breathing seconds appear underwater or while air is not full. Living mounts show current/max health, and jumpable mounts also show a short charge meter. These readings share the lower row with absorption. A central gap leaves room for experience levels; if a long level number overlaps, status icons and readings take priority. This survival HUD is hidden in Creative and Spectator modes; F1 hides the HUD.",
+  "guide.starrail_sim.help.hud_settings": "Display settings: F8 toggles between the mod HUD and vanilla by default. Rebind it in Controls; the choice is saved. The client config starrail_sim-client.toml supports placement above experience or in the lower-left corner, 75%-100% scale and exact numbers. Large values use K/M abbreviations by default. Display preferences do not change player attributes or abilities."
 }

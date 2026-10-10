@@ -429,6 +429,12 @@ public final class StarRailSimMod {
     // 把各延迟注册器接入模组事件总线，并设置创造模式物品栏内容。
     public StarRailSimMod(FMLJavaModLoadingContext context) {
         var modEventBus = context.getModEventBus();
+        StarRailStatusConfig.register();
+        modEventBus.addListener((net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent event) ->
+                event.enqueueWork(() -> {
+                    StarRailAttributes.enableVanillaCombatSync();
+                    StarRailAttributeLimits.apply();
+                }));
         StarRailRuinWorldgen.register(modEventBus);
         StarRailNetwork.register();
         StarRailAttributes.ATTRIBUTES.register(modEventBus);

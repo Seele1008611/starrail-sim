@@ -431,6 +431,7 @@ public final class StarRailGuideScreen extends StarRailStyledScreen {
         String[][] groups = {
                 {"title", "open_current", "path", "practice", "trial", "progress", "rollback"},
                 {"combat_title", "damage", "toughness", "break", "effect_hit", "effect_resistance", "knockback_resistance"},
+                {"hud_title", "hud_values", "hud_context", "hud_settings"},
                 {"interface_title", "attributes", "practice_detail", "path_switch", "notifications", "light_cone"}
         };
         int y = contentTop, textWidth = contentRight - contentLeft - 10;
@@ -465,16 +466,7 @@ public final class StarRailGuideScreen extends StarRailStyledScreen {
     }
 
     private static int practiceTarget(StarRailPathRank rank) {
-        return switch (rank) {
-            case PATHFARING -> 5;
-            case GLIMPSE -> 8;
-            case RESONANCE -> 12;
-            case PRACTICE -> 30;
-            case DEEP_PRACTICE -> 60;
-            case HIGH_PATHSTRIDER -> 120;
-            case PATH_PINNACLE -> StarRailPathProgress.PINNACLE_PRACTICE_TARGET;
-            default -> 0;
-        };
+        return StarRailPathProgress.targetFor(rank);
     }
 
     private static String coreKey(StarRailPath path) {
@@ -514,7 +506,8 @@ public final class StarRailGuideScreen extends StarRailStyledScreen {
                     : "screen.starrail_sim.destruction_damage";
             case ERUDITION -> objective == 1
                     ? "screen.starrail_sim.erudition_multi_hit"
-                    : "screen.starrail_sim.erudition_multi_hit";
+                    : (StarRailPathClientState.getTrialRank().getLevel() >= 3
+                    ? "screen.starrail_sim.erudition_unique_hits" : "screen.starrail_sim.erudition_multi_hit");
             case NIHILITY -> objective == 1
                     ? "screen.starrail_sim.nihility_marks"
                     : "screen.starrail_sim.nihility_kills";

@@ -228,37 +228,33 @@ public final class StarRailPathEffects {
         if (attackDamage != null) {
             applyModifier(attackDamage, HUNT_ATTACK_DAMAGE_MODIFIER,
                     "starrail_sim.path.hunt.attack_damage", huntAttackDamage(level),
-                    AttributeModifier.Operation.MULTIPLY_TOTAL, path == StarRailPath.HUNT);
+                    AttributeModifier.Operation.MULTIPLY_TOTAL, false);
             applyModifier(attackDamage, DESTRUCTION_ATTACK_DAMAGE_MODIFIER,
                     "starrail_sim.path.destruction.attack_damage",
                     destructionAttackDamage(level),
-                    AttributeModifier.Operation.MULTIPLY_TOTAL,
-                    path == StarRailPath.DESTRUCTION);
+                    AttributeModifier.Operation.MULTIPLY_TOTAL, false);
             applyModifier(attackDamage, ERUDITION_ATTACK_DAMAGE_MODIFIER,
                     "starrail_sim.path.erudition.attack_damage",
                     eruditionAttackDamage(level),
-                    AttributeModifier.Operation.MULTIPLY_TOTAL,
-                    path == StarRailPath.ERUDITION);
+                    AttributeModifier.Operation.MULTIPLY_TOTAL, false);
             applyModifier(attackDamage, NIHILITY_ATTACK_DAMAGE_MODIFIER,
                     "starrail_sim.path.nihility.attack_damage",
                     nihilityAttackDamage(level),
-                    AttributeModifier.Operation.MULTIPLY_TOTAL,
-                    path == StarRailPath.NIHILITY);
+                    AttributeModifier.Operation.MULTIPLY_TOTAL, false);
             applyModifier(attackDamage, REMEMBRANCE_ATTACK_DAMAGE_MODIFIER,
                     "starrail_sim.path.remembrance.attack_damage",
                     remembranceAttackDamage(level),
-                    AttributeModifier.Operation.MULTIPLY_TOTAL,
-                    path == StarRailPath.REMEMBRANCE);
+                    AttributeModifier.Operation.MULTIPLY_TOTAL, false);
             applyModifier(attackDamage, ELATION_ATTACK_DAMAGE_MODIFIER,
                     "starrail_sim.path.elation.attack_damage",
                     elationAttackDamage(level),
-                    AttributeModifier.Operation.MULTIPLY_TOTAL,
-                    path == StarRailPath.ELATION);
+                    AttributeModifier.Operation.MULTIPLY_TOTAL, false);
             applyModifier(attackDamage, PINNACLE_PRACTICE_ATTACK_DAMAGE_MODIFIER,
                     "starrail_sim.path.pinnacle_practice_attack_damage",
-                    StarRailPathProgress.pinnacleAttackBonus(pinnaclePracticeCount),
+                    pathAttackBonus(path, level) + (level >= 7
+                            ? StarRailPathProgress.pinnacleAttackBonus(pinnaclePracticeCount) : 0),
                     AttributeModifier.Operation.MULTIPLY_TOTAL,
-                    path.isRealPath() && level >= StarRailPathRank.PATH_PINNACLE.getLevel());
+                    path.isRealPath() && level > 0);
         }
 
         AttributeInstance remembranceCritDamage = player.getAttribute(
@@ -293,148 +289,111 @@ public final class StarRailPathEffects {
     }
 
     private static double huntCritRate(int level) {
-        return level >= StarRailPathRank.PATH_PINNACLE.getLevel() ? 0.15D
-                : level >= StarRailPathRank.PRACTICE.getLevel() ? 0.10D
-                : level >= StarRailPathRank.PATHFARING.getLevel() ? 0.05D : 0.0D;
+        return rankValue(level, 5, 6, 8, 10, 11, 13, 15);
     }
 
     private static double huntCritDamage(int level) {
-        return level >= StarRailPathRank.PATH_PINNACLE.getLevel() ? 0.30D
-                : level >= StarRailPathRank.DEEP_PRACTICE.getLevel() ? 0.20D
-                : level >= StarRailPathRank.GLIMPSE.getLevel() ? 0.10D : 0.0D;
+        return rankValue(level, 5, 10, 15, 20, 25, 30, 40);
     }
 
     private static double huntAttackDamage(int level) {
-        return level >= StarRailPathRank.PATH_PINNACLE.getLevel() ? 0.30D
-                : level >= StarRailPathRank.HIGH_PATHSTRIDER.getLevel() ? 0.20D
-                : level >= StarRailPathRank.RESONANCE.getLevel() ? 0.10D : 0.0D;
+        return rankValue(level, 5, 10, 15, 20, 25, 30, 35);
     }
 
     private static double destructionCritDamage(int level) {
-        return level >= StarRailPathRank.PATH_PINNACLE.getLevel() ? 0.40D
-                : level >= StarRailPathRank.DEEP_PRACTICE.getLevel() ? 0.30D
-                : level >= StarRailPathRank.RESONANCE.getLevel() ? 0.20D
-                : level >= StarRailPathRank.PATHFARING.getLevel() ? 0.10D : 0.0D;
+        return rankValue(level, 10, 15, 20, 25, 30, 35, 40);
     }
 
     private static double destructionAttackDamage(int level) {
-        return level >= StarRailPathRank.PATH_PINNACLE.getLevel() ? 0.20D
-                : level >= StarRailPathRank.HIGH_PATHSTRIDER.getLevel() ? 0.15D
-                : level >= StarRailPathRank.PRACTICE.getLevel() ? 0.10D
-                : level >= StarRailPathRank.GLIMPSE.getLevel() ? 0.05D : 0.0D;
+        return rankValue(level, 5, 10, 15, 20, 25, 30, 40);
     }
 
     private static double eruditionAttackDamage(int level) {
-        return level >= StarRailPathRank.PATH_PINNACLE.getLevel() ? 0.25D
-                : level >= StarRailPathRank.DEEP_PRACTICE.getLevel() ? 0.15D
-                : level >= StarRailPathRank.RESONANCE.getLevel() ? 0.10D
-                : level >= StarRailPathRank.PATHFARING.getLevel() ? 0.05D : 0.0D;
+        return rankValue(level, 5, 10, 15, 20, 25, 30, 35);
     }
 
     private static double eruditionCritDamage(int level) {
-        return level >= StarRailPathRank.PATH_PINNACLE.getLevel() ? 0.25D
-                : level >= StarRailPathRank.HIGH_PATHSTRIDER.getLevel() ? 0.15D
-                : level >= StarRailPathRank.GLIMPSE.getLevel() ? 0.05D : 0.0D;
+        return rankValue(level, 5, 10, 15, 20, 25, 30, 35);
     }
 
     private static double eruditionCritRate(int level) {
-        return level >= StarRailPathRank.PATH_PINNACLE.getLevel() ? 0.10D
-                : level >= StarRailPathRank.PRACTICE.getLevel() ? 0.05D : 0.0D;
+        return rankValue(level, 0, 2, 3, 5, 6, 8, 10);
     }
 
     private static double nihilityEffectHitRate(int level) {
-        return level >= StarRailPathRank.PATH_PINNACLE.getLevel() ? 0.30D
-                : level >= StarRailPathRank.DEEP_PRACTICE.getLevel() ? 0.20D
-                : level >= StarRailPathRank.RESONANCE.getLevel() ? 0.15D
-                : level >= StarRailPathRank.PATHFARING.getLevel() ? 0.10D : 0.0D;
+        return rankValue(level, 10, 12, 15, 18, 22, 25, 30);
     }
 
     private static double nihilityAttackDamage(int level) {
-        return level >= StarRailPathRank.PATH_PINNACLE.getLevel() ? 0.20D
-                : level >= StarRailPathRank.HIGH_PATHSTRIDER.getLevel() ? 0.15D
-                : level >= StarRailPathRank.PRACTICE.getLevel() ? 0.10D
-                : level >= StarRailPathRank.GLIMPSE.getLevel() ? 0.05D : 0.0D;
+        return rankValue(level, 5, 10, 20, 30, 40, 50, 60);
     }
 
     private static double nihilityBreakEffect(int level) {
-        return level >= StarRailPathRank.PATH_PINNACLE.getLevel() ? 0.10D : 0.0D;
+        return rankValue(level, 0, 0, 5, 5, 10, 15, 20);
     }
 
     private static double harmonyArmor(int level) {
-        return level >= StarRailPathRank.PATH_PINNACLE.getLevel() ? 0.10D
-                : level >= StarRailPathRank.PRACTICE.getLevel() ? 0.05D
-                : level >= StarRailPathRank.PATHFARING.getLevel() ? 0.02D : 0.0D;
+        return rankValue(level, 3, 6, 9, 12, 16, 20, 25);
     }
 
     private static double remembranceAttackDamage(int level) {
-        return level >= StarRailPathRank.PATH_PINNACLE.getLevel() ? 0.25D
-                : level >= StarRailPathRank.DEEP_PRACTICE.getLevel() ? 0.15D
-                : level >= StarRailPathRank.RESONANCE.getLevel() ? 0.10D
-                : level >= StarRailPathRank.PATHFARING.getLevel() ? 0.05D : 0.0D;
+        return rankValue(level, 5, 10, 15, 20, 25, 30, 40);
     }
 
     private static double remembranceCritDamage(int level) {
-        return level >= StarRailPathRank.PATH_PINNACLE.getLevel() ? 0.25D
-                : level >= StarRailPathRank.HIGH_PATHSTRIDER.getLevel() ? 0.15D
-                : level >= StarRailPathRank.PRACTICE.getLevel() ? 0.10D
-                : level >= StarRailPathRank.GLIMPSE.getLevel() ? 0.05D : 0.0D;
+        return rankValue(level, 5, 10, 15, 20, 25, 30, 40);
     }
 
     private static double elationCritRate(int level) {
-        return level >= StarRailPathRank.PATH_PINNACLE.getLevel() ? 0.09D
-                : level >= StarRailPathRank.PRACTICE.getLevel() ? 0.06D
-                : level >= StarRailPathRank.PATHFARING.getLevel() ? 0.03D : 0.0D;
+        return rankValue(level, 3, 4, 5, 6, 7, 8, 10);
     }
 
     private static double elationAttackDamage(int level) {
-        return level >= StarRailPathRank.PATH_PINNACLE.getLevel() ? 0.15D
-                : level >= StarRailPathRank.DEEP_PRACTICE.getLevel() ? 0.10D
-                : level >= StarRailPathRank.GLIMPSE.getLevel() ? 0.05D : 0.0D;
+        return rankValue(level, 5, 10, 15, 20, 25, 30, 35);
     }
 
     private static double elationCritDamage(int level) {
-        return level >= StarRailPathRank.PATH_PINNACLE.getLevel() ? 0.15D
-                : level >= StarRailPathRank.HIGH_PATHSTRIDER.getLevel() ? 0.10D
-                : level >= StarRailPathRank.RESONANCE.getLevel() ? 0.05D : 0.0D;
+        return rankValue(level, 5, 10, 15, 20, 25, 30, 35);
     }
 
     private static double abundanceMaxHealth(int level) {
-        return level >= StarRailPathRank.PATH_PINNACLE.getLevel() ? 0.15D
-                : level >= StarRailPathRank.DEEP_PRACTICE.getLevel() ? 0.10D
-                : level >= StarRailPathRank.RESONANCE.getLevel() ? 0.05D
-                : level >= StarRailPathRank.PATHFARING.getLevel() ? 0.02D : 0.0D;
+        return rankValue(level, 5, 10, 20, 30, 40, 50, 60);
     }
 
     private static double abundanceHealingEffect(int level) {
-        return level >= StarRailPathRank.PATH_PINNACLE.getLevel() ? 0.20D
-                : level >= StarRailPathRank.HIGH_PATHSTRIDER.getLevel() ? 0.15D
-                : level >= StarRailPathRank.PRACTICE.getLevel() ? 0.10D
-                : level >= StarRailPathRank.GLIMPSE.getLevel() ? 0.05D : 0.0D;
+        return rankValue(level, 0, 5, 8, 10, 12, 15, 20);
     }
 
     private static double harmonyMaxHealth(int level) {
-        return level >= StarRailPathRank.PATH_PINNACLE.getLevel() ? 0.11D
-                : level >= StarRailPathRank.HIGH_PATHSTRIDER.getLevel() ? 0.06D
-                : level >= StarRailPathRank.GLIMPSE.getLevel() ? 0.03D : 0.0D;
+        return rankValue(level, 3, 6, 9, 12, 16, 20, 25);
     }
 
     private static double harmonyArmorToughness(int level) {
-        return level >= StarRailPathRank.HIGH_PATHSTRIDER.getLevel() ? 0.04D
-                : level >= StarRailPathRank.RESONANCE.getLevel() ? 0.02D : 0.0D;
+        return rankValue(level, 0, 3, 6, 9, 12, 16, 20);
     }
 
     private static double preservationArmor(int level) {
-        return level >= StarRailPathRank.PATH_PINNACLE.getLevel() ? 0.25D
-                : level >= StarRailPathRank.DEEP_PRACTICE.getLevel() ? 0.20D
-                : level >= StarRailPathRank.RESONANCE.getLevel() ? 0.15D
-                : level >= StarRailPathRank.PATHFARING.getLevel() ? 0.10D : 0.0D;
+        return rankValue(level, 10, 15, 20, 30, 40, 45, 55);
     }
 
     private static double preservationArmorToughness(int level) {
-        return level >= StarRailPathRank.PATH_PINNACLE.getLevel() ? 0.25D
-                : level >= StarRailPathRank.HIGH_PATHSTRIDER.getLevel() ? 0.20D
-                : level >= StarRailPathRank.DEEP_PRACTICE.getLevel() ? 0.15D
-                : level >= StarRailPathRank.GLIMPSE.getLevel() ? 0.10D : 0.0D;
+        return rankValue(level, 0, 5, 10, 12, 15, 20, 25);
+    }
+
+    private static double rankValue(int level, int... percentages) {
+        return level <= 0 ? 0 : percentages[Math.min(7, level) - 1] / 100.0D;
+    }
+
+    public static double pathAttackBonus(StarRailPath path, int level) {
+        return switch (path) {
+            case HUNT -> huntAttackDamage(level);
+            case DESTRUCTION -> destructionAttackDamage(level);
+            case ERUDITION -> eruditionAttackDamage(level);
+            case NIHILITY -> nihilityAttackDamage(level);
+            case REMEMBRANCE -> remembranceAttackDamage(level);
+            case ELATION -> elationAttackDamage(level);
+            default -> 0;
+        };
     }
 
     private static void applyModifier(AttributeInstance instance, UUID id, String name,

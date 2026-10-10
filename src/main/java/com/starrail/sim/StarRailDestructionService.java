@@ -15,8 +15,8 @@ public final class StarRailDestructionService {
     private static final String DESPERATION_BLAST_TAG = "trace_destruction_desperation_blast";
     private static final long WRATH_DURATION = 8L * 20L;
     private static final long EMPOWERED_ATTACK_DURATION = 8L * 20L;
-    private static final long DESPERATION_COOLDOWN = 30L * 20L;
-    private static final long DESPERATION_RESISTANCE_DURATION = 3L * 20L;
+    private static final long DESPERATION_COOLDOWN = 12L * 20L;
+    private static final long DESPERATION_RESISTANCE_DURATION = 8L * 20L;
 
     private StarRailDestructionService() {
     }
@@ -31,10 +31,10 @@ public final class StarRailDestructionService {
         long currentTick = player.level().getGameTime();
         expireAttackBonus(player, data, currentTick);
         int level = data.getCurrentPathRank().getLevel();
-        float multiplier = 1.0F;
+        float bonusMultiplier = 0.0F;
         if (level >= StarRailPathRank.PRACTICE.getLevel()
                 && isBelowHalfHealth(player)) {
-            multiplier *= 1.10F;
+            bonusMultiplier += 0.10F;
             StarRailPathMessages.send(player, StarRailPath.DESTRUCTION,
                     Component.translatable(
                             "message.starrail_sim.destruction_blood_battle"));
@@ -42,14 +42,14 @@ public final class StarRailDestructionService {
 
         double bonus = data.getDestructionAttackBonus();
         if (bonus > 0.0D) {
-            multiplier *= (float) (1.0D + bonus);
+            bonusMultiplier += (float) bonus;
             data.setDestructionAttackBonus(0.0D);
             data.setDestructionAttackBonusExpireTick(-1L);
             StarRailPathMessages.send(player, StarRailPath.DESTRUCTION,
                     Component.translatable(
                             "message.starrail_sim.destruction_empowered_attack"));
         }
-        return multiplier;
+        return 1 + bonusMultiplier + (sustainedMultiplier(player) - 1);
     }
 
     /** Consumes the rank-six trace's critical-damage rider for this attack. */
@@ -133,15 +133,14 @@ public final class StarRailDestructionService {
         if (data.getCurrentPathRank().getLevel()
                 >= StarRailPathRank.PATH_PINNACLE.getLevel()
                 && isBelowQuarterHealth(player)
-                && data.getDestructionDesperationCooldownTick() <= currentTick) {
+                && StarRailRankRuntime.ready(player, "skill_destruction_desperation")) {
             data.setDestructionDesperationCooldownTick(
                     currentTick + DESPERATION_COOLDOWN);
-            data.setDestructionAttackBonus(0.50D);
-            data.setDestructionAttackBonusExpireTick(
-                    currentTick + EMPOWERED_ATTACK_DURATION);
+            StarRailRankRuntime.cooldown(player, "skill_destruction_desperation", DESPERATION_COOLDOWN);
+            player.getPersistentData().putLong("starrail_destruction_sustained", StarRailRankRuntime.now(player) + 8 * 20);
             player.getPersistentData().putBoolean(DESPERATION_BLAST_TAG, true);
             StarRailCombatVfx.self(player, CombatVfxPacket.Kind.DESTRUCTION_DESPERATE);
-            player.addEffect(new MobEffectInstance(
+            StarRailRankRuntime.grantEffect(player, new MobEffectInstance(
                     MobEffects.DAMAGE_RESISTANCE,
                     (int) DESPERATION_RESISTANCE_DURATION, 0,
                     false, true, true));
@@ -149,6 +148,12 @@ public final class StarRailDestructionService {
                     Component.translatable(
                             "message.starrail_sim.destruction_desperation"));
         }
+    }
+
+    public static float sustainedMultiplier(ServerPlayer player) {
+        boolean active = player.getCapability(StarRailPathCapability.PATH_DATA)
+                .map(data -> data.getCurrentPath() == StarRailPath.DESTRUCTION).orElse(false);
+        return active && player.getPersistentData().getLong("starrail_destruction_sustained") > StarRailRankRuntime.now(player) ? 1.5F : 1;
     }
 
     /** Clears all temporary Destruction state when the path changes. */
