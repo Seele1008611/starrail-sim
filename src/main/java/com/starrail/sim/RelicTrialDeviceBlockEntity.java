@@ -24,8 +24,9 @@ import java.util.UUID;
 
 /** Saves the chosen relic set and one active duel session on the arena device. */
 public final class RelicTrialDeviceBlockEntity extends BlockEntity {
-    private static final int DATA_SIZE = 8;
+    private static final int DATA_SIZE = 9;
     private static final int NEXT_WAVE_DELAY_TICKS = 60;
+    private static final int ARENA_HALF_SIZE = 10;
 
     private final SimpleContainerData data = new SimpleContainerData(DATA_SIZE);
     private final List<UUID> activeMobIds = new ArrayList<>();
@@ -40,9 +41,10 @@ public final class RelicTrialDeviceBlockEntity extends BlockEntity {
     private boolean battleComplete;
     private UUID ownerId;
     private UUID sessionId;
-    private ItemStack plannedReward = ItemStack.EMPTY;
+    private final List<ItemStack> plannedRewards = new ArrayList<>();
     private int rewardStars;
     private int rewardPartIndex = -1;
+    private int rewardCount;
 
     public RelicTrialDeviceBlockEntity(BlockPos pos, BlockState state) {
         super(StarRailSimMod.RELIC_TRIAL_DEVICE_ENTITY.get(), pos, state);
@@ -79,6 +81,7 @@ public final class RelicTrialDeviceBlockEntity extends BlockEntity {
 
     public int rewardStars() { return rewardStars; }
     public int rewardPartIndex() { return rewardPartIndex; }
+    public int rewardCount() { return rewardCount; }
 
     public UUID sessionId() {
         return sessionId;
@@ -100,14 +103,22 @@ public final class RelicTrialDeviceBlockEntity extends BlockEntity {
         updateClients();
     }
 
-    void beginBattle(UUID owner, int rank, int setIndex, ItemStack reward) {
+    void beginBattle(UUID owner, int rank, int setIndex, List<ItemStack> rewards) {
+        if (rewards.isEmpty() || rewards.size() > 3) {
+            throw new IllegalArgumentException("Arena reward count must be between 1 and 3");
+        }
         ownerId = owner;
         sessionId = UUID.randomUUID();
         challengeRank = Math.max(1, Math.min(7, rank));
         selectedSetIndex = RelicTrialSet.clampIndex(setIndex);
-        plannedReward = reward.copy();
-        RelicStackData.Data rewardData = RelicStackData.read(plannedReward).orElseThrow(
-                () -> new IllegalArgumentException("Arena reward must be a valid relic"));
+        plannedRewards.clear();
+        for (ItemStack reward : rewards) {
+            RelicStackData.read(reward).orElseThrow(
+                    () -> new IllegalArgumentException("Arena reward must be a valid relic"));
+            plannedRewards.add(reward.copy());
+        }
+        rewardCount = plannedRewards.size();
+        RelicStackData.Data rewardData = RelicStackData.read(plannedRewards.get(0)).orElseThrow();
         rewardStars = rewardData.stars();
         rewardPartIndex = rewardData.part().ordinal();
         waveIndex = 0;
@@ -146,35 +157,48 @@ public final class RelicTrialDeviceBlockEntity extends BlockEntity {
         participants.clear();
         ownerId = null;
         sessionId = null;
-        plannedReward = ItemStack.EMPTY;
+        plannedRewards.clear();
         rewardStars = 0;
         rewardPartIndex = -1;
+        rewardCount = 0;
         setChanged();
         syncData();
         updateClients();
     }
 
     private void completeBattle(ServerLevel serverLevel, BlockPos deathPos) {
-        if (!battleActive || ownerId == null || plannedReward.isEmpty()) return;
-        RelicStackData.Data rewardData = RelicStackData.read(plannedReward).orElse(null);
-        if (rewardData == null) {
+        if (!battleActive || ownerId == null || plannedRewards.isEmpty()) return;
+        List<ItemEntity> drops = new ArrayList<>(plannedRewards.size());
+        for (int index = 0; index < plannedRewards.size(); index++) {
+            ItemStack reward = plannedRewards.get(index);
+            if (RelicStackData.read(reward).isEmpty()) {
+                RelicTrialBattleService.abort(serverLevel, this, Component.translatable(
+                        "message.starrail_sim.arena.reward_failed"));
+                return;
+            }
+            double angle = Math.PI * 2.0D * index / Math.max(1, plannedRewards.size());
+            ItemEntity drop = new ItemEntity(serverLevel,
+                    deathPos.getX() + 0.5D + Math.cos(angle) * 0.35D,
+                    deathPos.getY() + 0.25D,
+                    deathPos.getZ() + 0.5D + Math.sin(angle) * 0.35D, reward.copy());
+            drop.setTarget(ownerId);
+            drop.setThrower(ownerId);
+            drop.setPickUpDelay(10);
+            drops.add(drop);
+        }
+        boolean allSpawned = true;
+        for (ItemEntity drop : drops) {
+            if (!serverLevel.addFreshEntity(drop)) {
+                allSpawned = false;
+                break;
+            }
+        }
+        if (!allSpawned) {
+            drops.forEach(Entity::discard);
             RelicTrialBattleService.abort(serverLevel, this, Component.translatable(
                     "message.starrail_sim.arena.reward_failed"));
             return;
         }
-        ItemEntity drop = new ItemEntity(serverLevel, deathPos.getX() + 0.5D,
-                deathPos.getY() + 0.25D, deathPos.getZ() + 0.5D, plannedReward.copy());
-        drop.setTarget(ownerId);
-        drop.setThrower(ownerId);
-        drop.setPickUpDelay(10);
-        if (!serverLevel.addFreshEntity(drop)) {
-            RelicTrialBattleService.abort(serverLevel, this, Component.translatable(
-                    "message.starrail_sim.arena.reward_failed"));
-            return;
-        }
-        Component rewardName = plannedReward.getHoverName();
-        Component partName = Component.translatable("ui.starrail_sim.relic.part."
-                + rewardData.part().id());
         battleActive = false;
         battleComplete = true;
         aliveCount = 0;
@@ -182,15 +206,15 @@ public final class RelicTrialDeviceBlockEntity extends BlockEntity {
         ownerAwayTicks = 0;
         activeMobIds.clear();
         participants.clear();
-        plannedReward = ItemStack.EMPTY;
+        plannedRewards.clear();
         setChanged();
         syncData();
         updateClients();
         ServerPlayer player = serverLevel.getServer().getPlayerList().getPlayer(ownerId);
         if (player != null) {
             player.displayClientMessage(Component.translatable(
-                    "message.starrail_sim.arena.victory", rewardData.stars(),
-                    partName, rewardName), false);
+                    "message.starrail_sim.arena.victory", rewardCount,
+                    RelicTrialSet.byIndex(selectedSetIndex).displayName()), false);
         }
     }
 
@@ -276,6 +300,7 @@ public final class RelicTrialDeviceBlockEntity extends BlockEntity {
         data.set(5, battleComplete ? 1 : 0);
         data.set(6, rewardStars);
         data.set(7, rewardPartIndex);
+        data.set(8, rewardCount);
     }
 
     private void updateClients() {
@@ -289,6 +314,7 @@ public final class RelicTrialDeviceBlockEntity extends BlockEntity {
         if (!(level instanceof ServerLevel serverLevel)
                 || !(rawDevice instanceof RelicTrialDeviceBlockEntity device)
                 || !device.battleActive) return;
+        RelicTrialBattleService.keepMobsInsideArena(serverLevel, device, ARENA_HALF_SIZE);
         device.tickOwnerPresence(serverLevel);
         if (!device.battleActive || device.transitionTicks <= 0) return;
         device.transitionTicks--;
@@ -313,7 +339,10 @@ public final class RelicTrialDeviceBlockEntity extends BlockEntity {
         tag.putBoolean("BattleComplete", battleComplete);
         tag.putInt("RewardStars", rewardStars);
         tag.putInt("RewardPart", rewardPartIndex);
-        tag.put("PlannedReward", plannedReward.save(new CompoundTag()));
+        tag.putInt("RewardCount", rewardCount);
+        ListTag rewardTags = new ListTag();
+        for (ItemStack reward : plannedRewards) rewardTags.add(reward.save(new CompoundTag()));
+        tag.put("PlannedRewards", rewardTags);
         if (ownerId != null) tag.putUUID("Owner", ownerId);
         if (sessionId != null) tag.putUUID("Session", sessionId);
         ListTag mobs = new ListTag();
@@ -347,8 +376,26 @@ public final class RelicTrialDeviceBlockEntity extends BlockEntity {
         rewardPartIndex = tag.contains("RewardPart")
                 ? Math.max(-1, Math.min(RelicStackData.Part.values().length - 1,
                 tag.getInt("RewardPart"))) : -1;
-        plannedReward = tag.contains("PlannedReward", Tag.TAG_COMPOUND)
-                ? ItemStack.of(tag.getCompound("PlannedReward")) : ItemStack.EMPTY;
+        plannedRewards.clear();
+        if (tag.contains("PlannedRewards", Tag.TAG_LIST)) {
+            ListTag rewardTags = tag.getList("PlannedRewards", Tag.TAG_COMPOUND);
+            for (int i = 0; i < rewardTags.size() && plannedRewards.size() < 3; i++) {
+                ItemStack reward = ItemStack.of(rewardTags.getCompound(i));
+                if (!reward.isEmpty()) plannedRewards.add(reward);
+            }
+        } else if (tag.contains("PlannedReward", Tag.TAG_COMPOUND)) {
+            // Migrate an in-progress world saved by the single-reward prototype.
+            ItemStack legacyReward = ItemStack.of(tag.getCompound("PlannedReward"));
+            if (!legacyReward.isEmpty()) plannedRewards.add(legacyReward);
+        }
+        rewardCount = Math.max(0, Math.min(3, tag.getInt("RewardCount")));
+        if (rewardCount == 0) rewardCount = plannedRewards.size();
+        if (!plannedRewards.isEmpty()) {
+            RelicStackData.read(plannedRewards.get(0)).ifPresent(firstReward -> {
+                rewardStars = firstReward.stars();
+                rewardPartIndex = firstReward.part().ordinal();
+            });
+        }
         ownerId = tag.hasUUID("Owner") ? tag.getUUID("Owner") : null;
         sessionId = tag.hasUUID("Session") ? tag.getUUID("Session") : null;
         activeMobIds.clear();
@@ -364,6 +411,19 @@ public final class RelicTrialDeviceBlockEntity extends BlockEntity {
             if (entry.hasUUID("Id")) participants.add(entry.getUUID("Id"));
         }
         if (ownerId != null) participants.add(ownerId);
+        if (battleActive && (ownerId == null || sessionId == null || plannedRewards.isEmpty())) {
+            battleActive = false;
+            battleComplete = false;
+            waveIndex = 0;
+            aliveCount = 0;
+            transitionTicks = 0;
+            activeMobIds.clear();
+            participants.clear();
+            ownerId = null;
+            sessionId = null;
+            plannedRewards.clear();
+            rewardCount = 0;
+        }
         syncData();
     }
 
@@ -378,6 +438,7 @@ public final class RelicTrialDeviceBlockEntity extends BlockEntity {
         tag.putBoolean("BattleComplete", battleComplete);
         tag.putInt("RewardStars", rewardStars);
         tag.putInt("RewardPart", rewardPartIndex);
+        tag.putInt("RewardCount", rewardCount);
         return tag;
     }
 
@@ -394,6 +455,7 @@ public final class RelicTrialDeviceBlockEntity extends BlockEntity {
         rewardPartIndex = tag.contains("RewardPart")
                 ? Math.max(-1, Math.min(RelicStackData.Part.values().length - 1,
                 tag.getInt("RewardPart"))) : -1;
+        rewardCount = Math.max(0, Math.min(3, tag.getInt("RewardCount")));
         syncData();
     }
 }

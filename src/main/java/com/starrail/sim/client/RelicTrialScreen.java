@@ -2,7 +2,6 @@ package com.starrail.sim.client;
 
 import com.starrail.sim.RelicTrialMenu;
 import com.starrail.sim.RelicTrialSet;
-import com.starrail.sim.RelicStackData;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -121,11 +120,7 @@ public final class RelicTrialScreen extends AbstractContainerScreen<RelicTrialMe
                     menu.waveIndex(), menu.aliveCount());
             statusColor = 0xFFFFA477;
         } else if (menu.battleComplete()) {
-            int partIndex = Math.max(0, Math.min(RelicStackData.Part.values().length - 1,
-                    menu.rewardPartIndex()));
-            RelicStackData.Part rewardPart = RelicStackData.Part.values()[partIndex];
-            status = Component.translatable("ui.starrail_sim.arena.completed", menu.rewardStars(),
-                    Component.translatable("ui.starrail_sim.relic.part." + rewardPart.id()));
+            status = Component.translatable("ui.starrail_sim.arena.completed", menu.rewardCount());
             statusColor = 0xFF9BE29E;
         } else {
             status = Component.translatable("ui.starrail_sim.arena.ready");

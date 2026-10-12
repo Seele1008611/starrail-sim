@@ -21,7 +21,7 @@ public final class RelicTrialMenu extends AbstractContainerMenu {
 
     /** Client constructor. The block position is sent by NetworkHooks.openScreen. */
     public RelicTrialMenu(int containerId, Inventory inventory, FriendlyByteBuf buffer) {
-        this(containerId, inventory, buffer.readBlockPos(), new SimpleContainerData(8));
+        this(containerId, inventory, buffer.readBlockPos(), new SimpleContainerData(9));
     }
 
     private RelicTrialMenu(int containerId, Inventory inventory, BlockPos pos,
@@ -45,6 +45,7 @@ public final class RelicTrialMenu extends AbstractContainerMenu {
     public boolean battleComplete() { return data.get(5) != 0; }
     public int rewardStars() { return data.get(6); }
     public int rewardPartIndex() { return data.get(7); }
+    public int rewardCount() { return data.get(8); }
 
     @Override
     public boolean clickMenuButton(Player player, int buttonId) {

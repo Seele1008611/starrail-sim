@@ -1,21 +1,31 @@
 package com.starrail.sim.mixin;
 
 import com.starrail.sim.StarRailPlayerDefense;
-import net.minecraft.world.damagesource.CombatRules;
+import net.minecraft.tags.DamageTypeTags;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-/** Replace only the armor formula call, retaining bypass tags, equipment wear and later stages. */
+/** Applies the extended player armor curve after other mods finish armor calculation. */
 @Mixin(LivingEntity.class)
 public abstract class PlayerArmorMixin {
-    @Redirect(method = "getDamageAfterArmorAbsorb", at = @At(value = "INVOKE",
-            target = "Lnet/minecraft/world/damagesource/CombatRules;getDamageAfterAbsorb(FFF)F"), require = 1)
-    private float starrail$armor(float damage, float armor, float toughness) {
-        return (Object) this instanceof Player player
-                ? StarRailPlayerDefense.damage(player, damage, armor, toughness)
-                : CombatRules.getDamageAfterAbsorb(damage, armor, toughness);
+    @Inject(method = "getDamageAfterArmorAbsorb", at = @At("RETURN"), cancellable = true,
+            require = 0)
+    private void starrail$armor(DamageSource source, float damage,
+                                CallbackInfoReturnable<Float> callback) {
+        if (source.is(DamageTypeTags.BYPASSES_ARMOR)) return;
+        if ((Object) this instanceof Player player
+                && StarRailPlayerDefense.shouldUseExtendedFormula(player)) {
+            float armor = (float) player.getAttributeValue(
+                    net.minecraft.world.entity.ai.attributes.Attributes.ARMOR);
+            float toughness = (float) player.getAttributeValue(
+                    net.minecraft.world.entity.ai.attributes.Attributes.ARMOR_TOUGHNESS);
+            callback.setReturnValue(StarRailPlayerDefense.damage(
+                    player, damage, armor, toughness));
+        }
     }
 }

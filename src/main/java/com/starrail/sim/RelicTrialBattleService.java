@@ -15,6 +15,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.monster.RangedAttackMob;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.block.state.BlockState;
@@ -29,23 +30,27 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 import java.util.UUID;
 
-/** Server-authoritative wave spawning and kill tracking for the relic arena prototype. */
+/** Server-authoritative wave spawning, mob filtering and reward tracking for the relic arena. */
 @Mod.EventBusSubscriber(modid = StarRailSimMod.MOD_ID)
 public final class RelicTrialBattleService {
     private static final String DEVICE_POS_TAG = "StarRailRelicArenaDevice";
     private static final String SESSION_TAG = "StarRailRelicArenaSession";
     private static final String ELITE_TAG = "StarRailRelicArenaElite";
-    private static final double MAX_DEFAULT_MOB_HEALTH = 160.0D;
-    private static final double MAX_DEFAULT_MOB_WIDTH = 2.5D;
-    private static final double MAX_DEFAULT_MOB_HEIGHT = 3.5D;
     private static final TagKey<EntityType<?>> ARENA_EXCLUDED = TagKey.create(
             Registries.ENTITY_TYPE, new ResourceLocation(StarRailSimMod.MOD_ID, "arena_excluded"));
+    private static final TagKey<EntityType<?>> ARENA_ALLOWED = TagKey.create(
+            Registries.ENTITY_TYPE, new ResourceLocation(StarRailSimMod.MOD_ID, "arena_allowed"));
     private static final TagKey<EntityType<?>> ARENA_RANGED = TagKey.create(
             Registries.ENTITY_TYPE, new ResourceLocation(StarRailSimMod.MOD_ID, "arena_ranged"));
     private static final TagKey<EntityType<?>> FORGE_BOSSES = TagKey.create(
             Registries.ENTITY_TYPE, new ResourceLocation("forge", "bosses"));
+    private static final Set<String> HARD_EXCLUDED_VANILLA_IDS = Set.of(
+            "minecraft:creeper", "minecraft:ender_dragon", "minecraft:wither",
+            "minecraft:warden", "minecraft:elder_guardian", "minecraft:ravager",
+            "minecraft:vex", "minecraft:phantom");
     private static final Random RANDOM = new Random();
 
     private RelicTrialBattleService() {
@@ -74,15 +79,21 @@ public final class RelicTrialBattleService {
         }
         rank = Math.min(7, rank);
         RelicTrialSet set = RelicTrialSet.byIndex(device.selectedSetIndex());
-        int rewardStars = rollRewardStars(rank, player.getRandom().nextInt(100));
         RelicStackData.Part[] rewardParts = set.inner()
                 ? new RelicStackData.Part[]{RelicStackData.Part.SPHERE, RelicStackData.Part.ROPE}
                 : new RelicStackData.Part[]{RelicStackData.Part.HEAD, RelicStackData.Part.HANDS,
                 RelicStackData.Part.BODY, RelicStackData.Part.FEET};
-        RelicStackData.Part rewardPart = rewardParts[player.getRandom().nextInt(rewardParts.length)];
-        ItemStack plannedReward = StarRailRelicItems.createGeneratedStack(
-                RelicStackData.SetId.valueOf(set.name()), rewardPart, rewardStars, player.getRandom());
-        device.beginBattle(player.getUUID(), rank, device.selectedSetIndex(), plannedReward);
+        int rewardCount = 1 + player.getRandom().nextInt(3);
+        List<ItemStack> plannedRewards = new ArrayList<>(rewardCount);
+        for (int i = 0; i < rewardCount; i++) {
+            int rewardStars = rollRewardStars(rank, player.getRandom().nextInt(100));
+            RelicStackData.Part rewardPart = rewardParts[
+                    player.getRandom().nextInt(rewardParts.length)];
+            plannedRewards.add(StarRailRelicItems.createGeneratedStack(
+                    RelicStackData.SetId.valueOf(set.name()), rewardPart, rewardStars,
+                    player.getRandom()));
+        }
+        device.beginBattle(player.getUUID(), rank, device.selectedSetIndex(), plannedRewards);
         if (!spawnWave(level, device, 1)) {
             device.abortBattle();
             player.displayClientMessage(Component.translatable(
@@ -110,11 +121,11 @@ public final class RelicTrialBattleService {
         if (!device.isBattleActive() || waveNumber < 1 || waveNumber > 3) return false;
         List<Composition> compositions = waveComposition(device.challengeRank(), waveNumber);
         List<EntityType<?>> candidates = eligibleTypes(level);
+        if (candidates.isEmpty()) return false;
         List<EntityType<?>> normal = matchingTypes(level, candidates, Composition.NORMAL);
         List<EntityType<?>> ranged = matchingTypes(level, candidates, Composition.RANGED);
-        if (normal.isEmpty()) normal = vanillaFallback(Composition.NORMAL);
-        if (ranged.isEmpty()) ranged = vanillaFallback(Composition.RANGED);
-        if (candidates.isEmpty()) candidates = vanillaFallback(Composition.NORMAL);
+        if (normal.isEmpty()) normal = candidates;
+        if (ranged.isEmpty()) ranged = candidates;
 
         BlockPos devicePos = device.getBlockPos();
         List<BlockPos> pads = new ArrayList<>(List.of(
@@ -163,6 +174,44 @@ public final class RelicTrialBattleService {
         return true;
     }
 
+    /** Return teleported trial mobs to the arena floor before players have to chase them. */
+    static void keepMobsInsideArena(ServerLevel level, RelicTrialDeviceBlockEntity device,
+                                    int halfSize) {
+        BlockPos center = device.getBlockPos();
+        List<BlockPos> pads = List.of(
+                center.offset(0, 0, -8), center.offset(8, 0, 0),
+                center.offset(0, 0, 8), center.offset(-8, 0, 0));
+        for (UUID id : device.activeMobIds()) {
+            Entity entity = level.getEntity(id);
+            if (!(entity instanceof Mob mob) || !outsideArena(mob, center, halfSize)) continue;
+
+            mob.getNavigation().stop();
+            int start = Math.floorMod(id.hashCode(), pads.size());
+            BlockPos safePos = null;
+            for (int offset = 0; offset < pads.size() && safePos == null; offset++) {
+                safePos = findSpawnPosition(level, mob, pads.get((start + offset) % pads.size()));
+            }
+            if (safePos == null) continue;
+
+            mob.moveTo(safePos.getX() + 0.5D, safePos.getY(), safePos.getZ() + 0.5D,
+                    mob.getYRot(), mob.getXRot());
+            ServerPlayer owner = device.ownerId() == null ? null
+                    : level.getServer().getPlayerList().getPlayer(device.ownerId());
+            if (owner != null && owner.isAlive() && owner.level() == level) {
+                mob.setTarget(owner);
+            }
+        }
+    }
+
+    private static boolean outsideArena(Mob mob, BlockPos center, int halfSize) {
+        double centerX = center.getX() + 0.5D;
+        double centerZ = center.getZ() + 0.5D;
+        return Math.abs(mob.getX() - centerX) > halfSize + 0.5D
+                || Math.abs(mob.getZ() - centerZ) > halfSize + 0.5D
+                || mob.getY() < center.getY() - 4.0D
+                || mob.getY() > center.getY() + 7.0D;
+    }
+
     private static Mob prepareMob(ServerLevel level, List<EntityType<?>> pool, BlockPos pad,
                                   boolean elite, int rank) {
         if (pool.isEmpty()) return null;
@@ -180,42 +229,46 @@ public final class RelicTrialBattleService {
                 continue;
             }
 
-            BlockPos spawnPos = findSpawnPosition(level, mob, pad);
-            if (spawnPos == null) {
+            try {
+                BlockPos spawnPos = findSpawnPosition(level, mob, pad);
+                if (spawnPos == null) {
+                    mob.discard();
+                    continue;
+                }
+                mob.moveTo(spawnPos.getX() + 0.5D, spawnPos.getY(),
+                        spawnPos.getZ() + 0.5D, RANDOM.nextFloat() * 360.0F, 0.0F);
+                mob.finalizeSpawn(level, level.getCurrentDifficultyAt(spawnPos),
+                        MobSpawnType.STRUCTURE, null, null);
+                if (isOversizedOrBossLike(mob)) {
+                    mob.discard();
+                    continue;
+                }
+                if (elite) {
+                    mob.getPersistentData().putBoolean(ELITE_TAG, true);
+                    double healthMultiplier = rank >= 7 ? 2.5D : rank >= 5 ? 2.0D : 1.5D;
+                    double attackMultiplier = rank >= 7 ? 1.4D : rank >= 5 ? 1.3D : 1.2D;
+                    scaleAttribute(mob, Attributes.MAX_HEALTH, healthMultiplier);
+                    scaleAttribute(mob, Attributes.ATTACK_DAMAGE, attackMultiplier);
+                    mob.setHealth(mob.getMaxHealth());
+                }
+                mob.setPersistenceRequired();
+                if (!level.noCollision(mob)) {
+                    mob.discard();
+                    continue;
+                }
+                return mob;
+            } catch (RuntimeException exception) {
                 mob.discard();
-                continue;
             }
-            mob.moveTo(spawnPos.getX() + 0.5D, spawnPos.getY(),
-                    spawnPos.getZ() + 0.5D, RANDOM.nextFloat() * 360.0F, 0.0F);
-            mob.finalizeSpawn(level, level.getCurrentDifficultyAt(spawnPos),
-                    MobSpawnType.STRUCTURE, null, null);
-            if (isOversizedOrBossLike(mob)) {
-                mob.discard();
-                continue;
-            }
-            if (elite) {
-                mob.getPersistentData().putBoolean(ELITE_TAG, true);
-                double healthMultiplier = rank >= 7 ? 2.5D : rank >= 5 ? 2.0D : 1.5D;
-                double attackMultiplier = rank >= 7 ? 1.4D : rank >= 5 ? 1.3D : 1.2D;
-                scaleAttribute(mob, Attributes.MAX_HEALTH, healthMultiplier);
-                scaleAttribute(mob, Attributes.ATTACK_DAMAGE, attackMultiplier);
-                mob.setHealth(mob.getMaxHealth());
-            }
-            mob.setPersistenceRequired();
-            if (!level.noCollision(mob)) {
-                mob.discard();
-                continue;
-            }
-            return mob;
         }
         return null;
     }
 
     /** Conservative fallback for modded boss entities without Forge's boss tag. */
     private static boolean isOversizedOrBossLike(Mob mob) {
-        return mob.getMaxHealth() > MAX_DEFAULT_MOB_HEALTH
-                || mob.getBbWidth() > MAX_DEFAULT_MOB_WIDTH
-                || mob.getBbHeight() > MAX_DEFAULT_MOB_HEIGHT;
+        return mob.getMaxHealth() > StarRailStatusConfig.ARENA_MAX_MOB_HEALTH.get()
+                || mob.getBbWidth() > StarRailStatusConfig.ARENA_MAX_MOB_WIDTH.get()
+                || mob.getBbHeight() > StarRailStatusConfig.ARENA_MAX_MOB_HEIGHT.get();
     }
 
     private static BlockPos findSpawnPosition(ServerLevel level, Mob mob, BlockPos pad) {
@@ -251,17 +304,99 @@ public final class RelicTrialBattleService {
         if (instance != null) instance.setBaseValue(instance.getBaseValue() * multiplier);
     }
 
-    private static List<EntityType<?>> eligibleTypes(ServerLevel level) {
+    public static List<EntityType<?>> eligibleTypes(ServerLevel level) {
         List<EntityType<?>> types = new ArrayList<>();
-        var registry = level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
         for (EntityType<?> type : ForgeRegistries.ENTITY_TYPES.getValues()) {
-            if (type.getCategory() != MobCategory.MONSTER) continue;
-            ResourceLocation id = ForgeRegistries.ENTITY_TYPES.getKey(type);
-            if (id == null || isExcludedByEntityId(id) || hasTag(registry, id, FORGE_BOSSES)
-                    || hasTag(registry, id, ARENA_EXCLUDED)) continue;
-            types.add(type);
+            if (inspectType(level, type).eligible()) types.add(type);
         }
         return types;
+    }
+
+    public static TypeInspection inspectType(ServerLevel level, EntityType<?> type) {
+        ResourceLocation id = ForgeRegistries.ENTITY_TYPES.getKey(type);
+        if (id == null) return TypeInspection.rejected("unknown_entity", type.getCategory());
+        var registry = level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
+        boolean forgeBoss = hasTag(registry, id, FORGE_BOSSES);
+        boolean excluded = hasTag(registry, id, ARENA_EXCLUDED);
+        boolean allowed = hasTag(registry, id, ARENA_ALLOWED);
+        boolean ranged = hasTag(registry, id, ARENA_RANGED) || looksRanged(id);
+        if (forgeBoss) return new TypeInspection(false, "forge_boss", type.getCategory(),
+                -1.0D, -1.0F, -1.0F, forgeBoss, allowed, excluded, ranged);
+        if (HARD_EXCLUDED_VANILLA_IDS.contains(id.toString())) {
+            return new TypeInspection(false, "hard_excluded", type.getCategory(),
+                    -1.0D, -1.0F, -1.0F, forgeBoss, allowed, excluded, ranged);
+        }
+        if (excluded) return new TypeInspection(false, "excluded_tag", type.getCategory(),
+                -1.0D, -1.0F, -1.0F, forgeBoss, allowed, excluded, ranged);
+        if (!"minecraft".equals(id.getNamespace())) {
+            return new TypeInspection(false, "non_vanilla", type.getCategory(),
+                    -1.0D, -1.0F, -1.0F, forgeBoss, allowed, excluded, ranged);
+        }
+        if (!allowed && hasRiskyName(id)) {
+            return new TypeInspection(false, "name_heuristic", type.getCategory(),
+                    -1.0D, -1.0F, -1.0F, forgeBoss, allowed, excluded, ranged);
+        }
+        if (type.getCategory() != MobCategory.MONSTER) {
+            return new TypeInspection(false, "category", type.getCategory(),
+                    -1.0D, -1.0F, -1.0F, forgeBoss, allowed, excluded, ranged);
+        }
+
+        Entity created;
+        try {
+            created = type.create(level);
+        } catch (RuntimeException exception) {
+            return new TypeInspection(false, "create_failed", type.getCategory(),
+                    -1.0D, -1.0F, -1.0F, forgeBoss, allowed, excluded, ranged);
+        }
+        if (!(created instanceof Mob mob)) {
+            if (created != null) created.discard();
+            return new TypeInspection(false, "not_mob", type.getCategory(),
+                    -1.0D, -1.0F, -1.0F, forgeBoss, allowed, excluded, ranged);
+        }
+        double health;
+        float width;
+        float height;
+        try {
+            health = mob.getMaxHealth();
+            width = mob.getBbWidth();
+            height = mob.getBbHeight();
+            ranged = ranged || mob instanceof RangedAttackMob;
+        } catch (RuntimeException exception) {
+            mob.discard();
+            return new TypeInspection(false, "create_failed", type.getCategory(),
+                    -1.0D, -1.0F, -1.0F, forgeBoss, allowed, excluded, ranged);
+        }
+        mob.discard();
+        if (health > StarRailStatusConfig.ARENA_MAX_MOB_HEALTH.get()
+                || width > StarRailStatusConfig.ARENA_MAX_MOB_WIDTH.get()
+                || height > StarRailStatusConfig.ARENA_MAX_MOB_HEIGHT.get()) {
+            return new TypeInspection(false, "size_limit", type.getCategory(),
+                    health, width, height, forgeBoss, allowed, excluded, ranged);
+        }
+        return new TypeInspection(true, "eligible", type.getCategory(), health, width, height,
+                forgeBoss, allowed, excluded, ranged);
+    }
+
+    private static boolean isRangedType(ServerLevel level, EntityType<?> type, ResourceLocation id,
+                                        net.minecraft.core.Registry<EntityType<?>> registry) {
+        if (hasTag(registry, id, ARENA_RANGED) || looksRanged(id)) return true;
+        Entity created;
+        try {
+            created = type.create(level);
+        } catch (RuntimeException exception) {
+            return false;
+        }
+        if (created == null) return false;
+        boolean ranged = created instanceof RangedAttackMob;
+        created.discard();
+        return ranged;
+    }
+
+    public static boolean isRangedType(ServerLevel level, EntityType<?> type) {
+        ResourceLocation id = ForgeRegistries.ENTITY_TYPES.getKey(type);
+        if (id == null) return false;
+        var registry = level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
+        return isRangedType(level, type, id, registry);
     }
 
     private static List<EntityType<?>> matchingTypes(ServerLevel level,
@@ -272,7 +407,7 @@ public final class RelicTrialBattleService {
         for (EntityType<?> type : types) {
             ResourceLocation id = ForgeRegistries.ENTITY_TYPES.getKey(type);
             if (id == null) continue;
-            boolean ranged = hasTag(registry, id, ARENA_RANGED) || looksRanged(id);
+            boolean ranged = isRangedType(level, type, id, registry);
             if ((composition == Composition.RANGED) == ranged) matches.add(type);
         }
         return matches;
@@ -284,7 +419,7 @@ public final class RelicTrialBattleService {
         return holder.isPresent() && holder.get().is(tag);
     }
 
-    private static boolean isExcludedByEntityId(ResourceLocation id) {
+    private static boolean hasRiskyName(ResourceLocation id) {
         String path = id.getPath().toLowerCase(java.util.Locale.ROOT);
         return path.contains("boss") || path.contains("dragon") || path.contains("wither")
                 || path.contains("warden") || path.contains("elder_guardian")
@@ -295,12 +430,6 @@ public final class RelicTrialBattleService {
         String path = id.getPath().toLowerCase(java.util.Locale.ROOT);
         return path.contains("skeleton") || path.contains("archer") || path.contains("pillager")
                 || path.contains("shooter") || path.contains("ranged") || path.contains("bow");
-    }
-
-    private static List<EntityType<?>> vanillaFallback(Composition composition) {
-        if (composition == Composition.RANGED)
-            return List.<EntityType<?>>of(EntityType.SKELETON, EntityType.STRAY);
-        return List.<EntityType<?>>of(EntityType.ZOMBIE, EntityType.HUSK, EntityType.SPIDER);
     }
 
     private static List<Composition> waveComposition(int rank, int wave) {
@@ -348,8 +477,6 @@ public final class RelicTrialBattleService {
         BlockPos pos = BlockPos.of(marker.devicePos());
         if (level.getBlockEntity(pos) instanceof RelicTrialDeviceBlockEntity device) {
             ServerPlayer killer = StarRailCombatEvents.getPlayerAttacker(event.getSource());
-            if (killer != null && killer.distanceToSqr(pos.getX() + 0.5D,
-                    pos.getY() + 0.5D, pos.getZ() + 0.5D) > 32.0D * 32.0D) killer = null;
             device.onTaggedMobKilled(marker.sessionId(), event.getEntity().getUUID(),
                     killer == null ? null : killer.getUUID(), event.getEntity().blockPosition());
         }
@@ -370,6 +497,16 @@ public final class RelicTrialBattleService {
     }
 
     private enum Composition { NORMAL, RANGED, ELITE }
+
+    public record TypeInspection(boolean eligible, String reason, MobCategory category,
+                                 double maxHealth, float width, float height,
+                                 boolean forgeBoss, boolean allowedTag, boolean excludedTag,
+                                 boolean ranged) {
+        private static TypeInspection rejected(String reason, MobCategory category) {
+            return new TypeInspection(false, reason, category, -1.0D, -1.0F, -1.0F,
+                    false, false, false, false);
+        }
+    }
 
     private record CompoundTagView(long devicePos, UUID sessionId) {
         static CompoundTagView from(Entity entity) {

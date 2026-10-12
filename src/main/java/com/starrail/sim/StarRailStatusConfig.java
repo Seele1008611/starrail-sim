@@ -10,6 +10,8 @@ public final class StarRailStatusConfig {
     public static final ForgeConfigSpec.ConfigValue<java.util.List<? extends String>> LIMITS;
     public static final ForgeConfigSpec.BooleanValue EXTEND_LIMITS, EXTENDED_DEFENSE, HUD, LEFT_CORNER, EXACT;
     public static final ForgeConfigSpec.DoubleValue SCALE, DEFENSE_CAP, DEFENSE_CURVE, TOUGHNESS_WEIGHT;
+    public static final ForgeConfigSpec.DoubleValue ARENA_MAX_MOB_HEALTH, ARENA_MAX_MOB_WIDTH,
+            ARENA_MAX_MOB_HEIGHT;
     static {
         var b = new ForgeConfigSpec.Builder();
         EXTEND_LIMITS = b.comment("Restart required. AttributeFix, when installed, owns vanilla ranges.")
@@ -26,6 +28,14 @@ public final class StarRailStatusConfig {
         DEFENSE_CAP = b.defineInRange("armorReductionCeiling", .95, .8, .99);
         DEFENSE_CURVE = b.defineInRange("excessArmorCurve", 80.0, 1.0, 1000000.0);
         TOUGHNESS_WEIGHT = b.defineInRange("excessToughnessWeight", .5, 0.0, 10.0);
+        b.push("relicTrial");
+        ARENA_MAX_MOB_HEALTH = b.comment("Maximum base health for arena candidates. Raising this can allow stronger mobs into waves; hard exclusions still apply.")
+                .defineInRange("maxMobHealth", 160.0, 1.0, 1000000.0);
+        ARENA_MAX_MOB_WIDTH = b.comment("Maximum entity width in blocks for arena candidates.")
+                .defineInRange("maxMobWidth", 2.5, 0.1, 64.0);
+        ARENA_MAX_MOB_HEIGHT = b.comment("Maximum entity height in blocks for arena candidates.")
+                .defineInRange("maxMobHeight", 3.5, 0.1, 128.0);
+        b.pop();
         SERVER = b.build();
         b = new ForgeConfigSpec.Builder();
         HUD = b.comment("False restores all replaced vanilla survival overlays. Also toggled by the HUD key.")

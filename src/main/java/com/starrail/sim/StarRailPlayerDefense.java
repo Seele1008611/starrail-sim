@@ -6,6 +6,12 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 
 public final class StarRailPlayerDefense {
+    public static boolean shouldUseExtendedFormula(Player player) {
+        return StarRailStatusConfig.EXTENDED_DEFENSE.get()
+                && (player.getAttributeValue(Attributes.ARMOR) > 30
+                || player.getAttributeValue(Attributes.ARMOR_TOUGHNESS) > 20);
+    }
+
     public static float damage(Player player, float damage, float vanillaArmor, float vanillaToughness) {
         double armor = Math.max(0, player.getAttributeValue(Attributes.ARMOR));
         double toughness = Math.max(0, player.getAttributeValue(Attributes.ARMOR_TOUGHNESS));

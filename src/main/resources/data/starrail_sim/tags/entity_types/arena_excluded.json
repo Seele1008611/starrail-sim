@@ -6,6 +6,8 @@
     "minecraft:wither",
     "minecraft:warden",
     "minecraft:elder_guardian",
-    "minecraft:ravager"
+    "minecraft:ravager",
+    "minecraft:vex",
+    "minecraft:phantom"
   ]
 }
