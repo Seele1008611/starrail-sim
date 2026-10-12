@@ -12,7 +12,7 @@
 - Java：`17`
 - 必需依赖：Curios API（Forge、Minecraft 1.20.1）；发行包使用 `5.14.1` 核验。
 
-发行 JAR：[starrail_sim-1.11.0.jar](https://github.com/Seele1008611/starrail-sim/releases/download/v1.11.0/starrail_sim-1.11.0.jar)。
+发行 JAR：[starrail_sim-1.12.0.jar](https://github.com/Seele1008611/starrail-sim/releases/download/v1.12.0/starrail_sim-1.12.0.jar)。
 
 ## 功能概览
 
@@ -78,6 +78,6 @@ Windows 下可用项目自带 Gradle Wrapper 启动开发客户端或构建项�
 
 项目文档与设计资料已按主题整理在 [`设计方案/README.md`](设计方案/README.md)：命途、战斗和版本记录见 [`项目文档`](设计方案/项目文档/README.md)；遗迹概念图、模型源文件和测试记录见 [`遗迹设计`](设计方案/遗迹设计/README.md)。当前版本的详细规则可从 [设计总纲](设计方案/项目文档/系统设计/DESIGN.md)、[命途试炼与寻迹](设计方案/项目文档/系统设计/PATH_TRIALS.md)、[命途等级](设计方案/项目文档/系统设计/PATH_RANKS.md) 开始。版本记录见 [CHANGELOG.md](CHANGELOG.md)；1.6.0 行迹设计与验收记录见 [1.6.0 版本计划](设计方案/项目文档/版本规划/PLAN_1.6.0.md) 和 [九命途行迹设计表](设计方案/项目文档/系统设计/1.6.0巡猎行迹设计表.md)。
 
-`README.txt` 和根目录 `changelog.txt` 是 Forge MDK 上游模板文件；项目说明和版本记录以本文件及 `CHANGELOG.md` 为准。发布归档见 [releases/1.10.0.md](releases/1.10.0.md)、[releases/1.9.0.md](releases/1.9.0.md)、[releases/1.8.0.md](releases/1.8.0.md)、[releases/1.7.0.md](releases/1.7.0.md)、[releases/1.6.0.md](releases/1.6.0.md)、[releases/1.5.0.md](releases/1.5.0.md)、[releases/1.4.0.md](releases/1.4.0.md)、[releases/1.3.0.md](releases/1.3.0.md)、[releases/1.2.0.md](releases/1.2.0.md) 和 [releases/1.1.0.md](releases/1.1.0.md)。
+`README.txt` 和根目录 `changelog.txt` 是 Forge MDK 上游模板文件；项目说明和版本记录以本文件及 `CHANGELOG.md` 为准。发布归档见 [releases/1.12.0.md](releases/1.12.0.md)、[releases/1.11.0.md](releases/1.11.0.md)、[releases/1.10.0.md](releases/1.10.0.md)、[releases/1.9.0.md](releases/1.9.0.md)、[releases/1.8.0.md](releases/1.8.0.md)、[releases/1.7.0.md](releases/1.7.0.md)、[releases/1.6.0.md](releases/1.6.0.md)、[releases/1.5.0.md](releases/1.5.0.md)、[releases/1.4.0.md](releases/1.4.0.md)、[releases/1.3.0.md](releases/1.3.0.md)、[releases/1.2.0.md](releases/1.2.0.md) 和 [releases/1.1.0.md](releases/1.1.0.md)。
 
 

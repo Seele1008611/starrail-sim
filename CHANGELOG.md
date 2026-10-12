@@ -18,6 +18,7 @@
 - 多人游戏无测试条件，仍未验证；本候选不作多人同步兼容承诺。
 - 用户确认整合包实机测试通过；多人游戏无测试条件，仍未验证。
 - 发行 JAR：[starrail_sim-1.12.0.jar](https://github.com/Seele1008611/starrail-sim/releases/download/v1.12.0/starrail_sim-1.12.0.jar)，40,672,120 字节；SHA-256：`67B863DBDA6031BA207BFD4CB2FB5689E0405FDA69390F5296BB5C5A920D6F3C`。
+- 校验文件：[starrail_sim-1.12.0.jar.sha256](https://github.com/Seele1008611/starrail-sim/releases/download/v1.12.0/starrail_sim-1.12.0.jar.sha256)。
 - GitHub Release：[v1.12.0](https://github.com/Seele1008611/starrail-sim/releases/tag/v1.12.0)。
 
 ## 1.11.0 — 正式版（2026-10-12）
