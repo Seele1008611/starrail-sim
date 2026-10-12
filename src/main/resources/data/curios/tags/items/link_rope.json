@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    "starrail_sim:relic_space_station_rope",
+    "starrail_sim:relic_fleet_rope"
+  ]
+}

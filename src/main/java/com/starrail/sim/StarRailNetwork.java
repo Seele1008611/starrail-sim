@@ -14,8 +14,8 @@ import net.minecraftforge.network.simple.SimpleChannel;
 
 /** Network channel for server-authoritative combat feedback. */
 public final class StarRailNetwork {
-    // 增加玩家状态快照及客户端就绪请求；客户端和服务端需要使用同一协议版本。
-    private static final String PROTOCOL_VERSION = "10";
+    // 数据包字段与注册顺序变更时，客户端和服务端必须同步更新协议版本。
+    private static final String PROTOCOL_VERSION = "13";
 
     public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(
             new ResourceLocation(StarRailSimMod.MOD_ID, "main"),
@@ -71,6 +71,15 @@ public final class StarRailNetwork {
                 NotificationPacket::decode,
                 NotificationPacket::handle,
                 java.util.Optional.of(net.minecraftforge.network.NetworkDirection.PLAY_TO_CLIENT));
+        CHANNEL.registerMessage(messageId++, RelicActionPacket.class,
+                RelicActionPacket::encode, RelicActionPacket::decode, RelicActionPacket::handle,
+                java.util.Optional.of(net.minecraftforge.network.NetworkDirection.PLAY_TO_SERVER));
+        CHANNEL.registerMessage(messageId++, RelicStateRequestPacket.class,
+                RelicStateRequestPacket::encode, RelicStateRequestPacket::decode, RelicStateRequestPacket::handle,
+                java.util.Optional.of(net.minecraftforge.network.NetworkDirection.PLAY_TO_SERVER));
+        CHANNEL.registerMessage(messageId++, RelicSnapshotPacket.class,
+                RelicSnapshotPacket::encode, RelicSnapshotPacket::decode, RelicSnapshotPacket::handle,
+                java.util.Optional.of(net.minecraftforge.network.NetworkDirection.PLAY_TO_CLIENT));
     }
 
     public static void sendDamageNumber(ServerPlayer player, LivingEntity target,
@@ -89,6 +98,16 @@ public final class StarRailNetwork {
 
     public static void sendPathState(ServerPlayer player, PathStatePacket packet) {
         CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), packet);
+    }
+
+    public static void sendRelicSnapshot(ServerPlayer player) {
+        CHANNEL.send(PacketDistributor.PLAYER.with(() -> player),
+                new RelicSnapshotPacket(StarRailRelicSnapshotService.create(player)));
+    }
+
+    public static void sendRelicSnapshot(ServerPlayer player, String resultKey, boolean accepted) {
+        CHANNEL.send(PacketDistributor.PLAYER.with(() -> player),
+                new RelicSnapshotPacket(StarRailRelicSnapshotService.create(player, resultKey, accepted)));
     }
 
     public static void sendNotification(ServerPlayer player, Component message) {

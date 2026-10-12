@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "starrail_sim:relic_musketeer_body",
+    "starrail_sim:relic_passerby_body",
+    "starrail_sim:relic_knight_body"
+  ]
+}

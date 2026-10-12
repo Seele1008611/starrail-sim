@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>星穹 · 遗器与位面饰品</title>
+  <link rel="stylesheet" href="遗器界面.css">
+  <link rel="stylesheet" href="遗器宽屏布局.css">
+</head>
+<body>
+<div class="stars" aria-hidden="true"></div>
+<div class="preview-viewport"><div class="game-frame" id="gameFrame">
+<header class="page-head"><div class="brand"><span class="brand-mark">✦</span><div><span class="eyebrow">STAR RAIL · 1.10.0</span><h1>遗器与位面饰品</h1></div></div><div class="head-actions"><span class="prototype">交互原型 · 套装与成长数值已确认</span><button id="reset">重置演示</button></div></header>
+<div class="workspace">
+  <nav class="navigation" aria-label="遗器功能">
+    <span class="nav-caption">装备与养成</span>
+    <button class="nav-button active" data-view="equipment"><span>▣</span>装备总览</button>
+    <button class="nav-button" data-view="enhance"><span>↟</span>遗器强化</button>
+    <button class="nav-button" data-view="salvage"><span>◇</span>遗器分解</button>
+    <button class="nav-button" data-view="forge"><span>✧</span>遗器合成</button>
+    <button class="nav-button" data-view="reroll"><span>⚄</span>变量重掷</button>
+    <div class="nav-foot"><strong>六槽 · 两类套装</strong><p>外圈四件，内圈两件。<br>分别计算套装件数。</p><p>此页使用演示属性，不代表最终成长数值。</p></div>
+  </nav>
+  <main>
+    <section class="resources" aria-label="演示材料"><div class="resource" id="crystal"></div><div class="resource" id="remains"></div><div class="resource" id="resin"></div><div class="resource" id="dice"></div></section>
+    <section class="panel scene-panel"><header class="section-head"><div><span class="eyebrow" id="viewCaption">RELIC LOADOUT</span><h2 id="viewTitle">六槽装备</h2></div><span id="viewHint" class="muted">点击部位或库存查看详情</span></header><div id="viewContent"></div></section>
+    <section class="panel inventory-panel"><header class="section-head inventory-head"><div><span class="eyebrow">COLLECTION</span><h2>遗器库存 <small id="inventoryCount"></small></h2></div><div class="filters"><select id="slotFilter" aria-label="按部位筛选"><option value="all">全部部位</option><option value="head">头部</option><option value="hands">手部</option><option value="body">躯干</option><option value="feet">脚部</option><option value="sphere">位面球</option><option value="rope">连结绳</option></select><select id="setFilter" aria-label="按套装筛选"><option value="all">全部套装</option></select><select id="starFilter" aria-label="按星级筛选"><option value="all">全部星级</option><option value="2">二星</option><option value="3">三星</option><option value="4">四星</option><option value="5">五星</option></select><label class="lock-filter"><input id="lockFilter" type="checkbox">仅锁定</label></div></header>
+      <div class="inventory-toolbar"><input id="inventorySearch" type="search" placeholder="搜索部件或套装名称" aria-label="搜索遗器"><select id="mainFilter" aria-label="筛选主属性"><option value="all">全部主属性</option></select><select id="stateFilter" aria-label="筛选装备状态"><option value="all">全部状态</option><option value="equipped">已装备</option><option value="available">未装备</option><option value="pending">重掷待选</option></select><select id="sortOrder" aria-label="库存排序"><option value="star">星级优先</option><option value="level">强化等级优先</option><option value="recent">最近获得</option><option value="part">部位顺序</option></select><button id="clearFilters">清空筛选</button></div>
+      <div id="filterSummary" class="filter-summary" aria-live="polite"></div><div id="inventory" class="inventory-grid"></div></section>
+    <p class="page-note">五套套装效果已按确认稿展示，战斗效果尚未接入；属性与强化数值仍为交互示例。装备、强化、分解、合成及重掷操作只影响本页演示库存。</p>
+  </main>
+  <aside class="panel detail-panel" id="detail" aria-label="选中遗器详情"></aside>
+</div>
+</div></div>
+<dialog id="confirmation"><div class="dialog-header"><h2 id="dialogTitle"></h2><button id="closeDialog" aria-label="关闭">×</button></div><div id="dialogBody"></div><div class="dialog-actions"><button id="cancelDialog">取消</button><button class="primary" id="acceptDialog">确认</button></div></dialog>
+<div id="toast" role="status" aria-live="polite"></div>
+<script src="遗器界面.js"></script>
+</body>
+</html>

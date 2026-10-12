@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>星穹 · 遗器试炼决斗场</title>
+  <link rel="stylesheet" href="决斗场.css">
+</head>
+<body>
+  <div class="stars" aria-hidden="true"></div>
+  <div class="frame">
+    <header class="page-head">
+      <div class="brand">
+        <span class="brand-mark">✦</span>
+        <div><span class="eyebrow">STAR RAIL · 1.10.0</span><h1>遗器试炼</h1></div>
+      </div>
+      <div class="head-meta"><span class="instance-tag"><i></i> 主世界 · 试炼实例</span><span class="prototype">决斗场交互原型</span><button class="icon-button" id="resetDemo" title="重置演示" aria-label="重置演示">↻</button></div>
+    </header>
+
+    <main class="layout">
+      <section class="arena-column">
+        <article class="panel arena-panel">
+          <header class="section-head">
+            <div><span class="eyebrow">ARENA PREVIEW</span><h2>星轨遗迹 · 决斗场</h2></div>
+            <div class="arena-facts"><span>25 × 25 占地</span><b>·</b><span>21 × 21 净空</span><b>·</b><span>顶部开放</span></div>
+          </header>
+
+          <div class="structure-toolbar">
+            <div class="structure-tabs" role="tablist" aria-label="建筑结构视图">
+              <button class="structure-tab active" data-structure="perspective" role="tab" aria-controls="perspectiveView" aria-selected="true">建筑透视</button>
+              <button class="structure-tab" data-structure="plan" role="tab" aria-controls="planView" aria-selected="false">俯视布局</button>
+              <button class="structure-tab" data-structure="build" role="tab" aria-controls="buildEditor" aria-selected="false">逐块建造</button>
+            </div>
+            <span id="structureCaption">石砖围墙 · 四角深板岩塔 · 中央星轨装置</span>
+          </div>
+
+          <div class="arena-view" id="arenaView" data-view="perspective">
+            <svg class="building-svg perspective-svg" id="perspectiveView" viewBox="0 0 1000 540" role="img" aria-label="Minecraft风格石砖决斗场建筑透视图">
+              <defs>
+                <linearGradient id="sceneSky" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#101a2b"/><stop offset=".56" stop-color="#1d3040"/><stop offset="1" stop-color="#101a28"/></linearGradient>
+                <linearGradient id="wallShade" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#65767c"/><stop offset="1" stop-color="#354752"/></linearGradient>
+                <linearGradient id="floorShade" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#74817e"/><stop offset="1" stop-color="#35454b"/></linearGradient>
+                <radialGradient id="coreGlow"><stop stop-color="#f8d77b" stop-opacity=".33"/><stop offset="1" stop-color="#54d8dc" stop-opacity="0"/></radialGradient>
+                <pattern id="stoneBricks" width="48" height="30" patternUnits="userSpaceOnUse">
+                  <rect width="48" height="30" fill="#53656b"/><path d="M0 1H48M0 29H48M1 0V15M24 15V30M47 0V15" fill="none" stroke="#829096" stroke-width="2"/><path d="M3 4H20M27 19H44" stroke="#697a7f" stroke-width="1" opacity=".8"/>
+                </pattern>
+                <pattern id="darkBrick" width="34" height="24" patternUnits="userSpaceOnUse">
+                  <rect width="34" height="24" fill="#263941"/><path d="M0 1H34M0 23H34M1 0V12M17 12V24M33 0V12" fill="none" stroke="#41575d" stroke-width="2"/>
+                </pattern>
+                <pattern id="floorTiles" width="44" height="38" patternUnits="userSpaceOnUse">
+                  <rect width="44" height="38" fill="#4f605f"/><path d="M0 1H44M1 0V38M43 0V38" stroke="#81908b" stroke-width="2"/><path d="M5 5H38V33H5Z" fill="none" stroke="#60716e" stroke-width="1"/>
+                </pattern>
+                <pattern id="topTiles" width="14" height="14" patternUnits="userSpaceOnUse">
+                  <rect width="14" height="14" fill="#53666a"/><path d="M0 1H14M1 0V14" stroke="#91a09a" stroke-width="1.2"/><path d="M4 4H11V11H4Z" fill="none" stroke="#617679" stroke-width=".8"/>
+                </pattern>
+              </defs>
+              <rect width="1000" height="540" fill="url(#sceneSky)"/>
+              <ellipse cx="500" cy="305" rx="420" ry="210" fill="url(#coreGlow)"/>
+              <g opacity=".46" fill="#9fb5b6"><circle cx="110" cy="58" r="2"/><circle cx="828" cy="74" r="1.5"/><circle cx="690" cy="38" r="1.4"/><circle cx="268" cy="52" r="1.5"/><circle cx="932" cy="180" r="1.2"/></g>
+
+              <!-- Open-top masonry: rear wall and two side wings -->
+              <path d="M75 202 218 102V294L75 382Z" fill="url(#darkBrick)" stroke="#172a35" stroke-width="8"/>
+              <path d="M925 202 782 102V294L925 382Z" fill="url(#darkBrick)" stroke="#172a35" stroke-width="8"/>
+              <rect x="218" y="86" width="564" height="218" fill="url(#stoneBricks)" stroke="#253a43" stroke-width="8"/>
+              <rect x="218" y="84" width="564" height="19" fill="#24424a" stroke="#68cbd0" stroke-opacity=".55" stroke-width="2"/>
+              <rect x="218" y="279" width="564" height="25" fill="url(#darkBrick)"/>
+              <path d="M78 201 218 102M78 224 218 126M922 201 782 102M922 224 782 126" stroke="#8da0a0" stroke-opacity=".38" stroke-width="6"/>
+              <path d="M76 376 216 287M924 376 784 287" stroke="#182c35" stroke-width="17"/>
+
+              <!-- Deep-slate buttresses and corner towers -->
+              <g fill="url(#darkBrick)" stroke="#172b33" stroke-width="5">
+                <path d="M72 190 118 158 118 358 72 386Z"/><path d="M181 119 220 92V298L181 320Z"/>
+                <path d="M928 190 882 158V358L928 386Z"/><path d="M819 119 780 92V298L819 320Z"/>
+                <path d="M115 354 154 330V390L115 416Z"/><path d="M885 354 846 330V390L885 416Z"/>
+              </g>
+              <g fill="#2d535a" stroke="#6cc7c7" stroke-opacity=".55" stroke-width="2">
+                <path d="M68 185 119 151 119 167 68 201Z"/><path d="M879 151 932 185 932 201 879 167Z"/>
+                <path d="M177 116 222 85V101L177 133Z"/><path d="M778 85 823 116V133L778 101Z"/>
+              </g>
+
+              <!-- Stepped central gate, five blocks wide, four blocks high -->
+              <rect x="392" y="140" width="216" height="151" fill="#101b29" stroke="#1f313a" stroke-width="7"/>
+              <rect x="410" y="157" width="180" height="134" fill="#0b1421" stroke="#3c777b" stroke-width="3"/>
+              <rect x="430" y="190" width="14" height="101" fill="#d1b45f"/>
+              <rect x="556" y="190" width="14" height="101" fill="#d1b45f"/>
+              <rect x="444" y="176" width="112" height="14" fill="#d1b45f"/>
+              <rect x="458" y="162" width="84" height="14" fill="#b99b4e"/>
+              <rect x="476" y="148" width="48" height="14" fill="#d1b45f"/>
+              <rect x="444" y="190" width="112" height="101" fill="#09111e" stroke="#5c8e8c" stroke-width="3"/>
+              <g fill="none" stroke="#755036" stroke-width="5">
+                <path d="M455 220V289M477 220V289M500 220V289M523 220V289M545 220V289"/>
+                <path d="M445 242H555M445 267H555" stroke-width="4"/>
+              </g>
+              <rect x="393" y="132" width="214" height="17" fill="#283f48" stroke="#8a9b98" stroke-width="2"/>
+              <rect x="393" y="149" width="17" height="143" fill="#304852"/><rect x="590" y="149" width="17" height="143" fill="#304852"/>
+              <text x="500" y="126" text-anchor="middle" fill="#e8d28f" font-size="12" letter-spacing="4">挑战入口 · 五格宽</text>
+
+              <!-- Lamps and block-built wall sconces -->
+              <g>
+                <rect x="300" y="200" width="28" height="30" fill="#27464d" stroke="#94a39a" stroke-width="3"/><rect x="306" y="206" width="16" height="18" fill="#a9e8dd"/>
+                <rect x="672" y="200" width="28" height="30" fill="#27464d" stroke="#94a39a" stroke-width="3"/><rect x="678" y="206" width="16" height="18" fill="#a9e8dd"/>
+                <path d="M314 230V252M686 230V252" stroke="#e2c775" stroke-width="3"/><circle cx="314" cy="255" r="5" fill="#9fece1"/><circle cx="686" cy="255" r="5" fill="#9fece1"/>
+              </g>
+
+              <!-- Polished-andesite floor, recessed ring and four marked spawn pads -->
+              <path d="M75 374 218 291H782L925 374 671 512H329Z" fill="url(#floorShade)" stroke="#1f343d" stroke-width="12"/>
+              <path d="M75 374 218 291H782L925 374 671 512H329Z" fill="url(#floorTiles)" opacity=".82"/>
+              <path d="M175 376 274 320H726L825 376 648 470H352Z" fill="none" stroke="#263f47" stroke-width="12"/>
+              <path d="M175 376 274 320H726L825 376 648 470H352Z" fill="none" stroke="#d3b65f" stroke-opacity=".78" stroke-width="3"/>
+              <ellipse cx="500" cy="399" rx="196" ry="75" fill="#1a2e38" fill-opacity=".36" stroke="#64bfc0" stroke-width="3" stroke-dasharray="8 8"/>
+              <ellipse cx="500" cy="399" rx="122" ry="46" fill="none" stroke="#d8be6d" stroke-width="3"/>
+              <ellipse cx="500" cy="399" rx="106" ry="37" fill="url(#coreGlow)"/>
+              <g fill="#2c4d53" stroke="#80d8d1" stroke-width="3">
+                <path d="M484 326H516V340H484Z"/><path d="M484 461H516V475H484Z"/>
+                <path d="M309 389H341V407H309Z"/><path d="M659 389H691V407H659Z"/>
+              </g>
+              <g fill="#e5c76e"><circle cx="500" cy="333" r="4"/><circle cx="500" cy="468" r="4"/><circle cx="325" cy="398" r="4"/><circle cx="675" cy="398" r="4"/></g>
+              <path d="M328 491H672" stroke="#28424a" stroke-width="14"/><path d="M351 490H649" stroke="#7dc8c2" stroke-opacity=".5" stroke-width="3"/>
+              <text x="500" y="514" text-anchor="middle" fill="#bed0cd" font-size="11" letter-spacing="2">磨制安山岩地坪 · 暗海晶石环形嵌线</text>
+              <text x="118" y="432" fill="#d4c27d" font-size="10" letter-spacing="2">召唤点</text><text x="843" y="432" fill="#d4c27d" font-size="10" letter-spacing="2">召唤点</text>
+            </svg>
+
+            <svg class="building-svg plan-svg" id="planView" viewBox="0 0 760 440" role="img" aria-label="25乘25格决斗场俯视方块布局" hidden>
+              <defs>
+                <pattern id="planFloor" width="13" height="13" patternUnits="userSpaceOnUse"><rect width="13" height="13" fill="#526468"/><path d="M0 0H13V13" fill="none" stroke="#82918b" stroke-width="1"/><path d="M3 3H10V10H3Z" fill="none" stroke="#627578" stroke-width=".6"/></pattern>
+                <pattern id="planWall" width="13" height="13" patternUnits="userSpaceOnUse"><rect width="13" height="13" fill="#334a50"/><path d="M0 0H13M0 12H13M1 0V6M7 6V13" fill="none" stroke="#81918c" stroke-width="1.1"/></pattern>
+              </defs>
+              <rect width="760" height="440" fill="#111d2b"/>
+              <g transform="translate(126 28)">
+                <rect x="0" y="0" width="325" height="325" fill="url(#planWall)" stroke="#192a35" stroke-width="7"/>
+                <rect x="26" y="26" width="273" height="273" fill="url(#planFloor)" stroke="#273a41" stroke-width="3"/>
+                <rect x="0" y="0" width="39" height="39" fill="#263b44" stroke="#8f9f9a" stroke-width="2"/><rect x="286" y="0" width="39" height="39" fill="#263b44" stroke="#8f9f9a" stroke-width="2"/>
+                <rect x="0" y="286" width="39" height="39" fill="#263b44" stroke="#8f9f9a" stroke-width="2"/><rect x="286" y="286" width="39" height="39" fill="#263b44" stroke="#8f9f9a" stroke-width="2"/>
+                <rect x="130" y="0" width="65" height="26" fill="#111d2b"/><path d="M130 7V24M143 7V24M156 7V24M169 7V24M182 7V24" stroke="#e0c06d" stroke-width="3"/>
+                <path d="M136 70H189V83H215V96H228V122H241V202H228V228H215V241H189V254H136V241H110V228H97V202H84V122H97V96H110V83H136Z" fill="#202f38" fill-opacity=".4" stroke="#76c5c2" stroke-width="3" stroke-dasharray="7 6"/>
+                <path d="M149 110H176V123H189V136H202V189H189V202H176V215H149V202H136V189H123V136H136V123H149Z" fill="none" stroke="#e4c66e" stroke-width="3"/>
+                <rect x="143" y="143" width="39" height="39" fill="#e6c86e" fill-opacity=".16" stroke="#f0d985" stroke-width="3"/>
+                <path d="M149 162.5H176M162.5 149V176" stroke="#dcfbec" stroke-width="3"/>
+                <g fill="#29494d" stroke="#88d9d2" stroke-width="2"><rect x="155" y="45" width="15" height="15"/><rect x="155" y="265" width="15" height="15"/><rect x="45" y="155" width="15" height="15"/><rect x="265" y="155" width="15" height="15"/></g>
+                <g fill="#e4c86f"><circle cx="162.5" cy="52.5" r="3"/><circle cx="162.5" cy="272.5" r="3"/><circle cx="52.5" cy="162.5" r="3"/><circle cx="272.5" cy="162.5" r="3"/></g>
+                <text x="162.5" y="-11" text-anchor="middle" fill="#d8c17a" font-size="11">北侧入口 · 5格宽</text>
+                <text x="162.5" y="344" text-anchor="middle" fill="#b8c8ce" font-size="10">南侧安全交互区</text>
+                <path d="M0 -12V-18H325V-12M-12 0H-18V325H-12" fill="none" stroke="#7c8f9c" stroke-width="1.5"/>
+              </g>
+              <g transform="translate(496 77)" font-family="Microsoft YaHei, sans-serif">
+                <text x="0" y="0" fill="#edc96f" font-size="12" letter-spacing="2">STRUCTURE SPECS</text>
+                <text x="0" y="34" fill="#e3e9ef" font-size="16">25 × 25 格 · 外墙占地</text>
+                <text x="0" y="59" fill="#aab9c8" font-size="12">21 × 21 格 · 室内净空</text>
+                <text x="0" y="94" fill="#e3e9ef" font-size="14">墙高 7 格 · 四角塔高 9 格</text>
+                <text x="0" y="118" fill="#aab9c8" font-size="11">顶部开放，便于观察战斗与粒子</text>
+                <path d="M0 139H214" stroke="#33465a"/>
+                <rect x="0" y="157" width="16" height="16" fill="url(#planWall)"/><text x="25" y="170" fill="#d3dce0" font-size="11">石砖围墙</text>
+                <rect x="0" y="187" width="16" height="16" fill="#263941" stroke="#718b8c"/><text x="25" y="200" fill="#d3dce0" font-size="11">深板岩立柱 / 塔楼</text>
+                <rect x="0" y="217" width="16" height="16" fill="#526468" stroke="#93a19c"/><text x="25" y="230" fill="#d3dce0" font-size="11">磨制安山岩地面</text>
+                <rect x="0" y="247" width="16" height="16" fill="#24424a" stroke="#68cbd0"/><text x="25" y="260" fill="#d3dce0" font-size="11">暗海晶石装饰线</text>
+                <rect x="0" y="277" width="16" height="16" fill="#a9e8dd" stroke="#82938f"/><text x="25" y="290" fill="#d3dce0" font-size="11">海晶灯 / 末地烛</text>
+                <path d="M0 317H214" stroke="#33465a"/>
+                <text x="0" y="339" fill="#76d7a5" font-size="10">入口：北墙中央5格宽栅栏门</text>
+                <text x="0" y="359" fill="#aab9c8" font-size="10">中心台座 3×3 · 四向召唤点</text>
+                <text x="0" y="379" fill="#d3dce0" font-size="10">施工：地坪 → 墙体 → 塔楼与灯</text>
+                <text x="0" y="400" fill="#8496a9" font-size="9">仅用原版方块；顶部不封顶</text>
+              </g>
+            </svg>
+            <section class="build-editor" id="buildEditor" aria-label="逐块建造与材料统计" hidden>
+              <div class="build-toolbar">
+                <div class="build-layer-control"><label for="buildLayer">建造层</label><button class="layer-step" id="layerPrev" aria-label="上一层">−</button><select id="buildLayer"></select><button class="layer-step" id="layerNext" aria-label="下一层">＋</button><span id="layerName">地面与地坪</span></div>
+                <div class="build-actions"><button class="secondary" id="markLayer">标记本层完成</button><button class="secondary" id="resetBuild">重置进度</button></div>
+              </div>
+              <div class="build-summary" aria-live="polite"><span id="layerProgress">本层：0 / 0 格</span><span id="totalProgress">总进度：0 / 0 方块</span><span id="buildPercent">0%</span></div>
+              <div class="build-body">
+                <div class="build-grid-panel">
+                  <div class="build-axis-note"><span>北 ↑　X：西 → 东　·　Z：北 → 南</span><span>点格子即可标记一块已放置</span></div>
+                  <div class="build-grid-scroll"><div class="build-grid" id="buildingGrid" role="group" aria-label="25乘25方块建造网格"></div></div>
+                  <div class="build-help"><span class="grid-key filled"></span>未放置方块 <span class="grid-key placed"></span>已放置 <span class="grid-key empty"></span>留空/通道</div>
+                </div>
+                <aside class="material-count-panel"><header><strong>材料统计</strong><small>按完整结构计算</small></header><div id="materialCounts" class="material-count-list"></div><div class="material-total"><span>结构总方块</span><strong id="materialBlockTotal">0</strong></div></aside>
+              </div>
+            </section>
+            <div class="device-wrap"><div class="device-ring"><i></i></div><button class="arena-device" id="centerDevice" aria-label="中央套装装置"><span>✦</span><small>星轨装置</small></button></div>
+            <div class="arena-label label-north">召唤区 · 北</div><div class="arena-label label-south">安全交互区</div>
+            <div id="enemies" class="enemy-field" aria-label="当前波敌人"></div>
+            <div class="arena-hud"><div><span class="eyebrow">CURRENT TRIAL</span><strong id="arenaStatus">待命 · 选择套装并开始</strong></div><div class="hud-count"><span id="waveCounter">— / 3</span><b id="enemyCounter">0 / 4</b></div></div>
+            <div class="arena-corner corner-tl"></div><div class="arena-corner corner-tr"></div><div class="arena-corner corner-bl"></div><div class="arena-corner corner-br"></div>
+          </div>
+
+          <div class="structure-palette"><span>建筑材质</span><b class="material-stone">石砖</b><b class="material-slate">深板岩砖</b><b class="material-andesite">磨制安山岩</b><b class="material-prismarine">暗海晶石</b><b class="material-lamp">海晶灯</b><b class="material-gate">深色橡木栅栏门</b><b class="material-core">磁石</b><b>末地烛</b></div>
+
+          <div class="battle-controls">
+            <div class="control-note"><span class="live-dot"></span><span id="controlHint">演示模式：开始后点击场内敌人模拟击败。</span></div>
+            <div class="control-actions"><button class="secondary" id="clearWave" disabled>清完本波</button><button class="secondary" id="retry" hidden>重新挑战</button></div>
+          </div>
+        </article>
+
+        <section class="wave-section" aria-label="波次安排">
+          <div class="wave-heading"><div><span class="eyebrow">ENCOUNTER FLOW</span><h2>三段试炼</h2></div><span id="difficultyPill" class="difficulty-pill">入门难度</span></div>
+          <div class="wave-track" id="waveTrack"></div>
+          <div class="compatibility-row" title="设计方案：从已加载实体类型中初筛普通敌对生物，再按BOSS排除名单、实体标签和安全生成条件过滤；远程单位另分池。不同生物Mod没有统一的BOSS标记，特殊实体仍需整合包配置。"><span class="compatibility-mark">MOD</span><div><strong>整合包兼容生物池</strong><small>普通敌对生物初筛 → 排除BOSS/高危实体 → 安全检查 → 近战与远程分池</small></div><span class="compatibility-status">规则可配置</span></div>
+          <p class="footnote">敌人使用现有生物；精英为强化版本，不添加专属怪物。每波清空后才会召出下一波。</p>
+        </section>
+      </section>
+
+      <aside class="panel config-panel">
+        <header class="section-head config-head"><div><span class="eyebrow">TRIAL CONFIG</span><h2>挑战准备</h2></div><span class="lock-state" id="lockState">未锁定</span></header>
+        <div class="config-scroll">
+          <section class="config-block path-block">
+            <div class="block-title"><span class="number">01</span><div><h3>命途等级</h3><small>决定敌人强度与遗器星级</small></div></div>
+            <div class="level-select-row"><select id="pathLevel" aria-label="选择命途等级">
+              <option value="1">1 级 · 踏上命途</option><option value="2">2 级 · 初窥命途</option><option value="3">3 级 · 命途共鸣</option><option value="4">4 级 · 命途践行</option><option value="5">5 级 · 深度践行</option><option value="6">6 级 · 高阶行者</option><option value="7">7 级 · 命途极境</option>
+            </select><span class="level-seal" id="levelSeal">Ⅰ</span></div>
+            <p class="tier-copy" id="tierCopy">入门 · 敌人使用基础属性，逐波加入远程单位。</p>
+          </section>
+
+          <section class="config-block set-block">
+            <div class="block-title"><span class="number">02</span><div><h3>选择目标套装</h3><small>通关掉落该套装中的随机部位</small></div></div>
+            <div class="set-grid" id="setGrid"></div>
+            <div class="selected-set" id="selectedSet"></div>
+          </section>
+
+          <section class="config-block reward-block">
+            <div class="block-title"><span class="number">03</span><div><h3>通关奖励</h3><small>奖励星级按开场时命途等级锁定</small></div></div>
+            <div class="reward-result" id="rewardResult"></div>
+            <div class="reward-foot"><span>完整通关</span><strong>所选套装遗器 ×1</strong></div>
+          </section>
+        </div>
+        <footer class="config-footer">
+          <div class="ready-summary"><span class="ready-orbit">✦</span><div><strong id="readySetName">野穗伴行的快枪手</strong><small id="readySummary">1级 · 入门 · 三波试炼</small></div></div>
+          <button class="primary start-button" id="startTrial"><span>开始试炼</span><b>→</b></button>
+          <p class="footer-note" id="resultNote">发起者等级锁定本场难度与星级；失败不发放遗器。</p>
+        </footer>
+      </aside>
+    </main>
+    <footer class="page-foot"><span>星穹 · 遗器系统设计参考</span><span>本页为交互演示，不连接游戏存档或真实掉落。</span></footer>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="决斗场.js"></script>
+</body>
+</html>

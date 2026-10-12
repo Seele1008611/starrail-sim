@@ -69,6 +69,7 @@ public final class StarRailAbundanceService {
             float absorption = Math.min(Math.min(MAX_OVERFLOW_ABSORPTION, overflow * conversion),
                     Math.max(0, maximum * .20F - owned));
             if (absorption > 0.0F) {
+                absorption = StarRailRelicService.boostShieldAmount(player, absorption);
                 player.setAbsorptionAmount(player.getAbsorptionAmount() + absorption);
                 state.putFloat("overflow_shield", owned + absorption);
                 state.putFloat("observed_absorption", player.getAbsorptionAmount());
@@ -114,8 +115,9 @@ public final class StarRailAbundanceService {
         float recovery = 0.20F + (StarRailTraceService.hasPassive(
                 player, StarRailPath.ABUNDANCE, 8) ? 0.10F : 0.0F);
         player.heal(player.getMaxHealth() * recovery);
-        player.setAbsorptionAmount(Math.max(
-                player.getAbsorptionAmount(), player.getMaxHealth() * 0.05F));
+        float emergencyShield = StarRailRelicService.boostShieldAmount(
+                player, player.getMaxHealth() * 0.05F);
+        player.setAbsorptionAmount(Math.max(player.getAbsorptionAmount(), emergencyShield));
         state.putLong(SAVE_COOLDOWN_TAG, now + SAVE_COOLDOWN);
             StarRailRankRuntime.cooldown(player, "skill_abundance_save", SAVE_COOLDOWN);
         StarRailCombatVfx.self(player, CombatVfxPacket.Kind.ABUNDANCE_MERCY);

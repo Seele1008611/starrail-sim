@@ -7,10 +7,12 @@ package com.starrail.sim.client;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.starrail.sim.StarRailSimMod;
 import net.minecraft.client.KeyMapping;
+import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import org.lwjgl.glfw.GLFW;
 
 /** Client-only key mappings for the mod. */
@@ -35,5 +37,11 @@ public final class StarRailClient {
     public static void registerKeyMappings(RegisterKeyMappingsEvent event) {
         event.register(OPEN_CHARACTER);
         event.register(TOGGLE_STATUS);
+    }
+
+    @SubscribeEvent
+    public static void registerMenus(FMLClientSetupEvent event) {
+        event.enqueueWork(() -> MenuScreens.register(
+                StarRailSimMod.RELIC_TRIAL_MENU.get(), RelicTrialScreen::new));
     }
 }

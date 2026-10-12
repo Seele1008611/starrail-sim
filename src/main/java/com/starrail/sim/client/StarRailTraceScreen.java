@@ -43,6 +43,7 @@ public final class StarRailTraceScreen extends StarRailStyledScreen {
             switch (index) {
                 case 0 -> minecraft.setScreen(new StarRailCharacterScreen());
                 case 1 -> minecraft.setScreen(new StarRailLightConeScreen());
+                case 3 -> minecraft.setScreen(new StarRailCharacterScreen(true));
                 case 4 -> minecraft.setScreen(new StarRailPathScreen());
                 case 5 -> minecraft.setScreen(new StarRailGuideScreen());
             }

@@ -16,9 +16,12 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraft.world.effect.MobEffect;
+import net.minecraftforge.common.extensions.IForgeMenuType;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -45,6 +48,23 @@ public final class StarRailSimMod {
             DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MOD_ID);
     public static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZERS =
             DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, MOD_ID);
+    public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_TYPES =
+            DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, MOD_ID);
+    public static final DeferredRegister<MenuType<?>> MENU_TYPES =
+            DeferredRegister.create(ForgeRegistries.MENU_TYPES, MOD_ID);
+
+    /** Central relic-trial altar block and its persistent battle state. */
+    public static final RegistryObject<Block> RELIC_TRIAL_DEVICE = BLOCKS.register(
+            "relic_trial_device", () -> new RelicTrialDeviceBlock(BlockBehaviour.Properties.of()
+                    .mapColor(MapColor.COLOR_LIGHT_BLUE).strength(3.5F, 6.0F)
+                    .requiresCorrectToolForDrops().pushReaction(PushReaction.BLOCK)));
+    public static final RegistryObject<Item> RELIC_TRIAL_DEVICE_ITEM = ITEMS.register(
+            "relic_trial_device", () -> new BlockItem(RELIC_TRIAL_DEVICE.get(), new Item.Properties()));
+    public static final RegistryObject<BlockEntityType<RelicTrialDeviceBlockEntity>> RELIC_TRIAL_DEVICE_ENTITY =
+            BLOCK_ENTITY_TYPES.register("relic_trial_device", () -> BlockEntityType.Builder.of(
+                    RelicTrialDeviceBlockEntity::new, RELIC_TRIAL_DEVICE.get()).build(null));
+    public static final RegistryObject<MenuType<RelicTrialMenu>> RELIC_TRIAL_MENU = MENU_TYPES.register(
+            "relic_trial", () -> IForgeMenuType.create(RelicTrialMenu::new));
 
     public static final RegistryObject<Block> HUNT_RUIN_ANCHOR = BLOCKS.register(
             "hunt_ruin_anchor", () -> new PathRuinAnchorBlock(StarRailPath.HUNT,
@@ -344,6 +364,8 @@ public final class StarRailSimMod {
                             output.accept(StarRailRuinContent.anchorItem(path).get());
                             output.accept(StarRailTraceMaterials.get(path));
                         }
+                        output.accept(RELIC_TRIAL_DEVICE_ITEM.get());
+                        StarRailRelicItems.addCreativeItems(output);
                         output.accept(IN_THE_NIGHT.get());
                         output.accept(I_WILL_HUNT.get());
                         output.accept(WORRISOME_BLISSFUL.get());
@@ -442,6 +464,9 @@ public final class StarRailSimMod {
         StarRailTraceMaterials.register();
         BLOCKS.register(modEventBus);
         ITEMS.register(modEventBus);
+        StarRailRelicItems.ITEMS.register(modEventBus);
+        BLOCK_ENTITY_TYPES.register(modEventBus);
+        MENU_TYPES.register(modEventBus);
         CREATIVE_TABS.register(modEventBus);
         RECIPE_SERIALIZERS.register(modEventBus);
         modEventBus.addListener(StarRailAttributes::addPlayerAttributes);

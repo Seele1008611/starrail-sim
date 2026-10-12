@@ -62,6 +62,10 @@ public final class StarRailRuinCommands {
     private StarRailRuinCommands() {
     }
 
+    static boolean isPlacementActive(MinecraftServer server) {
+        return ACTIVE_JOBS.containsKey(server);
+    }
+
     @SubscribeEvent
     // 注册普通遗迹与九种命途变体的放置指令，以及取消进行中任务的指令。
     public static void register(RegisterCommandsEvent event) {
@@ -105,7 +109,7 @@ public final class StarRailRuinCommands {
         CommandSourceStack source = context.getSource();
         ServerLevel level = source.getLevel();
         MinecraftServer server = source.getServer();
-        if (ACTIVE_JOBS.containsKey(server)) {
+        if (ACTIVE_JOBS.containsKey(server) || RelicTrialArenaCommands.isBuildActive(server)) {
             source.sendFailure(Component.literal("已有遗迹放置任务正在进行；完成后再试，或执行 /starrail ruin cancel。"));
             return 0;
         }
@@ -152,7 +156,8 @@ public final class StarRailRuinCommands {
     public static boolean placeSoughtRuin(ServerPlayer player, StarRailPath path, int x, int z,
                                           Consumer<BlockPos> onComplete, Runnable onFailure) {
         MinecraftServer server = player.getServer();
-        if (server == null || ACTIVE_JOBS.containsKey(server)) {
+        if (server == null || ACTIVE_JOBS.containsKey(server)
+                || RelicTrialArenaCommands.isBuildActive(server)) {
             player.sendSystemMessage(Component.translatable(
                     "message.starrail_sim.path_seek_busy"));
             return false;

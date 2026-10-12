@@ -81,7 +81,8 @@ public final class StarRailPreservationService {
             if (StarRailTraceService.hasPassive(player, StarRailPath.PRESERVATION, 6)
                     && player.getPersistentData().getLong(PASSIVE_SHIELD_BARRIER_TAG)
                     != data.getPreservationBarrierExpireTick()) {
-                player.setAbsorptionAmount(player.getAbsorptionAmount() + 1.0F);
+                player.setAbsorptionAmount(player.getAbsorptionAmount()
+                        + StarRailRelicService.boostShieldAmount(player, 1.0F));
                 player.getPersistentData().putLong(PASSIVE_SHIELD_BARRIER_TAG,
                         data.getPreservationBarrierExpireTick());
             }
@@ -151,7 +152,8 @@ public final class StarRailPreservationService {
             float maximumAbsorption = (float) (armor * 2.5D);
             if (currentAbsorption < maximumAbsorption) {
                 player.setAbsorptionAmount(Math.min(maximumAbsorption,
-                        currentAbsorption + (float) armor));
+                        currentAbsorption + StarRailRelicService.boostShieldAmount(
+                                player, (float) armor)));
             }
         }
         data.setPreservationNextShieldTick(currentTick + SHIELD_INTERVAL);

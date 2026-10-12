@@ -124,7 +124,7 @@ public final class StarRailUiStyle {
             setSelected(buttons[index], index == selected);
         }
         buttons[2].active = true;
-        buttons[3].active = false;
+        buttons[3].active = true;
         return buttons;
     }
 

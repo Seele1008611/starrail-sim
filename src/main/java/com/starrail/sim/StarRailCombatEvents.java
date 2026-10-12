@@ -48,6 +48,7 @@ public final class StarRailCombatEvents {
         if (player == null || StarRailOwnedDamage.isSecondary(player)) {
             return;
         }
+        event.setAmount(StarRailRelicService.boostDamage(player, event.getAmount()));
         if (player.getPersistentData().getBoolean("trace_destruction_splash_active")) {
             return;
         }

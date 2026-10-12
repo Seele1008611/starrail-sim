@@ -16,7 +16,7 @@ public abstract class StarRailStyledScreen extends Screen {
         scrollPanels.forEach(StarRailSmoothScroll::cancelInteraction);
         scrollPanels.clear();
         int actualWidth = width, actualHeight = height;
-        uiScale = Math.max(.01, Math.min(actualWidth / 800.0, actualHeight / 450.0));
+        uiScale = Math.max(.01, Math.min(actualWidth / referenceWidth(), actualHeight / referenceHeight()));
         width = (int) Math.round(actualWidth / uiScale);
         height = (int) Math.round(actualHeight / uiScale);
         if (showGlobalClose()) addRenderableWidget(StarRailUiStyle.closeButton(ignored -> onClose(), StarRailUiStyle.panelLeft(width) + StarRailUiStyle.panelWidth(width) - 24,
@@ -24,6 +24,8 @@ public abstract class StarRailStyledScreen extends Screen {
     }
 
     protected boolean showGlobalClose() { return true; }
+    protected double referenceWidth() { return 800.0; }
+    protected double referenceHeight() { return 450.0; }
 
     /** Scale from this screen's responsive logical coordinates to framebuffer pixels. */
     protected final double uiScaleFactor() { return uiScale; }
@@ -55,6 +57,7 @@ public abstract class StarRailStyledScreen extends Screen {
 
     @Override
     public final boolean mouseClicked(double x, double y, int button) {
+        if (overlayMouseClicked(x / uiScale, y / uiScale, button)) return true;
         if (button == 0) {
             for (StarRailSmoothScroll scroll : scrollPanels) {
                 if (scroll.press(x / uiScale, y / uiScale)) return true;
@@ -62,6 +65,8 @@ public abstract class StarRailStyledScreen extends Screen {
         }
         return logicalMouseClicked(x / uiScale, y / uiScale, button);
     }
+    /** Popups must receive clicks before underlying widgets and scrollbars. */
+    protected boolean overlayMouseClicked(double x, double y, int button) { return false; }
     protected boolean logicalMouseClicked(double x, double y, int button) {
         return super.mouseClicked(x, y, button);
     }

@@ -1,0 +1,141 @@
+/* 1440 × 810 reference canvas. Scale the entire frame uniformly, never its axes independently. */
+body { overflow:hidden; }
+.preview-viewport { position:fixed; inset:0; display:grid; place-items:center; }
+.game-frame {
+  width:1440px; height:810px; flex:none; overflow:hidden;
+  transform:scale(var(--frame-scale,1)); transform-origin:center;
+  background:radial-gradient(circle at 40% 48%,#203c4938,transparent 48%),#0b1424eb;
+  border:1px solid #34455b; box-shadow:0 24px 90px #0006;
+  display:grid; grid-template-rows:88px minmax(0,1fr);
+}
+.game-frame .page-head { width:100%; max-width:none; margin:0; padding:18px 24px; }
+.game-frame .workspace {
+  width:100%; max-width:none; height:100%; min-height:0; margin:0; padding:0 24px 24px;
+  display:grid; grid-template-columns:136px minmax(0,1fr) 268px; gap:16px; align-items:stretch;
+}
+.game-frame .navigation { display:block; grid-column:auto; padding-top:12px; overflow:visible; }
+.game-frame .nav-caption { display:block; font-size:11px; margin:0 12px 18px; }
+.game-frame .nav-button { width:100%; margin:8px 0; padding:12px 8px; gap:9px; font-size:13px; border-bottom:0; }
+.game-frame .nav-button.active { border-left:2px solid var(--gold); }
+.game-frame .nav-button span { font-size:23px; }
+.game-frame .nav-foot { display:block; margin:36px 8px 0; }
+.game-frame main {
+  min-width:0; min-height:0; display:grid;
+  grid-template-columns:minmax(0,1fr) 320px;
+  grid-template-rows:50px minmax(0,1fr) 20px; gap:12px 16px;
+}
+.game-frame .resources { grid-column:1/-1; grid-row:1; margin:0; gap:8px; grid-template-columns:repeat(4,minmax(0,1fr)); }
+.game-frame .resource { padding:6px 10px; gap:10px; }
+.game-frame .resource img { width:30px; height:30px; }
+.game-frame .resource span { font-size:11px; }
+.game-frame .resource strong { font-size:16px; }
+.game-frame .scene-panel { grid-column:1; grid-row:2; min-height:0; display:flex; flex-direction:column; }
+.game-frame .section-head { flex:none; min-height:64px; padding:10px 16px; gap:10px; }
+.game-frame .section-head .muted { max-width:170px; text-align:right; }
+.game-frame #viewContent { flex:1; min-height:0; overflow-y:auto; overflow-x:hidden; scrollbar-width:thin; scrollbar-color:#50647d transparent; }
+.game-frame .loadout {
+  /* Square space is reserved first; inventory never occupies the space below these circles. */
+  width:416px; height:416px; min-width:416px; min-height:416px;
+  margin:4px auto; position:relative; aspect-ratio:1;
+  background:radial-gradient(circle at center,#3e829921,transparent 68%);
+}
+.game-frame .loadout::before,.game-frame .loadout::after { display:none; }
+.game-frame .outer-orbit { width:90%; height:90%; aspect-ratio:1; top:50%; }
+.game-frame .inner-orbit { width:210px; height:210px; aspect-ratio:1; top:50%; }
+.game-frame .idle-orbit svg { aspect-ratio:1; }
+.game-frame .loadout .slot {
+  width:108px; height:108px; min-width:108px; min-height:108px; aspect-ratio:1;
+  padding:8px; border-radius:50%;
+}
+.game-frame .loadout .slot img { width:80px; height:80px; }
+.game-frame .loadout .slot .slot-label { top:calc(100% + 6px); font-size:12px; line-height:18px; }
+.game-frame .loadout .slot .slot-level { font-size:12px; line-height:19px; }
+.game-frame .loadout .head-slot { left:7%; top:7%; }
+.game-frame .loadout .hands-slot { left:67%; top:7%; }
+.game-frame .loadout .body-slot { left:7%; top:67%; }
+.game-frame .loadout .feet-slot { left:67%; top:67%; }
+.game-frame .inner-row {
+  width:180px; height:180px; top:50%; bottom:auto; left:50%;
+  transform:translate(-50%,-50%); display:block;
+}
+.game-frame .loadout .inner-row .slot { width:82px; height:82px; min-width:82px; min-height:82px; }
+.game-frame .loadout .inner-row .slot img { width:60px; height:60px; }
+.game-frame .loadout .inner-row .slot[data-slot=sphere] { left:0; top:0; }
+.game-frame .loadout .inner-row .slot[data-slot=rope] { left:98px; top:98px; }
+.game-frame .inner-tag { top:-24px; font-size:11px; }
+.game-frame .set-summary { padding:10px 14px; gap:12px; }
+.game-frame .set-summary h3 { font-size:11px; margin-bottom:3px; }
+.game-frame .set-line { font-size:11px; gap:5px; }
+.game-frame .set-line strong { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.game-frame .set-line span { flex:none; }
+.game-frame .loadout-stats { padding:9px 14px; }
+.game-frame .aggregate-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+.game-frame .inventory-panel {
+  grid-column:2; grid-row:2; margin:0; min-width:0; min-height:0;
+  display:flex; flex-direction:column; overflow:hidden;
+}
+.game-frame .inventory-head { min-height:64px; flex-wrap:nowrap; }
+.game-frame .inventory-head h2 { font-size:16px; }
+.game-frame .inventory-head .eyebrow { font-size:9px; }
+.game-frame .inventory-search-row { padding:10px 12px 4px; flex:none; }
+.game-frame .inventory-search-row input {
+  width:100%; min-width:0; padding:8px 10px; background:#0b1424;
+  border:1px solid var(--line); border-radius:4px; color:var(--text); font-size:12px;
+}
+.game-frame .inventory-controls { flex:none; position:relative; border-bottom:1px solid var(--line); }
+.game-frame .inventory-controls summary {
+  padding:9px 14px; display:flex; align-items:center; gap:8px; cursor:pointer;
+  color:var(--cyan); font-size:12px; list-style:none;
+}
+.game-frame .inventory-controls summary::after { content:'＋'; margin-left:auto; }
+.game-frame .inventory-controls[open] summary::after { content:'−'; }
+.game-frame .inventory-controls .filters { display:grid; grid-template-columns:1fr 1fr; gap:6px; padding:0 12px; }
+.game-frame .inventory-controls select { width:100%; max-width:none; min-width:0; font-size:11px; padding:6px; }
+.game-frame .inventory-toolbar { display:grid; grid-template-columns:1fr 1fr; gap:6px; padding:8px 12px 10px; }
+.game-frame .inventory-toolbar input[type=search] { grid-column:1/-1; width:100%; min-width:0; padding:7px; font-size:12px; }
+.game-frame .inventory-toolbar button { padding:6px; font-size:11px; }
+.game-frame .filter-summary { flex:none; font-size:10px; padding:8px 12px; }
+.game-frame .inventory-grid {
+  flex:1; min-height:0; max-height:none; overflow:auto; align-content:start;
+  grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; padding:12px;
+  scrollbar-width:thin; scrollbar-color:#50647d transparent;
+}
+.game-frame .item-card {
+  min-width:0; min-height:146px; height:146px; padding:22px 5px 8px;
+  display:grid; grid-template-rows:60px 12px 16px 16px; gap:3px;
+  align-content:start; overflow:hidden;
+}
+.game-frame .item-card img { width:60px; height:60px; margin:0; justify-self:center; align-self:center; }
+.game-frame .item-card .item-name {
+  width:100%; min-width:0; font-size:11px; line-height:16px;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.game-frame .item-card .rarity-stars { font-size:9px; line-height:12px; letter-spacing:1px; }
+.game-frame .item-card .item-level,.game-frame .item-card .item-state { top:5px; line-height:12px; }
+.game-frame .card-main {
+  min-width:0; width:100%; margin:0; font-size:10px; line-height:16px;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.game-frame .page-note { grid-column:1/-1; grid-row:3; margin:0; align-self:center; font-size:10px; }
+.game-frame .detail-panel {
+  width:auto; min-width:0; min-height:0; height:100%; max-height:none;
+  position:relative; top:auto; overflow-y:auto; scrollbar-width:thin;
+}
+.game-frame .detail-top { padding:14px 16px; }
+.game-frame .detail-top img { width:112px; height:112px; margin:0 auto 10px; }
+.game-frame .detail-top h2 { font-size:16px; }
+.game-frame .detail-body { padding:12px 16px; }
+.game-frame .detail-actions { position:sticky; bottom:0; z-index:5; padding:12px 16px; background:#101b2df5; }
+.game-frame .workbench { min-height:0; padding:16px; }
+.game-frame .form-grid { grid-template-columns:1fr 1fr; }
+.game-frame .bench-target { gap:16px; padding:12px; }
+.game-frame .bench-target img { width:76px; height:76px; }
+.game-frame .forge-preview { padding:12px; gap:12px; }
+.game-frame .cost-tile { min-width:0; flex:1; padding:8px; }
+.game-frame .bench-empty { padding:70px 20px; }
+/* Browser media queries do not alter the reference canvas. Smaller windows get uniform letterboxing. */
+.game-frame h1 { font-size:23px; letter-spacing:3px; }
+.game-frame .brand { gap:17px; }
+.game-frame .brand-mark { font-size:36px; }
+.game-frame .head-actions button { padding:8px 15px; font-size:14px; }
+.game-frame .head-actions .prototype { display:inline; }

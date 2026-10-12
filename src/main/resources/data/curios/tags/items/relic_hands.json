@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "starrail_sim:relic_musketeer_hands",
+    "starrail_sim:relic_passerby_hands",
+    "starrail_sim:relic_knight_hands"
+  ]
+}

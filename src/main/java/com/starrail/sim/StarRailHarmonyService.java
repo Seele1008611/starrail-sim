@@ -136,7 +136,8 @@ public final class StarRailHarmonyService {
 
     private static void grantAbsorption(ServerPlayer player, CompoundTag state) {
         observeShield(player, state);
-        float amount = player.getMaxHealth() * 0.025F;
+        float amount = StarRailRelicService.boostShieldAmount(
+                player, player.getMaxHealth() * 0.025F);
         float added = Math.max(0, amount - player.getAbsorptionAmount());
         player.setAbsorptionAmount(Math.max(player.getAbsorptionAmount(), amount));
         StarRailPathMessages.send(player, StarRailPath.HARMONY, Component.translatable(

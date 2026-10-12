@@ -102,6 +102,8 @@ public final class StarRailGuideScreen extends StarRailStyledScreen {
                         minecraft.setScreen(new StarRailLightConeScreen());
                     } else if (index == 2) {
                         minecraft.setScreen(new StarRailTraceScreen());
+                    } else if (index == 3) {
+                        minecraft.setScreen(new StarRailCharacterScreen(true));
                     } else if (index == 4) {
                         minecraft.setScreen(new StarRailPathScreen());
                     }
@@ -432,6 +434,8 @@ public final class StarRailGuideScreen extends StarRailStyledScreen {
                 {"title", "open_current", "path", "practice", "trial", "progress", "rollback"},
                 {"combat_title", "damage", "toughness", "break", "effect_hit", "effect_resistance", "knockback_resistance"},
                 {"hud_title", "hud_values", "hud_context", "hud_settings"},
+                {"relic_title", "relic_access", "relic_slots", "relic_trial", "relic_growth",
+                        "relic_salvage", "relic_reroll", "relic_sets"},
                 {"interface_title", "attributes", "practice_detail", "path_switch", "notifications", "light_cone"}
         };
         int y = contentTop, textWidth = contentRight - contentLeft - 10;

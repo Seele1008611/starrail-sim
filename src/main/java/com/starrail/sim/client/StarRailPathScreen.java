@@ -86,6 +86,8 @@ public final class StarRailPathScreen extends StarRailStyledScreen {
                         minecraft.setScreen(new StarRailLightConeScreen());
                     } else if (index == 2) {
                         minecraft.setScreen(new StarRailTraceScreen());
+                    } else if (index == 3) {
+                        minecraft.setScreen(new StarRailCharacterScreen(true));
                     } else if (index == 5) {
                         minecraft.setScreen(new StarRailGuideScreen());
                     }

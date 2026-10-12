@@ -3,6 +3,12 @@
     "player"
   ],
   "slots": [
-    "light_cone"
+    "light_cone",
+    "relic_head",
+    "relic_hands",
+    "relic_body",
+    "relic_feet",
+    "planar_sphere",
+    "link_rope"
   ]
 }

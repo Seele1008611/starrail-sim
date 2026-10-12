@@ -9,6 +9,7 @@ import com.starrail.sim.StarRailPath;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -21,6 +22,8 @@ import java.util.Locale;
 
 /** Main character overview inspired by the compact character screens of RPGs. */
 public final class StarRailCharacterScreen extends StarRailStyledScreen {
+    private final boolean relicSection;
+    private final StarRailRelicPanel relicPanel = new StarRailRelicPanel(this);
     private final Button[] navigationButtons = new Button[
             StarRailUiStyle.CHARACTER_NAVIGATION_KEYS.length];
     private Button attributeDetailsButton;
@@ -38,7 +41,13 @@ public final class StarRailCharacterScreen extends StarRailStyledScreen {
     private boolean compactLayout;
 
     public StarRailCharacterScreen() {
-        super(Component.translatable("screen.starrail_sim.character_detail"));
+        this(false);
+    }
+
+    public StarRailCharacterScreen(boolean relicSection) {
+        super(Component.translatable(relicSection ? "screen.starrail_sim.character_relics"
+                : "screen.starrail_sim.character_detail"));
+        this.relicSection = relicSection;
     }
 
     @Override
@@ -60,11 +69,17 @@ public final class StarRailCharacterScreen extends StarRailStyledScreen {
         rightLeft = contentRight - Math.min(240, Math.max(195, contentWidth * 32 / 100));
 
         Button[] createdNavigation = StarRailUiStyle.createCharacterNavigation(
-                panelLeft, panelTop, panelWidth, panelHeight, 0, this::openSection);
+                panelLeft, panelTop, panelWidth, panelHeight, relicSection ? 3 : 0, this::openSection);
         for (int index = 0; index < navigationButtons.length; index++) {
             navigationButtons[index] = addRenderableWidget(createdNavigation[index]);
         }
 
+        if (relicSection) {
+            relicPanel.layout(contentLeft, panelTop + 60, contentRight, panelBottom - 12);
+            StarRailRelicClientData.requestSnapshot();
+            relicPanel.buildWidgets();
+            return;
+        }
         lightConeHeadingY = panelBottom - 76;
         lightConeBoxY = lightConeHeadingY;
         int detailsY = panelTop + 150 + 21 * 7 + 16;
@@ -76,7 +91,11 @@ public final class StarRailCharacterScreen extends StarRailStyledScreen {
     }
 
     private void openSection(int index) {
-        if (index == 1) {
+        if (index == 0 && relicSection) {
+            minecraft.setScreen(new StarRailCharacterScreen());
+        } else if (index == 3 && !relicSection) {
+            minecraft.setScreen(new StarRailCharacterScreen(true));
+        } else if (index == 1) {
             minecraft.setScreen(new StarRailLightConeScreen());
         } else if (index == 2) {
             minecraft.setScreen(new StarRailTraceScreen());
@@ -95,6 +114,13 @@ public final class StarRailCharacterScreen extends StarRailStyledScreen {
         Player player = Minecraft.getInstance().player;
         StarRailPath path = StarRailPathClientState.getCurrentPath();
         StarRailUiStyle.renderHeader(graphics, title, panelLeft, panelTop);
+
+        if (relicSection) {
+            relicPanel.render(graphics, mouseX, mouseY);
+            super.renderPage(graphics, mouseX, mouseY, partialTick);
+            relicPanel.renderChoices(graphics, mouseX, mouseY);
+            return;
+        }
 
         if (player != null) {
             renderPlayerModel(graphics, player, mouseX, mouseY);
@@ -195,12 +221,56 @@ public final class StarRailCharacterScreen extends StarRailStyledScreen {
 
     @Override
     protected boolean logicalMouseClicked(double mouseX, double mouseY, int button) {
+        if (relicSection) return super.logicalMouseClicked(mouseX, mouseY, button);
         if (button == 0 && mouseX >= rightLeft && mouseX <= contentRight
                 && mouseY >= lightConeHeadingY && mouseY <= lightConeHeadingY + 60) {
             minecraft.setScreen(new StarRailLightConeScreen());
             return true;
         }
         return super.logicalMouseClicked(mouseX, mouseY, button);
+    }
+
+    void addRelicWidget(AbstractWidget widget) { addRenderableWidget(widget); }
+
+    void removeRelicWidget(AbstractWidget widget) { removeWidget(widget); }
+
+    @Override
+    protected boolean overlayMouseClicked(double x, double y, int button) {
+        return relicSection && relicPanel.clickChoices(x, y, button);
+    }
+
+    @Override
+    public boolean keyPressed(int key, int scanCode, int modifiers) {
+        if (relicSection && relicPanel.keyChoices(key)) return true;
+        return super.keyPressed(key, scanCode, modifiers);
+    }
+
+    @Override
+    public boolean charTyped(char character, int modifiers) {
+        if (relicSection && relicPanel.choicesOpen()) return true;
+        return super.charTyped(character, modifiers);
+    }
+
+    /** Rebuild controls without resetting logical scale or the panel's animation clock. */
+    void rebuildRelicWidgets() {
+        clearWidgets();
+        addRenderableWidget(StarRailUiStyle.closeButton(ignored -> onClose(), panelRight - 24, panelTop + 4));
+        Button[] navigation = StarRailUiStyle.createCharacterNavigation(panelLeft, panelTop,
+                panelRight - panelLeft, panelBottom - panelTop, 3, this::openSection);
+        for (int i = 0; i < navigation.length; i++) navigationButtons[i] = addRenderableWidget(navigation[i]);
+        relicPanel.buildWidgets();
+    }
+
+    boolean isRelicSection() { return relicSection; }
+
+    void onRelicSnapshotUpdated(String resultKey, boolean accepted) {
+        if (relicSection) relicPanel.onServerSnapshotUpdated(resultKey, accepted);
+    }
+
+    @Override
+    protected boolean logicalMouseScrolled(double x, double y, double amount) {
+        if (relicSection && relicPanel.scroll(x, y, amount)) return true;
+        return super.logicalMouseScrolled(x, y, amount);
     }
 
     private void drawSummaryLine(GuiGraphics graphics, String labelKey, Component value,
