@@ -2405,5 +2405,8 @@
   "message.starrail_sim.relic.reroll_pending": "请先处理这件遗器待选择的重掷结果。",
   "message.starrail_sim.relic.reroll_missing": "这件遗器没有待选择的重掷结果。",
   "message.starrail_sim.relic.materials_insufficient": "遗器材料不足。",
-  "message.starrail_sim.relic.inventory_full": "背包没有足够空间领取遗器或材料。"
+  "message.starrail_sim.relic.inventory_full": "背包没有足够空间领取遗器或材料。",
+  "ui.starrail_sim.path.shared_growth": "命途共同成长",
+  "ui.starrail_sim.path.shared_growth_row": "%s级：每秒恢复最大生命值%s；基础生命+%s；最大生命值+%s；攻击力基值+%s；护甲值基值+%s、护甲值+%s；护甲韧性基值+%s、护甲韧性+%s。",
+  "ui.starrail_sim.path.shared_growth_unaligned": "未踏上命途时不获得命途共同成长。"
 }

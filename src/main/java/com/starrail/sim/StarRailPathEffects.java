@@ -65,6 +65,14 @@ public final class StarRailPathEffects {
             UUID.fromString("5c0d7f16-2a89-4d3e-8b54-9e7a1f6c203d");
     private static final UUID PINNACLE_PRACTICE_ATTACK_DAMAGE_MODIFIER =
             UUID.fromString("c2a7e1f4-8b35-4d92-a6c1-7e0f5b3d9148");
+    private static final UUID PATH_SHARED_ATTACK_DAMAGE_MODIFIER =
+            UUID.fromString("e1a7f9b2-8c4d-4f63-a5b0-2d7e9c1f6a34");
+    private static final UUID PATH_SHARED_MAX_HEALTH_FLAT_MODIFIER =
+            UUID.fromString("9a6f8d23-1c47-4e52-b0a9-37d6f4c82105");
+    private static final UUID PATH_SHARED_ARMOR_MODIFIER =
+            UUID.fromString("b2c8e4f1-7a3d-4b96-9e20-5f1a8c6d3b47");
+    private static final UUID PATH_SHARED_ARMOR_TOUGHNESS_MODIFIER =
+            UUID.fromString("c3d9f5a2-8b4e-4c07-af31-6b2d9e7f4c58");
 
     private StarRailPathEffects() {
     }
@@ -90,7 +98,8 @@ public final class StarRailPathEffects {
 
     public static void refresh(Player player, StarRailPath path, StarRailPathRank rank,
                                int pinnaclePracticeCount) {
-        int level = rank == null ? 0 : rank.getLevel();
+        int level = StarRailPathGrowth.clampLevel(rank == null ? 0 : rank.getLevel());
+        boolean activePath = path != null && path.isRealPath() && level > 0;
 
         AttributeInstance critRate = player.getAttribute(StarRailAttributes.CRIT_RATE.get());
         if (critRate != null) {
@@ -109,40 +118,59 @@ public final class StarRailPathEffects {
 
         AttributeInstance armor = player.getAttribute(Attributes.ARMOR);
         if (armor != null) {
+            double pathArmor = path == StarRailPath.PRESERVATION
+                    ? preservationArmor(level)
+                    : path == StarRailPath.HARMONY ? harmonyArmor(level) : 0.0D;
             applyModifier(armor, PRESERVATION_ARMOR_MODIFIER,
-                    "starrail_sim.path.preservation.armor", preservationArmor(level),
-                    AttributeModifier.Operation.MULTIPLY_TOTAL, path == StarRailPath.PRESERVATION);
+                    "starrail_sim.path.shared.armor_percent",
+                    StarRailPathGrowth.armorPercentBonus(level) + pathArmor,
+                    AttributeModifier.Operation.MULTIPLY_TOTAL, activePath);
             applyModifier(armor, HARMONY_ARMOR_MODIFIER,
-                    "starrail_sim.path.harmony.armor", harmonyArmor(level),
-                    AttributeModifier.Operation.MULTIPLY_TOTAL, path == StarRailPath.HARMONY);
+                    "starrail_sim.path.legacy_harmony.armor", 0.0D,
+                    AttributeModifier.Operation.MULTIPLY_TOTAL, false);
+            applyModifier(armor, PATH_SHARED_ARMOR_MODIFIER,
+                    "starrail_sim.path.shared.armor_flat", StarRailPathGrowth.armorBonus(level),
+                    AttributeModifier.Operation.ADDITION, activePath);
         }
 
         AttributeInstance armorToughness = player.getAttribute(Attributes.ARMOR_TOUGHNESS);
         if (armorToughness != null) {
+            double pathToughness = path == StarRailPath.PRESERVATION
+                    ? preservationArmorToughness(level)
+                    : path == StarRailPath.HARMONY ? harmonyArmorToughness(level) : 0.0D;
             applyModifier(armorToughness, PRESERVATION_ARMOR_TOUGHNESS_MODIFIER,
-                    "starrail_sim.path.preservation.armor_toughness",
-                    preservationArmorToughness(level),
-                    AttributeModifier.Operation.MULTIPLY_TOTAL,
-                    path == StarRailPath.PRESERVATION);
+                    "starrail_sim.path.shared.armor_toughness_percent",
+                    StarRailPathGrowth.armorToughnessPercentBonus(level) + pathToughness,
+                    AttributeModifier.Operation.MULTIPLY_TOTAL, activePath);
             applyModifier(armorToughness, HARMONY_ARMOR_TOUGHNESS_MODIFIER,
-                    "starrail_sim.path.harmony.armor_toughness",
-                    harmonyArmorToughness(level),
-                    AttributeModifier.Operation.MULTIPLY_TOTAL,
-                    path == StarRailPath.HARMONY);
+                    "starrail_sim.path.legacy_harmony.armor_toughness", 0.0D,
+                    AttributeModifier.Operation.MULTIPLY_TOTAL, false);
+            applyModifier(armorToughness, PATH_SHARED_ARMOR_TOUGHNESS_MODIFIER,
+                    "starrail_sim.path.shared.armor_toughness_flat",
+                    StarRailPathGrowth.armorToughnessBonus(level),
+                    AttributeModifier.Operation.ADDITION, activePath);
         }
 
         AttributeInstance maxHealth = player.getAttribute(Attributes.MAX_HEALTH);
         if (maxHealth != null) {
+            double pathHealth = path == StarRailPath.ABUNDANCE
+                    ? abundanceMaxHealth(level)
+                    : path == StarRailPath.HARMONY ? harmonyMaxHealth(level) : 0.0D;
+            applyModifier(maxHealth, PATH_SHARED_MAX_HEALTH_FLAT_MODIFIER,
+                    "starrail_sim.path.shared.max_health_flat",
+                    StarRailPathGrowth.maxHealthFlatBonus(level),
+                    AttributeModifier.Operation.ADDITION, activePath);
             applyModifier(maxHealth, ABUNDANCE_HEALTH_MODIFIER,
-                    "starrail_sim.path.abundance.max_health",
-                    abundanceMaxHealth(level),
-                    AttributeModifier.Operation.MULTIPLY_TOTAL,
-                    path == StarRailPath.ABUNDANCE);
+                    "starrail_sim.path.shared.max_health",
+                    StarRailPathGrowth.maxHealthBonus(level)
+                            + pathHealth,
+                    AttributeModifier.Operation.MULTIPLY_TOTAL, activePath);
             applyModifier(maxHealth, HARMONY_MAX_HEALTH_MODIFIER,
-                    "starrail_sim.path.harmony.max_health",
-                    harmonyMaxHealth(level),
-                    AttributeModifier.Operation.MULTIPLY_TOTAL,
-                    path == StarRailPath.HARMONY);
+                    "starrail_sim.path.legacy_harmony.max_health", 0.0D,
+                    AttributeModifier.Operation.MULTIPLY_TOTAL, false);
+            if (!player.level().isClientSide() && player.getHealth() > player.getMaxHealth()) {
+                player.setHealth(player.getMaxHealth());
+            }
         }
 
         AttributeInstance healingEffect = player.getAttribute(
@@ -226,6 +254,10 @@ public final class StarRailPathEffects {
 
         AttributeInstance attackDamage = player.getAttribute(Attributes.ATTACK_DAMAGE);
         if (attackDamage != null) {
+            applyModifier(attackDamage, PATH_SHARED_ATTACK_DAMAGE_MODIFIER,
+                    "starrail_sim.path.shared.attack_damage",
+                    StarRailPathGrowth.attackDamageBonus(level),
+                    AttributeModifier.Operation.ADDITION, activePath);
             applyModifier(attackDamage, HUNT_ATTACK_DAMAGE_MODIFIER,
                     "starrail_sim.path.hunt.attack_damage", huntAttackDamage(level),
                     AttributeModifier.Operation.MULTIPLY_TOTAL, false);

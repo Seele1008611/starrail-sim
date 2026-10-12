@@ -7,6 +7,7 @@ package com.starrail.sim.client;
 import com.starrail.sim.PathActionPacket;
 import com.starrail.sim.StarRailNetwork;
 import com.starrail.sim.StarRailPath;
+import com.starrail.sim.StarRailPathGrowth;
 import com.starrail.sim.StarRailPathRules;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -370,6 +371,9 @@ public final class StarRailPathScreen extends StarRailStyledScreen {
             }
             break;
         }
+        y = drawGrowthHeading(graphics, "shared_growth", y + 10);
+        y = drawGrowthText(graphics, StarRailPathGrowth.describeRank(browsedRank), y,
+                StarRailUiStyle.CYAN_ACCENT);
         y = drawGrowthText(graphics, Component.translatable("ui.starrail_sim.path.cumulative_note"),
                 y + 2, StarRailUiStyle.MUTED_COLOR);
         y = drawGrowthHeading(graphics, "practice", y + 10);

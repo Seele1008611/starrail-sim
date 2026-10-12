@@ -2402,5 +2402,8 @@
   "message.starrail_sim.relic.reroll_pending": "Resolve this relic's pending reroll first.",
   "message.starrail_sim.relic.reroll_missing": "This relic has no pending reroll result.",
   "message.starrail_sim.relic.materials_insufficient": "Not enough relic materials.",
-  "message.starrail_sim.relic.inventory_full": "There is not enough inventory space for the relic or materials."
+  "message.starrail_sim.relic.inventory_full": "There is not enough inventory space for the relic or materials.",
+  "ui.starrail_sim.path.shared_growth": "Shared Path Growth",
+  "ui.starrail_sim.path.shared_growth_row": "Rank %s: restore %s of max health each second; base health +%s; max health +%s; attack damage +%s; armor +%s and +%s; armor toughness +%s and +%s.",
+  "ui.starrail_sim.path.shared_growth_unaligned": "Shared Path Growth is inactive until you follow a Path."
 }

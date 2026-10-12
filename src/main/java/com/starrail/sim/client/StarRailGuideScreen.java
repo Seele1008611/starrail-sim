@@ -7,6 +7,7 @@ package com.starrail.sim.client;
 import com.starrail.sim.PathActionPacket;
 import com.starrail.sim.StarRailNetwork;
 import com.starrail.sim.StarRailPath;
+import com.starrail.sim.StarRailPathGrowth;
 import com.starrail.sim.StarRailPathProgress;
 import com.starrail.sim.StarRailPathRank;
 import com.starrail.sim.StarRailPathRules;
@@ -287,6 +288,11 @@ public final class StarRailGuideScreen extends StarRailStyledScreen {
                 Component.translatable(coreKey(path)), x, nextY, textWidth) + 12;
         nextY = drawArticle(graphics, Component.translatable("guide.starrail_sim.current.effect"),
                 currentRankEffect(path), x, nextY, textWidth) + 12;
+        nextY = drawArticle(graphics,
+                Component.translatable("ui.starrail_sim.path.shared_growth"),
+                StarRailPathGrowth.describeRank(
+                        StarRailPathClientState.getCurrentPathRank().getLevel()),
+                x, nextY, textWidth) + 12;
 
         if (StarRailPathClientState.getTrialPath().isRealPath()) {
             drawLine(graphics, Component.translatable("guide.starrail_sim.current.trial",
@@ -346,6 +352,9 @@ public final class StarRailGuideScreen extends StarRailStyledScreen {
             y = drawArticle(graphics, heading, Component.translatable(section[1]),
                     detailX, y, textWidth) + 14;
         }
+        y = drawArticle(graphics,
+                Component.translatable("ui.starrail_sim.path.shared_growth"),
+                StarRailPathGrowth.describeAllRanks(), detailX, y, textWidth) + 14;
         drawArticle(graphics, Component.translatable("guide.starrail_sim.path.materials"),
                 Component.translatable("guide.starrail_sim.path.material_source"),
                 detailX, y, textWidth);

@@ -89,6 +89,7 @@ public final class StarRailPathEvents {
             StarRailHuntService.tick(player, data);
             StarRailHarmonyService.tick(player);
             StarRailPathEffects.refresh(player, data.getCurrentPath());
+            StarRailPathRegenService.tick(player, data);
             StarRailLightConeService.refresh(player);
             StarRailLightConeService.tickSheHasClosedHerEyes(player);
         });
@@ -179,6 +180,9 @@ public final class StarRailPathEvents {
         float amount = event.getAmount() * (float) (1 + Math.max(0,
                 StarRailAttributes.getValue(player, StarRailAttributes.HEALING_EFFECT, 0)));
         event.setAmount(amount);
+        if (StarRailPathRegenService.isNaturalRecovery(player)) {
+            return;
+        }
         player.getCapability(StarRailPathCapability.PATH_DATA).ifPresent(data -> {
             if (data.getCurrentPath() == StarRailPath.ABUNDANCE) StarRailAbundanceService.onHealing(player, data, amount);
             float actual = Math.min(amount, Math.max(0, player.getMaxHealth() - player.getHealth()));
