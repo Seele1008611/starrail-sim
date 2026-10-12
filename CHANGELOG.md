@@ -2,7 +2,7 @@
 
 本日志记录模组版本进度。GitHub 仓库中的第一版为 `1.0.0`，`1.1.0` 于 2026-10-01 发布。
 
-## 1.11.0 — 候选发行版（2026-10-12）
+## 1.11.0 — 正式版（2026-10-12）
 
 ### 新增与调整
 
@@ -14,9 +14,10 @@
 
 - `compileJava` 已通过；用户于2026-10-12确认单人实机测试通过。
 - 整合包普通怪筛选和多人游戏暂未测试，不据此宣称兼容性已验证。
-- 候选发行 JAR：[starrail_sim-1.11.0.jar](build/libs/starrail_sim-1.11.0.jar)，40,659,592字节；SHA-256：`82446570A45EF4C86F2F3AC5593EB62A18E72C92B191BE54D563CCF857122898`。构建和静态核对已完成，尚未公开发布。
+- 正式发行 JAR：[starrail_sim-1.11.0.jar](https://github.com/Seele1008611/starrail-sim/releases/download/v1.11.0/starrail_sim-1.11.0.jar)，40,659,592字节；SHA-256：`82446570A45EF4C86F2F3AC5593EB62A18E72C92B191BE54D563CCF857122898`。
+- GitHub Release：[v1.11.0](https://github.com/Seele1008611/starrail-sim/releases/tag/v1.11.0)，发行 JAR 和 SHA-256 校验文件已上传。
 - Java 17.0.20、Gradle 8.8、Minecraft 1.20.1、Forge 47.4.10、Curios API 5.14.1；使用用户目录缓存离线执行 `reobfJar`，没有下载新依赖。
-- 候选包清单和核对记录见 [1.11.0 候选发布归档](releases/1.11.0.md)。
+- 发布清单和核对记录见 [1.11.0 发布归档](releases/1.11.0.md)。
 
 ## 1.10.0 — 正式版（2026-10-12）
 
