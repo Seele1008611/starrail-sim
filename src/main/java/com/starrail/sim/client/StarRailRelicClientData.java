@@ -44,11 +44,13 @@ public final class StarRailRelicClientData implements StarRailRelicUiData {
         List<Entry> entries = new ArrayList<>();
         EnumMap<Part, Long> equipped = new EnumMap<>(Part.class);
         EnumMap<Material, Integer> materials = new EnumMap<>(Material.class);
+        java.util.Set<UUID> owned=new java.util.HashSet<>();
         ListTag relics = root.getList("Relics", Tag.TAG_COMPOUND);
         for (int index = 0; index < relics.size(); index++) {
             CompoundTag tag = relics.getCompound(index);
             RelicStackData.Data data = RelicStackData.decode(tag).orElse(null);
             if (data == null) continue;
+            owned.add(data.instanceId());
             long id = IDS_BY_UUID.computeIfAbsent(data.instanceId(), ignored -> nextId++);
             Part part = Part.valueOf(data.part().name());
             List<SubStat> substats = toUiStats(data.substats());
@@ -64,7 +66,13 @@ public final class StarRailRelicClientData implements StarRailRelicUiData {
         materials.put(Material.RESIN, Math.max(0, root.getInt("Resin")));
         materials.put(Material.DICE, Math.max(0, root.getInt("Dice")));
         materials.put(Material.INTERFERENCE_KEY, Math.max(0, root.getInt("InterferenceKey")));
-        current = new Snapshot(entries, equipped, materials, true);
+        Map<Integer,Map<Part,UUID>> presets=new HashMap<>();
+        for(int slot=0;slot<4;slot++)if(root.contains("Preset_"+slot,Tag.TAG_LIST)) {
+            EnumMap<Part,UUID> loadout=new EnumMap<>(Part.class);ListTag saved=root.getList("Preset_"+slot,Tag.TAG_COMPOUND);
+            for(int i=0;i<saved.size();i++)try{CompoundTag item=saved.getCompound(i);loadout.put(Part.valueOf(item.getString("part")),item.getUUID("id"));}catch(IllegalArgumentException ignored){}
+            presets.put(slot,loadout);
+        }
+        current = new Snapshot(entries, equipped, materials, true,presets,owned);
 
         Minecraft minecraft = Minecraft.getInstance();
         if (minecraft.screen instanceof StarRailCharacterScreen screen && screen.isRelicSection()) {

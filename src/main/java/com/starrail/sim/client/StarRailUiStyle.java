@@ -8,6 +8,9 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import com.starrail.sim.StarRailPath;
+import com.starrail.sim.StarRailSimMod;
 
 import java.util.function.IntConsumer;
 
@@ -34,6 +37,15 @@ public final class StarRailUiStyle {
     };
 
     private StarRailUiStyle() {
+    }
+
+    public static boolean smoothEnabled() {
+        return com.starrail.sim.StarRailStatusConfig.SMOOTH_UI.get() && StarRailSmoothUi.available()
+                && !(Minecraft.getInstance().screen instanceof StarRailDisplayPreviewScreen);
+    }
+
+    public static boolean reducedMotion() {
+        return com.starrail.sim.StarRailStatusConfig.REDUCED_MOTION.get();
     }
     private static long navigationPressedAt;
     private static String navigationPressedLabel = "";
@@ -136,14 +148,14 @@ public final class StarRailUiStyle {
     public static void renderHeader(GuiGraphics graphics, Component title, int left, int top) {
         int x = left + 22, y = top + 20;
         StarRailCosmicUi.navigationIcon(graphics, 4, x, y, GOLD_ACCENT);
-        graphics.drawString(Minecraft.getInstance().font, title, x + 17, y - 9, GOLD_ACCENT);
+        graphics.drawString(StarRailUiFonts.forMod(), title, x + 17, y - 9, GOLD_ACCENT);
         com.starrail.sim.StarRailPath path = StarRailPathClientState.getCurrentPath();
         Component identity = path.isRealPath() ? Component.literal(path.getDisplayName())
                 : Component.translatable("screen.starrail_sim.character_unaligned");
         if (Minecraft.getInstance().player != null) {
             identity = identity.copy().append(" / ").append(Minecraft.getInstance().player.getName());
         }
-        graphics.drawString(Minecraft.getInstance().font, identity, x + 17, y + 5, VALUE_COLOR);
+        graphics.drawString(StarRailUiFonts.forMod(), identity, x + 17, y + 5, VALUE_COLOR);
     }
 
     public static Button button(Component message, Button.OnPress onPress,
@@ -158,6 +170,28 @@ public final class StarRailUiStyle {
         Button button = button(Component.literal(path.getDisplayName()), action, x, y, width, height);
         ((StarRailButton) button).path = path;
         return button;
+    }
+
+    /** Draws the bundled path emblem, preserving its source aspect ratio for reuse across screens. */
+    public static void drawPathIcon(GuiGraphics graphics, StarRailPath path, int centerX, int centerY,
+                                    int maxWidth, int maxHeight) {
+        StarRailTraceLayouts.Layout layout = StarRailTraceLayouts.get(path);
+        int textureWidth = layout.textureWidth();
+        int textureHeight = layout.textureHeight();
+        double scale = Math.min(maxWidth / (double) textureWidth, maxHeight / (double) textureHeight);
+        int drawWidth = Math.max(1, (int) Math.round(textureWidth * scale));
+        int drawHeight = Math.max(1, (int) Math.round(textureHeight * scale));
+        int drawX = centerX - drawWidth / 2;
+        int drawY = centerY - drawHeight / 2;
+        ResourceLocation texture = ResourceLocation.fromNamespaceAndPath(StarRailSimMod.MOD_ID,
+                "textures/gui/traces/" + path.getId() + ".png");
+        if (smoothEnabled()) {
+            StarRailSmoothUi.image(graphics, texture, drawX, drawY, drawWidth, drawHeight,
+                    textureWidth, textureHeight);
+        } else {
+            graphics.blit(texture, drawX, drawY, drawWidth, drawHeight, 0F, 0F,
+                    textureWidth, textureHeight, textureWidth, textureHeight);
+        }
     }
 
     public static Button tabButton(Component message, Button.OnPress action,
@@ -200,8 +234,12 @@ public final class StarRailUiStyle {
         return button;
     }
 
-    private static void roundedOutline(GuiGraphics graphics, int x, int y, int width, int height,
+    static void roundedOutline(GuiGraphics graphics, int x, int y, int width, int height,
             int fill, int border) {
+        if (smoothEnabled()) {
+            StarRailSmoothUi.roundedRect(graphics, x, y, width, height, height / 2F, 1, fill, border);
+            return;
+        }
         int r = height / 2;
         graphics.drawManaged(() -> {
             for (int row = 0; row < height; row++) {
@@ -235,7 +273,7 @@ public final class StarRailUiStyle {
     public static void fittedText(GuiGraphics graphics, Component text, int x, int y,
             int availableWidth, int color) {
         if (availableWidth <= 0) return;
-        var font = Minecraft.getInstance().font;
+        var font = StarRailUiFonts.forMod();
         float scale = Math.min(1F, availableWidth / (float) Math.max(1, font.width(text)));
         graphics.pose().pushPose();
         graphics.pose().translate(x, y + (1 - scale) * 4, 0);
@@ -341,21 +379,43 @@ public final class StarRailUiStyle {
         }
 
         private void ripple(GuiGraphics graphics, double elapsed) {
-            if (elapsed >= .5) return;
-            double progress = elapsed / .5;
+            if (elapsed >= .78 || reducedMotion()) return;
+            double progress = elapsed / .78;
             double radius = Math.hypot(width, height) * (1 - Math.pow(1 - progress, 3));
-            int alpha = (int) (35 * (1 - progress));
+            int alpha = (int) (44 * (1 - progress));
             graphics.drawManaged(() -> {
                 for (int row = 1; row < height - 1; row++) {
                     double dy = row - pressY;
                     if (Math.abs(dy) > radius) continue;
                     double dx = Math.sqrt(Math.max(0, radius * radius - dy * dy));
-                    int left = Math.max(1, (int) (pressX - dx));
-                    int right = Math.min(width - 1, (int) (pressX + dx));
+                    int inset = smoothEnabled() ? (int) Math.ceil(height / 2D - Math.sqrt(Math.max(0,
+                            height * height / 4D - Math.pow(row + .5 - height / 2D, 2)))) + 1 : 1;
+                    int left = Math.max(inset, (int) (pressX - dx));
+                    int right = Math.min(width - inset, (int) (pressX + dx));
                     if (right > left) graphics.fill(getX() + left, getY() + row,
                             getX() + right, getY() + row + 1, alpha << 24 | 0xF0D8A0);
                 }
             });
+        }
+
+        private void feedbackHalo(GuiGraphics graphics, double elapsed) {
+            if (!active || elapsed < 0 || elapsed >= .82 || reducedMotion()) return;
+            double progress = elapsed / .82;
+            double fade = (1 - progress) * (1 - progress);
+            int expand = (int) Math.round(Math.sin(progress * Math.PI) * 2);
+            int color = selected ? GOLD_ACCENT : CYAN_ACCENT;
+            int border = (int) Math.round(104 * fade) << 24 | color & 0xFFFFFF;
+            roundedOutline(graphics, getX() - expand, getY() - expand,
+                    width + expand * 2, height + expand * 2, 0, border);
+
+            double sweep = progress < .68 ? progress / .68 : (1 - progress) / .32;
+            int span = (int) Math.round((width - 10) * Math.max(0, Math.min(1, sweep)));
+            if (span > 0) {
+                int glintAlpha = (int) Math.round(150 * fade);
+                int left = getX() + 5 + (progress < .68 ? 0 : width - 10 - span);
+                graphics.fill(left, getY() + height - 3, left + span,
+                        getY() + height - 2, glintAlpha << 24 | color & 0xFFFFFF);
+            }
         }
 
         @Override
@@ -381,26 +441,34 @@ public final class StarRailUiStyle {
             graphics.fill(x,y+height-1,x+width,y+height,selected ? GOLD_ACCENT : DIVIDER_COLOR);
             boolean tall = height >= 50;
             int cx=tall ? x+width/2 : x+15, cy=tall ? y+14 : y+height/2;
-            StarRailPathSymbols.draw(graphics,path,cx,cy,tall ? 8 : 7,color);
-            String label=Minecraft.getInstance().font.plainSubstrByWidth(getMessage().getString(),
+            drawPathIcon(graphics, path, cx, cy, tall ? 22 : 14, tall ? 22 : 14);
+            String label=StarRailUiFonts.forMod().plainSubstrByWidth(getMessage().getString(),
                     width-(tall ? 10 : 36));
             if (tall) {
-                graphics.drawCenteredString(Minecraft.getInstance().font,Component.literal(label),x+width/2,y+29,color);
-                if (current) graphics.drawCenteredString(Minecraft.getInstance().font,
+                graphics.drawCenteredString(StarRailUiFonts.forMod(),Component.literal(label),x+width/2,y+29,color);
+                if (current) graphics.drawCenteredString(StarRailUiFonts.forMod(),
                         Component.translatable("ui.starrail_sim.path.current_marker"),x+width/2,y+43,CYAN_ACCENT);
             } else {
-                graphics.drawString(Minecraft.getInstance().font,label,x+31,y+(height-9)/2,color);
+                graphics.drawString(StarRailUiFonts.forMod(),label,x+31,y+(height-9)/2,color);
             }
             if(current) {
                 graphics.fill(x+width-6,y+4,x+width-3,y+7,CYAN_ACCENT);
             }
             ripple(graphics, elapsed);
+            feedbackHalo(graphics, elapsed);
         }
 
         private void renderRankNode(GuiGraphics graphics, boolean hovered, double elapsed) {
             int cx = getX() + width / 2, cy = getY() + 14;
             int radius = Math.min(12, Math.max(8, width / 2 - 3));
             int color = selected ? GOLD_ACCENT : rankReached ? CYAN_ACCENT : MUTED_COLOR;
+            if (smoothEnabled()) {
+                if (selected || hoverAmount > .01) StarRailSmoothUi.circle(graphics, cx, cy, radius + 3, 0,
+                        selected ? 0x20E7C77E : blend(0x007EAAC4, 0x147EAAC4, hoverAmount), 0);
+                StarRailSmoothUi.circle(graphics, cx, cy, radius, 1, 0xFF151E31,
+                        selected ? GOLD_ACCENT : rankReached ? 0xA055D6D2 : 0x7097A6BF);
+                if (rankCurrent) graphics.fill(cx - 2, cy + radius - 1, cx + 3, cy + radius + 2, CYAN_ACCENT);
+            } else {
             graphics.drawManaged(() -> {
                 if (selected || hoverAmount > .01) StarRailCosmicUi.ellipse(graphics, cx, cy,
                         radius + 3, radius + 3, selected ? 0x20E7C77E : blend(0x007EAAC4, 0x147EAAC4, hoverAmount));
@@ -412,13 +480,29 @@ public final class StarRailUiStyle {
                             selected ? GOLD_ACCENT : rankReached ? 0xA055D6D2 : 0x7097A6BF);
                 }
                 if (rankCurrent) graphics.fill(cx - 2, cy + radius - 1, cx + 3, cy + radius + 2, CYAN_ACCENT);
-                if (elapsed < .45) StarRailCosmicUi.orbit(graphics, cx, cy,
-                        radius + 2 + elapsed * 10, (int) (110 * (1 - elapsed / .45)) << 24 | 0xE7C77E);
+                if (elapsed < .75) StarRailCosmicUi.orbit(graphics, cx, cy,
+                        radius + 2 + elapsed * 10, (int) (110 * (1 - elapsed / .75)) << 24 | 0xE7C77E);
             });
+            }
+            if (elapsed < .82 && !reducedMotion()) {
+                double progress = elapsed / .82;
+                for (int wave = 0; wave < 2; wave++) {
+                    double waveProgress = progress - wave * .24;
+                    if (waveProgress < 0 || waveProgress > 1) continue;
+                    int alpha = (int) (118 * (1 - waveProgress));
+                    int ringColor = alpha << 24 | 0xE7C77E;
+                    float ringRadius = (float) (radius + 3 + waveProgress * 12);
+                    if (smoothEnabled()) StarRailSmoothUi.circle(graphics, cx, cy, ringRadius,
+                            1, 0, ringColor);
+                    else StarRailCosmicUi.orbit(graphics, cx, cy, ringRadius, ringColor);
+                }
+            }
             String[] lines = getMessage().getString().split("\n");
-            graphics.drawCenteredString(Minecraft.getInstance().font, Component.literal(lines[0]), cx, cy - 4, color);
+            if (!(StarRailUiFonts.replaces(StarRailUiFonts.forMod())
+                    && StarRailSharpText.draw(graphics, Component.literal(lines[0]), cx, cy, color, true, true)))
+                graphics.drawCenteredString(StarRailUiFonts.forMod(), Component.literal(lines[0]), cx, cy - 4, color);
             if (lines.length > 1) {
-                var font = Minecraft.getInstance().font;
+                var font = StarRailUiFonts.forMod();
                 // Fit complete localized rank names, rather than truncating them at narrow widths.
                 float scale = Math.min(1F, (width - 2F) / Math.max(1, font.width(lines[1])));
                 graphics.pose().pushPose();
@@ -436,13 +520,15 @@ public final class StarRailUiStyle {
             long now = System.nanoTime();
             double dt = hoverFrame == 0 ? 0 : Math.min(.1, (now - hoverFrame) / 1_000_000_000.0);
             hoverFrame = now;
-            hoverAmount += ((highlighted && active ? 1 : 0) - hoverAmount) * (1 - Math.exp(-dt / .065));
+            hoverAmount += ((highlighted && active ? 1 : 0) - hoverAmount) * (1 - Math.exp(-dt / .16));
             if (!active) hoverAmount = 0;
             double elapsed = (System.nanoTime() - pressedAt) / 1_000_000_000.0;
             if (navigation && getMessage().getString().equals(navigationPressedLabel)) {
                 elapsed = (System.nanoTime() - navigationPressedAt) / 1_000_000_000.0;
             }
-            int pressed = active && elapsed < .1 ? 1 : 0;
+            if (reducedMotion()) { elapsed = 10; hoverAmount = highlighted && active ? 1 : 0; }
+            double pressPulse = active ? Math.max(0, 1 - Math.abs(elapsed - .11) / .13) : 0;
+            int pressed = (int) Math.round(pressPulse * 2);
             if (path.isRealPath()) {
                 renderPathCard(graphics, highlighted, elapsed);
                 return;
@@ -454,8 +540,12 @@ public final class StarRailUiStyle {
             if (closeCross) {
                 int color = blend(closeColor, CYAN_ACCENT, hoverAmount);
                 int cx = getX() + width / 2, cy = getY() + height / 2;
-                StarRailCosmicUi.line(graphics, cx - 4, cy - 4, cx + 4, cy + 4, color);
-                StarRailCosmicUi.line(graphics, cx - 4, cy + 4, cx + 4, cy - 4, color);
+                feedbackHalo(graphics, elapsed);
+                double clickPulse = elapsed < .82 && !reducedMotion()
+                        ? Math.sin(Math.PI * elapsed / .82) : 0;
+                double arm = 4 + hoverAmount * 1.2 + clickPulse * 1.5;
+                StarRailCosmicUi.line(graphics, cx - arm, cy - arm, cx + arm, cy + arm, color);
+                StarRailCosmicUi.line(graphics, cx - arm, cy + arm, cx + arm, cy - arm, color);
                 return;
             }
             if (tab) {
@@ -469,11 +559,17 @@ public final class StarRailUiStyle {
                         blend(0x162C3550, 0x344F6079, hoverAmount),
                         blend(0x709EACC2, GOLD_ACCENT, hoverAmount));
             } else if (!navigation) {
+                if (smoothEnabled()) roundedOutline(graphics, getX() + pressed, getY() + pressed,
+                        width - pressed * 2, height - pressed * 2,
+                        selected ? 0x40CBB574 : blend(PANEL_INNER, 0x344F6079, hoverAmount),
+                        selected ? GOLD_ACCENT : blend(DIVIDER_COLOR, CYAN_ACCENT, hoverAmount));
+                else {
                 graphics.fill(getX() + pressed, getY() + pressed,
                         getX() + width - pressed, getY() + height - pressed,
                         selected ? 0x40CBB574 : blend(PANEL_INNER, 0x344F6079, hoverAmount));
                 graphics.fill(getX(), getY() + height - 1, getX() + width,
                         getY() + height, selected ? GOLD_ACCENT : DIVIDER_COLOR);
+                }
             } else {
                 int cx = getX() + 12, cy = getY() + height / 2;
                 if (selected || hoverAmount > .01) {
@@ -487,6 +583,7 @@ public final class StarRailUiStyle {
                 StarRailCosmicUi.navigationIcon(graphics, navigationIndex, cx, cy,
                         selected ? GOLD_ACCENT : active ? VALUE_COLOR : 0xFF657086);
             }
+            feedbackHalo(graphics, elapsed);
             int color = selected ? GOLD_ACCENT : active ? VALUE_COLOR : 0xFF657086;
             if (tab && selected) color = 0xFF303441;
             Component label = getMessage();
@@ -494,23 +591,23 @@ public final class StarRailUiStyle {
             String[] lines = label.getString().split("\n");
             int lineTop = getY() + (height - lines.length * 12 + 3) / 2;
             for (int index = 0; index < lines.length; index++) {
-                String text = Minecraft.getInstance().font.plainSubstrByWidth(lines[index], maxTextWidth);
+                String text = StarRailUiFonts.forMod().plainSubstrByWidth(lines[index], maxTextWidth);
                 int lineColor = index == 0 ? color : selected ? GOLD_ACCENT : MUTED_COLOR;
                 if (navigation) {
-                    graphics.drawString(Minecraft.getInstance().font, text, getX() + 32,
+                    graphics.drawString(StarRailUiFonts.forMod(), text, getX() + 32,
                             lineTop + index * 12, lineColor);
                 } else {
-                    graphics.drawCenteredString(Minecraft.getInstance().font, Component.literal(text),
+                    graphics.drawCenteredString(StarRailUiFonts.forMod(), Component.literal(text),
                             getX() + width / 2, lineTop + index * 12, lineColor);
                 }
             }
-            if (elapsed < .55 && (active || tab && selected)) {
-                double progress = elapsed / .55;
+            if (elapsed < .82 && (active || tab && selected)) {
+                double progress = elapsed / .82;
                 if (!navigation) ripple(graphics, elapsed);
                 if (navigation) {
-                    int end = getX() + 30 + (int) ((width - 32) * Math.min(1, progress / .6));
-                    int start = progress < .6 ? getX() + 30
-                            : getX() + 30 + (int) ((width - 32) * (progress - .6) / .4);
+                    int end = getX() + 30 + (int) ((width - 32) * Math.min(1, progress / .62));
+                    int start = progress < .62 ? getX() + 30
+                            : getX() + 30 + (int) ((width - 32) * (progress - .62) / .38);
                     graphics.fill(start, getY() + height - 5, end + 1, getY() + height - 4, GOLD_ACCENT);
                     int dot = progress < .6 ? getX() + 30 : end;
                     graphics.fill(dot - 1, getY() + height - 6, dot + 2,

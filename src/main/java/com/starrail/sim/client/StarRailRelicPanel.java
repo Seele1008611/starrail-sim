@@ -1,6 +1,9 @@
 package com.starrail.sim.client;
 
 import com.starrail.sim.StarRailRelicOperationService;
+import com.starrail.sim.RelicPresetPacket;
+import com.starrail.sim.StarRailNetwork;
+import com.starrail.sim.StarRailRelicPresetService;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -10,7 +13,6 @@ import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.fml.loading.FMLEnvironment;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -50,7 +52,7 @@ final class StarRailRelicPanel {
     private ChoiceList choiceList;
 
     StarRailRelicPanel(StarRailCharacterScreen host) { this.host = host; }
-    private Font font() { return Minecraft.getInstance().font; }
+    private Font font() { return StarRailUiFonts.forMod(); }
     private Entry item() { return state.find(selected); }
     private double now() { return StarRailCosmicUi.seconds(); }
     void layout(int left, int top, int right, int bottom) {
@@ -72,16 +74,15 @@ final class StarRailRelicPanel {
                     () -> { view = tab; changedAt = now(); host.rebuildRelicWidgets(); });
             StarRailUiStyle.setSelected(b, view == tab);
         }
-        if (!FMLEnvironment.production) button(tr(data.preview() ? "leave_preview" : "enter_preview"), detailLeft, top - 21, right - detailLeft, 18, () -> {
-            if (data.preview()) {
-                data = StarRailRelicClientData.INSTANCE;
-                StarRailRelicClientData.requestSnapshot();
-            } else data = new StarRailRelicPreviewData();
-            state = data.snapshot();
-            selected = state.inventory().isEmpty() ? -1 : state.inventory().get(0).id();
-            view = View.EQUIPMENT; clearFilters(); detailScroll.reset(); changedAt = now(); host.rebuildRelicWidgets();
-        });
         if (view == View.EQUIPMENT) {
+            int presetGap=4,presetWidth=(centerRight-left-16-presetGap*3)/4;
+            for(int slot=0;slot<4;slot++) {
+                final int preset=slot;Map<Part,java.util.UUID> loadout=state.presets().get(slot);
+                String label=tr("preset.button",slot+1,loadout==null?"—":loadout.size(),loadout==null?"":state.presetMissing(slot)>0?" !":"");
+                selector(label,left+8+slot*(presetWidth+presetGap),stageTop+3,presetWidth,17,
+                        List.of(tr("preset.apply"),tr("preset.save"),tr("preset.clear")),0,
+                        action->{StarRailRelicPresetService.Operation operation=switch(action){case 0->StarRailRelicPresetService.Operation.APPLY;case 1->StarRailRelicPresetService.Operation.SAVE;default->StarRailRelicPresetService.Operation.CLEAR;};StarRailNetwork.CHANNEL.sendToServer(new RelicPresetPacket(preset,operation));});
+            }
             for (Part part : Part.values()) {
                 double[] p = slotPosition(part); int diameter = part.inner() ? 44 : 58;
                 Tile tile = new Tile(Button.builder(Component.literal(part.label()), b -> {
@@ -380,8 +381,8 @@ final class StarRailRelicPanel {
         drawInventory(g, mouseX, mouseY);
         if (data.preview()) fitted(g,tr("preview_badge"),detailLeft,top+15,right-detailLeft,CYAN);
         if (!notice.isEmpty() && now() - flashAt < 3) fitted(g,notice,left,stageTop+4,width,flashColor);
-        if (now()-changedAt < .3) g.fill(left,stageTop,centerRight,stageBottom,alpha(0xFF091222,Math.max(0,1-(now()-changedAt)/.3)*.35));
-        if (now()-flashAt < .7) g.drawManaged(() -> burst(g,(left+centerRight)/2,(stageTop+stageBottom)/2,now()-flashAt,flashColor));
+        if (now()-changedAt < .48) g.fill(left,stageTop,centerRight,stageBottom,alpha(0xFF091222,Math.max(0,1-(now()-changedAt)/.48)*.35));
+        if (now()-flashAt < .95) g.drawManaged(() -> burst(g,(left+centerRight)/2,(stageTop+stageBottom)/2,now()-flashAt,flashColor));
     }
     private void drawSets(GuiGraphics g) {
         int y = stageBottom - 40; Map<Integer, Integer> counts = new java.util.LinkedHashMap<>();
@@ -504,6 +505,23 @@ final class StarRailRelicPanel {
         choiceList.render(g, mouseX, mouseY);
         g.pose().popPose();
     }
+    void renderSlotTooltip(GuiGraphics g, int mouseX, int mouseY) {
+        if (view != View.EQUIPMENT || choiceList != null) return;
+        int orbitCenter = (left + centerRight) / 2;
+        for (Part part : Part.values()) {
+            double[] position = slotPosition(part);
+            int radius = (part.inner() ? 44 : 58) / 2;
+            double dx = mouseX - position[0], dy = mouseY - position[1];
+            if (dx * dx + dy * dy > radius * radius) continue;
+
+            // Keep the short label attached to the circle instead of letting the
+            // scaled vanilla widget tooltip drift away from outer relic slots.
+            int tooltipX = (int) position[0] + (position[0] < orbitCenter ? radius : -radius - 34);
+            int tooltipY = (int) position[1];
+            g.renderTooltip(font(), Component.literal(part.label()), tooltipX, tooltipY);
+            return;
+        }
+    }
     /** Floating selection list in the same logical coordinates as the character screen. */
     private final class ChoiceList {
         private static final int ROW = 20;
@@ -511,11 +529,14 @@ final class StarRailRelicPanel {
         private final IntConsumer choose;
         private final int x, y, width, height, rows, selectedIndex;
         private final double openedAt = now();
+        private final double[] hoverAmounts;
+        private long hoverFrame;
         private int first, focused;
         ChoiceList(int anchorX, int anchorY, int anchorWidth, int anchorHeight,
                    List<String> options, int selectedIndex, IntConsumer choose) {
             this.options = List.copyOf(options); this.choose = choose; this.selectedIndex = selectedIndex;
             rows = Math.min(options.size(), Math.min(8, Math.max(1, (host.height - 24) / ROW)));
+            hoverAmounts = new double[rows];
             height = rows * ROW;
             int labelWidth = options.stream().mapToInt(font()::width).max().orElse(0) + 28;
             width = Math.min(host.width - 24, Math.max(anchorWidth, labelWidth));
@@ -536,14 +557,17 @@ final class StarRailRelicPanel {
             focused = Math.max(first, Math.min(first + rows - 1, focused));
         }
         void render(GuiGraphics g, int mouseX, int mouseY) {
-            double reveal = Math.min(1, Math.max(0, (now() - openedAt) / .12));
+            long frame=System.nanoTime();double dt=hoverFrame==0?0:Math.min(.1,(frame-hoverFrame)/1_000_000_000D);hoverFrame=frame;
+            double reveal = StarRailUiStyle.reducedMotion()?1:Math.min(1, Math.max(0, (now() - openedAt) / .24));
             g.fill(x + 3, y + 3, x + width + 3, y + height + 3, 0x80000000);
             g.fill(x, y, x + width, y + height, 0xFF101B2E);
-            g.renderOutline(x, y, width, height, alpha(GOLD, .6 + .4 * reveal));
+            g.renderOutline(x, y, width, height, alpha(GOLD, .45 + .55 * reveal));
             for (int row = 0; row < rows; row++) {
                 int index = first + row, rowY = y + row * ROW;
                 boolean hover = mouseX >= x && mouseX < x + width && mouseY >= rowY && mouseY < rowY + ROW;
-                if (hover || index == focused) g.fill(x + 1, rowY + 1, x + width - 1, rowY + ROW - 1, 0xFF263950);
+                double target=hover||index==focused?1:0;if(StarRailUiStyle.reducedMotion())hoverAmounts[row]=target;else hoverAmounts[row]+=(target-hoverAmounts[row])*(1-Math.exp(-dt/.16));
+                if (hoverAmounts[row]>.01) g.fill(x + 1, rowY + 1, x + width - 1, rowY + ROW - 1,
+                        alpha(index==selectedIndex?GOLD:CYAN,.10+.22*hoverAmounts[row]));
                 if (index == selectedIndex) text(g, "✓", x + 5, rowY + 6, GOLD);
                 ellipsis(g, options.get(index), x + 17, rowY + 6, width - 24, index == selectedIndex ? GOLD : TEXT);
             }
@@ -555,7 +579,8 @@ final class StarRailRelicPanel {
             }
         }
     }
-    private double orbitY() { return (stageTop + stageBottom - 60) / 2D; }
+    // Leave a header band for the four preset selectors above the orbit diagram.
+    private double orbitY() { return (stageTop + stageBottom - 60) / 2D + 22; }
     private double orbitRadius() { return Math.min(116, Math.min((centerRight-left-24)/2D,(stageBottom-stageTop-70)/2D)); }
     private double[] slotPosition(Part part) {
         double cx = (left + centerRight) / 2D, cy = orbitY();
@@ -572,10 +597,11 @@ final class StarRailRelicPanel {
     private void drawOrbits(GuiGraphics g) {
         double cx=(left+centerRight)/2D, cy=orbitY(), radius=orbitRadius(), t=now();
         ring(g,cx,cy,radius,0,Math.PI*2,0x407EAFBB);
-        ring(g,cx,cy,radius,t*Math.PI/12,.65,0xB0E7C77E);
-        ring(g,cx,cy,radius,t*Math.PI/12+Math.PI,.65,0xB0E7C77E);
+        double outerPhase=StarRailUiStyle.reducedMotion()?0:t*Math.PI/12;
+        ring(g,cx,cy,radius,outerPhase,.65,0xB0E7C77E);
+        ring(g,cx,cy,radius,outerPhase+Math.PI,.65,0xB0E7C77E);
         ring(g,cx,cy,58,0,Math.PI*2,0x3055D6D2);
-        ring(g,cx,cy,58,-t*Math.PI/8,.8,0xB055D6D2);
+        ring(g,cx,cy,58,StarRailUiStyle.reducedMotion()?0:-t*Math.PI/8,.8,0xB055D6D2);
         g.drawCenteredString(font(),tr("inner_label"),(int)cx,(int)cy-72,CYAN);
         for(int n=0;n<32;n++) {
             double a=n*Math.PI/16, tick=n%4==0?8:5;
@@ -583,8 +609,12 @@ final class StarRailRelicPanel {
                     cx+Math.cos(a)*(radius+tick),cy+Math.sin(a)*(radius+tick),0x607EAFBB);
         }
     }
-    private static void ring(GuiGraphics g,double x,double y,double r,double start,double length,int color){int steps=Math.max(6,(int)(r*length/2));for(int n=0;n<steps;n++){double a=start+length*n/steps,b=start+length*(n+1)/steps;StarRailCosmicUi.line(g,x+Math.cos(a)*r,y+Math.sin(a)*r,x+Math.cos(b)*r,y+Math.sin(b)*r,color);}}
+    private static void ring(GuiGraphics g,double x,double y,double r,double start,double length,int color){
+        if(StarRailUiStyle.smoothEnabled()){StarRailSmoothUi.arc(g,(float)x,(float)y,(float)r,(float)start,(float)length,1,color);return;}
+        int steps=Math.max(6,(int)(r*length/2));for(int n=0;n<steps;n++){double a=start+length*n/steps,b=start+length*(n+1)/steps;StarRailCosmicUi.line(g,x+Math.cos(a)*r,y+Math.sin(a)*r,x+Math.cos(b)*r,y+Math.sin(b)*r,color);}
+    }
     private static int alpha(int color,double opacity){return Math.max(0,Math.min(255,(int)(opacity*255)))<<24|(color&0xFFFFFF);}
+    private static int blendColor(int from,int to,double progress){double t=Math.max(0,Math.min(1,progress));int result=0;for(int shift=0;shift<=24;shift+=8){int a=from>>>shift&255,b=to>>>shift&255;result|=(int)Math.round(a+(b-a)*t)<<shift;}return result;}
     private static int rarity(int stars){return switch(stars){case 2->0xFF91BE9A;case 3->0xFF73B6DD;case 4->0xFFBB9CDE;default->GOLD;};}
     private static void panel(GuiGraphics g,int l,int t,int r,int b){g.fill(l,t,r,b,0xB0101A2D);g.renderOutline(l,t,r-l,b-t,0x5034435B);}
     private void fitted(GuiGraphics g,String text,int x,int y,int w,int color){ellipsis(g,text,x,y,w,color);}
@@ -597,40 +627,49 @@ final class StarRailRelicPanel {
     }
     private void text(GuiGraphics g,String text,int x,int y,int color){g.drawString(font(),text,x,y,color,false);}
     private static void image(GuiGraphics g,ResourceLocation texture,int x,int y,int size){RenderSystem.enableBlend();g.blit(texture,x,y,size,size,0F,0F,64,64,64,64);}
-    private static void burst(GuiGraphics g,double x,double y,double age,int color){if(age<0||age>.7)return;ring(g,x,y,12+age*65,0,Math.PI*2,alpha(color,(1-age/.7)*.7));for(int n=0;n<12;n++){double a=n*Math.PI/6,r=12+age*(35+n%3*18);int px=(int)(x+Math.cos(a)*r),py=(int)(y+Math.sin(a)*r);g.fill(px,py,px+2,py+2,alpha(color,1-age/.7));}}
+    private static void burst(GuiGraphics g,double x,double y,double age,int color){if(age<0||age>.95)return;double progress=age/.95;ring(g,x,y,12+progress*68,0,Math.PI*2,alpha(color,(1-progress)*.7));for(int n=0;n<12;n++){double a=n*Math.PI/6,r=12+progress*(35+n%3*18);int px=(int)(x+Math.cos(a)*r),py=(int)(y+Math.sin(a)*r);g.fill(px,py,px+2,py+2,alpha(color,1-progress));}}
 
     private final class Tile extends Button {
         private final Part part; private Entry card;
+        private long hoverFrame;
+        private double hoverAmount;
         Tile(Button.Builder builder,Part part,Entry card){
             super(builder);this.part=part;this.card=card;
             updateTooltip();
         }
         void updateTooltip() {
-            String label=part!=null?part.label():card.name()+" · "+card.part().label()+" · "+card.main().label()+" "+card.main().format(card.mainValue());
-            if(card!=null)label+=" · "+tr(card.pending()?"pending":state.worn(card)?"worn":card.locked()?"locked":"unworn");
+            if (part != null) {
+                setTooltip(null);
+                return;
+            }
+            String label=card.name()+" · "+card.part().label()+" · "+card.main().label()+" "+card.main().format(card.mainValue());
+            label+=" · "+tr(card.pending()?"pending":state.worn(card)?"worn":card.locked()?"locked":"unworn");
             setTooltip(Tooltip.create(Component.literal(label)));
         }
         @Override protected boolean clicked(double x,double y){if(card!=null&&(y<gridTop||y>=gridBottom))return false;if(part!=null){double dx=x-getX()-width/2D,dy=y-getY()-height/2D;if(dx*dx+dy*dy>width*width/4D)return false;}return super.clicked(x,y);}
         @Override protected void renderWidget(GuiGraphics g,int mx,int my,float partialTick){
-            boolean hover=isHoveredOrFocused();
+            boolean hover=isHoveredOrFocused();long frame=System.nanoTime();double dt=hoverFrame==0?0:Math.min(.1,(frame-hoverFrame)/1_000_000_000D);hoverFrame=frame;if(StarRailUiStyle.reducedMotion())hoverAmount=hover?1:0;else hoverAmount+=( (hover?1:0)-hoverAmount)*(1-Math.exp(-dt/.16));
             if(part!=null){Entry i=state.equipped(part);double x=getX()+width/2D,y=getY()+height/2D,r=width/2D,t=now();int color=part.inner()?CYAN:i==null?MUTED:rarity(i.stars());boolean chosen=i!=null&&i.id()==selected;
-                g.drawManaged(()->{StarRailCosmicUi.ellipse(g,x,y,r,r,0xFF152337);ring(g,x,y,r,0,Math.PI*2,color);double phase=t*Math.PI*2/(part.inner()?-9:12)+part.ordinal();ring(g,x,y,r+2,phase,.9,alpha(color,.8));ring(g,x,y,r+2,phase+Math.PI,.9,alpha(color,.8));ring(g,x,y,r+4,0,Math.PI*2,alpha(color,.15+.15*(1+Math.sin(t*1.2+part.ordinal()))));if(chosen)ring(g,x,y,r+5,0,Math.PI*2,GOLD);double age=t-slotPressed.getOrDefault(part,-10D);if(age<.45)ring(g,x,y,r+5+age*12,0,Math.PI*2,alpha(GOLD,1-age/.45));});
-                if(i!=null){int size=part.inner()?32:44,dy=hover?0:(int)Math.round(Math.sin(t*1.2+part.ordinal())*1.5);image(g,i.image(),(int)x-size/2,(int)y-size/2+dy,size);text(g,"+"+i.level(),getX()+width-20,getY()-2,GOLD);}else text(g,"+",(int)x-3,(int)y-4,MUTED);
+                double hoverGlow=StarRailUiStyle.reducedMotion()?0:hoverAmount*(.6+.4*(1+Math.sin(t*2.4+part.ordinal()))/2);
+                g.drawManaged(()->{if(StarRailUiStyle.smoothEnabled())StarRailSmoothUi.circle(g,(float)x,(float)y,(float)r,1,0xFF152337,blendColor(color,CYAN,hoverAmount*.35));else StarRailCosmicUi.ellipse(g,x,y,r,r,0xFF152337);ring(g,x,y,r,0,Math.PI*2,blendColor(color,CYAN,hoverAmount*.35));double phase=(StarRailUiStyle.reducedMotion()?0:t*Math.PI*2/(part.inner()?-9:12))+part.ordinal();ring(g,x,y,r+2,phase,.9,alpha(color,.8));ring(g,x,y,r+2,phase+Math.PI,.9,alpha(color,.8));ring(g,x,y,r+4,0,Math.PI*2,alpha(color,StarRailUiStyle.reducedMotion()?.25:.15+.15*(1+Math.sin(t*1.2+part.ordinal()))));if(hoverGlow>.02)ring(g,x,y,r+5+hoverGlow,0,Math.PI*2,alpha(CYAN,hoverGlow*.35));if(chosen)ring(g,x,y,r+5,0,Math.PI*2,GOLD);double age=t-slotPressed.getOrDefault(part,-10D);if(age<.72&&!StarRailUiStyle.reducedMotion())ring(g,x,y,r+5+age*9,0,Math.PI*2,alpha(GOLD,1-age/.72));});
+                if(i!=null){int size=part.inner()?32:44;double bob=StarRailUiStyle.reducedMotion()?0:Math.sin(t*1.2+part.ordinal())*1.5*(1-hoverAmount);int dy=(int)Math.round(bob-hoverAmount*2);image(g,i.image(),(int)x-size/2,(int)y-size/2+dy,size);text(g,"+"+i.level(),getX()+width-20,getY()-2,GOLD);}else text(g,"+",(int)x-3,(int)y-4,MUTED);
                 fitted(g,part.label(),getX()-6,getY()+height+4,width+12,MUTED);
             }else{
                 host.clip(g,inventoryLeft+6,gridTop,inventoryRight-6,gridBottom);
                 int color=rarity(card.stars()), x=getX(), y=getY();
                 panel(g,x,y,x+width,y+height);
-                g.renderOutline(x,y,width,height,card.id()==selected?GOLD:hover?CYAN:color);
-                image(g,card.image(),x+width/2-18,y+16-(hover?2:0),36);
+                int outline=card.id()==selected?GOLD:blendColor(color,CYAN,hoverAmount*.7);
+                g.renderOutline(x,y,width,height,outline);
+                if(hoverAmount>.02)g.fill(x+1,y+1,x+width-1,y+2,alpha(CYAN,hoverAmount*.65));
+                image(g,card.image(),x+width/2-18,y+16-(int)Math.round(hoverAmount*2),36);
                 text(g,"+"+card.level(),x+width-21,y+4,color);
                 if(card.locked()||state.worn(card)||card.pending())
                     g.fill(x+4,y+4,x+7,y+7,card.pending()?CYAN:GOLD);
                 fitted(g,"★".repeat(card.stars()),x+4,y+54,width-8,color);
                 ellipsis(g,card.name(),x+4,y+66,width-8,TEXT);
                 ellipsis(g,card.main().label()+" "+card.main().format(card.mainValue()),x+4,y+78,width-8,CYAN);
-                if(card.id()==selected&&now()-selectedAt<.4)
-                    g.renderOutline(x+1,y+1,width-2,height-2,alpha(GOLD,1-(now()-selectedAt)/.4));
+                if(card.id()==selected&&!StarRailUiStyle.reducedMotion()&&now()-selectedAt<.72)
+                    g.renderOutline(x+1,y+1,width-2,height-2,alpha(GOLD,1-(now()-selectedAt)/.72));
                 g.disableScissor();
             }
         }

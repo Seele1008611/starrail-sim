@@ -148,7 +148,7 @@ public final class StarRailNotifications {
         Minecraft minecraft = Minecraft.getInstance();
         if (minecraft.player == null || minecraft.level == null || minecraft.options.hideGui
                 || minecraft.screen != null) return;
-        Font font = minecraft.font;
+        Font font = StarRailUiFonts.forMod();
         int screenWidth = event.getWindow().getGuiScaledWidth();
         int screenHeight = event.getWindow().getGuiScaledHeight();
         int maxWidth = Math.min(MAX_TEXT_WIDTH, screenWidth - 32);

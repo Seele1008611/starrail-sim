@@ -288,6 +288,8 @@ public final class StarRailRelicOperationService {
         return Result.ok();
     }
 
+    static LocatedRelic locateForPreset(ServerPlayer player, UUID instanceId) { return locate(player,instanceId); }
+
     private static LocatedRelic locate(ServerPlayer player, UUID instanceId) {
         if (instanceId == null) return null;
         List<LocatedRelic> found = new ArrayList<>();
@@ -365,7 +367,7 @@ public final class StarRailRelicOperationService {
 
     private enum Operation { LOCK, ENHANCE, REROLL, KEEP_OLD, TAKE_NEW }
 
-    private record LocatedRelic(ItemStack stack, boolean equipped, int inventorySlot,
+    record LocatedRelic(ItemStack stack, boolean equipped, int inventorySlot,
                                 Runnable saveAction, Runnable removeAction) {
         private void save() { saveAction.run(); }
         private void remove() { removeAction.run(); }

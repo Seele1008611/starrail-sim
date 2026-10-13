@@ -123,7 +123,7 @@ public final class StarRailRuinBattleHud {
 
     private static void row(GuiGraphics g, int x, int y, int width, Component label,
                             float value, float max, float fraction, int colour) {
-        var font = Minecraft.getInstance().font;
+        var font = StarRailUiFonts.forMod();
         String text = String.format(Locale.ROOT, "%.1f / %.1f", Math.max(0, value), max);
         g.drawString(font, label, x, y, 0xFFD9E3EB, false);
         g.drawString(font, text, x + width - font.width(text), y, 0xFFFFFFFF, false);

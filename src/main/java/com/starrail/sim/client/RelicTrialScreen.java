@@ -7,14 +7,19 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.lwjgl.glfw.GLFW;
 
 /** Compact in-game selector that previews the current set and starts a test fight. */
 public final class RelicTrialScreen extends AbstractContainerScreen<RelicTrialMenu> {
-    private final List<Button> setButtons = new ArrayList<>();
+    private static final int PICKER_ROW_HEIGHT = 19;
+    private static final double PICKER_OPEN_SECONDS = .26;
+    private final double[] pickerHover = new double[RelicTrialSet.values().length];
+    private Button setSelector;
     private Button startButton;
+    private boolean setListOpen;
+    private long setListOpenedAt;
+    private long pickerFrame;
+    private int pickerFocused;
 
     public RelicTrialScreen(RelicTrialMenu menu, Inventory inventory, Component title) {
         super(menu, inventory, title);
@@ -27,18 +32,12 @@ public final class RelicTrialScreen extends AbstractContainerScreen<RelicTrialMe
     @Override
     protected void init() {
         super.init();
-        setButtons.clear();
-        RelicTrialSet[] sets = RelicTrialSet.values();
-        for (int index = 0; index < sets.length; index++) {
-            final int selected = index;
-            int column = index % 2;
-            int row = index / 2;
-            Button button = StarRailUiStyle.button(setButtonLabel(sets[index]),
-                    ignored -> click(selected), leftPos + 16 + column * 140,
-                    topPos + 75 + row * 31, 134, 27);
-            setButtons.add(button);
-            addRenderableWidget(button);
-        }
+        font = StarRailUiFonts.forMod();
+        setListOpen = false;
+        setSelector = StarRailUiStyle.button(setSelectorLabel(), ignored -> toggleSetList(),
+                leftPos + 16, topPos + 75, imageWidth - 32, 27);
+        StarRailUiStyle.setSelected(setSelector, true);
+        addRenderableWidget(setSelector);
         startButton = StarRailUiStyle.button(Component.translatable("ui.starrail_sim.arena.start"),
                         ignored -> click(menu.battleActive()
                                 ? RelicTrialMenu.BUTTON_ABORT : RelicTrialMenu.BUTTON_START),
@@ -53,6 +52,13 @@ public final class RelicTrialScreen extends AbstractContainerScreen<RelicTrialMe
         }
     }
 
+    private void toggleSetList() {
+        if (menu.battleActive()) return;
+        setListOpen = !setListOpen;
+        setListOpenedAt = System.nanoTime();
+        pickerFocused = menu.selectedSetIndex();
+    }
+
     @Override
     protected void containerTick() {
         super.containerTick();
@@ -60,11 +66,12 @@ public final class RelicTrialScreen extends AbstractContainerScreen<RelicTrialMe
     }
 
     private void refreshButtons() {
-        for (int index = 0; index < setButtons.size(); index++) {
-            setButtons.get(index).active = !menu.battleActive();
-            StarRailUiStyle.setSelected(setButtons.get(index), index == menu.selectedSetIndex());
-            setButtons.get(index).setMessage(setButtonLabel(RelicTrialSet.values()[index]));
+        if (setSelector != null) {
+            setSelector.active = !menu.battleActive();
+            setSelector.setMessage(setSelectorLabel());
+            StarRailUiStyle.setSelected(setSelector, true);
         }
+        if (menu.battleActive()) setListOpen = false;
         if (startButton != null) {
             startButton.active = true;
             String key = menu.battleActive() ? "ui.starrail_sim.arena.cancel"
@@ -75,10 +82,118 @@ public final class RelicTrialScreen extends AbstractContainerScreen<RelicTrialMe
         }
     }
 
-    private static Component setButtonLabel(RelicTrialSet set) {
-        return Component.translatable("ui.starrail_sim.arena.set_card", set.displayName(),
+    private Component setSelectorLabel() {
+        RelicTrialSet set = RelicTrialSet.byIndex(menu.selectedSetIndex());
+        return Component.translatable("ui.starrail_sim.arena.set_picker",
+                set.displayName(), Component.translatable(set.inner()
+                        ? "ui.starrail_sim.arena.set_inner" : "ui.starrail_sim.arena.set_outer"));
+    }
+
+    private static Component setOptionLabel(RelicTrialSet set) {
+        return Component.translatable("ui.starrail_sim.arena.set_option", set.displayName(),
                 Component.translatable(set.inner() ? "ui.starrail_sim.arena.set_inner"
                         : "ui.starrail_sim.arena.set_outer"));
+    }
+
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        if (setListOpen && button == 0) {
+            int listX = leftPos + 11, listY = topPos + 71, listWidth = imageWidth - 22;
+            int listHeight = PICKER_ROW_HEIGHT * RelicTrialSet.values().length;
+            if (mouseX >= listX && mouseX < listX + listWidth
+                    && mouseY >= listY && mouseY < listY + listHeight) {
+                int index = (int) (mouseY - listY) / PICKER_ROW_HEIGHT;
+                if (index >= 0 && index < RelicTrialSet.values().length) click(index);
+                setListOpen = false;
+                return true;
+            }
+            setListOpen = false;
+        }
+        return super.mouseClicked(mouseX, mouseY, button);
+    }
+
+    @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        if (setListOpen && keyCode == GLFW.GLFW_KEY_ESCAPE) {
+            setListOpen = false;
+            return true;
+        }
+        if (setListOpen && keyCode == GLFW.GLFW_KEY_UP) {
+            pickerFocused = Math.max(0, pickerFocused - 1);
+            return true;
+        }
+        if (setListOpen && keyCode == GLFW.GLFW_KEY_DOWN) {
+            pickerFocused = Math.min(RelicTrialSet.values().length - 1, pickerFocused + 1);
+            return true;
+        }
+        if (setListOpen && (keyCode == GLFW.GLFW_KEY_ENTER || keyCode == GLFW.GLFW_KEY_KP_ENTER
+                || keyCode == GLFW.GLFW_KEY_SPACE)) {
+            click(pickerFocused);
+            setListOpen = false;
+            return true;
+        }
+        return super.keyPressed(keyCode, scanCode, modifiers);
+    }
+
+    @Override
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+        super.render(graphics, mouseX, mouseY, partialTick);
+        if (setListOpen) renderSetList(graphics, mouseX, mouseY);
+    }
+
+    private void renderSetList(GuiGraphics graphics, int mouseX, int mouseY) {
+        int x = leftPos + 11, y = topPos + 71, width = imageWidth - 22;
+        int height = PICKER_ROW_HEIGHT * RelicTrialSet.values().length;
+        long now = System.nanoTime();
+        double dt = pickerFrame == 0 ? 0 : Math.min(.1, (now - pickerFrame) / 1_000_000_000D);
+        pickerFrame = now;
+        double age = Math.max(0, (now - setListOpenedAt) / 1_000_000_000D);
+        double reveal = StarRailUiStyle.reducedMotion()?1:Math.min(1, age / PICKER_OPEN_SECONDS);
+        reveal = reveal * reveal * (3 - 2 * reveal);
+        graphics.pose().pushPose();
+        graphics.pose().translate(0, 0, 420);
+        graphics.fill(x + 3, y + 3, x + width + 3, y + height + 3, 0x90000000);
+        int panelFill = (int) (238 * reveal) << 24 | 0x101B2E;
+        int panelBorder = (int) (210 * reveal) << 24 | 0xE7C77E;
+        if (StarRailUiStyle.smoothEnabled()) {
+            StarRailSmoothUi.roundedRect(graphics, x, y, width, height, 8, 1, panelFill, panelBorder);
+        } else {
+            graphics.fill(x, y, x + width, y + height, panelFill);
+            graphics.renderOutline(x, y, width, height, panelBorder);
+        }
+        for (int index = 0; index < RelicTrialSet.values().length; index++) {
+            int rowY = y + index * PICKER_ROW_HEIGHT;
+            boolean hover = mouseX >= x && mouseX < x + width
+                    && mouseY >= rowY && mouseY < rowY + PICKER_ROW_HEIGHT;
+            if (StarRailUiStyle.reducedMotion()) pickerHover[index] = hover ? 1 : 0;
+            else pickerHover[index] += ((hover ? 1 : 0) - pickerHover[index])
+                    * (1 - Math.exp(-dt / .16));
+            double rowAge = Math.max(0, age - index * .024);
+            double rowReveal = StarRailUiStyle.reducedMotion()?1:Math.min(1, rowAge / .22);
+            rowReveal = rowReveal * rowReveal * (3 - 2 * rowReveal);
+            int selected = menu.selectedSetIndex() == index ? 1 : 0;
+            double highlight = Math.max(Math.max(selected * .6, pickerHover[index]),
+                    setListOpen && index == pickerFocused ? .45 : 0);
+            if (highlight > .01) {
+                int color = selected == 1 ? 0xE7C77E : 0x55D6D2;
+                graphics.fill(x + 3, rowY + 1, x + width - 3, rowY + PICKER_ROW_HEIGHT - 1,
+                        (int) (58 * highlight * rowReveal) << 24 | color);
+            }
+            if (index > 0) graphics.fill(x + 10, rowY, x + width - 10, rowY + 1,
+                    (int) (42 * rowReveal) << 24 | 0x9EACC2);
+            Component label = setOptionLabel(RelicTrialSet.values()[index]);
+            int textColor = index == menu.selectedSetIndex() ? 0xFFE7C77E : 0xFFE4EAF2;
+            String clipped = StarRailUiFonts.forMod().plainSubstrByWidth(label.getString(), width - 48);
+            graphics.drawString(StarRailUiFonts.forMod(), clipped, x + 14,
+                    rowY + (PICKER_ROW_HEIGHT - font.lineHeight) / 2,
+                    (int) (255 * rowReveal) << 24 | textColor & 0xFFFFFF);
+            if (index == menu.selectedSetIndex()) {
+                graphics.drawString(StarRailUiFonts.forMod(), "✓", x + width - 18,
+                        rowY + (PICKER_ROW_HEIGHT - font.lineHeight) / 2,
+                        (int) (255 * rowReveal) << 24 | 0xE7C77E);
+            }
+        }
+        graphics.pose().popPose();
     }
 
     @Override
@@ -98,8 +213,7 @@ public final class RelicTrialScreen extends AbstractContainerScreen<RelicTrialMe
     @Override
     protected void renderLabels(GuiGraphics graphics, int mouseX, int mouseY) {
         graphics.drawString(font, title, 16, 13, 0xF2C96D, false);
-        graphics.drawString(font, Component.translatable("ui.starrail_sim.arena.selected_set",
-                RelicTrialSet.byIndex(menu.selectedSetIndex()).displayName()),
+        graphics.drawString(font, Component.translatable("ui.starrail_sim.arena.choose_set"),
                 16, 34, 0xE4EAF5, false);
         int currentRank = StarRailPathClientState.getCurrentPathRank().getLevel();
         Component rules;

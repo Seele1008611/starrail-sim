@@ -152,6 +152,10 @@ public final class StarRailGuideScreen extends StarRailStyledScreen {
                 Component.translatable("ui.starrail_sim.guide.open_path"),
                 ignored -> minecraft.setScreen(new StarRailPathScreen()),
                 contentLeft, panelBottom - 65, detailX - contentLeft - 16, 24));
+        addRenderableWidget(StarRailUiStyle.button(
+                Component.translatable("ui.starrail_sim.settings.open"),
+                ignored -> minecraft.setScreen(new StarRailDisplaySettingsScreen(this)),
+                panelRight - 186, panelTop + 22, 160, 24));
         StarRailNetwork.CHANNEL.sendToServer(
                 new PathActionPacket(PathActionPacket.Action.REQUEST_STATE));
         updateVisibility();
@@ -444,8 +448,9 @@ public final class StarRailGuideScreen extends StarRailStyledScreen {
                 {"combat_title", "damage", "toughness", "break", "effect_hit", "effect_resistance", "knockback_resistance"},
                 {"hud_title", "hud_values", "hud_context", "hud_settings"},
                 {"relic_title", "relic_access", "relic_slots", "relic_trial", "relic_growth",
-                        "relic_salvage", "relic_reroll", "relic_sets"},
-                {"interface_title", "attributes", "practice_detail", "path_switch", "notifications", "light_cone"}
+                        "relic_salvage", "relic_reroll", "relic_sets", "relic_presets"},
+                {"interface_title", "attributes", "attribute_sources", "practice_detail", "path_switch",
+                        "notifications", "light_cone", "display_settings"}
         };
         int y = contentTop, textWidth = contentRight - contentLeft - 10;
         for (String[] group : groups) {

@@ -27,6 +27,9 @@ replay_pid*.log
 eclipse
 run
 
+# Local UI rollback archives (keep on disk, do not publish duplicate resources).
+/backups/
+
 # Files from Forge MDK
 forge*changelog.txt
 

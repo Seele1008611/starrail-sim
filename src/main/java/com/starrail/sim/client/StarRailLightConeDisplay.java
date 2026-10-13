@@ -8,7 +8,25 @@ import net.minecraft.world.item.ItemStack;
 
 /** A centered card plane; inventory renderer's GUI depth translation must not be rotated. */
 final class StarRailLightConeDisplay {
+    private static final float CARD_WIDTH = 764F;
+    private static final float CARD_HEIGHT = 1080F;
+    private static final float CARD_ROLL_DEGREES = -8F;
+    private static final float CARD_DEPTH = 27F;
+    static final float MAX_ROTATION_DEGREES = 30F;
+
     private StarRailLightConeDisplay() { }
+
+    /** Maximum horizontal screen-space width across the interactive rotation range. */
+    static float maxProjectedWidthFactor() {
+        double roll = Math.toRadians(CARD_ROLL_DEGREES);
+        double faceWidth = CARD_WIDTH * Math.abs(Math.cos(roll));
+        double faceHeight = CARD_HEIGHT * Math.abs(Math.sin(roll));
+        // The layered card edge extends behind the face and also rotates into screen space.
+        double depth = CARD_DEPTH * Math.abs(Math.cos(roll));
+        double yaw = Math.min(Math.toRadians(MAX_ROTATION_DEGREES), Math.atan2(depth, faceWidth));
+        double projectedWidth = faceHeight + faceWidth * Math.cos(yaw) + depth * Math.sin(yaw);
+        return (float) (projectedWidth / CARD_HEIGHT);
+    }
 
     static void banner(GuiGraphics graphics, ItemStack stack, int x, int y, int width, int height) {
         if (stack.isEmpty()) return;
@@ -43,7 +61,7 @@ final class StarRailLightConeDisplay {
         graphics.pose().pushPose();
         graphics.pose().translate(centerX, centerY, 40);
         if (!upright) {
-            graphics.pose().mulPose(Axis.ZP.rotationDegrees(-8));
+            graphics.pose().mulPose(Axis.ZP.rotationDegrees(CARD_ROLL_DEGREES));
             graphics.pose().mulPose(Axis.YP.rotationDegrees(angle));
         }
         float scale = cardHeight / 1080F;
@@ -54,12 +72,14 @@ final class StarRailLightConeDisplay {
                 graphics.pose().pushPose();
                 graphics.pose().translate(0, 0, -layer * 9);
                 graphics.setColor(.4F, .39F, .47F, 1F);
-                graphics.blit(texture, -382, -540, 160F, 0F, 764, 1080, 1080, 1080);
+                graphics.blit(texture, -(int) (CARD_WIDTH / 2), -(int) (CARD_HEIGHT / 2), 160F, 0F,
+                        (int) CARD_WIDTH, (int) CARD_HEIGHT, 1080, 1080);
                 graphics.pose().popPose();
             }
         }
         graphics.setColor(1, 1, 1, 1);
-        graphics.blit(texture, -382, -540, 160F, 0F, 764, 1080, 1080, 1080);
+        graphics.blit(texture, -(int) (CARD_WIDTH / 2), -(int) (CARD_HEIGHT / 2), 160F, 0F,
+                (int) CARD_WIDTH, (int) CARD_HEIGHT, 1080, 1080);
         if (!upright) {
             graphics.pose().translate(0, 0, 1);
             double shimmer = .5 + .5 * Math.sin(StarRailCosmicUi.seconds() * Math.PI * 2 / 8);

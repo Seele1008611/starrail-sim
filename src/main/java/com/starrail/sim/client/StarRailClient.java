@@ -34,6 +34,16 @@ public final class StarRailClient {
     }
 
     @SubscribeEvent
+    public static void registerShaders(net.minecraftforge.client.event.RegisterShadersEvent event) {
+        StarRailSmoothUi.register(event);
+    }
+
+    @SubscribeEvent
+    public static void registerReloadListeners(net.minecraftforge.client.event.RegisterClientReloadListenersEvent event) {
+        event.registerReloadListener(StarRailSharpText.INSTANCE);
+    }
+
+    @SubscribeEvent
     public static void registerKeyMappings(RegisterKeyMappingsEvent event) {
         event.register(OPEN_CHARACTER);
         event.register(TOGGLE_STATUS);

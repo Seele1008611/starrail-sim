@@ -101,7 +101,9 @@ public final class StarRailTraceScreen extends StarRailStyledScreen {
         RenderSystem.enableBlend(); RenderSystem.setShaderColor(tintRed, tintGreen, 1F, .14F);
         // Keep the destination size separate from the source region: otherwise
         // GuiGraphics samples only the upper-left portion of the watermark.
-        g.blit(watermark, emblemX, emblemY, emblemWidth, emblemHeight, 0F, 0F,
+        if (StarRailUiStyle.smoothEnabled()) StarRailSmoothUi.image(g,watermark,emblemX,emblemY,
+                emblemWidth,emblemHeight,layout.textureWidth(),layout.textureHeight());
+        else g.blit(watermark, emblemX, emblemY, emblemWidth, emblemHeight, 0F, 0F,
                 layout.textureWidth(), layout.textureHeight(), layout.textureWidth(), layout.textureHeight());
         g.flush(); RenderSystem.setShaderColor(1,1,1,1);
         g.drawManaged(() -> {
@@ -122,6 +124,10 @@ public final class StarRailTraceScreen extends StarRailStyledScreen {
         if (confirmation) drawConfirmation(g,mask);
     }
     private void ring(GuiGraphics g,double x,double y,double radius,int color) {
+        if (StarRailUiStyle.smoothEnabled()) {
+            StarRailSmoothUi.arc(g,(float)x,(float)y,(float)radius,0,(float)(Math.PI*2),1,color);
+            return;
+        }
         for(int i=0;i<96;i++) {
             double a=i*Math.PI*2/96,b=(i+1)*Math.PI*2/96;
             StarRailCosmicUi.line(g,x+Math.cos(a)*radius,y+Math.sin(a)*radius,x+Math.cos(b)*radius,y+Math.sin(b)*radius,color);
@@ -135,6 +141,17 @@ public final class StarRailTraceScreen extends StarRailStyledScreen {
         int green=Math.min(255,((layout.accent()>>8)&255)+48);
         int blue=Math.min(255,(layout.accent()&255)+48);
         int flowColor=0xD8000000|(r<<16)|(green<<8)|blue;
+        if (StarRailUiStyle.smoothEnabled() && segment.kind()==0) {
+            double x1=originX+segment.x1()*scale,y1=originY+segment.y1()*scale;
+            double x2=originX+segment.x2()*scale,y2=originY+segment.y2()*scale;
+            StarRailCosmicUi.line(g,x1,y1,x2,y2,baseColor);
+            if (!StarRailUiStyle.reducedMotion()) {
+                double from=Math.max(0,head-.06),to=Math.min(1,head+.06);
+                StarRailCosmicUi.line(g,x1+(x2-x1)*from,y1+(y2-y1)*from,
+                        x1+(x2-x1)*to,y1+(y2-y1)*to,flowColor);
+            }
+            return;
+        }
         for(int i=1;i<=70;i++) {
             double t=i/70.0,u=1-t,x,y;
             if (segment.kind()==0) {
@@ -147,7 +164,7 @@ public final class StarRailTraceScreen extends StarRailStyledScreen {
                 y=u*u*u*segment.y1()+3*u*u*t*segment.c1y()+3*u*t*t*segment.c2y()+t*t*t*segment.y2();
             }
             double distance=Math.abs(t-head);
-            int color=distance < .06 ? flowColor : baseColor;
+            int color=!StarRailUiStyle.reducedMotion() && distance < .06 ? flowColor : baseColor;
             StarRailCosmicUi.line(g,originX+px*scale,originY+py*scale,originX+x*scale,originY+y*scale,color);
             px=x;py=y;
         }

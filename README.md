@@ -5,14 +5,14 @@
 ## 版本与依赖
 
 - Mod ID：`starrail_sim`
-- 当前正式版本：`1.12.0`（2026-10-12）。
-- 发行包与校验信息见 [1.12.0 发布归档](releases/1.12.0.md)。
+- 当前正式版本：`1.13.0`（2026-10-13）。
+- 发行包与校验信息见 [1.13.0 发布归档](releases/1.13.0.md)。
 - Minecraft：`1.20.1`
 - Forge：`47.x`；1.11.0 单人验收使用开发客户端 `47.4.10`。
 - Java：`17`
 - 必需依赖：Curios API（Forge、Minecraft 1.20.1）；发行包使用 `5.14.1` 核验。
 
-发行 JAR：[starrail_sim-1.12.0.jar](https://github.com/Seele1008611/starrail-sim/releases/download/v1.12.0/starrail_sim-1.12.0.jar)。
+发行 JAR：[starrail_sim-1.13.0.jar](https://github.com/Seele1008611/starrail-sim/releases/download/v1.13.0/starrail_sim-1.13.0.jar)。
 
 ## 功能概览
 
@@ -20,6 +20,7 @@
 - 1.10.0 新增六槽遗器、五套遗器效果与养成系统，以及可自然生成的遗器决斗场；包含三波战斗、遗器奖励、定向合成、干涉密钥和变量骰子。
 - 1.11.0 新增九命途逐级累计的生命、攻击、防御与恢复成长。
 - 1.12.0 收紧遗器决斗场敌人筛选为原版普通敌对生物，新增筛选诊断、服务器安全阈值配置与随机1～3件通关奖励，并修正绕甲伤害和超限护甲公式的冲突。
+- 1.13.0 内置思源黑体并加入字体与平滑绘制设置、属性来源明细、四套通用遗器预设，以及多处角色、遗器、光锥和试炼台界面优化。
 
 - 角色属性、战斗反馈、光锥与 Curios 饰品槽。
 - 1.8.0 新增九命途触发技及韧性削减、击破的立体网格特效，区分近战与远程，并跟随实际目标。
@@ -41,7 +42,7 @@
 
 1. 安装 Minecraft 1.20.1、Java 17 和 Forge 47.x。
 2. 安装适用于 Forge 1.20.1 的 Curios API 5.14.1 或更高版本。
-3. 将 `starrail_sim-1.12.0.jar` 和 Curios API JAR 放入游戏实例的 `mods` 文件夹。
+3. 将 `starrail_sim-1.13.0.jar` 和 Curios API JAR 放入游戏实例的 `mods` 文件夹。
 4. 启动 Forge 配置文件。
 
 建议先在新存档中体验。自然生成只会发生在首次生成的区块；已经生成过的区块不会因为安装模组而自动补出遗迹。普通遗迹会在满足高度和结构放置条件时尝试生成，命途主题遗迹由命途寻迹安排。
@@ -58,6 +59,7 @@ Windows 下可用项目自带 Gradle Wrapper 启动开发客户端或构建项�
 ## 验证状态
 
 - 1.12.0 用户确认整合包实机测试通过；多人游戏暂未测试。详见 [1.12.0 发布归档](releases/1.12.0.md)。
+- 1.13.0 用户确认单人实机验收通过；多人游戏暂未测试。详见 [1.13.0 发布归档](releases/1.13.0.md)。
 - 1.11.0 用户确认单人实机测试通过；详见 [1.11.0 发布归档](releases/1.11.0.md)。
 - 1.10.0 网络协议为 13，客户端与服务端须使用同版。详见 [1.10.0 发布归档](releases/1.10.0.md)。
 - 1.9.0 用户确认发布前单人补测通过，攻击力 UI 同步及护甲/韧性基值保存修复复测通过。多人和 AttributeFix 共同加载未验证；协议为 10，两端须使用同版。详见 [补测步骤与结果](设计方案/项目文档/测试验收/1.9.0发布前补测步骤.md)。
@@ -78,6 +80,6 @@ Windows 下可用项目自带 Gradle Wrapper 启动开发客户端或构建项�
 
 项目文档与设计资料已按主题整理在 [`设计方案/README.md`](设计方案/README.md)：命途、战斗和版本记录见 [`项目文档`](设计方案/项目文档/README.md)；遗迹概念图、模型源文件和测试记录见 [`遗迹设计`](设计方案/遗迹设计/README.md)。当前版本的详细规则可从 [设计总纲](设计方案/项目文档/系统设计/DESIGN.md)、[命途试炼与寻迹](设计方案/项目文档/系统设计/PATH_TRIALS.md)、[命途等级](设计方案/项目文档/系统设计/PATH_RANKS.md) 开始。版本记录见 [CHANGELOG.md](CHANGELOG.md)；1.6.0 行迹设计与验收记录见 [1.6.0 版本计划](设计方案/项目文档/版本规划/PLAN_1.6.0.md) 和 [九命途行迹设计表](设计方案/项目文档/系统设计/1.6.0巡猎行迹设计表.md)。
 
-`README.txt` 和根目录 `changelog.txt` 是 Forge MDK 上游模板文件；项目说明和版本记录以本文件及 `CHANGELOG.md` 为准。发布归档见 [releases/1.12.0.md](releases/1.12.0.md)、[releases/1.11.0.md](releases/1.11.0.md)、[releases/1.10.0.md](releases/1.10.0.md)、[releases/1.9.0.md](releases/1.9.0.md)、[releases/1.8.0.md](releases/1.8.0.md)、[releases/1.7.0.md](releases/1.7.0.md)、[releases/1.6.0.md](releases/1.6.0.md)、[releases/1.5.0.md](releases/1.5.0.md)、[releases/1.4.0.md](releases/1.4.0.md)、[releases/1.3.0.md](releases/1.3.0.md)、[releases/1.2.0.md](releases/1.2.0.md) 和 [releases/1.1.0.md](releases/1.1.0.md)。
+`README.txt` 和根目录 `changelog.txt` 是 Forge MDK 上游模板文件；项目说明和版本记录以本文件及 `CHANGELOG.md` 为准。发布归档见 [releases/1.13.0.md](releases/1.13.0.md)、[releases/1.12.0.md](releases/1.12.0.md)、[releases/1.11.0.md](releases/1.11.0.md)、[releases/1.10.0.md](releases/1.10.0.md)、[releases/1.9.0.md](releases/1.9.0.md)、[releases/1.8.0.md](releases/1.8.0.md)、[releases/1.7.0.md](releases/1.7.0.md)、[releases/1.6.0.md](releases/1.6.0.md)、[releases/1.5.0.md](releases/1.5.0.md)、[releases/1.4.0.md](releases/1.4.0.md)、[releases/1.3.0.md](releases/1.3.0.md)、[releases/1.2.0.md](releases/1.2.0.md) 和 [releases/1.1.0.md](releases/1.1.0.md)。
 
 

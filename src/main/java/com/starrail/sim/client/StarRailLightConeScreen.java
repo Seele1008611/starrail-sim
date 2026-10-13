@@ -148,6 +148,10 @@ public final class StarRailLightConeScreen extends StarRailStyledScreen {
 
         int pageY = panelBottom - (compactLayout ? 25 : 30);
         addRenderableWidget(StarRailUiStyle.outlinedButton(
+                Component.translatable("screen.starrail_sim.light_cone.choose"),
+                ignored -> minecraft.setScreen(new StarRailLightConePickerScreen(this)),
+                centerRight - 184, pageY, 88, 22));
+        addRenderableWidget(StarRailUiStyle.outlinedButton(
                 Component.translatable("ui.starrail_sim.cone.preview"),
                 ignored -> minecraft.setScreen(new FrontView(this,
                         StarRailLightConeClientData.findEquipped(minecraft.player).copy())),
@@ -211,13 +215,15 @@ public final class StarRailLightConeScreen extends StarRailStyledScreen {
 
     private void renderCenter(GuiGraphics graphics, ItemStack stack) {
         int bottom = panelBottom - 42;
-        int centerX = (contentLeft + centerRight) / 2 - 24;
+        int centerX = (contentLeft + centerRight) / 2;
         if (stack.isEmpty()) {
             graphics.drawCenteredString(font, Component.translatable("screen.starrail_sim.light_cone_empty"),
                     centerX, (contentTop + bottom) / 2, StarRailUiStyle.VALUE_COLOR);
             return;
         }
-        float cardHeight = Math.min(bottom - contentTop - 42, (centerRight - contentLeft - 48) / .85F);
+        float availableWidth = Math.max(1, centerRight - contentLeft - 56);
+        float cardHeight = Math.min(bottom - contentTop - 42,
+                availableWidth / StarRailLightConeDisplay.maxProjectedWidthFactor());
         float centerY = (contentTop + bottom) / 2F - 8;
         StarRailCosmicUi.prism(graphics, centerX + (int) (cardHeight * .5 * Math.sin(Math.toRadians(8))),
                 (int) (centerY + cardHeight * .5 * Math.cos(Math.toRadians(8))),
@@ -238,7 +244,8 @@ public final class StarRailLightConeScreen extends StarRailStyledScreen {
     @Override
     protected boolean logicalMouseDragged(double x, double y, int button, double dx, double dy) {
         if (draggingCone && button == 0) {
-            coneTargetAngle = (float) Math.max(-30, Math.min(30, coneTargetAngle + dx * .3));
+            coneTargetAngle = (float) Math.max(-StarRailLightConeDisplay.MAX_ROTATION_DEGREES,
+                    Math.min(StarRailLightConeDisplay.MAX_ROTATION_DEGREES, coneTargetAngle + dx * .3));
             return true;
         }
         return super.logicalMouseDragged(x, y, button, dx, dy);

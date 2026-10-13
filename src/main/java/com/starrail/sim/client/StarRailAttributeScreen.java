@@ -1,6 +1,11 @@
 package com.starrail.sim.client;
 
 import com.starrail.sim.StarRailAttributes;
+import com.starrail.sim.AttributeSourcesPacket;
+import com.starrail.sim.AttributeSourcesRequestPacket;
+import com.starrail.sim.StarRailNetwork;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.FormattedCharSequence;
@@ -21,6 +26,28 @@ public final class StarRailAttributeScreen extends StarRailModalScreen {
     private final StarRailSmoothScroll scroll = new StarRailSmoothScroll();
     private int selected = -1;
     private int contentHeight;
+    private AttributeSourcesPacket snapshot;
+    private int refreshTicks;
+    private Button back;
+    private static final String[] SOURCES={"path","traces","light_cone","equipment","relics","effects","temporary","other"};
+
+    @Override protected void init() {
+        super.init();snapshot=null;refreshTicks=0;
+        back=addRenderableWidget(StarRailUiStyle.outlinedButton(Component.translatable("ui.starrail_sim.attributes.back"),
+                ignored->{selected=-1;scroll.reset();},modalLeft+17,modalBottom-36,120,22));
+        request();
+    }
+    private void request() {
+        if(minecraft.player!=null && minecraft.getConnection()!=null)
+            StarRailNetwork.CHANNEL.sendToServer(new AttributeSourcesRequestPacket());
+    }
+    @Override public void tick() {super.tick();if(++refreshTicks>=20){refreshTicks=0;request();}}
+    public static void accept(AttributeSourcesPacket packet) {
+        Minecraft mc=Minecraft.getInstance();
+        if(mc.player!=null && packet.owner().equals(mc.player.getUUID()) && mc.screen instanceof StarRailAttributeScreen screen)
+            screen.snapshot=packet;
+    }
+
 
     public StarRailAttributeScreen(StarRailStyledScreen parent) {
         super(Component.translatable("screen.starrail_sim.attributes"), parent);
@@ -54,6 +81,11 @@ public final class StarRailAttributeScreen extends StarRailModalScreen {
     protected void renderModal(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
         Player player = minecraft.player;
         if (player != null) refresh(player);
+        if(snapshot!=null)for(int i=0;i<LABELS.length;i++) {
+            values[i]=snapshot.rows().get(i).total();bases[i]=snapshot.rows().get(i).base();
+        }
+        back.visible=selected>=0;back.active=selected>=0;
+        if(selected>=0){renderSources(graphics,mouseX,mouseY);return;}
         int left = modalLeft + 17, right = modalRight - 17;
         int bottom = modalBottom - 68;
         scroll.advance();
@@ -97,16 +129,6 @@ public final class StarRailAttributeScreen extends StarRailModalScreen {
         renderScrollBar(graphics, scroll, modalRight - 10, bodyTop, bottom, contentHeight, mouseX, mouseY);
         graphics.fill(left, bottom + 9, right, bottom + 10, 0x30707785);
         Component help = Component.translatable("ui.starrail_sim.attributes.help");
-        if (selected >= 0) {
-            help = Component.translatable("ui.starrail_sim.attributes.breakdown",
-                    Component.translatable("ui.starrail_sim." + LABELS[selected]),
-                    number(selected, bases[selected]), number(selected, values[selected] - bases[selected]),
-                    number(selected, values[selected]));
-            if (selected == 0 && player != null) {
-                help = help.copy().append("  ").append(Component.translatable("ui.starrail_sim.attributes.health",
-                        String.format(Locale.ROOT, "%.1f", player.getHealth()), number(0, values[0])));
-            }
-        }
         int helpY = bottom + 18;
         for (FormattedCharSequence line : font.split(help, right - left)) {
             graphics.drawString(font, line, left, helpY, SECONDARY_INK, false);
@@ -114,13 +136,60 @@ public final class StarRailAttributeScreen extends StarRailModalScreen {
         }
     }
 
+    private void renderSources(GuiGraphics g,int mx,int my) {
+        int left=modalLeft+17,right=modalRight-17,bottom=modalBottom-50;
+        scroll.advance();clip(g,left,bodyTop,right,bottom);
+        int y=bodyTop+7-(int)scroll.position();
+        g.drawString(font,Component.translatable("ui.starrail_sim."+LABELS[selected]),left,y,INK,false);y+=21;
+        if(snapshot==null) {
+            g.drawString(font,Component.translatable("ui.starrail_sim.attributes.loading"),left,y,SECONDARY_INK,false);
+            g.disableScissor();return;
+        }
+        var row=snapshot.rows().get(selected);
+        y=sourceLine(g,left,right,y,Component.translatable("ui.starrail_sim.attributes.source.base"),number(selected,row.base()));
+        for(int i=0;i<SOURCES.length;i++) {
+            var group=row.groups().get(i);StringBuilder value=new StringBuilder();
+            if(Math.abs(group.addition())>.000001)value.append(signed(number(selected,group.addition()),group.addition()));
+            if(Math.abs(group.basePercent())>.000001)append(value,
+                    Component.translatable("ui.starrail_sim.attributes.base_percent",signed(String.format(Locale.ROOT,"%.1f%%",group.basePercent()*100),group.basePercent())).getString());
+            if(Math.abs(group.totalFactor()-1)>.000001)append(value,
+                    Component.translatable("ui.starrail_sim.attributes.total_factor",String.format(Locale.ROOT,"%.4f",group.totalFactor())).getString());
+            if(value.isEmpty())value.append("—");
+            y=sourceLine(g,left,right,y,Component.translatable("ui.starrail_sim.attributes.source."+SOURCES[i]),value.toString());
+        }
+        y+=7;
+        y=sourceLine(g,left,right,y,Component.translatable("ui.starrail_sim.attributes.final"),number(selected,row.total()));
+        if(Math.abs(row.raw()-row.total())>.00001)
+            y=sourceLine(g,left,right,y,Component.translatable("ui.starrail_sim.attributes.limit_adjustment"),
+                    signed(number(selected,row.total()-row.raw()),row.total()-row.raw()));
+        y+=8;
+        for(String key:new String[]{"formula","source_note"}) {
+            for(var line:font.split(Component.translatable("ui.starrail_sim.attributes."+key),right-left)) {
+                g.drawString(font,line,left,y,SECONDARY_INK,false);y+=12;
+            }y+=8;
+        }
+        g.disableScissor();contentHeight=y+(int)scroll.position()-bodyTop+8;
+        scroll.bounds(contentHeight-(bottom-bodyTop));
+        renderScrollBar(g,scroll,modalRight-10,bodyTop,bottom,contentHeight,mx,my);
+    }
+    private int sourceLine(GuiGraphics g,int left,int right,int y,Component label,String value) {
+        g.fill(left,y,right,y+21,0x10707785);
+        g.drawString(font,label,left+4,y+6,INK,false);
+        var lines=font.split(Component.literal(value),right-left-155);
+        int lineY=y+6;
+        for(var line:lines){g.drawString(font,line,right-4-font.width(line),lineY,SECONDARY_INK,false);lineY+=12;}
+        return y+Math.max(24,lines.size()*12+12);
+    }
+    private static String signed(String value,double number){return number>0?"+"+value:value;}
+    private static void append(StringBuilder value,String part){if(!value.isEmpty())value.append(" · ");value.append(part);}
+
     @Override
     protected boolean logicalMouseClicked(double x, double y, int button) {
-        if (button == 0 && x >= modalLeft + 17 && x < modalRight - 17
+        if (selected<0 && button == 0 && x >= modalLeft + 17 && x < modalRight - 17
                 && y >= bodyTop && y < modalBottom - 68) {
             for (int i = 0; i < rowPositions.length; i++) {
                 if (y >= rowPositions[i] - scroll.position() && y < rowPositions[i] - scroll.position() + 22) {
-                    selected = i;
+                    selected = i;scroll.reset();
                     return true;
                 }
             }
@@ -130,7 +199,7 @@ public final class StarRailAttributeScreen extends StarRailModalScreen {
 
     @Override
     protected boolean logicalMouseScrolled(double x, double y, double amount) {
-        if (x >= modalLeft && x <= modalRight && y >= bodyTop && y < modalBottom - 68) {
+        if (x >= modalLeft && x <= modalRight && y >= bodyTop && y < modalBottom - (selected>=0?50:68)) {
             scroll.wheel(amount, 25);
         }
         return true;

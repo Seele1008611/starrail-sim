@@ -177,7 +177,7 @@ public final class StarRailPlayerStatusHud {
         return EXACT.format(v);
     }
     private static void text(GuiGraphics g, String value, int x, int y, int width, int color) {
-        var font = Minecraft.getInstance().font;
+        var font = StarRailUiFonts.forMod();
         // Vanilla glyphs have seven visible pixels, matching the seven-pixel status icons.
         // Shrink only when a long value would overflow its own state slot.
         float s = Math.min(1F, width / (float) Math.max(1, font.width(value)));

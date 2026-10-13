@@ -21,6 +21,17 @@ public final class StarRailClientEvents {
     }
 
     @SubscribeEvent
+    public static void registerClientCommands(net.minecraftforge.client.event.RegisterClientCommandsEvent event) {
+        event.getDispatcher().register(net.minecraft.commands.Commands.literal("starrail_ui_preview")
+                .executes(context -> {
+                    // Queue this after the chat screen finishes closing for the command.
+                    Minecraft.getInstance().tell(() ->
+                            Minecraft.getInstance().setScreen(new StarRailDisplayPreviewScreen(null)));
+                    return 1;
+                }));
+    }
+
+    @SubscribeEvent
     public static void onClientTick(ClientTickEvent event) {
         if (event.phase != ClientTickEvent.Phase.END) {
             return;

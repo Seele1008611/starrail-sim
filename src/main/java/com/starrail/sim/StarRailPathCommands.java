@@ -202,7 +202,7 @@ public final class StarRailPathCommands {
             StarRailPathEffects.refresh(player, path);
             StarRailPathService.sync(player);
             context.getSource().sendSuccess(() -> Component.literal(
-                    "已准备" + path.getDisplayName() + "行迹测试：命途极境、已有行迹保留，并补足解锁剩余节点所需材料。"), false);
+                    "已准备" + path.getDisplayName() + "行迹测试：资深行者阶段、已有行迹保留，并补足解锁剩余节点所需材料。"), false);
         });
         return 1;
     }
@@ -270,7 +270,7 @@ public final class StarRailPathCommands {
                 return;
             }
             if (data.getCurrentPathRank() == StarRailPathRank.PATH_PINNACLE) {
-                context.getSource().sendFailure(Component.literal("当前已经是命途极境。"));
+                context.getSource().sendFailure(Component.literal("已达到当前开放的最高命途阶位。"));
                 return;
             }
             StarRailPathProgress.beginRankTrial(player, data, data.getCurrentPath(),

@@ -15,7 +15,7 @@ import net.minecraftforge.network.simple.SimpleChannel;
 /** Network channel for server-authoritative combat feedback. */
 public final class StarRailNetwork {
     // 数据包字段与注册顺序变更时，客户端和服务端必须同步更新协议版本。
-    private static final String PROTOCOL_VERSION = "13";
+    private static final String PROTOCOL_VERSION = "15";
 
     public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(
             new ResourceLocation(StarRailSimMod.MOD_ID, "main"),
@@ -29,6 +29,12 @@ public final class StarRailNetwork {
     }
 
     public static void register() {
+        CHANNEL.registerMessage(messageId++, AttributeSourcesRequestPacket.class,
+                AttributeSourcesRequestPacket::encode,AttributeSourcesRequestPacket::decode,AttributeSourcesRequestPacket::handle,
+                java.util.Optional.of(net.minecraftforge.network.NetworkDirection.PLAY_TO_SERVER));
+        CHANNEL.registerMessage(messageId++, AttributeSourcesPacket.class,
+                AttributeSourcesPacket::encode,AttributeSourcesPacket::decode,AttributeSourcesPacket::handle,
+                java.util.Optional.of(net.minecraftforge.network.NetworkDirection.PLAY_TO_CLIENT));
         CHANNEL.registerMessage(messageId++, PlayerStatusRequestPacket.class,
                 PlayerStatusRequestPacket::encode, PlayerStatusRequestPacket::decode, PlayerStatusRequestPacket::handle,
                 java.util.Optional.of(net.minecraftforge.network.NetworkDirection.PLAY_TO_SERVER));
@@ -71,6 +77,9 @@ public final class StarRailNetwork {
                 NotificationPacket::decode,
                 NotificationPacket::handle,
                 java.util.Optional.of(net.minecraftforge.network.NetworkDirection.PLAY_TO_CLIENT));
+        CHANNEL.registerMessage(messageId++, RelicPresetPacket.class,
+                RelicPresetPacket::encode,RelicPresetPacket::decode,RelicPresetPacket::handle,
+                java.util.Optional.of(net.minecraftforge.network.NetworkDirection.PLAY_TO_SERVER));
         CHANNEL.registerMessage(messageId++, RelicActionPacket.class,
                 RelicActionPacket::encode, RelicActionPacket::decode, RelicActionPacket::handle,
                 java.util.Optional.of(net.minecraftforge.network.NetworkDirection.PLAY_TO_SERVER));
@@ -80,6 +89,9 @@ public final class StarRailNetwork {
         CHANNEL.registerMessage(messageId++, RelicSnapshotPacket.class,
                 RelicSnapshotPacket::encode, RelicSnapshotPacket::decode, RelicSnapshotPacket::handle,
                 java.util.Optional.of(net.minecraftforge.network.NetworkDirection.PLAY_TO_CLIENT));
+        CHANNEL.registerMessage(messageId++, LightConeEquipPacket.class,
+                LightConeEquipPacket::encode, LightConeEquipPacket::decode, LightConeEquipPacket::handle,
+                java.util.Optional.of(net.minecraftforge.network.NetworkDirection.PLAY_TO_SERVER));
     }
 
     public static void sendDamageNumber(ServerPlayer player, LivingEntity target,

@@ -42,6 +42,8 @@ public final class StarRailRelicSnapshotService {
         ListTag entries = new ListTag();
         entriesById.values().forEach(entries::add);
         snapshot.put("Relics", entries);
+        snapshot.put("Presets",StarRailRelicPresetService.snapshots(player));
+        for(int slot=0;slot<4;slot++)if(StarRailRelicPresetService.exists(player,slot))snapshot.put("Preset_"+slot,StarRailRelicPresetService.entries(player,slot).copy());
         snapshot.putInt("Crystal", count(player, StarRailRelicItems.LOST_CRYSTAL.get()));
         snapshot.putInt("Remains", count(player, StarRailRelicItems.RELIC_REMAINS.get()));
         snapshot.putInt("Resin", count(player, StarRailRelicItems.SELF_MODELING_RESIN.get()));

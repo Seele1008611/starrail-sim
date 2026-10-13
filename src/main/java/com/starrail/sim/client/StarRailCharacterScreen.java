@@ -119,6 +119,7 @@ public final class StarRailCharacterScreen extends StarRailStyledScreen {
             relicPanel.render(graphics, mouseX, mouseY);
             super.renderPage(graphics, mouseX, mouseY, partialTick);
             relicPanel.renderChoices(graphics, mouseX, mouseY);
+            relicPanel.renderSlotTooltip(graphics, mouseX, mouseY);
             return;
         }
 

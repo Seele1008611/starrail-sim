@@ -5,6 +5,8 @@ import net.minecraft.resources.ResourceLocation;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 import java.util.Locale;
 
 /** UI contract. The screen owns no ItemStacks, attribute modifiers or persistence. */
@@ -61,8 +63,12 @@ public interface StarRailRelicUiData {
     }
     List<SetInfo> SETS = List.of(new SetInfo("musketeer", false), new SetInfo("passerby", false),
             new SetInfo("knight", false), new SetInfo("space_station", true), new SetInfo("fleet", true));
-    record Snapshot(List<Entry> inventory, Map<Part, Long> equipped, Map<Material, Integer> materials, boolean editable) {
-        public Snapshot { inventory = List.copyOf(inventory); equipped = Map.copyOf(equipped); materials = Map.copyOf(materials); }
+    record Snapshot(List<Entry> inventory, Map<Part, Long> equipped, Map<Material, Integer> materials, boolean editable,
+                    Map<Integer,Map<Part,UUID>> presets,Set<UUID> ownedRelics) {
+        public Snapshot(List<Entry> inventory,Map<Part,Long> equipped,Map<Material,Integer> materials,boolean editable){this(inventory,equipped,materials,editable,Map.of(),Set.of());}
+        public Snapshot { inventory = List.copyOf(inventory); equipped = Map.copyOf(equipped); materials = Map.copyOf(materials);
+            Map<Integer,Map<Part,UUID>> copy=new java.util.HashMap<>();presets.forEach((slot,items)->copy.put(slot,Map.copyOf(items)));presets=Map.copyOf(copy);ownedRelics=Set.copyOf(ownedRelics); }
+        public int presetMissing(int slot){return (int)presets.getOrDefault(slot,Map.of()).values().stream().filter(id->!ownedRelics.contains(id)).count();}
         public Entry find(long id) { return inventory.stream().filter(i -> i.id() == id).findFirst().orElse(null); }
         public Entry equipped(Part part) { return find(equipped.getOrDefault(part, -1L)); }
         public boolean worn(Entry entry) { return equipped.getOrDefault(entry.part(), -1L) == entry.id(); }

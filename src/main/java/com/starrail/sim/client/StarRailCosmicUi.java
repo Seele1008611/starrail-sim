@@ -22,7 +22,7 @@ public final class StarRailCosmicUi {
 
     private static void backdropGeometry(GuiGraphics graphics, int width, int height) {
         graphics.fillGradient(0, 0, width, height, 0xFF080A1C, 0xFF13243A);
-        double time = seconds();
+        double time = StarRailUiStyle.reducedMotion() ? 0 : seconds();
         for (int i = 0; i < 9; i++) {
             int opacity = (int) (3 + 5 * (.5 + .5 * Math.sin(time / (14 + i % 3 * 5) + i * 1.8)));
             double driftX = Math.sin(time / (31 + i * 2) + i * 1.3) * width * .008;
@@ -44,6 +44,10 @@ public final class StarRailCosmicUi {
     }
 
     public static void ellipse(GuiGraphics graphics, double cx, double cy, double rx, double ry, int color) {
+        if (StarRailUiStyle.smoothEnabled()) {
+            StarRailSmoothUi.ellipse(graphics, cx, cy, rx, ry, color);
+            return;
+        }
         for (int y = (int) -ry; y <= ry; y += 2) {
             double factor = Math.sqrt(Math.max(0, 1 - y * y / (ry * ry)));
             graphics.fill((int) (cx - rx * factor), (int) cy + y,
@@ -52,6 +56,10 @@ public final class StarRailCosmicUi {
     }
 
     public static void line(GuiGraphics graphics, double x1, double y1, double x2, double y2, int color) {
+        if (StarRailUiStyle.smoothEnabled()) {
+            StarRailSmoothUi.line(graphics, x1, y1, x2, y2, 1, color);
+            return;
+        }
         int steps = Math.max(1, (int) Math.max(Math.abs(x2 - x1), Math.abs(y2 - y1)));
         for (int i = 0; i <= steps; i++) {
             int x = (int) (x1 + (x2 - x1) * i / steps), y = (int) (y1 + (y2 - y1) * i / steps);
@@ -61,9 +69,14 @@ public final class StarRailCosmicUi {
 
     /** A dotted selection ring matching the navigation's slow orbital accent. */
     public static void orbit(GuiGraphics graphics, double x, double y, double radius, int color) {
-        double phase = seconds() * Math.PI * 2 / 45;
+        double phase = StarRailUiStyle.reducedMotion() ? 0 : seconds() * Math.PI * 2 / 45;
         for (int i = 0; i < 32; i++) {
             double a = phase + i * Math.PI * 2 / 32;
+            if (StarRailUiStyle.smoothEnabled()) {
+                StarRailSmoothUi.circle(graphics, (float)(x + Math.cos(a)*radius),
+                        (float)(y + Math.sin(a)*radius), .5F, 0, color, 0);
+                continue;
+            }
             int px = (int) Math.round(x + Math.cos(a) * radius);
             int py = (int) Math.round(y + Math.sin(a) * radius);
             graphics.fill(px, py, px + 1, py + 1, color);
@@ -86,6 +99,11 @@ public final class StarRailCosmicUi {
                 line(graphics, x - 3, y - 2, x + 3, y - 2, color);
             }
             case 2 -> { // traces, incomplete orbit
+                if (StarRailUiStyle.smoothEnabled()) {
+                    StarRailSmoothUi.arc(graphics,x,y,5,0,(float)(26*Math.PI/16+.18),1,color);
+                    ellipse(graphics,x+4,y-4,2,2,color);
+                    break;
+                }
                 for (int i = 0; i < 26; i++) {
                     double a = i * Math.PI / 16;
                     line(graphics, x + Math.cos(a) * 5, y + Math.sin(a) * 5,
@@ -94,6 +112,11 @@ public final class StarRailCosmicUi {
                 ellipse(graphics, x + 4, y - 4, 2, 2, color);
             }
             case 3 -> { // linked relic rings
+                if (StarRailUiStyle.smoothEnabled()) {
+                    StarRailSmoothUi.arc(graphics,x-2,y-2,3,0,(float)(Math.PI*2),1,color);
+                    StarRailSmoothUi.arc(graphics,x+2,y+2,3,0,(float)(Math.PI*2),1,color);
+                    break;
+                }
                 orbit(graphics, x - 2, y - 2, 3, color);
                 orbit(graphics, x + 2, y + 2, 3, color);
             }
@@ -125,11 +148,21 @@ public final class StarRailCosmicUi {
         // Static translucent floor; the shared stars remain visible through it.
         ellipse(graphics, centerX, baseY + 95, width * .95, 135, 0x334E536F);
         ellipse(graphics, centerX, baseY + 18, radius * .42, radius * .08, 0x35242A43);
-        double angle = seconds() * Math.PI * 2 / 60;
+        double angle = StarRailUiStyle.reducedMotion() ? 0 : seconds() * Math.PI * 2 / 60;
         for (int ring = 0; ring < 2; ring++) {
             double rx = radius * (ring == 0 ? .95 : .65), ry = rx * .25;
             for (int segment = 0; segment < 12; segment++) {
                 double start = angle + segment * Math.PI * 2 / 12;
+                if (StarRailUiStyle.smoothEnabled()) {
+                    graphics.pose().pushPose();
+                    try {
+                        graphics.pose().translate(centerX,baseY+14,0);
+                        graphics.pose().scale(1,.25F,1);
+                        StarRailSmoothUi.arc(graphics,0,4,(float)rx,(float)start,.216F,1,0x253D62B4);
+                        StarRailSmoothUi.arc(graphics,0,0,(float)rx,(float)start,.216F,1,0xC6E4E9FF);
+                    } finally { graphics.pose().popPose(); }
+                    continue;
+                }
                 for (int n = 0; n < 12; n++) {
                     double a = start + n * .018, b = a + .018;
                     double x1 = centerX + Math.cos(a) * rx, y1 = baseY + 14 + Math.sin(a) * ry;
@@ -138,6 +171,10 @@ public final class StarRailCosmicUi {
                     line(graphics, x1, y1, x2, y2, 0xC6E4E9FF);
                 }
             }
+        }
+        if (StarRailUiStyle.smoothEnabled()) {
+            smoothPlatformRim(graphics, centerX, baseY, width);
+            return;
         }
         for (int x = 0; x < width; x++) {
             double dx = x - centerX;
@@ -154,6 +191,21 @@ public final class StarRailCosmicUi {
             int height = 2 + (int) (rise * 10);
             graphics.fillGradient(x, rimY - height, x + 1, rimY,
                     0x00D5DCFF, (int) (14 * bright * Math.sin(rise * Math.PI)) << 24 | 0xD5DCFF);
+        }
+    }
+
+    private static void smoothPlatformRim(GuiGraphics graphics, int centerX, int baseY, int width) {
+        for (int x = 0; x < width; x += 4) {
+            int nextX = Math.min(width, x + 4);
+            double dx = x - centerX;
+            double nextDx = nextX - centerX;
+            double rimY = baseY - 25 + dx * dx / (width * 25.0);
+            double nextRimY = baseY - 25 + nextDx * nextDx / (width * 25.0);
+            double bright = Math.exp(-dx * dx / (width * width * .065));
+            StarRailSmoothUi.line(graphics, x, rimY, nextX, nextRimY, 8,
+                    (int) (12 + bright * 10) << 24 | 0xCCC6FF);
+            StarRailSmoothUi.line(graphics, x, rimY, nextX, nextRimY, 1,
+                    (int) (55 + 180 * bright) << 24 | 0xF1EDFF);
         }
     }
 
