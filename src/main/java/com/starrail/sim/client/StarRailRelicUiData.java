@@ -62,7 +62,13 @@ public interface StarRailRelicUiData {
         public String label() { return tr("set." + id); }
     }
     List<SetInfo> SETS = List.of(new SetInfo("musketeer", false), new SetInfo("passerby", false),
-            new SetInfo("knight", false), new SetInfo("space_station", true), new SetInfo("fleet", true));
+            new SetInfo("knight", false), new SetInfo("space_station", true), new SetInfo("fleet", true),
+            new SetInfo("guard", false), new SetInfo("genius", false),
+            new SetInfo("dead_water_pioneer", false), new SetInfo("iron_cavalry", false),
+            new SetInfo("valorous", false), new SetInfo("scholar", false), new SetInfo("hero", false),
+            new SetInfo("savior", false), new SetInfo("magical_girl", false), new SetInfo("navigator", false),
+            new SetInfo("belobog", true), new SetInfo("penacony", true), new SetInfo("amphoreus", true),
+            new SetInfo("live_stream", true));
     record Snapshot(List<Entry> inventory, Map<Part, Long> equipped, Map<Material, Integer> materials, boolean editable,
                     Map<Integer,Map<Part,UUID>> presets,Set<UUID> ownedRelics) {
         public Snapshot(List<Entry> inventory,Map<Part,Long> equipped,Map<Material,Integer> materials,boolean editable){this(inventory,equipped,materials,editable,Map.of(),Set.of());}

@@ -120,6 +120,7 @@ public final class StarRailRelicOperationService {
 
         ItemStack incoming = target.stack().copy();
         RelicStackData.write(incoming, RelicStackData.touch(data));
+        if (!stacks.isItemValid(replaceSlot, incoming)) return Result.fail("operation_invalid");
         target.remove();
         if (!oldToInventory.isEmpty() && !inventory.add(oldToInventory)) {
             target.save();

@@ -14,8 +14,9 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 
 /** Slotless menu that safely routes arena selector buttons through the server. */
 public final class RelicTrialMenu extends AbstractContainerMenu {
-    public static final int BUTTON_START = 5;
-    public static final int BUTTON_ABORT = 6;
+    // Keep action buttons out of the set-index range as the selector grows.
+    public static final int BUTTON_START = 100;
+    public static final int BUTTON_ABORT = 101;
     private final BlockPos devicePos;
     private final ContainerData data;
 

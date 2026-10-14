@@ -7,6 +7,8 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.damagesource.CombatRules;
 import net.minecraft.world.item.ItemStack;
 import top.theillusivec4.curios.api.CuriosApi;
 
@@ -18,6 +20,7 @@ import java.util.UUID;
 /** Rebuilds relic-derived attributes from the server-authoritative Curios loadout. */
 public final class StarRailRelicService {
     private static final String SET_CACHE_TAG = "starrail_sim_relic_set_pieces";
+    private static final String GUARD_HEAL_COOLDOWN_TAG = "starrail_sim_guard_heal_cooldown";
     private static final UUID MAX_HEALTH_FLAT = id("max_health.flat");
     private static final UUID MAX_HEALTH_PERCENT = id("max_health.percent");
     private static final UUID ATTACK_FLAT = id("attack.flat");
@@ -41,17 +44,46 @@ public final class StarRailRelicService {
 
         Totals totals = collect(player);
         saveSetCounts(player, totals.pieces);
-        int pieces;
-        pieces = totals.pieces.getOrDefault(RelicStackData.SetId.PASSERBY, 0);
+        int pieces = totals.pieces.getOrDefault(RelicStackData.SetId.PASSERBY, 0);
         if (pieces >= 2) totals.add(RelicStackData.Stat.HEAL, 15.0D);
-        pieces = totals.pieces.getOrDefault(RelicStackData.SetId.MUSKETEER, 0);
-        if (pieces >= 2) totals.add(RelicStackData.Stat.ATTACK_PCT, 12.0D);
-        pieces = totals.pieces.getOrDefault(RelicStackData.SetId.KNIGHT, 0);
-        if (pieces >= 2) totals.add(RelicStackData.Stat.ARMOR_PCT, 15.0D);
-        pieces = totals.pieces.getOrDefault(RelicStackData.SetId.SPACE_STATION, 0);
-        if (pieces >= 2) totals.add(RelicStackData.Stat.ATTACK_PCT, 24.0D);
-        pieces = totals.pieces.getOrDefault(RelicStackData.SetId.FLEET, 0);
-        if (pieces >= 2) totals.add(RelicStackData.Stat.HP_PCT, 20.0D);
+        if (has(totals, RelicStackData.SetId.MUSKETEER, 2)) totals.add(RelicStackData.Stat.ATTACK_PCT, 12.0D);
+        if (has(totals, RelicStackData.SetId.KNIGHT, 2)) totals.add(RelicStackData.Stat.ARMOR_PCT, 15.0D);
+        if (has(totals, RelicStackData.SetId.SPACE_STATION, 2)) totals.add(RelicStackData.Stat.ATTACK_PCT, 24.0D);
+        if (has(totals, RelicStackData.SetId.FLEET, 2)) totals.add(RelicStackData.Stat.HP_PCT, 20.0D);
+
+        if (has(totals, RelicStackData.SetId.GENIUS, 2)) totals.add(RelicStackData.Stat.ATTACK_PCT, 15.0D);
+        if (has(totals, RelicStackData.SetId.DEAD_WATER_PIONEER, 4)) {
+            totals.add(RelicStackData.Stat.CRIT, 4.0D);
+            totals.add(RelicStackData.Stat.CRIT_DAMAGE, 24.0D);
+        }
+        if (has(totals, RelicStackData.SetId.IRON_CAVALRY, 2)) totals.add(RelicStackData.Stat.BREAK, 25.0D);
+        if (has(totals, RelicStackData.SetId.VALOROUS, 2)
+                || has(totals, RelicStackData.SetId.HERO, 2)
+                || has(totals, RelicStackData.SetId.NAVIGATOR, 2)) {
+            if (has(totals, RelicStackData.SetId.VALOROUS, 2)) totals.add(RelicStackData.Stat.ATTACK_PCT, 12.0D);
+            if (has(totals, RelicStackData.SetId.HERO, 2)) totals.add(RelicStackData.Stat.ATTACK_PCT, 12.0D);
+            if (has(totals, RelicStackData.SetId.NAVIGATOR, 2)) totals.add(RelicStackData.Stat.ATTACK_PCT, 12.0D);
+        }
+        if (has(totals, RelicStackData.SetId.VALOROUS, 4)) totals.add(RelicStackData.Stat.CRIT, 6.0D);
+        if (has(totals, RelicStackData.SetId.SCHOLAR, 2)
+                || has(totals, RelicStackData.SetId.SAVIOR, 2)) {
+            if (has(totals, RelicStackData.SetId.SCHOLAR, 2)) totals.add(RelicStackData.Stat.CRIT, 8.0D);
+            if (has(totals, RelicStackData.SetId.SAVIOR, 2)) totals.add(RelicStackData.Stat.CRIT, 8.0D);
+        }
+        if (has(totals, RelicStackData.SetId.HERO, 4)) {
+            totals.add(RelicStackData.Stat.ATTACK_PCT, 8.0D);
+            totals.add(RelicStackData.Stat.CRIT_DAMAGE, 30.0D);
+        }
+        if (has(totals, RelicStackData.SetId.SAVIOR, 4)) totals.add(RelicStackData.Stat.HP_PCT, 24.0D);
+        if (has(totals, RelicStackData.SetId.MAGICAL_GIRL, 2)) totals.add(RelicStackData.Stat.CRIT_DAMAGE, 16.0D);
+        if (has(totals, RelicStackData.SetId.NAVIGATOR, 4)) totals.add(RelicStackData.Stat.CRIT_DAMAGE, 20.0D);
+        if (has(totals, RelicStackData.SetId.BELOBOG, 2)) totals.add(RelicStackData.Stat.ARMOR_PCT, 30.0D);
+        if (has(totals, RelicStackData.SetId.PENACONY, 2)) totals.add(RelicStackData.Stat.HP_PCT, 15.0D);
+        if (has(totals, RelicStackData.SetId.AMPHOREUS, 2)) {
+            totals.add(RelicStackData.Stat.CRIT, 8.0D);
+            totals.add(RelicStackData.Stat.CRIT_DAMAGE, 24.0D);
+        }
+        if (has(totals, RelicStackData.SetId.LIVE_STREAM, 2)) totals.add(RelicStackData.Stat.CRIT_DAMAGE, 32.0D);
 
         apply(player, Attributes.MAX_HEALTH, MAX_HEALTH_FLAT, MAX_HEALTH_PERCENT,
                 "starrail_sim.relic.max_health", totals.get(RelicStackData.Stat.HP),
@@ -96,10 +128,81 @@ public final class StarRailRelicService {
                 ? amount * 1.20F : amount;
     }
 
-    /** Applies the confirmed Musketeer four-piece damage bonus to outgoing damage. */
+    /** Adds active set damage bonuses to outgoing damage. */
     public static float boostDamage(ServerPlayer player, float amount) {
-        return amount > 0.0F && equippedPieces(player, RelicStackData.SetId.MUSKETEER) >= 4
-                ? amount * 1.10F : amount;
+        return boostDamage(player, null, amount);
+    }
+
+    /** Adds all active relic damage bonuses before vanilla armor is resolved. */
+    public static float boostDamage(ServerPlayer player, LivingEntity target, float amount) {
+        if (amount <= 0.0F) return amount;
+        double bonus = 0.0D;
+        if (equippedPieces(player, RelicStackData.SetId.MUSKETEER) >= 4) bonus += 0.10D;
+        if (equippedPieces(player, RelicStackData.SetId.GENIUS) >= 2) bonus += 0.15D;
+        if (target != null && equippedPieces(player, RelicStackData.SetId.DEAD_WATER_PIONEER) >= 2
+                && target.getActiveEffects().stream().anyMatch(effect -> !effect.getEffect().isBeneficial())) {
+            bonus += 0.12D;
+        }
+        if (equippedPieces(player, RelicStackData.SetId.IRON_CAVALRY) >= 4) bonus += 0.15D;
+        if (equippedPieces(player, RelicStackData.SetId.VALOROUS) >= 4) bonus += 0.18D;
+        if (equippedPieces(player, RelicStackData.SetId.SCHOLAR) >= 4) bonus += 0.20D;
+        if (equippedPieces(player, RelicStackData.SetId.SAVIOR) >= 4) bonus += 0.15D;
+        if (equippedPieces(player, RelicStackData.SetId.NAVIGATOR) >= 4) bonus += 0.18D;
+        if (hasPenaconyDamageAura(player)) bonus += 0.10D;
+        return amount * (float) (1.0D + bonus);
+    }
+
+    /** Converts armor penetration into an equivalent pre-armor amount. */
+    public static float applyArmorPenetration(ServerPlayer attacker, LivingEntity target, float amount) {
+        if (amount <= 0.0F) return amount;
+        double penetration = 0.0D;
+        if (equippedPieces(attacker, RelicStackData.SetId.GENIUS) >= 4) penetration += 0.20D;
+        if (equippedPieces(attacker, RelicStackData.SetId.IRON_CAVALRY) >= 4) penetration += 0.10D;
+        if (equippedPieces(attacker, RelicStackData.SetId.MAGICAL_GIRL) >= 4) penetration += 0.20D;
+        if (penetration <= 0.0D || target.getAttribute(Attributes.ARMOR) == null) return amount;
+        float armor = (float) target.getAttributeValue(Attributes.ARMOR);
+        float toughness = (float) target.getAttributeValue(Attributes.ARMOR_TOUGHNESS);
+        if (armor <= 0.0F) return amount;
+        float desiredAfterArmor = CombatRules.getDamageAfterAbsorb(amount,
+                armor * (float) Math.max(0.0D, 1.0D - Math.min(0.9D, penetration)), toughness);
+        float low = amount;
+        float high = Math.max(amount, 1.0F);
+        for (int i = 0; i < 20 && CombatRules.getDamageAfterAbsorb(high, armor, toughness)
+                < desiredAfterArmor && high < 1.0E9F; i++) {
+            high *= 2.0F;
+        }
+        for (int i = 0; i < 28; i++) {
+            float mid = (low + high) * 0.5F;
+            if (CombatRules.getDamageAfterAbsorb(mid, armor, toughness) < desiredAfterArmor) low = mid;
+            else high = mid;
+        }
+        return (low + high) * 0.5F;
+    }
+
+    /** Reduces incoming damage when the wearer has at least two Guard pieces. */
+    public static float reduceIncomingDamage(ServerPlayer player, float amount) {
+        return amount > 0.0F && equippedPieces(player, RelicStackData.SetId.GUARD) >= 2
+                ? amount * 0.85F : amount;
+    }
+
+    /** Four-piece Guard auto-heal: 15% max health at or below 30%, once per 1200 ticks. */
+    public static void tickGuardRecovery(ServerPlayer player) {
+        if (!player.isAlive() || equippedPieces(player, RelicStackData.SetId.GUARD) < 4) return;
+        double maxHealth = player.getMaxHealth();
+        if (maxHealth <= 0.0D || player.getHealth() > maxHealth * 0.30D) return;
+        long now = player.getServer().overworld().getGameTime();
+        CompoundTag data = player.getPersistentData();
+        if (now < data.getLong(GUARD_HEAL_COOLDOWN_TAG)) return;
+        player.heal((float) (maxHealth * 0.15D));
+        data.putLong(GUARD_HEAL_COOLDOWN_TAG, now + 1200L);
+    }
+
+    private static boolean hasPenaconyDamageAura(ServerPlayer player) {
+        return player.serverLevel().getEntitiesOfClass(ServerPlayer.class,
+                        player.getBoundingBox().inflate(10.0D),
+                        candidate -> candidate.distanceToSqr(player) <= 100.0D
+                                && equippedPieces(candidate, RelicStackData.SetId.PENACONY) >= 2)
+                .size() > 0;
     }
 
     /** Applies the confirmed Passerby four-piece nearby-player heal on a hostile kill. */
@@ -178,6 +281,10 @@ public final class StarRailRelicService {
             cached.putInt(set.id(), pieces.getOrDefault(set, 0));
         }
         player.getPersistentData().put(SET_CACHE_TAG, cached);
+    }
+
+    private static boolean has(Totals totals, RelicStackData.SetId set, int pieces) {
+        return totals.pieces.getOrDefault(set, 0) >= pieces;
     }
 
     private static final class Totals {

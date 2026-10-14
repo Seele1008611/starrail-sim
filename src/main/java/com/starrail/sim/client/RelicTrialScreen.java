@@ -12,6 +12,7 @@ import org.lwjgl.glfw.GLFW;
 /** Compact in-game selector that previews the current set and starts a test fight. */
 public final class RelicTrialScreen extends AbstractContainerScreen<RelicTrialMenu> {
     private static final int PICKER_ROW_HEIGHT = 19;
+    private static final int PICKER_VISIBLE_ROWS = 7;
     private static final double PICKER_OPEN_SECONDS = .26;
     private final double[] pickerHover = new double[RelicTrialSet.values().length];
     private Button setSelector;
@@ -20,6 +21,7 @@ public final class RelicTrialScreen extends AbstractContainerScreen<RelicTrialMe
     private long setListOpenedAt;
     private long pickerFrame;
     private int pickerFocused;
+    private int pickerScrollOffset;
 
     public RelicTrialScreen(RelicTrialMenu menu, Inventory inventory, Component title) {
         super(menu, inventory, title);
@@ -57,6 +59,7 @@ public final class RelicTrialScreen extends AbstractContainerScreen<RelicTrialMe
         setListOpen = !setListOpen;
         setListOpenedAt = System.nanoTime();
         pickerFocused = menu.selectedSetIndex();
+        keepFocusedSetVisible();
     }
 
     @Override
@@ -95,14 +98,28 @@ public final class RelicTrialScreen extends AbstractContainerScreen<RelicTrialMe
                         : "ui.starrail_sim.arena.set_outer"));
     }
 
+    private int visibleSetRows() {
+        return Math.min(PICKER_VISIBLE_ROWS, RelicTrialSet.values().length);
+    }
+
+    private void keepFocusedSetVisible() {
+        int visible = visibleSetRows();
+        if (pickerFocused < pickerScrollOffset) pickerScrollOffset = pickerFocused;
+        if (pickerFocused >= pickerScrollOffset + visible) {
+            pickerScrollOffset = pickerFocused - visible + 1;
+        }
+        pickerScrollOffset = Math.max(0, Math.min(
+                RelicTrialSet.values().length - visible, pickerScrollOffset));
+    }
+
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (setListOpen && button == 0) {
             int listX = leftPos + 11, listY = topPos + 71, listWidth = imageWidth - 22;
-            int listHeight = PICKER_ROW_HEIGHT * RelicTrialSet.values().length;
+            int listHeight = PICKER_ROW_HEIGHT * visibleSetRows();
             if (mouseX >= listX && mouseX < listX + listWidth
                     && mouseY >= listY && mouseY < listY + listHeight) {
-                int index = (int) (mouseY - listY) / PICKER_ROW_HEIGHT;
+                int index = pickerScrollOffset + (int) (mouseY - listY) / PICKER_ROW_HEIGHT;
                 if (index >= 0 && index < RelicTrialSet.values().length) click(index);
                 setListOpen = false;
                 return true;
@@ -113,6 +130,21 @@ public final class RelicTrialScreen extends AbstractContainerScreen<RelicTrialMe
     }
 
     @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
+        if (setListOpen) {
+            int x = leftPos + 11, y = topPos + 71, width = imageWidth - 22;
+            int height = PICKER_ROW_HEIGHT * visibleSetRows();
+            if (mouseX >= x && mouseX < x + width && mouseY >= y && mouseY < y + height) {
+                int maxOffset = RelicTrialSet.values().length - visibleSetRows();
+                pickerScrollOffset = Math.max(0, Math.min(maxOffset,
+                        pickerScrollOffset - (int) Math.signum(delta)));
+                return true;
+            }
+        }
+        return super.mouseScrolled(mouseX, mouseY, delta);
+    }
+
+    @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         if (setListOpen && keyCode == GLFW.GLFW_KEY_ESCAPE) {
             setListOpen = false;
@@ -120,10 +152,12 @@ public final class RelicTrialScreen extends AbstractContainerScreen<RelicTrialMe
         }
         if (setListOpen && keyCode == GLFW.GLFW_KEY_UP) {
             pickerFocused = Math.max(0, pickerFocused - 1);
+            keepFocusedSetVisible();
             return true;
         }
         if (setListOpen && keyCode == GLFW.GLFW_KEY_DOWN) {
             pickerFocused = Math.min(RelicTrialSet.values().length - 1, pickerFocused + 1);
+            keepFocusedSetVisible();
             return true;
         }
         if (setListOpen && (keyCode == GLFW.GLFW_KEY_ENTER || keyCode == GLFW.GLFW_KEY_KP_ENTER
@@ -143,7 +177,8 @@ public final class RelicTrialScreen extends AbstractContainerScreen<RelicTrialMe
 
     private void renderSetList(GuiGraphics graphics, int mouseX, int mouseY) {
         int x = leftPos + 11, y = topPos + 71, width = imageWidth - 22;
-        int height = PICKER_ROW_HEIGHT * RelicTrialSet.values().length;
+        int visibleRows = visibleSetRows();
+        int height = PICKER_ROW_HEIGHT * visibleRows;
         long now = System.nanoTime();
         double dt = pickerFrame == 0 ? 0 : Math.min(.1, (now - pickerFrame) / 1_000_000_000D);
         pickerFrame = now;
@@ -161,14 +196,15 @@ public final class RelicTrialScreen extends AbstractContainerScreen<RelicTrialMe
             graphics.fill(x, y, x + width, y + height, panelFill);
             graphics.renderOutline(x, y, width, height, panelBorder);
         }
-        for (int index = 0; index < RelicTrialSet.values().length; index++) {
-            int rowY = y + index * PICKER_ROW_HEIGHT;
+        for (int row = 0; row < visibleRows; row++) {
+            int index = pickerScrollOffset + row;
+            int rowY = y + row * PICKER_ROW_HEIGHT;
             boolean hover = mouseX >= x && mouseX < x + width
                     && mouseY >= rowY && mouseY < rowY + PICKER_ROW_HEIGHT;
             if (StarRailUiStyle.reducedMotion()) pickerHover[index] = hover ? 1 : 0;
             else pickerHover[index] += ((hover ? 1 : 0) - pickerHover[index])
                     * (1 - Math.exp(-dt / .16));
-            double rowAge = Math.max(0, age - index * .024);
+            double rowAge = Math.max(0, age - row * .024);
             double rowReveal = StarRailUiStyle.reducedMotion()?1:Math.min(1, rowAge / .22);
             rowReveal = rowReveal * rowReveal * (3 - 2 * rowReveal);
             int selected = menu.selectedSetIndex() == index ? 1 : 0;
@@ -192,6 +228,15 @@ public final class RelicTrialScreen extends AbstractContainerScreen<RelicTrialMe
                         rowY + (PICKER_ROW_HEIGHT - font.lineHeight) / 2,
                         (int) (255 * rowReveal) << 24 | 0xE7C77E);
             }
+        }
+        if (RelicTrialSet.values().length > visibleRows) {
+            int trackTop = y + 5, trackBottom = y + height - 5;
+            int trackHeight = trackBottom - trackTop;
+            int thumbHeight = Math.max(12, trackHeight * visibleRows / RelicTrialSet.values().length);
+            int maxOffset = RelicTrialSet.values().length - visibleRows;
+            int thumbTop = trackTop + (trackHeight - thumbHeight) * pickerScrollOffset / maxOffset;
+            graphics.fill(x + width - 4, trackTop, x + width - 3, trackBottom, 0x5579899C);
+            graphics.fill(x + width - 5, thumbTop, x + width - 2, thumbTop + thumbHeight, 0xDDE7C77E);
         }
         graphics.pose().popPose();
     }

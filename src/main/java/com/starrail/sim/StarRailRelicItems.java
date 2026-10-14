@@ -8,9 +8,10 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
-/** Relic equipment and material item registry for the five currently planned sets. */
+/** Relic equipment and material item registry. */
 public final class StarRailRelicItems {
     public static final DeferredRegister<Item> ITEMS =
             DeferredRegister.create(ForgeRegistries.ITEMS, StarRailSimMod.MOD_ID);
@@ -39,13 +40,50 @@ public final class StarRailRelicItems {
     public static final RegistryObject<RelicItem> FLEET_SPHERE = register("relic_fleet_sphere", RelicStackData.SetId.FLEET, RelicStackData.Part.SPHERE);
     public static final RegistryObject<RelicItem> FLEET_ROPE = register("relic_fleet_rope", RelicStackData.SetId.FLEET, RelicStackData.Part.ROPE);
 
-    public static final List<RegistryObject<RelicItem>> ALL = List.of(
+    private static final List<RegistryObject<RelicItem>> GUARD = registerOuterSet("guard", RelicStackData.SetId.GUARD);
+    private static final List<RegistryObject<RelicItem>> GENIUS = registerOuterSet("genius", RelicStackData.SetId.GENIUS);
+    private static final List<RegistryObject<RelicItem>> DEAD_WATER_PIONEER = registerOuterSet("dead_water_pioneer", RelicStackData.SetId.DEAD_WATER_PIONEER);
+    private static final List<RegistryObject<RelicItem>> IRON_CAVALRY = registerOuterSet("iron_cavalry", RelicStackData.SetId.IRON_CAVALRY);
+    private static final List<RegistryObject<RelicItem>> VALOROUS = registerOuterSet("valorous", RelicStackData.SetId.VALOROUS);
+    private static final List<RegistryObject<RelicItem>> SCHOLAR = registerOuterSet("scholar", RelicStackData.SetId.SCHOLAR);
+    private static final List<RegistryObject<RelicItem>> HERO = registerOuterSet("hero", RelicStackData.SetId.HERO);
+    private static final List<RegistryObject<RelicItem>> SAVIOR = registerOuterSet("savior", RelicStackData.SetId.SAVIOR);
+    private static final List<RegistryObject<RelicItem>> MAGICAL_GIRL = registerOuterSet("magical_girl", RelicStackData.SetId.MAGICAL_GIRL);
+    private static final List<RegistryObject<RelicItem>> NAVIGATOR = registerOuterSet("navigator", RelicStackData.SetId.NAVIGATOR);
+    private static final List<RegistryObject<RelicItem>> BELOBOG = registerInnerSet("belobog", RelicStackData.SetId.BELOBOG);
+    private static final List<RegistryObject<RelicItem>> PENACONY = registerInnerSet("penacony", RelicStackData.SetId.PENACONY);
+    private static final List<RegistryObject<RelicItem>> AMPHOREUS = registerInnerSet("amphoreus", RelicStackData.SetId.AMPHOREUS);
+    private static final List<RegistryObject<RelicItem>> LIVE_STREAM = registerInnerSet("live_stream", RelicStackData.SetId.LIVE_STREAM);
+
+    public static final List<RegistryObject<RelicItem>> ALL = allRelics();
+
+    private static List<RegistryObject<RelicItem>> allRelics() {
+        List<RegistryObject<RelicItem>> all = new ArrayList<>(List.of(
             MUSKETEER_HEAD, MUSKETEER_HANDS, MUSKETEER_BODY, MUSKETEER_FEET,
             PASSERBY_HEAD, PASSERBY_HANDS, PASSERBY_BODY, PASSERBY_FEET,
             KNIGHT_HEAD, KNIGHT_HANDS, KNIGHT_BODY, KNIGHT_FEET,
-            SPACE_STATION_SPHERE, SPACE_STATION_ROPE, FLEET_SPHERE, FLEET_ROPE);
+            SPACE_STATION_SPHERE, SPACE_STATION_ROPE, FLEET_SPHERE, FLEET_ROPE));
+        for (List<RegistryObject<RelicItem>> set : List.of(GUARD, GENIUS, DEAD_WATER_PIONEER,
+                IRON_CAVALRY, VALOROUS, SCHOLAR, HERO, SAVIOR, MAGICAL_GIRL, NAVIGATOR,
+                BELOBOG, PENACONY, AMPHOREUS, LIVE_STREAM)) {
+            all.addAll(set);
+        }
+        return List.copyOf(all);
+    }
 
     private StarRailRelicItems() {}
+
+    private static List<RegistryObject<RelicItem>> registerOuterSet(String id, RelicStackData.SetId set) {
+        return List.of(register("relic_" + id + "_head", set, RelicStackData.Part.HEAD),
+                register("relic_" + id + "_hands", set, RelicStackData.Part.HANDS),
+                register("relic_" + id + "_body", set, RelicStackData.Part.BODY),
+                register("relic_" + id + "_feet", set, RelicStackData.Part.FEET));
+    }
+
+    private static List<RegistryObject<RelicItem>> registerInnerSet(String id, RelicStackData.SetId set) {
+        return List.of(register("relic_" + id + "_sphere", set, RelicStackData.Part.SPHERE),
+                register("relic_" + id + "_rope", set, RelicStackData.Part.ROPE));
+    }
 
     private static RegistryObject<RelicItem> register(String id, RelicStackData.SetId set,
                                                        RelicStackData.Part part) {

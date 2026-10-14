@@ -7,6 +7,7 @@ package com.starrail.sim;
 import net.minecraft.util.Mth;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
@@ -48,7 +49,7 @@ public final class StarRailCombatEvents {
         if (player == null || StarRailOwnedDamage.isSecondary(player)) {
             return;
         }
-        event.setAmount(StarRailRelicService.boostDamage(player, event.getAmount()));
+        event.setAmount(StarRailRelicService.boostDamage(player, event.getEntity(), event.getAmount()));
         if (player.getPersistentData().getBoolean("trace_destruction_splash_active")) {
             return;
         }
@@ -178,6 +179,17 @@ public final class StarRailCombatEvents {
         }
     }
 
+    /** The Guard two-piece reduction applies to all damage types before vanilla armor. */
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public static void applyRelicDamageReduction(LivingHurtEvent event) {
+        if (event.isCanceled() || event.getAmount() <= 0.0F
+                || event.getEntity().level().isClientSide()
+                || !(event.getEntity() instanceof ServerPlayer player)) {
+            return;
+        }
+        event.setAmount(StarRailRelicService.reduceIncomingDamage(player, event.getAmount()));
+    }
+
     /** The rainbow cone counts each landed player hit exactly once, melee or projectile. */
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void recordMayRainbowAttack(LivingHurtEvent event) {
@@ -201,6 +213,12 @@ public final class StarRailCombatEvents {
                 event.getEntity());
         if (multiplier > 1.0D) {
             event.setAmount(event.getAmount() * (float) multiplier);
+        }
+        ServerPlayer attacker = getPlayerAttacker(event.getSource());
+        if (attacker != null && !StarRailOwnedDamage.isSecondary(attacker)
+                && !event.getSource().is(DamageTypeTags.BYPASSES_ARMOR)) {
+            event.setAmount(StarRailRelicService.applyArmorPenetration(
+                    attacker, event.getEntity(), event.getAmount()));
         }
     }
 

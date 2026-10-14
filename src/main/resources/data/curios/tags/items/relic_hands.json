@@ -3,6 +3,16 @@
   "values": [
     "starrail_sim:relic_musketeer_hands",
     "starrail_sim:relic_passerby_hands",
-    "starrail_sim:relic_knight_hands"
+    "starrail_sim:relic_knight_hands",
+    "starrail_sim:relic_guard_hands",
+    "starrail_sim:relic_genius_hands",
+    "starrail_sim:relic_dead_water_pioneer_hands",
+    "starrail_sim:relic_iron_cavalry_hands",
+    "starrail_sim:relic_valorous_hands",
+    "starrail_sim:relic_scholar_hands",
+    "starrail_sim:relic_hero_hands",
+    "starrail_sim:relic_savior_hands",
+    "starrail_sim:relic_magical_girl_hands",
+    "starrail_sim:relic_navigator_hands"
   ]
 }

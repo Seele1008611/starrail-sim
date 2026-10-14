@@ -31,7 +31,13 @@ public final class RelicStackData {
 
     public enum SetId {
         MUSKETEER("musketeer", false), PASSERBY("passerby", false), KNIGHT("knight", false),
-        SPACE_STATION("space_station", true), FLEET("fleet", true);
+        SPACE_STATION("space_station", true), FLEET("fleet", true),
+        GUARD("guard", false), GENIUS("genius", false),
+        DEAD_WATER_PIONEER("dead_water_pioneer", false), IRON_CAVALRY("iron_cavalry", false),
+        VALOROUS("valorous", false), SCHOLAR("scholar", false), HERO("hero", false),
+        SAVIOR("savior", false), MAGICAL_GIRL("magical_girl", false), NAVIGATOR("navigator", false),
+        BELOBOG("belobog", true), PENACONY("penacony", true), AMPHOREUS("amphoreus", true),
+        LIVE_STREAM("live_stream", true);
 
         private final String id;
         private final boolean inner;

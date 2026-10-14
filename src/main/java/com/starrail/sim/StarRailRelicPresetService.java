@@ -103,6 +103,11 @@ public final class StarRailRelicPresetService {
                 if(!targetIds.contains(id))outgoing.add(stack.copy());
             }
         }
+        for(var part:RelicStackData.Part.values()) {
+            StarRailRelicOperationService.LocatedRelic target=targets[part.ordinal()];
+            if(target!=null&&!handlers[part.ordinal()].isItemValid(destination[part.ordinal()],target.stack()))
+                return new Result(false,"preset_invalid");
+        }
         Inventory inventory=player.getInventory();List<ItemStack> simulated=new ArrayList<>();
         for(int i=0;i<inventory.items.size();i++)simulated.add(inventory.items.get(i).copy());
         for(StarRailRelicOperationService.LocatedRelic target:targets)if(target!=null&&!target.equipped()) {

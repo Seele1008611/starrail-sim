@@ -3,6 +3,16 @@
   "values": [
     "starrail_sim:relic_musketeer_head",
     "starrail_sim:relic_passerby_head",
-    "starrail_sim:relic_knight_head"
+    "starrail_sim:relic_knight_head",
+    "starrail_sim:relic_guard_head",
+    "starrail_sim:relic_genius_head",
+    "starrail_sim:relic_dead_water_pioneer_head",
+    "starrail_sim:relic_iron_cavalry_head",
+    "starrail_sim:relic_valorous_head",
+    "starrail_sim:relic_scholar_head",
+    "starrail_sim:relic_hero_head",
+    "starrail_sim:relic_savior_head",
+    "starrail_sim:relic_magical_girl_head",
+    "starrail_sim:relic_navigator_head"
   ]
 }

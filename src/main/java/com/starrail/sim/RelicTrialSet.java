@@ -2,13 +2,27 @@ package com.starrail.sim;
 
 import net.minecraft.network.chat.Component;
 
-/** The five relic sets currently available from the arena prototype selector. */
+/** Relic sets available from the arena selector, kept in lockstep with RelicStackData.SetId. */
 public enum RelicTrialSet {
     MUSKETEER("musketeer", false),
     PASSERBY("passerby", false),
     KNIGHT("knight", false),
     SPACE_STATION("space_station", true),
-    FLEET("fleet", true);
+    FLEET("fleet", true),
+    GUARD("guard", false),
+    GENIUS("genius", false),
+    DEAD_WATER_PIONEER("dead_water_pioneer", false),
+    IRON_CAVALRY("iron_cavalry", false),
+    VALOROUS("valorous", false),
+    SCHOLAR("scholar", false),
+    HERO("hero", false),
+    SAVIOR("savior", false),
+    MAGICAL_GIRL("magical_girl", false),
+    NAVIGATOR("navigator", false),
+    BELOBOG("belobog", true),
+    PENACONY("penacony", true),
+    AMPHOREUS("amphoreus", true),
+    LIVE_STREAM("live_stream", true);
 
     private final String id;
     private final boolean inner;

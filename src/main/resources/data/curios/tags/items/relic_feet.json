@@ -3,6 +3,16 @@
   "values": [
     "starrail_sim:relic_musketeer_feet",
     "starrail_sim:relic_passerby_feet",
-    "starrail_sim:relic_knight_feet"
+    "starrail_sim:relic_knight_feet",
+    "starrail_sim:relic_guard_feet",
+    "starrail_sim:relic_genius_feet",
+    "starrail_sim:relic_dead_water_pioneer_feet",
+    "starrail_sim:relic_iron_cavalry_feet",
+    "starrail_sim:relic_valorous_feet",
+    "starrail_sim:relic_scholar_feet",
+    "starrail_sim:relic_hero_feet",
+    "starrail_sim:relic_savior_feet",
+    "starrail_sim:relic_magical_girl_feet",
+    "starrail_sim:relic_navigator_feet"
   ]
 }

@@ -3,6 +3,16 @@
   "values": [
     "starrail_sim:relic_musketeer_body",
     "starrail_sim:relic_passerby_body",
-    "starrail_sim:relic_knight_body"
+    "starrail_sim:relic_knight_body",
+    "starrail_sim:relic_guard_body",
+    "starrail_sim:relic_genius_body",
+    "starrail_sim:relic_dead_water_pioneer_body",
+    "starrail_sim:relic_iron_cavalry_body",
+    "starrail_sim:relic_valorous_body",
+    "starrail_sim:relic_scholar_body",
+    "starrail_sim:relic_hero_body",
+    "starrail_sim:relic_savior_body",
+    "starrail_sim:relic_magical_girl_body",
+    "starrail_sim:relic_navigator_body"
   ]
 }

@@ -2,6 +2,10 @@
   "replace": false,
   "values": [
     "starrail_sim:relic_space_station_sphere",
-    "starrail_sim:relic_fleet_sphere"
+    "starrail_sim:relic_fleet_sphere",
+    "starrail_sim:relic_belobog_sphere",
+    "starrail_sim:relic_penacony_sphere",
+    "starrail_sim:relic_amphoreus_sphere",
+    "starrail_sim:relic_live_stream_sphere"
   ]
 }
