@@ -255,6 +255,18 @@
         {
           "type": "minecraft:item",
           "name": "starrail_sim:flower_world_mesmerizing_eyes"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:you_will_rise_and_sing"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:colors_for_tomorrow"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:summertime_to_the_waves"
         }
       ]
     },

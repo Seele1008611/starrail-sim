@@ -69,6 +69,10 @@ import com.starrail.sim.EchoesOfTheCoffinItem;
 import com.starrail.sim.TimeWaitsForNoOneItem;
 import com.starrail.sim.NightOfFrightItem;
 import com.starrail.sim.OnlyTheScentRemainsItem;
+import com.starrail.sim.YouWillRiseAndSingItem;
+import com.starrail.sim.ColorsForTomorrowItem;
+import com.starrail.sim.SummertimeToTheWavesItem;
+import com.starrail.sim.StarRail15LightConeService;
 import com.starrail.sim.StarRailAttributes;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -104,6 +108,11 @@ public final class StarRailLightConeScreen extends StarRailStyledScreen {
     private boolean draggingCone;
     private final StarRailSmoothScroll detailsScroll = new StarRailSmoothScroll();
     private int detailsBottom;
+    private Component specialEffectBody;
+    private int specialEffectBodyStartX;
+    private int specialEffectBodyStartY;
+    private int specialEffectBodyWidth;
+    private int specialEffectBodyEndY;
 
     public StarRailLightConeScreen() {
         super(Component.translatable("screen.starrail_sim.character_light_cone"));
@@ -291,11 +300,14 @@ public final class StarRailLightConeScreen extends StarRailStyledScreen {
                 || stack.getItem() instanceof MakeFarewellMoreBeautifulItem
                 || stack.getItem() instanceof LoveIsEternalItem
                 || stack.getItem() instanceof StarlightForLongNightsItem
+                || stack.getItem() instanceof YouWillRiseAndSingItem
                 || stack.getItem() instanceof MayRainbowStayInTheSkyItem;
         boolean elationLightCone = stack.getItem() instanceof WelcomeToGalacticCityItem
                 || stack.getItem() instanceof MeetInTheNextFlowerSeasonItem
                 || stack.getItem() instanceof WhenSheDecidesToSeeItem
-                || stack.getItem() instanceof FlowerWorldMesmerizingEyesItem;
+                || stack.getItem() instanceof FlowerWorldMesmerizingEyesItem
+                || stack.getItem() instanceof ColorsForTomorrowItem
+                || stack.getItem() instanceof SummertimeToTheWavesItem;
         boolean harmonyLightCone = stack.getItem() instanceof BattleIsntOverItem
                 || stack.getItem() instanceof MemoryOfMeItem
                 || stack.getItem() instanceof NightFlowingColorsItem
@@ -395,6 +407,38 @@ public final class StarRailLightConeScreen extends StarRailStyledScreen {
 
     private void renderSpecialEffect(GuiGraphics graphics, Player player, ItemStack stack,
                                      int x, int y, int width) {
+        Component description = StarRailItemTooltipHandler.getSpecialEffectDescription(stack);
+        specialEffectBody = description.getString().isBlank() ? null : description;
+        specialEffectBodyStartX = x;
+        specialEffectBodyStartY = y + 22;
+        specialEffectBodyWidth = width;
+        specialEffectBodyEndY = Integer.MIN_VALUE;
+        try {
+            renderSpecialEffectContent(graphics, player, stack, x, y, width);
+        } finally {
+            if (specialEffectBody != null) {
+                drawWrapped(graphics, specialEffectBody, specialEffectBodyStartX,
+                        specialEffectBodyStartY, specialEffectBodyWidth,
+                        StarRailUiStyle.VALUE_COLOR);
+            }
+            specialEffectBody = null;
+        }
+    }
+
+    private void renderSpecialEffectContent(GuiGraphics graphics, Player player,
+                                            ItemStack stack, int x, int y, int width) {
+        if (stack.getItem() instanceof YouWillRiseAndSingItem) {
+            renderYouWillRiseAndSingSpecialEffect(graphics, stack, x, y, width);
+            return;
+        }
+        if (stack.getItem() instanceof ColorsForTomorrowItem) {
+            renderColorsForTomorrowSpecialEffect(graphics, stack, x, y, width);
+            return;
+        }
+        if (stack.getItem() instanceof SummertimeToTheWavesItem) {
+            renderSummertimeToTheWavesSpecialEffect(graphics, stack, x, y, width);
+            return;
+        }
         if (stack.getItem() instanceof IWillHuntItem) {
             renderIWillHuntSpecialEffect(graphics, player, stack, x, y, width);
             return;
@@ -2582,6 +2626,30 @@ public final class StarRailLightConeScreen extends StarRailStyledScreen {
                         level))), x, y, width);
     }
 
+    private void renderYouWillRiseAndSingSpecialEffect(
+            GuiGraphics graphics, ItemStack stack, int x, int y, int width) {
+        int level = YouWillRiseAndSingItem.getSuperimposition(stack);
+        graphics.drawString(font, Component.translatable(
+                "screen.starrail_sim.light_cone_you_will_rise_and_sing_special", level),
+                x, y, StarRailUiStyle.CYAN_ACCENT);
+    }
+
+    private void renderColorsForTomorrowSpecialEffect(
+            GuiGraphics graphics, ItemStack stack, int x, int y, int width) {
+        int level = ColorsForTomorrowItem.getSuperimposition(stack);
+        graphics.drawString(font, Component.translatable(
+                "screen.starrail_sim.light_cone_colors_for_tomorrow_special", level),
+                x, y, StarRailUiStyle.CYAN_ACCENT);
+    }
+
+    private void renderSummertimeToTheWavesSpecialEffect(
+            GuiGraphics graphics, ItemStack stack, int x, int y, int width) {
+        int level = SummertimeToTheWavesItem.getSuperimposition(stack);
+        graphics.drawString(font, Component.translatable(
+                "screen.starrail_sim.light_cone_summertime_to_the_waves_special", level),
+                x, y, StarRailUiStyle.CYAN_ACCENT);
+    }
+
     private static boolean isNihilityLightCone(ItemStack stack) {
         return stack.getItem() instanceof InTheNameOfTheWorldItem
                 || stack.getItem() instanceof OnTheShoreInTheFlowOfTimeItem
@@ -2771,6 +2839,15 @@ public final class StarRailLightConeScreen extends StarRailStyledScreen {
         if (stack.getItem() instanceof MayRainbowStayInTheSkyItem) {
             return MayRainbowStayInTheSkyItem.getSuperimposition(stack);
         }
+        if (stack.getItem() instanceof YouWillRiseAndSingItem) {
+            return YouWillRiseAndSingItem.getSuperimposition(stack);
+        }
+        if (stack.getItem() instanceof ColorsForTomorrowItem) {
+            return ColorsForTomorrowItem.getSuperimposition(stack);
+        }
+        if (stack.getItem() instanceof SummertimeToTheWavesItem) {
+            return SummertimeToTheWavesItem.getSuperimposition(stack);
+        }
         if (stack.getItem() instanceof NightFlowingColorsItem) {
             return NightFlowingColorsItem.getSuperimposition(stack);
         }
@@ -2818,6 +2895,17 @@ public final class StarRailLightConeScreen extends StarRailStyledScreen {
     }
 
     private int drawBullet(GuiGraphics graphics, Component text, int x, int y, int width) {
+        if (specialEffectBody != null) {
+            if (specialEffectBodyEndY == Integer.MIN_VALUE) {
+                specialEffectBodyStartX = x;
+                specialEffectBodyStartY = y;
+                specialEffectBodyWidth = width;
+                int lines = font.split(Component.literal(
+                        StarRailUiStyle.readableText(specialEffectBody)), width).size();
+                specialEffectBodyEndY = y + lines * (font.lineHeight + 3) + 6;
+            }
+            return specialEffectBodyEndY;
+        }
         graphics.drawString(font, Component.literal("•"), x, y, StarRailUiStyle.GOLD_ACCENT);
         return drawWrapped(graphics, text, x + 10, y, width - 10,
                 StarRailUiStyle.VALUE_COLOR) + 6;

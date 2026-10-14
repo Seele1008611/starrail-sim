@@ -2,6 +2,7 @@ package com.starrail.sim.client;
 
 import com.starrail.sim.LightConeEquipPacket;
 import com.starrail.sim.StarRailNetwork;
+import com.starrail.sim.StarRailPath;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -25,6 +26,8 @@ final class StarRailLightConePickerScreen extends StarRailModalScreen {
     private static final int COLUMNS = 2;
     private static final int TILE_HEIGHT = 38;
     private static final int ROW_STEP = 44;
+    private static final int FILTER_HEIGHT = 18;
+    private static final int FILTER_OPTION_HEIGHT = 18;
     private static final int TEXT = 0xFF303441;
     private static final int MUTED = 0xFF626978;
 
@@ -32,7 +35,9 @@ final class StarRailLightConePickerScreen extends StarRailModalScreen {
     private final StarRailSmoothScroll inventoryScroll = new StarRailSmoothScroll();
     private EditBox search;
     private String query = "";
-    private int listLeft, listTop, listRight, listBottom, tileWidth;
+    private String pathFilter = "";
+    private boolean pathMenuOpen;
+    private int listLeft, listTop, listRight, listBottom, tileWidth, pathFilterTop;
 
     StarRailLightConePickerScreen(StarRailLightConeScreen parent) {
         super(Component.translatable("screen.starrail_sim.light_cone.picker.title"), parent);
@@ -46,10 +51,12 @@ final class StarRailLightConePickerScreen extends StarRailModalScreen {
         super.init();
         listLeft = modalLeft + 18;
         listRight = modalRight - 28;
-        listTop = bodyTop + 28;
+        pathFilterTop = bodyTop + 25;
+        listTop = bodyTop + 49;
         listBottom = modalBottom - 36;
         tileWidth = Math.max(1, (listRight - listLeft - 8) / COLUMNS);
         inventoryScroll.reset();
+        pathMenuOpen = false;
         refreshCandidates();
 
         search = new EditBox(font, listLeft, bodyTop + 3, listRight - listLeft, 18,
@@ -81,16 +88,104 @@ final class StarRailLightConePickerScreen extends StarRailModalScreen {
             if (stack.isEmpty() || !stack.is(LIGHT_CONES)) continue;
             ResourceLocation itemId = BuiltInRegistries.ITEM.getKey(stack.getItem());
             int superimposition = stack.hasTag() ? stack.getTag().getInt("Superimposition") : 0;
-            candidates.add(new Candidate(slot, stack.copy(), itemId, superimposition));
+            candidates.add(new Candidate(slot, stack.copy(), itemId, superimposition, pathFor(itemId)));
         }
     }
 
     private List<Candidate> filteredCandidates() {
         String normalized = query.strip().toLowerCase(Locale.ROOT);
-        if (normalized.isEmpty()) return List.copyOf(candidates);
-        return candidates.stream().filter(candidate -> candidate.stack().getHoverName().getString()
-                .toLowerCase(Locale.ROOT).contains(normalized)
-                || candidate.itemId().toString().toLowerCase(Locale.ROOT).contains(normalized)).toList();
+        return candidates.stream()
+                .filter(candidate -> pathFilter.isEmpty() || pathFilter.equals(candidate.pathId()))
+                .filter(candidate -> normalized.isEmpty()
+                        || candidate.stack().getHoverName().getString().toLowerCase(Locale.ROOT).contains(normalized)
+                        || candidate.itemId().toString().toLowerCase(Locale.ROOT).contains(normalized))
+                .toList();
+    }
+
+    /** Reads the Path named by the cone's existing localized effect header. */
+    private static String pathFor(ResourceLocation itemId) {
+        if (!"starrail_sim".equals(itemId.getNamespace())) return "other";
+        String header = Component.translatable("tooltip.starrail_sim."
+                + itemId.getPath() + ".special_header").getString();
+        for (StarRailPath path : StarRailPath.values()) {
+            if (path.isRealPath() && header.contains(Component.translatable(
+                    "path.starrail_sim." + path.getId()).getString())) {
+                return path.getId();
+            }
+        }
+        return "other";
+    }
+
+    private List<String> pathOptions() {
+        List<String> options = new ArrayList<>();
+        options.add("");
+        for (StarRailPath path : StarRailPath.values()) {
+            if (path.isRealPath()) options.add(path.getId());
+        }
+        options.add("other");
+        return options;
+    }
+
+    private Component pathLabel(String pathId) {
+        if (pathId.isEmpty()) {
+            return Component.translatable("screen.starrail_sim.light_cone.picker.path.all");
+        }
+        if (pathId.equals("other")) {
+            return Component.translatable("screen.starrail_sim.light_cone.picker.path.other");
+        }
+        return Component.translatable("path.starrail_sim." + pathId);
+    }
+
+    private int pathMenuBottom() {
+        return Math.min(pathFilterTop + FILTER_HEIGHT + pathOptions().size() * FILTER_OPTION_HEIGHT,
+                modalBottom - 32);
+    }
+
+    private boolean insidePathFilter(double x, double y) {
+        return x >= listLeft && x < listRight && y >= pathFilterTop
+                && y < pathFilterTop + FILTER_HEIGHT;
+    }
+
+    private void renderPathFilter(GuiGraphics graphics, int mouseX, int mouseY) {
+        graphics.flush();
+        graphics.pose().pushPose();
+        graphics.pose().translate(0.0F, 0.0F, 300.0F);
+        try {
+            graphics.fill(listLeft, pathFilterTop, listRight, pathFilterTop + FILTER_HEIGHT, 0xFFF0F1F4);
+            graphics.renderOutline(listLeft, pathFilterTop, listRight - listLeft, FILTER_HEIGHT,
+                    pathMenuOpen ? StarRailUiStyle.CYAN_ACCENT : 0x40707785);
+            graphics.drawString(font, pathLabel(pathFilter), listLeft + 7, pathFilterTop + 5, TEXT, false);
+            graphics.drawString(font, pathMenuOpen ? "▴" : "▾", listRight - 14, pathFilterTop + 4,
+                    StarRailUiStyle.CYAN_ACCENT, false);
+
+            if (pathMenuOpen) {
+                List<String> options = pathOptions();
+                int menuTop = pathFilterTop + FILTER_HEIGHT;
+                int menuBottom = pathMenuBottom();
+                graphics.fill(listLeft, menuTop, listRight, menuBottom, 0xFFF0F1F4);
+                graphics.renderOutline(listLeft, menuTop, listRight - listLeft, menuBottom - menuTop,
+                        0x80707785);
+                clip(graphics, listLeft, menuTop, listRight, menuBottom);
+                for (int index = 0; index < options.size(); index++) {
+                    int y = menuTop + index * FILTER_OPTION_HEIGHT;
+                    if (y >= menuBottom) break;
+                    boolean selected = options.get(index).equals(pathFilter);
+                    boolean hovered = mouseX >= listLeft && mouseX < listRight
+                            && mouseY >= y && mouseY < y + FILTER_OPTION_HEIGHT;
+                    if (selected || hovered) {
+                        graphics.fill(listLeft + 1, y, listRight - 1,
+                                Math.min(y + FILTER_OPTION_HEIGHT, menuBottom),
+                                selected ? 0xFFD8E9EE : 0xFFE3E8ED);
+                    }
+                    graphics.drawString(font, pathLabel(options.get(index)), listLeft + 7, y + 5,
+                            selected ? StarRailUiStyle.CYAN_ACCENT : TEXT, false);
+                }
+                graphics.disableScissor();
+            }
+        } finally {
+            graphics.flush();
+            graphics.pose().popPose();
+        }
     }
 
     @Override
@@ -103,7 +198,7 @@ final class StarRailLightConePickerScreen extends StarRailModalScreen {
 
         clip(graphics, listLeft, listTop, listRight, listBottom);
         if (shown.isEmpty()) {
-            Component empty = Component.translatable(query.isBlank()
+            Component empty = Component.translatable(candidates.isEmpty()
                     ? "screen.starrail_sim.light_cone.picker.empty"
                     : "screen.starrail_sim.light_cone.picker.no_match");
             graphics.drawCenteredString(font, empty, (listLeft + listRight) / 2,
@@ -138,6 +233,34 @@ final class StarRailLightConePickerScreen extends StarRailModalScreen {
         graphics.drawString(font,
                 Component.translatable("screen.starrail_sim.light_cone.picker.hint"),
                 listLeft + 136, modalBottom - 21, MUTED, false);
+        renderPathFilter(graphics, mouseX, mouseY);
+    }
+
+    @Override
+    protected boolean overlayMouseClicked(double x, double y, int button) {
+        if (button != 0) return false;
+        if (pathMenuOpen) {
+            int menuTop = pathFilterTop + FILTER_HEIGHT;
+            int menuBottom = pathMenuBottom();
+            if (x >= listLeft && x < listRight && y >= menuTop && y < menuBottom) {
+                int index = (int) (y - menuTop) / FILTER_OPTION_HEIGHT;
+                List<String> options = pathOptions();
+                if (index >= 0 && index < options.size()) {
+                    pathFilter = options.get(index);
+                    inventoryScroll.reset();
+                }
+                pathMenuOpen = false;
+                return true;
+            }
+            pathMenuOpen = false;
+            if (insidePathFilter(x, y)) pathMenuOpen = true;
+            return true;
+        }
+        if (insidePathFilter(x, y)) {
+            pathMenuOpen = true;
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -163,6 +286,7 @@ final class StarRailLightConePickerScreen extends StarRailModalScreen {
 
     @Override
     protected boolean logicalMouseScrolled(double x, double y, double amount) {
+        if (pathMenuOpen) return true;
         if (x >= listLeft && x <= listRight && y >= listTop && y < listBottom) {
             inventoryScroll.wheel(amount, ROW_STEP);
             return true;
@@ -170,6 +294,15 @@ final class StarRailLightConePickerScreen extends StarRailModalScreen {
         return super.logicalMouseScrolled(x, y, amount);
     }
 
+    @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        if (pathMenuOpen && keyCode == 256) {
+            pathMenuOpen = false;
+            return true;
+        }
+        return super.keyPressed(keyCode, scanCode, modifiers);
+    }
+
     private record Candidate(int inventorySlot, ItemStack stack, ResourceLocation itemId,
-                             int superimposition) { }
+                             int superimposition, String pathId) { }
 }

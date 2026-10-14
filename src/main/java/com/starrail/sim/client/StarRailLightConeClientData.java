@@ -216,6 +216,15 @@ public final class StarRailLightConeClientData {
                         .findFirstCurio(player,
                                 StarRailSimMod.MAY_RAINBOW_STAY_IN_THE_SKY.get())
                         .map(result -> result.stack()))
+                .or(() -> CuriosApi.getCuriosHelper()
+                        .findFirstCurio(player, StarRailSimMod.YOU_WILL_RISE_AND_SING.get())
+                        .map(result -> result.stack()))
+                .or(() -> CuriosApi.getCuriosHelper()
+                        .findFirstCurio(player, StarRailSimMod.COLORS_FOR_TOMORROW.get())
+                        .map(result -> result.stack()))
+                .or(() -> CuriosApi.getCuriosHelper()
+                        .findFirstCurio(player, StarRailSimMod.SUMMERTIME_TO_THE_WAVES.get())
+                        .map(result -> result.stack()))
                 .orElse(ItemStack.EMPTY);
     }
 }

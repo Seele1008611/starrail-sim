@@ -3246,10 +3246,12 @@ public final class StarRailLightConeService {
                             : 0.0D,
                     AttributeModifier.Operation.ADDITION);
         }
+        StarRail15LightConeService.refresh(player);
     }
 
     /** Applies kill-triggered light-cone effects and refreshes their timers. */
     public static void onMonsterKilled(ServerPlayer player) {
+        StarRail15LightConeService.onMonsterKilled(player);
         triggerThoughRiversAndMountains(player);
         triggerNightOfFright(player);
         triggerLoveIsEternalPoem(player);
@@ -3518,6 +3520,7 @@ public final class StarRailLightConeService {
 
     /** Adds attack-triggered stacks for the equipped light cones. */
     public static void onAttack(ServerPlayer player) {
+        StarRail15LightConeService.onAttack(player);
         triggerLoveIsEternalBlank(player);
         triggerStarlitNight(player);
         onWelcomeToGalacticCityAttack(player);
@@ -4233,7 +4236,8 @@ public final class StarRailLightConeService {
 
     /** Returns all unconditional/stack-based Hunt light-cone damage multipliers. */
     public static double lightConeDamageMultiplier(ServerPlayer player, LivingEntity target) {
-        double multiplier = pursuitDamageMultiplier(player);
+        double multiplier = pursuitDamageMultiplier(player)
+                * StarRail15LightConeService.damageMultiplier(player);
         multiplier *= loveIsEternalDamageMultiplier(player);
         multiplier *= starlitNightDamageMultiplier(player);
         multiplier *= weaveTimeIntoGoldDamageMultiplier(player);

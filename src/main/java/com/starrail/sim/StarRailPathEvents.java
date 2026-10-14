@@ -9,6 +9,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -342,7 +343,19 @@ public final class StarRailPathEvents {
     public static void onLivingDeath(LivingDeathEvent event) {
         if (event.isCanceled() || event.getEntity().level().isClientSide()) return;
         if (event.getEntity() instanceof ServerPlayer dead) { StarRailPathTemporaryState.clear(dead, false); return; }
-        if (!(event.getEntity() instanceof Monster)) return;
+        if (!(event.getEntity() instanceof Monster)) {
+            if (!(event.getEntity() instanceof Enemy)) return;
+            ServerPlayer creditedEnemy = StarRailCombatEvents.getPlayerAttacker(event.getSource());
+            if (creditedEnemy == null) {
+                creditedEnemy = StarRailDebuffService.getNihilityMarkOwner(event.getEntity());
+            }
+            if (creditedEnemy == null) return;
+            String paidKey = "starrail_death_recorded_" + creditedEnemy.getUUID();
+            if (event.getEntity().getPersistentData().getBoolean(paidKey)) return;
+            event.getEntity().getPersistentData().putBoolean(paidKey, true);
+            StarRail15LightConeService.onMonsterKilled(creditedEnemy);
+            return;
+        }
         ServerPlayer credited = StarRailCombatEvents.getPlayerAttacker(event.getSource());
         if (credited == null) credited = StarRailDebuffService.getNihilityMarkOwner(event.getEntity());
         final ServerPlayer player = credited;

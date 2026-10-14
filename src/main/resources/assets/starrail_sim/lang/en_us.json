@@ -3480,6 +3480,10 @@
 
   ,"screen.starrail_sim.light_cone_remembrance": "Remembrance"
 
+  ,"screen.starrail_sim.light_cone_remembrance_active": "Path condition: following Remembrance; exclusive effect active"
+
+  ,"screen.starrail_sim.light_cone_remembrance_inactive": "Path condition: not following Remembrance; only base attributes are active"
+
   ,"screen.starrail_sim.light_cone_weave_time_into_gold_special": "Special Effect “Creation” (Only active when following Remembrance)"
 
   ,"screen.starrail_sim.light_cone_weave_time_into_gold_attack": "Increases Attack by %s."
@@ -4985,6 +4989,8 @@
   "screen.starrail_sim.light_cone.choose": "Choose Light Cone",
   "screen.starrail_sim.light_cone.picker.title": "Choose or Replace Light Cone",
   "screen.starrail_sim.light_cone.picker.search": "Search light cone names",
+  "screen.starrail_sim.light_cone.picker.path.all": "All Paths",
+  "screen.starrail_sim.light_cone.picker.path.other": "Other",
   "screen.starrail_sim.light_cone.picker.empty": "No equippable Light Cones in your inventory.",
   "screen.starrail_sim.light_cone.picker.no_match": "No matching Light Cone found.",
   "screen.starrail_sim.light_cone.picker.hint": "Click a Light Cone to equip it. Your current one returns to your inventory.",
@@ -5132,4 +5138,44 @@
   "item.starrail_sim.relic_live_stream_sphere": "Livestream's Thousand Windows",
   "ui.starrail_sim.relic.item.live_stream.rope": "Livestream's Flow of Chat",
   "item.starrail_sim.relic_live_stream_rope": "Livestream's Flow of Chat"
+  ,"item.starrail_sim.you_will_rise_and_sing": "You Will Rise and Sing"
+  ,"tooltip.starrail_sim.you_will_rise_and_sing.shift_hint": "Hold Shift to view Light Cone details"
+  ,"tooltip.starrail_sim.you_will_rise_and_sing.story_0": "The sea washed over her ankles, and foam broke beneath the moon. During a rare break in filming, the young woman was invited to a little beachside bonfire."
+  ,"tooltip.starrail_sim.you_will_rise_and_sing.story_1": "The firelight stretched the children's shadows. Confusion filled their little faces. They looked at her and asked timidly, “Sister Robin, what should we do?”"
+  ,"tooltip.starrail_sim.you_will_rise_and_sing.story_2": "She smiled and touched the strings with her fingertips, answering without words."
+  ,"tooltip.starrail_sim.you_will_rise_and_sing.story_3": "“Come, follow me—” The first pluck was swallowed by the sea breeze; the second found its tune. With waves on the shore and lights flickering, she sang softly, pouring out the clear sky in her heart."
+  ,"tooltip.starrail_sim.you_will_rise_and_sing.story_4": "“When you don't know how to sing, listen to the melody in your heart.”"
+  ,"tooltip.starrail_sim.you_will_rise_and_sing.story_5": "At first, the notes were scattered. Then they took shape, and the shape began to breathe. She sang, they sang, until the summer breeze passed by."
+  ,"tooltip.starrail_sim.you_will_rise_and_sing.story_6": "“Listen, this is the song in our hearts. It has always been there, waiting to be heard.” She heard it, and offered her gentle wish:"
+  ,"tooltip.starrail_sim.you_will_rise_and_sing.story_7": "“Rise and sing, then spread your wings and fly.”"
+  ,"tooltip.starrail_sim.you_will_rise_and_sing.superimposition": "Superimposition: S%s"
+  ,"tooltip.starrail_sim.you_will_rise_and_sing.special_header": "Special Effect “Improvisation” (Only active on the Path of Remembrance)"
+  ,"tooltip.starrail_sim.you_will_rise_and_sing.special_full": "Increases the wearer's Max HP by %s. After the wearer defeats an enemy, increases the wearer's ATK by %s for 20 seconds and grants “New Voice” for 20 seconds. While “New Voice” is active, increases the wearer's ATK and the ATK of other players within 10 blocks by %s. Repeated kills refresh the duration; these bonuses do not stack."
+  ,"item.starrail_sim.colors_for_tomorrow": "Colors for Tomorrow"
+  ,"tooltip.starrail_sim.colors_for_tomorrow.shift_hint": "Hold Shift to view Light Cone details"
+  ,"tooltip.starrail_sim.colors_for_tomorrow.story_0": "“The stroke has been corrected. Parameters adjusted.”"
+  ,"tooltip.starrail_sim.colors_for_tomorrow.story_1": "She once tried to fit the sea's curves into her painting, capture the shape of water, and study each fleck of foam."
+  ,"tooltip.starrail_sim.colors_for_tomorrow.story_2": "Again and again, countless waves bloomed beneath her brush, but none was the one she imagined."
+  ,"tooltip.starrail_sim.colors_for_tomorrow.story_3": "“I want to paint for everyone—not to trace their footsteps, but to draw the road ahead.”"
+  ,"tooltip.starrail_sim.colors_for_tomorrow.story_4": "With a sweep of her brush, she sheltered children who were hungry and thirsty."
+  ,"tooltip.starrail_sim.colors_for_tomorrow.story_5": "Ink spread as her strokes mended the world's cracks."
+  ,"tooltip.starrail_sim.colors_for_tomorrow.story_6": "Her farthest stroke pierced this world's canvas and reached into the vast galaxy."
+  ,"tooltip.starrail_sim.colors_for_tomorrow.story_7": "Through countless yesterdays, she painted futures for others—pale, dim, and tinged with hope."
+  ,"tooltip.starrail_sim.colors_for_tomorrow.story_8": "Looking back, every stroke she made had also captured the “pearl” in her heart."
+  ,"tooltip.starrail_sim.colors_for_tomorrow.superimposition": "Superimposition: S%s"
+  ,"tooltip.starrail_sim.colors_for_tomorrow.special_header": "Special Effect “Brushstroke” (Only active on the Path of Elation)"
+  ,"tooltip.starrail_sim.colors_for_tomorrow.special_full": "Increases the wearer's Armor by %s. After the wearer defeats an enemy, grants “Brushstroke,” increasing damage dealt by the wearer and other players within 10 blocks by %s for 10 seconds, and restores health once to the wearer and other players within 10 blocks equal to %s of the wearer's Armor."
+  ,"item.starrail_sim.summertime_to_the_waves": "Cast the Summer toward the Waves"
+  ,"tooltip.starrail_sim.summertime_to_the_waves.shift_hint": "Hold Shift to view Light Cone details"
+  ,"tooltip.starrail_sim.summertime_to_the_waves.story_0": "Water surged over the board. A crest split into a churning gap, and sunlight shattered into a thousand golden flecks. He mounted the board and let the wave toss him high."
+  ,"tooltip.starrail_sim.summertime_to_the_waves.story_1": "“Stormy seas mean great risks—and great risks mean great rewards.”"
+  ,"tooltip.starrail_sim.summertime_to_the_waves.story_2": "He gambled with the tide, again and again, riding the edge of the waves. Summer, sunlight, and the cool sea breeze blurred the names, numbers, lies, and schemes around him into indistinct colors. There was no need to tell them apart."
+  ,"tooltip.starrail_sim.summertime_to_the_waves.story_3": "“The tide is here. Why not see what it can stir up?”"
+  ,"tooltip.starrail_sim.summertime_to_the_waves.story_4": "The sea was boundless, as was the splendor of Thousand Star City. Before placing his next bet, he climbed the crest, staked himself, and fixed his gaze on that moment above the waves."
+  ,"tooltip.starrail_sim.summertime_to_the_waves.superimposition": "Superimposition: S%s"
+  ,"tooltip.starrail_sim.summertime_to_the_waves.special_header": "Special Effect “Wave Rider” (Only active on the Path of Elation)"
+  ,"tooltip.starrail_sim.summertime_to_the_waves.special_full": "Increases the wearer's CRIT Rate by %s. When the wearer performs an attack, grants “At the Helm,” increasing the wearer's Attack Speed by %s for 3 seconds. If the wearer defeats an enemy, also grants “Current,” increasing the wearer's ATK by %s for 10 seconds."
+  ,"screen.starrail_sim.light_cone_you_will_rise_and_sing_special": "Special Effect “Improvisation” (S%s; Path of Remembrance only)"
+  ,"screen.starrail_sim.light_cone_colors_for_tomorrow_special": "Special Effect “Brushstroke” (S%s; Path of Elation only)"
+  ,"screen.starrail_sim.light_cone_summertime_to_the_waves_special": "Special Effect “Wave Rider” (S%s; Path of Elation only)"
 }

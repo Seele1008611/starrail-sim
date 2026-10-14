@@ -172,6 +172,12 @@ public final class StarRailSimMod {
                     "flower_world_mesmerizing_eyes", FlowerWorldMesmerizingEyesItem::new);
     public static final RegistryObject<MayRainbowStayInTheSkyItem> MAY_RAINBOW_STAY_IN_THE_SKY =
             ITEMS.register("may_rainbow_stay_in_the_sky", MayRainbowStayInTheSkyItem::new);
+    public static final RegistryObject<YouWillRiseAndSingItem> YOU_WILL_RISE_AND_SING =
+            ITEMS.register("you_will_rise_and_sing", YouWillRiseAndSingItem::new);
+    public static final RegistryObject<ColorsForTomorrowItem> COLORS_FOR_TOMORROW =
+            ITEMS.register("colors_for_tomorrow", ColorsForTomorrowItem::new);
+    public static final RegistryObject<SummertimeToTheWavesItem> SUMMERTIME_TO_THE_WAVES =
+            ITEMS.register("summertime_to_the_waves", SummertimeToTheWavesItem::new);
     public static final RegistryObject<InTheNameOfTheWorldItem> IN_THE_NAME_OF_THE_WORLD =
             ITEMS.register("in_the_name_of_the_world", InTheNameOfTheWorldItem::new);
     public static final RegistryObject<OnTheShoreInTheFlowOfTimeItem>
@@ -428,6 +434,9 @@ public final class StarRailSimMod {
                         output.accept(WHEN_SHE_DECIDES_TO_SEE.get());
                         output.accept(FLOWER_WORLD_MESMERIZING_EYES.get());
                         output.accept(MAY_RAINBOW_STAY_IN_THE_SKY.get());
+                        output.accept(YOU_WILL_RISE_AND_SING.get());
+                        output.accept(COLORS_FOR_TOMORROW.get());
+                        output.accept(SUMMERTIME_TO_THE_WAVES.get());
                         // 创造模式中提供九种命途凭证，供测试各自的试炼流程。
                         output.accept(pathTrialTokenForCreative(StarRailPath.PRESERVATION));
                         output.accept(pathTrialTokenForCreative(StarRailPath.DESTRUCTION));

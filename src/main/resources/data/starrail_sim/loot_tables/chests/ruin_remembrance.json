@@ -51,6 +51,10 @@
         {
           "type": "minecraft:item",
           "name": "starrail_sim:may_rainbow_stay_in_the_sky"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:you_will_rise_and_sing"
         }
       ]
     },

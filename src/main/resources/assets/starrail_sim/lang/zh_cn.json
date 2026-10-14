@@ -3486,6 +3486,10 @@
 
   ,"screen.starrail_sim.light_cone_remembrance": "记忆"
 
+  ,"screen.starrail_sim.light_cone_remembrance_active": "命途条件：已踏上记忆，专属效果已激活"
+
+  ,"screen.starrail_sim.light_cone_remembrance_inactive": "命途条件：当前未踏上记忆，仅生效基础属性"
+
   ,"screen.starrail_sim.light_cone_weave_time_into_gold_special": "特殊效果“创设”（仅踏上记忆时生效）"
 
   ,"screen.starrail_sim.light_cone_weave_time_into_gold_attack": "攻击力提高%s。"
@@ -4991,6 +4995,8 @@
   "screen.starrail_sim.light_cone.choose": "选择光锥",
   "screen.starrail_sim.light_cone.picker.title": "选择或更换光锥",
   "screen.starrail_sim.light_cone.picker.search": "搜索光锥名称",
+  "screen.starrail_sim.light_cone.picker.path.all": "全部命途",
+  "screen.starrail_sim.light_cone.picker.path.other": "其他",
   "screen.starrail_sim.light_cone.picker.empty": "背包中没有可装备的光锥。",
   "screen.starrail_sim.light_cone.picker.no_match": "没有找到匹配的光锥。",
   "screen.starrail_sim.light_cone.picker.hint": "点击光锥即可装备；当前光锥会放回背包。",
@@ -5138,4 +5144,44 @@
   "item.starrail_sim.relic_live_stream_sphere": "直播间的千窗万面",
   "ui.starrail_sim.relic.item.live_stream.rope": "直播间的畅聊语流",
   "item.starrail_sim.relic_live_stream_rope": "直播间的畅聊语流"
+  ,"item.starrail_sim.you_will_rise_and_sing": "你将起身歌唱"
+  ,"tooltip.starrail_sim.you_will_rise_and_sing.shift_hint": "按住 Shift 显示光锥详情"
+  ,"tooltip.starrail_sim.you_will_rise_and_sing.story_0": "海水漫过足踝，泡沫于月下碎裂。难得的拍摄间隙，少女应邀来到沙滩，前来参加一场小小的篝火晚会。"
+  ,"tooltip.starrail_sim.you_will_rise_and_sing.story_1": "火光将孩子们的影子拉长，一张张小脸上写满迷茫。孩子们望向她，怯生生道：“知更鸟姐姐，我们该怎么办？”"
+  ,"tooltip.starrail_sim.you_will_rise_and_sing.story_2": "她微微一笑，用指尖轻触琴弦，替代回答。"
+  ,"tooltip.starrail_sim.you_will_rise_and_sing.story_3": "“来，跟着我——”第一声拨弦被海风吞没，第二声调律便有了形状。浪花拍岸、灯火明灭，她启唇，低吟轻歌，将胸中那片澄澈的晴空倾倒而出。"
+  ,"tooltip.starrail_sim.you_will_rise_and_sing.story_4": "“当你们不知道该怎么唱的时候，就听听自己心里的旋律。”"
+  ,"tooltip.starrail_sim.you_will_rise_and_sing.story_5": "起初只是零落的声调，后来渐渐声调有了轮廓，轮廓开始呼吸。她唱着，他们唱着，直至夏风拂过。"
+  ,"tooltip.starrail_sim.you_will_rise_and_sing.story_6": "“听，这就是我们心里的歌呀。它一直在那里，等待被听见。”她听见了，于是，她温柔地祝愿道："
+  ,"tooltip.starrail_sim.you_will_rise_and_sing.story_7": "“起身歌唱，随后，振翅飞翔吧。”"
+  ,"tooltip.starrail_sim.you_will_rise_and_sing.superimposition": "叠影：S%s"
+  ,"tooltip.starrail_sim.you_will_rise_and_sing.special_header": "特殊效果“即兴”（仅踏上记忆时生效）"
+  ,"tooltip.starrail_sim.you_will_rise_and_sing.special_full": "使装备者的生命上限提高%s。装备者击杀敌对目标后，自身攻击力提高%s，持续20秒，并获得“新声”，持续20秒。装备者持有“新声”时，自身和周围10格内其他玩家的攻击力提高%s；重复击杀刷新持续时间，不叠层。"
+  ,"item.starrail_sim.colors_for_tomorrow": "献给明日的色彩"
+  ,"tooltip.starrail_sim.colors_for_tomorrow.shift_hint": "按住 Shift 显示光锥详情"
+  ,"tooltip.starrail_sim.colors_for_tomorrow.story_0": "“错笔已修正，参数已调整。”"
+  ,"tooltip.starrail_sim.colors_for_tomorrow.story_1": "她曾试图拟合画作中海的曲线，萃取水的形意，解析星星点点的浮沫。"
+  ,"tooltip.starrail_sim.colors_for_tomorrow.story_2": "一次又一次，绘笔下开出无数朵浪花，但都不是她想象中的那朵。"
+  ,"tooltip.starrail_sim.colors_for_tomorrow.story_3": "“我想为众人作画：并非描摹他们的脚步，而是为他们绘出前路。”"
+  ,"tooltip.starrail_sim.colors_for_tomorrow.story_4": "一笔挥出，她为饥渴的孩子带去庇护。"
+  ,"tooltip.starrail_sim.colors_for_tomorrow.story_5": "墨色晕染，她用笔触织补天地的裂缝。"
+  ,"tooltip.starrail_sim.colors_for_tomorrow.story_6": "而她最遥远的一笔，穿透此世的画布，延伸向浩渺银河。"
+  ,"tooltip.starrail_sim.colors_for_tomorrow.story_7": "无数个昨日，她为他人描绘未来——苍白的，黯淡的，染上希望的色彩。"
+  ,"tooltip.starrail_sim.colors_for_tomorrow.story_8": "恍然回首，她落下的每一笔，也刻画着她心中的“真珠”。"
+  ,"tooltip.starrail_sim.colors_for_tomorrow.superimposition": "叠影：S%s"
+  ,"tooltip.starrail_sim.colors_for_tomorrow.special_header": "特殊效果“挥墨”（仅踏上欢愉时生效）"
+  ,"tooltip.starrail_sim.colors_for_tomorrow.special_full": "使装备者的护甲值提高%s。装备者在击杀敌对目标后，获得“墨笔”，使自身和周围10格内的其他玩家造成的伤害提高%s，持续10秒，并为装备者和自身周围10格内的其他玩家回复一次等同于装备者护甲值%s的生命值。"
+  ,"item.starrail_sim.summertime_to_the_waves": "向浪花掷下盛夏"
+  ,"tooltip.starrail_sim.summertime_to_the_waves.shift_hint": "按住 Shift 显示光锥详情"
+  ,"tooltip.starrail_sim.summertime_to_the_waves.story_0": "海水涌上板顶，浪尖撕开一道翻涌的豁口，阳光粉碎成千万片金箔。他踏上冲浪板，令浪峰将他抛向高处。"
+  ,"tooltip.starrail_sim.summertime_to_the_waves.story_1": "“惊涛骇浪意味着风险重重，风险重重更意味着回报颇丰。”"
+  ,"tooltip.starrail_sim.summertime_to_the_waves.story_2": "他与浪潮博弈，一次又一次，置身于风口浪尖。盛夏、阳光、海风的清冽，那些纷繁的名姓、盈亏的数字、众人眼底的谎言与算计都仿佛化为模糊的色块，再不必辨认。"
+  ,"tooltip.starrail_sim.summertime_to_the_waves.story_3": "“既然浪潮已至，何不看看它究竟能掀起什么？”"
+  ,"tooltip.starrail_sim.summertime_to_the_waves.story_4": "大海无限，千星城的繁华无限。在掷下下一枚筹码之前，他踏上浪脊，以身作押，将目光指向俯瞰浪涛的那一瞬间。"
+  ,"tooltip.starrail_sim.summertime_to_the_waves.superimposition": "叠影：S%s"
+  ,"tooltip.starrail_sim.summertime_to_the_waves.special_header": "特殊效果“浪行”（仅踏上欢愉时生效）"
+  ,"tooltip.starrail_sim.summertime_to_the_waves.special_full": "使装备者的暴击率提高%s。装备者施放攻击时，获得“风口”，“风口”使装备者的攻击速度提高%s，持续3秒。若装备者击杀敌对目标，则额外获得“潮流”，“潮流”使装备者的攻击力提高%s，持续10秒。"
+  ,"screen.starrail_sim.light_cone_you_will_rise_and_sing_special": "特殊效果“即兴”（S%s，仅踏上记忆时生效）"
+  ,"screen.starrail_sim.light_cone_colors_for_tomorrow_special": "特殊效果“挥墨”（S%s，仅踏上欢愉时生效）"
+  ,"screen.starrail_sim.light_cone_summertime_to_the_waves_special": "特殊效果“浪行”（S%s，仅踏上欢愉时生效）"
 }

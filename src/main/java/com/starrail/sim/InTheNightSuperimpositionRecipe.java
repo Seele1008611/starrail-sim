@@ -92,7 +92,10 @@ public final class InTheNightSuperimpositionRecipe extends CustomRecipe {
                     && !(stack.getItem() instanceof MeetInTheNextFlowerSeasonItem)
                     && !(stack.getItem() instanceof WhenSheDecidesToSeeItem)
                     && !(stack.getItem() instanceof FlowerWorldMesmerizingEyesItem)
-                    && !(stack.getItem() instanceof MayRainbowStayInTheSkyItem)) {
+                    && !(stack.getItem() instanceof MayRainbowStayInTheSkyItem)
+                    && !(stack.getItem() instanceof YouWillRiseAndSingItem)
+                    && !(stack.getItem() instanceof ColorsForTomorrowItem)
+                    && !(stack.getItem() instanceof SummertimeToTheWavesItem)) {
                     return false;
             }
             if (occupied == 0) {
@@ -147,6 +150,12 @@ public final class InTheNightSuperimpositionRecipe extends CustomRecipe {
             FlowerWorldMesmerizingEyesItem.setSuperimposition(result, highestLevel + 1);
         } else if (result.getItem() instanceof MayRainbowStayInTheSkyItem) {
             MayRainbowStayInTheSkyItem.setSuperimposition(result, highestLevel + 1);
+        } else if (result.getItem() instanceof YouWillRiseAndSingItem) {
+            YouWillRiseAndSingItem.setSuperimposition(result, highestLevel + 1);
+        } else if (result.getItem() instanceof ColorsForTomorrowItem) {
+            ColorsForTomorrowItem.setSuperimposition(result, highestLevel + 1);
+        } else if (result.getItem() instanceof SummertimeToTheWavesItem) {
+            SummertimeToTheWavesItem.setSuperimposition(result, highestLevel + 1);
         } else if (result.getItem() instanceof WeaveTimeIntoGoldItem) {
             WeaveTimeIntoGoldItem.setSuperimposition(result, highestLevel + 1);
         } else if (result.getItem() instanceof InTheNightItem) {
@@ -403,6 +412,15 @@ public final class InTheNightSuperimpositionRecipe extends CustomRecipe {
         }
         if (stack.getItem() instanceof MayRainbowStayInTheSkyItem) {
             return MayRainbowStayInTheSkyItem.getSuperimposition(stack);
+        }
+        if (stack.getItem() instanceof YouWillRiseAndSingItem) {
+            return YouWillRiseAndSingItem.getSuperimposition(stack);
+        }
+        if (stack.getItem() instanceof ColorsForTomorrowItem) {
+            return ColorsForTomorrowItem.getSuperimposition(stack);
+        }
+        if (stack.getItem() instanceof SummertimeToTheWavesItem) {
+            return SummertimeToTheWavesItem.getSuperimposition(stack);
         }
         if (stack.getItem() instanceof InTheNameOfTheWorldItem) {
             return InTheNameOfTheWorldItem.getSuperimposition(stack);

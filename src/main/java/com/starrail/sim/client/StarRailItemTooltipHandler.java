@@ -64,13 +64,19 @@ import com.starrail.sim.MakeFarewellMoreBeautifulItem;
 import com.starrail.sim.LoveIsEternalItem;
 import com.starrail.sim.StarlightForLongNightsItem;
 import com.starrail.sim.MayRainbowStayInTheSkyItem;
+import com.starrail.sim.YouWillRiseAndSingItem;
+import com.starrail.sim.ColorsForTomorrowItem;
+import com.starrail.sim.SummertimeToTheWavesItem;
+import com.starrail.sim.StarRail15LightConeService;
 import com.starrail.sim.WelcomeToGalacticCityItem;
 import com.starrail.sim.MeetInTheNextFlowerSeasonItem;
 import com.starrail.sim.WhenSheDecidesToSeeItem;
 import com.starrail.sim.FlowerWorldMesmerizingEyesItem;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
@@ -79,6 +85,7 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -220,7 +227,10 @@ public final class StarRailItemTooltipHandler {
                 && !(stack.getItem() instanceof MeetInTheNextFlowerSeasonItem)
                 && !(stack.getItem() instanceof WhenSheDecidesToSeeItem)
                 && !(stack.getItem() instanceof FlowerWorldMesmerizingEyesItem)
-                && !(stack.getItem() instanceof MayRainbowStayInTheSkyItem)) {
+                && !(stack.getItem() instanceof MayRainbowStayInTheSkyItem)
+                && !(stack.getItem() instanceof YouWillRiseAndSingItem)
+                && !(stack.getItem() instanceof ColorsForTomorrowItem)
+                && !(stack.getItem() instanceof SummertimeToTheWavesItem)) {
             return;
         }
 
@@ -349,6 +359,12 @@ public final class StarRailItemTooltipHandler {
         } else if (stack.getItem() instanceof NightOfFrightItem) {
             theme = ChatFormatting.LIGHT_PURPLE;
         } else if (stack.getItem() instanceof OnlyTheScentRemainsItem) {
+            theme = ChatFormatting.GOLD;
+        } else if (stack.getItem() instanceof YouWillRiseAndSingItem) {
+            theme = ChatFormatting.LIGHT_PURPLE;
+        } else if (stack.getItem() instanceof ColorsForTomorrowItem) {
+            theme = ChatFormatting.AQUA;
+        } else if (stack.getItem() instanceof SummertimeToTheWavesItem) {
             theme = ChatFormatting.GOLD;
         }
         if (Screen.hasShiftDown()) {
@@ -551,6 +567,18 @@ public final class StarRailItemTooltipHandler {
         } else if (stack.getItem() instanceof OnlyTheScentRemainsItem) {
             prefix = "tooltip.starrail_sim.only_the_scent_remains.story_";
             lineCount = 6;
+        } else if (stack.getItem() instanceof YouWillRiseAndSingItem) {
+            prefix = "tooltip.starrail_sim.you_will_rise_and_sing.story_";
+            lineCount = 8;
+            firstLineIndex = 0;
+        } else if (stack.getItem() instanceof ColorsForTomorrowItem) {
+            prefix = "tooltip.starrail_sim.colors_for_tomorrow.story_";
+            lineCount = 9;
+            firstLineIndex = 0;
+        } else if (stack.getItem() instanceof SummertimeToTheWavesItem) {
+            prefix = "tooltip.starrail_sim.summertime_to_the_waves.story_";
+            lineCount = 5;
+            firstLineIndex = 0;
         } else {
             prefix = "tooltip.starrail_sim.in_the_night.story_";
             lineCount = 4;
@@ -682,6 +710,12 @@ public final class StarRailItemTooltipHandler {
             hintKey = "tooltip.starrail_sim.night_of_fright.shift_hint";
         } else if (stack.getItem() instanceof OnlyTheScentRemainsItem) {
             hintKey = "tooltip.starrail_sim.only_the_scent_remains.shift_hint";
+        } else if (stack.getItem() instanceof YouWillRiseAndSingItem) {
+            hintKey = "tooltip.starrail_sim.you_will_rise_and_sing.shift_hint";
+        } else if (stack.getItem() instanceof ColorsForTomorrowItem) {
+            hintKey = "tooltip.starrail_sim.colors_for_tomorrow.shift_hint";
+        } else if (stack.getItem() instanceof SummertimeToTheWavesItem) {
+            hintKey = "tooltip.starrail_sim.summertime_to_the_waves.shift_hint";
         } else {
             hintKey = "tooltip.starrail_sim.in_the_night.shift_hint";
         }
@@ -725,6 +759,84 @@ public final class StarRailItemTooltipHandler {
 
     private static void addMechanicsTooltip(List<Component> tooltip, ItemStack stack,
                                             ChatFormatting theme) {
+        List<Component> mechanics = new ArrayList<>();
+        addMechanicsTooltipLines(mechanics, stack, theme);
+        tooltip.addAll(joinSpecialEffectLines(mechanics));
+    }
+
+    /** Returns the same complete special-effect paragraph used by the Shift tooltip. */
+    public static Component getSpecialEffectDescription(ItemStack stack) {
+        List<Component> mechanics = new ArrayList<>();
+        addMechanicsTooltipLines(mechanics, stack, ChatFormatting.WHITE);
+        for (List<Component> line : splitSpecialEffectLines(mechanics)) {
+            if (!line.isEmpty()) {
+                return joinParagraph(line);
+            }
+        }
+        return Component.empty();
+    }
+
+    private static List<Component> joinSpecialEffectLines(List<Component> mechanics) {
+        List<Component> result = new ArrayList<>();
+        List<Component> paragraph = null;
+        for (Component component : mechanics) {
+            String key = component.getContents() instanceof TranslatableContents translatable
+                    ? translatable.getKey() : "";
+            if (key.endsWith(".special_header")) {
+                if (paragraph != null && !paragraph.isEmpty()) {
+                    result.add(joinParagraph(paragraph));
+                }
+                result.add(component);
+                paragraph = new ArrayList<>();
+            } else if (paragraph == null) {
+                result.add(component);
+            } else if (!key.endsWith(".base_header") && !key.endsWith(".base_values")
+                    && !key.endsWith(".base_defense")) {
+                paragraph.add(component);
+            }
+        }
+        if (paragraph != null && !paragraph.isEmpty()) {
+            result.add(joinParagraph(paragraph));
+        }
+        return result;
+    }
+
+    private static List<List<Component>> splitSpecialEffectLines(List<Component> mechanics) {
+        List<List<Component>> result = new ArrayList<>();
+        List<Component> current = null;
+        for (Component component : mechanics) {
+            String key = component.getContents() instanceof TranslatableContents translatable
+                    ? translatable.getKey() : "";
+            if (key.endsWith(".special_header")) {
+                current = new ArrayList<>();
+                result.add(current);
+            } else if (current != null && !key.endsWith(".superimposition")
+                    && !key.endsWith(".base_header") && !key.endsWith(".base_values")
+                    && !key.endsWith(".base_defense")) {
+                current.add(component);
+            }
+        }
+        return result;
+    }
+
+    private static Component joinParagraph(List<Component> lines) {
+        MutableComponent paragraph = Component.empty();
+        boolean needsSpace = !Minecraft.getInstance().getLanguageManager()
+                .getSelected().startsWith("zh");
+        boolean first = true;
+        for (Component line : lines) {
+            if (first) {
+                paragraph.append(line);
+                first = false;
+            } else {
+                paragraph.append(Component.literal(needsSpace ? " " : "")).append(line);
+            }
+        }
+        return paragraph;
+    }
+
+    private static void addMechanicsTooltipLines(List<Component> tooltip, ItemStack stack,
+                                                 ChatFormatting theme) {
         if (stack.getItem() instanceof IWillHuntItem) {
             addIWillHuntMechanics(tooltip, stack, theme);
         } else if (stack.getItem() instanceof WorrisomeBlissfulItem) {
@@ -847,6 +959,12 @@ public final class StarRailItemTooltipHandler {
             addNightOfFrightMechanics(tooltip, stack, theme);
         } else if (stack.getItem() instanceof OnlyTheScentRemainsItem) {
             addOnlyTheScentRemainsMechanics(tooltip, stack, theme);
+        } else if (stack.getItem() instanceof YouWillRiseAndSingItem) {
+            addYouWillRiseAndSingMechanics(tooltip, stack, theme);
+        } else if (stack.getItem() instanceof ColorsForTomorrowItem) {
+            addColorsForTomorrowMechanics(tooltip, stack, theme);
+        } else if (stack.getItem() instanceof SummertimeToTheWavesItem) {
+            addSummertimeToTheWavesMechanics(tooltip, stack, theme);
         } else {
             addInTheNightMechanics(tooltip, stack, theme);
         }
@@ -2259,6 +2377,44 @@ public final class StarRailItemTooltipHandler {
         addStyled(tooltip, "tooltip.starrail_sim.only_the_scent_remains.base_header", theme);
         addStyled(tooltip, "tooltip.starrail_sim.only_the_scent_remains.base_values", theme);
         addStyled(tooltip, "tooltip.starrail_sim.only_the_scent_remains.base_defense", theme);
+    }
+
+    private static void addYouWillRiseAndSingMechanics(List<Component> tooltip,
+                                                       ItemStack stack,
+                                                       ChatFormatting theme) {
+        int level = YouWillRiseAndSingItem.getSuperimposition(stack);
+        addStyled(tooltip, "tooltip.starrail_sim.you_will_rise_and_sing.superimposition",
+                theme, level);
+        addStyled(tooltip, "tooltip.starrail_sim.you_will_rise_and_sing.special_header", theme);
+        addStyled(tooltip, "tooltip.starrail_sim.you_will_rise_and_sing.special_full", theme,
+                formatPercent(StarRail15LightConeService.songHealth(level)),
+                formatPercent(StarRail15LightConeService.songAttack(level)),
+                formatPercent(StarRail15LightConeService.songAura(level)));
+    }
+
+    private static void addColorsForTomorrowMechanics(List<Component> tooltip, ItemStack stack,
+                                                      ChatFormatting theme) {
+        int level = ColorsForTomorrowItem.getSuperimposition(stack);
+        addStyled(tooltip, "tooltip.starrail_sim.colors_for_tomorrow.superimposition",
+                theme, level);
+        addStyled(tooltip, "tooltip.starrail_sim.colors_for_tomorrow.special_header", theme);
+        addStyled(tooltip, "tooltip.starrail_sim.colors_for_tomorrow.special_full", theme,
+                formatPercent(StarRail15LightConeService.colorsArmor(level)),
+                formatPercent(StarRail15LightConeService.colorsDamage(level)),
+                formatPercent(StarRail15LightConeService.colorsHeal(level)));
+    }
+
+    private static void addSummertimeToTheWavesMechanics(List<Component> tooltip,
+                                                         ItemStack stack,
+                                                         ChatFormatting theme) {
+        int level = SummertimeToTheWavesItem.getSuperimposition(stack);
+        addStyled(tooltip, "tooltip.starrail_sim.summertime_to_the_waves.superimposition",
+                theme, level);
+        addStyled(tooltip, "tooltip.starrail_sim.summertime_to_the_waves.special_header", theme);
+        addStyled(tooltip, "tooltip.starrail_sim.summertime_to_the_waves.special_full", theme,
+                formatPercent(StarRail15LightConeService.summerCrit(level)),
+                formatPercent(StarRail15LightConeService.summerSpeed(level)),
+                formatPercent(StarRail15LightConeService.summerAttack(level)));
     }
 
     private static void addStyled(List<Component> tooltip, String key,
