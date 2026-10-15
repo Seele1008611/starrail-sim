@@ -16,7 +16,7 @@ public final class StarRailDisplaySettingsScreen extends StarRailStyledScreen {
     private final Screen parent;
     private final List<Choice> choices = new ArrayList<>();
     private int left, top, right, bottom;
-    private static final String[] ROWS = {"font_scope", "quality", "motion", "hud", "position", "hud_scale", "numbers"};
+    private static final String[] ROWS = {"quality", "motion", "hud", "position", "hud_scale", "numbers"};
 
     public StarRailDisplaySettingsScreen(Screen parent) {
         super(Component.translatable("screen.starrail_sim.display_settings"));
@@ -27,22 +27,18 @@ public final class StarRailDisplaySettingsScreen extends StarRailStyledScreen {
         super.init(); choices.clear();
         left = StarRailUiStyle.panelLeft(width); top = StarRailUiStyle.panelTop(height);
         right = left + StarRailUiStyle.panelWidth(width); bottom = top + StarRailUiStyle.panelHeight(height);
-        for (var scope : StarRailStatusConfig.FontScope.values()) {
-            option(0, scope.ordinal(), 3, "font." + scope.name().toLowerCase(java.util.Locale.ROOT),
-                    () -> StarRailStatusConfig.FONT_SCOPE.get() == scope, () -> StarRailStatusConfig.FONT_SCOPE.set(scope));
-        }
-        booleanRow(1, "smooth", "ordinary", StarRailStatusConfig.SMOOTH_UI);
-        booleanRow(2, "full_motion", "reduced_motion", StarRailStatusConfig.REDUCED_MOTION, true);
-        booleanRow(3, "mod_hud", "vanilla_hud", StarRailStatusConfig.HUD);
-        booleanRow(4, "above_hotbar", "left_corner", StarRailStatusConfig.LEFT_CORNER, true);
+        booleanRow(0, "smooth", "ordinary", StarRailStatusConfig.SMOOTH_UI);
+        booleanRow(1, "full_motion", "reduced_motion", StarRailStatusConfig.REDUCED_MOTION, true);
+        booleanRow(2, "mod_hud", "vanilla_hud", StarRailStatusConfig.HUD);
+        booleanRow(3, "above_hotbar", "left_corner", StarRailStatusConfig.LEFT_CORNER, true);
         double[] scales = {.75, .85, 1};
         for (int index = 0; index < scales.length; index++) {
             double scale = scales[index];
-            option(5, index, 3, Component.literal(Math.round(scale * 100) + "%"),
+            option(4, index, 3, Component.literal(Math.round(scale * 100) + "%"),
                     () -> Math.abs(StarRailStatusConfig.SCALE.get() - scale) < .001,
                     () -> StarRailStatusConfig.SCALE.set(scale));
         }
-        booleanRow(6, "abbreviated", "exact", StarRailStatusConfig.EXACT, true);
+        booleanRow(5, "abbreviated", "exact", StarRailStatusConfig.EXACT, true);
         addRenderableWidget(StarRailUiStyle.button(Component.translatable("ui.starrail_sim.settings.preview"),
                 ignored -> minecraft.setScreen(new StarRailDisplayPreviewScreen(this)), right - 168, top + 19, 138, 24));
         addRenderableWidget(StarRailUiStyle.button(Component.translatable("ui.starrail_sim.settings.defaults"),
@@ -72,11 +68,10 @@ public final class StarRailDisplaySettingsScreen extends StarRailStyledScreen {
         choices.forEach(choice -> StarRailUiStyle.setSelected(choice.button(), choice.selected().getAsBoolean()));
     }
     private void save() {
-        StarRailStatusConfig.CLIENT.save(); StarRailUiFonts.updateGlobalFont();
+        StarRailStatusConfig.CLIENT.save();
         font = StarRailUiFonts.forMod(); refresh();
     }
     private void defaults() {
-        StarRailStatusConfig.FONT_SCOPE.set(StarRailStatusConfig.FontScope.MOD);
         StarRailStatusConfig.SMOOTH_UI.set(true); StarRailStatusConfig.REDUCED_MOTION.set(false);
         StarRailStatusConfig.HUD.set(true); StarRailStatusConfig.LEFT_CORNER.set(false);
         StarRailStatusConfig.SCALE.set(1.0); StarRailStatusConfig.EXACT.set(false); save();

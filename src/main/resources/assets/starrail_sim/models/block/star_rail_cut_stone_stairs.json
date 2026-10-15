@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/stairs",
+  "textures": {
+    "bottom": "starrail_sim:block/star_rail_cut_stone",
+    "side": "starrail_sim:block/star_rail_cut_stone",
+    "top": "starrail_sim:block/star_rail_cut_stone"
+  }
+}

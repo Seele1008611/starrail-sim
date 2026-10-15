@@ -11,7 +11,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ChunkHolder;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.ChunkStatus;
 import net.minecraft.world.level.levelgen.structure.Structure;
@@ -44,9 +43,17 @@ public final class StarRailRuinLocateService {
 
     /** 开始由近到远检查自然生成候选区块，只在找到普通母体时返回坐标。 */
     public static int start(CommandSourceStack source) {
-        ServerLevel level = source.getLevel();
-        if (level.dimension() != Level.OVERWORLD) {
-            source.sendFailure(Component.literal("普通浮空遺跡只會在主世界生成。"));
+        return start(source, null);
+    }
+
+    /** 在命令来源维度运行，或显式指定另一个已加载维度。 */
+    public static int start(CommandSourceStack source, ResourceLocation requestedDimension) {
+        ServerLevel level = requestedDimension == null ? source.getLevel()
+                : source.getServer().getLevel(ResourceKey.create(Registries.DIMENSION,
+                        requestedDimension));
+        if (level == null) {
+            source.sendFailure(Component.literal("目标维度不存在或尚未加载："
+                    + requestedDimension));
             return 0;
         }
         MinecraftServer server = source.getServer();
@@ -74,7 +81,8 @@ public final class StarRailRuinLocateService {
         LocateJob job = new LocateJob(source, level, holder.value(), placements);
         ACTIVE.put(server, job);
         source.sendSuccess(() -> Component.literal(
-                "正在由近到远查找自然生成的普通母体；其他命途变体会自动跳过。"), false);
+                "正在维度 " + level.dimension().location()
+                        + " 由近到远查找自然生成的普通母体；其他命途变体会自动跳过。"), false);
         return 1;
     }
 
@@ -192,6 +200,7 @@ public final class StarRailRuinLocateService {
                         + "/" + candidates.size() + "，有效遗迹起点 " + validRuinStarts
                         + "，遗迹结构片 " + floatingRuinPieces + "，跳过的其他变体 "
                         + skippedVariants + "，区块请求失败 " + failedChunkRequests
+                        + "，维度 " + level.dimension().location()
                         + "。本次范围内没有找到普通母体；请依据这些计数反馈结果。"));
                 return true;
             }
@@ -214,8 +223,8 @@ public final class StarRailRuinLocateService {
             int distance = (int) Math.sqrt(dx * dx + dz * dz);
             source.sendSuccess(() -> Component.literal("找到自然生成的普通母体：锚点 X="
                     + origin.getX() + " Y=" + origin.getY() + " Z=" + origin.getZ()
-                    + "，水平距离约 " + distance + " 格。可用 /tp " + origin.getX() + " "
-                    + (origin.getY() + 12) + " " + origin.getZ() + " 前往遗迹上方观察。"), false);
+                    + "，维度 " + level.dimension().location() + "，水平距离约 " + distance
+                    + " 格。请先进入目标维度，再传送到该坐标。"), false);
         }
     }
 }

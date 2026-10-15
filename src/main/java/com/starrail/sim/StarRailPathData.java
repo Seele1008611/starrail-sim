@@ -6,10 +6,15 @@ package com.starrail.sim;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
 
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.Collections;
+import java.util.Map;
 import java.util.UUID;
 
 /** Default implementation of the player's persistent path state. */
@@ -24,10 +29,23 @@ public final class StarRailPathData implements IStarRailPathData {
     private StarRailPath trialPath = StarRailPath.NONE;
     private StarRailPathRank trialRank = StarRailPathRank.UNALIGNED;
     private boolean pathUnlocked;
+    private final Set<String> exploredOverworldBiomes = new HashSet<>();
+    private boolean trainRewardIssued;
+    private boolean trainRewardPending;
+    private boolean legacyExplorationMigrated;
+    private final Set<String> discoveredPathRegions = new HashSet<>();
+    private final Set<String> discoveredPathRuins = new HashSet<>();
+    private final Map<String, Long> discoveredPathRuinPositions = new HashMap<>();
+    private final Map<String, String> archiveCustomNames = new HashMap<>();
+    private final Set<Long> discoveredPathBeacons = new HashSet<>();
+    private final Set<Long> discoveredPathArenas = new HashSet<>();
+    private boolean legacyPathArenaDiscovered;
+    private int pathArenaVictories;
     private StarRailPath soughtPath = StarRailPath.NONE;
     private int soughtX;
     private int soughtY;
     private int soughtZ;
+    private ResourceLocation soughtDimension = Level.OVERWORLD.location();
     private final EnumMap<StarRailPath, StarRailPathRank> pathRanks =
             new EnumMap<>(StarRailPath.class);
     private final EnumMap<StarRailPath, Integer> practiceProgress =
@@ -104,6 +122,69 @@ public final class StarRailPathData implements IStarRailPathData {
         pathUnlocked = unlocked;
     }
 
+    @Override public Set<String> getExploredOverworldBiomes() {
+        return Collections.unmodifiableSet(exploredOverworldBiomes);
+    }
+    @Override public boolean addExploredOverworldBiome(String biomeId) {
+        return biomeId != null && exploredOverworldBiomes.add(biomeId);
+    }
+    @Override public boolean isTrainRewardIssued() { return trainRewardIssued; }
+    @Override public void setTrainRewardIssued(boolean issued) { trainRewardIssued = issued; }
+    @Override public boolean isTrainRewardPending() { return trainRewardPending; }
+    @Override public void setTrainRewardPending(boolean pending) { trainRewardPending = pending; }
+    @Override public boolean isLegacyExplorationMigrated() { return legacyExplorationMigrated; }
+    @Override public void setLegacyExplorationMigrated(boolean migrated) { legacyExplorationMigrated = migrated; }
+    @Override public Set<String> getDiscoveredPathRegions() {
+        return Collections.unmodifiableSet(discoveredPathRegions);
+    }
+    @Override public boolean addDiscoveredPathRegion(String regionId) {
+        return regionId != null && discoveredPathRegions.add(regionId);
+    }
+    @Override public Set<String> getDiscoveredPathRuins() {
+        return Collections.unmodifiableSet(discoveredPathRuins);
+    }
+    @Override public boolean addDiscoveredPathRuin(String ruinId) {
+        return ruinId != null && discoveredPathRuins.add(ruinId);
+    }
+    @Override public Map<String, Long> getDiscoveredPathRuinPositions() {
+        return Collections.unmodifiableMap(discoveredPathRuinPositions);
+    }
+    @Override public boolean addDiscoveredPathRuinPosition(String ruinId, long position) {
+        return ruinId != null && discoveredPathRuinPositions.putIfAbsent(ruinId, position) == null;
+    }
+    @Override public Map<String, String> getArchiveCustomNames() {
+        return Collections.unmodifiableMap(archiveCustomNames);
+    }
+    @Override public void setArchiveCustomName(String recordKey, String name) {
+        if (recordKey == null || recordKey.isBlank()) return;
+        if (name == null || name.isBlank()) archiveCustomNames.remove(recordKey);
+        else archiveCustomNames.put(recordKey, name);
+    }
+    @Override public Set<Long> getDiscoveredPathBeacons() {
+        return Collections.unmodifiableSet(discoveredPathBeacons);
+    }
+    @Override public boolean addDiscoveredPathBeacon(long position) {
+        return discoveredPathBeacons.add(position);
+    }
+    @Override public boolean removeDiscoveredPathBeacon(long position) {
+        boolean removed = discoveredPathBeacons.remove(position);
+        if (removed) archiveCustomNames.remove("beacon:" + position);
+        return removed;
+    }
+    @Override public Set<Long> getDiscoveredPathArenas() {
+        return Collections.unmodifiableSet(discoveredPathArenas);
+    }
+    @Override public boolean addDiscoveredPathArena(long position) {
+        return discoveredPathArenas.add(position);
+    }
+    @Override public int getPathArenaVictories() { return pathArenaVictories; }
+    @Override public void recordPathArenaVictory() {
+        if (pathArenaVictories < Integer.MAX_VALUE) pathArenaVictories++;
+    }
+    @Override public boolean isPathArenaDiscovered() {
+        return legacyPathArenaDiscovered || !discoveredPathArenas.isEmpty();
+    }
+
     @Override
     public StarRailPath getSoughtPath() {
         return soughtPath;
@@ -125,12 +206,23 @@ public final class StarRailPathData implements IStarRailPathData {
     }
 
     @Override
+    public ResourceLocation getSoughtDimension() {
+        return soughtDimension;
+    }
+
+    @Override
     public void setSoughtRuin(StarRailPath path, int x, int y, int z) {
+        setSoughtRuin(path, Level.OVERWORLD.location(), x, y, z);
+    }
+
+    @Override
+    public void setSoughtRuin(StarRailPath path, ResourceLocation dimension, int x, int y, int z) {
         if (path == null || !path.isRealPath()) {
             clearSoughtRuin();
             return;
         }
         soughtPath = path;
+        soughtDimension = dimension == null ? Level.OVERWORLD.location() : dimension;
         soughtX = x;
         soughtY = y;
         soughtZ = z;
@@ -142,6 +234,7 @@ public final class StarRailPathData implements IStarRailPathData {
         soughtX = 0;
         soughtY = 0;
         soughtZ = 0;
+        soughtDimension = Level.OVERWORLD.location();
     }
 
     @Override
@@ -559,7 +652,28 @@ public final class StarRailPathData implements IStarRailPathData {
         trialPath = other.getTrialPath();
         trialRank = other.getTrialRank();
         pathUnlocked = other.isPathUnlocked();
-        setSoughtRuin(other.getSoughtPath(), other.getSoughtX(), other.getSoughtY(),
+        exploredOverworldBiomes.clear();
+        exploredOverworldBiomes.addAll(other.getExploredOverworldBiomes());
+        trainRewardIssued = other.isTrainRewardIssued();
+        trainRewardPending = other.isTrainRewardPending();
+        legacyExplorationMigrated = other.isLegacyExplorationMigrated();
+        discoveredPathRegions.clear();
+        discoveredPathRegions.addAll(other.getDiscoveredPathRegions());
+        discoveredPathRuins.clear();
+        discoveredPathRuins.addAll(other.getDiscoveredPathRuins());
+        discoveredPathRuinPositions.clear();
+        discoveredPathRuinPositions.putAll(other.getDiscoveredPathRuinPositions());
+        archiveCustomNames.clear();
+        archiveCustomNames.putAll(other.getArchiveCustomNames());
+        discoveredPathBeacons.clear();
+        discoveredPathBeacons.addAll(other.getDiscoveredPathBeacons());
+        discoveredPathArenas.clear();
+        discoveredPathArenas.addAll(other.getDiscoveredPathArenas());
+        legacyPathArenaDiscovered = other.isPathArenaDiscovered()
+                && discoveredPathArenas.isEmpty();
+        pathArenaVictories = other.getPathArenaVictories();
+        setSoughtRuin(other.getSoughtPath(), other.getSoughtDimension(),
+                other.getSoughtX(), other.getSoughtY(),
                 other.getSoughtZ());
         traceMasks.clear();
         pathRanks.clear();
@@ -618,10 +732,41 @@ public final class StarRailPathData implements IStarRailPathData {
         tag.putString("trial_path", trialPath.getId());
         tag.putInt("trial_rank", trialRank.getLevel());
         tag.putBoolean("path_unlocked", pathUnlocked);
+        ListTag exploredBiomes = new ListTag();
+        for (String biome : exploredOverworldBiomes) exploredBiomes.add(net.minecraft.nbt.StringTag.valueOf(biome));
+        tag.put("explored_overworld_biomes", exploredBiomes);
+        tag.putBoolean("train_reward_issued", trainRewardIssued);
+        tag.putBoolean("train_reward_pending", trainRewardPending);
+        tag.putBoolean("legacy_exploration_migrated", legacyExplorationMigrated);
+        ListTag pathRegions = new ListTag();
+        for (String region : discoveredPathRegions) pathRegions.add(net.minecraft.nbt.StringTag.valueOf(region));
+        tag.put("path_regions_discovered", pathRegions);
+        ListTag pathRuins = new ListTag();
+        for (String ruin : discoveredPathRuins) pathRuins.add(net.minecraft.nbt.StringTag.valueOf(ruin));
+        tag.put("path_ruins_discovered", pathRuins);
+        CompoundTag pathRuinPositions = new CompoundTag();
+        for (Map.Entry<String, Long> entry : discoveredPathRuinPositions.entrySet()) {
+            pathRuinPositions.putLong(entry.getKey(), entry.getValue());
+        }
+        tag.put("path_ruin_positions", pathRuinPositions);
+        CompoundTag archiveNames = new CompoundTag();
+        for (Map.Entry<String, String> entry : archiveCustomNames.entrySet()) {
+            archiveNames.putString(entry.getKey(), entry.getValue());
+        }
+        tag.put("path_archive_custom_names", archiveNames);
+        ListTag pathBeacons = new ListTag();
+        for (long beacon : discoveredPathBeacons) pathBeacons.add(net.minecraft.nbt.LongTag.valueOf(beacon));
+        tag.put("path_beacons_discovered", pathBeacons);
+        ListTag pathArenas = new ListTag();
+        for (long arena : discoveredPathArenas) pathArenas.add(net.minecraft.nbt.LongTag.valueOf(arena));
+        tag.put("path_arenas_discovered", pathArenas);
+        tag.putBoolean("path_arena_discovered", isPathArenaDiscovered());
+        tag.putInt("path_arena_victories", pathArenaVictories);
         tag.putString("sought_path", soughtPath.getId());
         tag.putInt("sought_x", soughtX);
         tag.putInt("sought_y", soughtY);
         tag.putInt("sought_z", soughtZ);
+        tag.putString("sought_dimension", soughtDimension.toString());
         CompoundTag rankTag = new CompoundTag();
         for (StarRailPath path : StarRailPath.values()) {
             if (path.isRealPath()) {
@@ -707,10 +852,66 @@ public final class StarRailPathData implements IStarRailPathData {
                 ? StarRailPathRank.fromLevel(tag.getInt("trial_rank"))
                 : StarRailPathRank.UNALIGNED;
         pathUnlocked = tag.getBoolean("path_unlocked");
+        exploredOverworldBiomes.clear();
+        if (tag.contains("explored_overworld_biomes", 9)) {
+            ListTag explored = tag.getList("explored_overworld_biomes", 8);
+            for (int i = 0; i < explored.size(); i++) exploredOverworldBiomes.add(explored.getString(i));
+        }
+        trainRewardIssued = tag.getBoolean("train_reward_issued");
+        trainRewardPending = tag.getBoolean("train_reward_pending");
+        legacyExplorationMigrated = tag.getBoolean("legacy_exploration_migrated");
+        discoveredPathRegions.clear();
+        if (tag.contains("path_regions_discovered", 9)) {
+            ListTag regions = tag.getList("path_regions_discovered", 8);
+            for (int i = 0; i < regions.size(); i++) discoveredPathRegions.add(regions.getString(i));
+        }
+        discoveredPathRuins.clear();
+        if (tag.contains("path_ruins_discovered", 9)) {
+            ListTag ruins = tag.getList("path_ruins_discovered", 8);
+            for (int i = 0; i < ruins.size(); i++) discoveredPathRuins.add(ruins.getString(i));
+        }
+        discoveredPathRuinPositions.clear();
+        if (tag.contains("path_ruin_positions", 10)) {
+            CompoundTag ruinPositions = tag.getCompound("path_ruin_positions");
+            for (String ruinId : ruinPositions.getAllKeys()) {
+                if (discoveredPathRuins.contains(ruinId)) {
+                    discoveredPathRuinPositions.put(ruinId, ruinPositions.getLong(ruinId));
+                }
+            }
+        }
+        archiveCustomNames.clear();
+        if (tag.contains("path_archive_custom_names", 10)) {
+            CompoundTag archiveNames = tag.getCompound("path_archive_custom_names");
+            for (String key : archiveNames.getAllKeys()) {
+                String value = archiveNames.getString(key);
+                if (!value.isBlank() && value.length() <= 64) archiveCustomNames.put(key, value);
+            }
+        }
+        discoveredPathBeacons.clear();
+        if (tag.contains("path_beacons_discovered", 9)) {
+            ListTag beacons = tag.getList("path_beacons_discovered", 4);
+            for (int i = 0; i < beacons.size(); i++) {
+                discoveredPathBeacons.add(((net.minecraft.nbt.LongTag) beacons.get(i)).getAsLong());
+            }
+        }
+        discoveredPathArenas.clear();
+        if (tag.contains("path_arenas_discovered", 9)) {
+            ListTag arenas = tag.getList("path_arenas_discovered", 4);
+            for (int i = 0; i < arenas.size(); i++) {
+                discoveredPathArenas.add(((net.minecraft.nbt.LongTag) arenas.get(i)).getAsLong());
+            }
+        }
+        legacyPathArenaDiscovered = tag.getBoolean("path_arena_discovered")
+                && discoveredPathArenas.isEmpty();
+        pathArenaVictories = Math.max(0, tag.getInt("path_arena_victories"));
         soughtPath = StarRailPath.byId(tag.getString("sought_path"));
         soughtX = tag.getInt("sought_x");
         soughtY = tag.getInt("sought_y");
         soughtZ = tag.getInt("sought_z");
+        ResourceLocation savedSoughtDimension = ResourceLocation.tryParse(
+                tag.getString("sought_dimension"));
+        soughtDimension = savedSoughtDimension == null
+                ? Level.OVERWORLD.location() : savedSoughtDimension;
         pathRanks.clear();
         if (tag.contains("path_ranks")) {
             CompoundTag rankTag = tag.getCompound("path_ranks");

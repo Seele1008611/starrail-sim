@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " G ",
+    "GFG",
+    " A "
+  ],
+  "key": {
+    "G": {
+      "item": "starrail_sim:luminous_glass"
+    },
+    "F": {
+      "item": "starrail_sim:star_rail_fragment"
+    },
+    "A": {
+      "item": "starrail_sim:terminal_alloy"
+    }
+  },
+  "result": {
+    "item": "starrail_sim:terminal_signal_lamp",
+    "count": 1
+  }
+}

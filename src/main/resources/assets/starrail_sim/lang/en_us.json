@@ -146,7 +146,7 @@
 
   "screen.starrail_sim.paths": "Path Search",
 
-  "screen.starrail_sim.path_locked": "Obtain a diamond to unlock the path clue.",
+  "screen.starrail_sim.path_locked": "Explore all 53 vanilla Overworld biomes and receive the Astral Express to unlock the Path clue.",
 
   "screen.starrail_sim.current_path": "Current Path: %s",
 
@@ -212,7 +212,7 @@
 
   "screen.starrail_sim.trial_time": "Time remaining: %s seconds",
 
-  "message.starrail_sim.path_locked": "Unlock the path clue first.",
+  "message.starrail_sim.path_locked": "Explore all 53 vanilla Overworld biomes to receive the Astral Express and unlock the Path clue.",
 
   "message.starrail_sim.path_already_chosen": "You have already chosen a path.",
 
@@ -232,13 +232,13 @@
 
   "message.starrail_sim.path_seek_no_spaced_site": "No nearby site meets the 400-block ruin spacing. Move farther away and try again.",
 
-  "message.starrail_sim.path_seek_overworld_only": "Path ruins can only be sought in the Overworld.",
+  "message.starrail_sim.path_seek_the_path_only": "Path ruins can only be sought in The Path dimension.",
 
   "message.starrail_sim.path_seek_failed": "The Path ruin could not be scheduled. Please try again shortly.",
 
-  "message.starrail_sim.path_seek_started": "Seeking the %s ruin near X=%s, Z=%s. Its full anchor will be shown when it is ready.",
+  "message.starrail_sim.path_seek_started": "Seeking the %s ruin in %s near X=%s, Z=%s. Its full anchor will be shown when it is ready.",
 
-  "message.starrail_sim.path_seek_target": "The %s ruin is ready at anchor X=%s, Y=%s, Z=%s. Open its chest and use the matching Trial Token.",
+  "message.starrail_sim.path_seek_target": "The %s ruin is ready in %s at anchor X=%s, Y=%s, Z=%s. Open its chest and use the matching Trial Token.",
 
   "message.starrail_sim.path_seek_retry": "The %s ruin could not be placed safely. Click a Path again to seek another site.",
 
@@ -422,7 +422,7 @@
 
   ,"screen.starrail_sim.guide_help": "System Guide"
 
-  ,"guide.starrail_sim.current.locked": "You have not discovered a path clue yet."
+  ,"guide.starrail_sim.current.locked": "Explore all 53 vanilla Overworld biomes and receive the Astral Express to unlock the Path clue."
 
   ,"guide.starrail_sim.current.unaligned": "A Path clue is available. Seek a ruin and complete its initial trial to enter that Path automatically."
 
@@ -630,7 +630,7 @@
 
   ,"guide.starrail_sim.help.relic_slots": "The outer ring has Head, Hands, Body and Feet slots. The inner ring has Planar Sphere and Link Rope slots. Relic details and tooltips show the set, rarity, main stat and substats."
 
-  ,"guide.starrail_sim.help.relic_trial": "Choose an outer- or inner-ring set at the arena's central device. Defeat 3 waves of 4 enemies to receive 1–3 random relics from that set. Reward count, rarity, and stats are locked when the battle starts; rarity follows the owner's Path rank: rank 1 can drop 2–3 stars, ranks 2–4 improve gradually, and rank 5 or higher guarantees 5 stars. Trial arenas naturally generate in non-ocean Overworld biomes at the same frequency as Path ruins. Generation cuts into and replaces terrain within the arena footprint, adding a foundation beneath low areas so the arena does not float. Only vanilla hostile mobs are selected; creepers, vexes, phantoms, and vanilla bosses are excluded. Mobs added by other mods are never summoned. Operators can locate one with /starrail arena locate; use /starrail arena pool [all|normal|ranged] to list candidates or /starrail arena inspect namespace:entity_id to see why an entity was included or excluded. The arena_allowed, arena_excluded, and arena_ranged tags can adjust risk filtering, exclusions, and ranged classification for vanilla hostile mobs only; they cannot add modded mobs. To build the 25×25 test arena manually, stand at a clear site and run /starrail arena build."
+  ,"guide.starrail_sim.help.relic_trial": "Choose an outer- or inner-ring set at the arena's central device. Defeat 3 waves of 4 enemies to receive 1–3 random relics from that set. Reward count, rarity, and stats are locked when the battle starts; rarity follows the owner's Path rank: rank 1 can drop 2–3 stars, ranks 2–4 improve gradually, and rank 5 or higher guarantees 5 stars. Trial arenas and ordinary floating ruins naturally generate in The Path's Starrail Wilderness and Echo Terminal regions; arenas are more common for quick relic farming. Arena generation does not require flat terrain: it clears the footprint and builds foundations beneath low areas. Only vanilla hostile mobs are selected; creepers, vexes, phantoms, and vanilla bosses are excluded. Mobs added by other mods are never summoned. Operators can locate one with /starrail arena locate [dimension]; use /starrail arena pool [all|normal|ranged] to list candidates or /starrail arena inspect namespace:entity_id to see why an entity was included or excluded. The arena_allowed, arena_excluded, and arena_ranged tags can adjust risk filtering, exclusions, and ranged classification for vanilla hostile mobs only; they cannot add modded mobs. To build the 25×25 test arena manually, stand at a clear site and run /starrail arena build [dimension]."
 
   ,"guide.starrail_sim.help.relic_growth": "A substat is added or enhanced every 3 enhancement levels. Maximum levels are +6 for 2-star, +9 for 3-star, +12 for 4-star and +15 for 5-star relics. Enhancement consumes Lost Crystals; the page previews the level and stat changes."
 
@@ -3986,7 +3986,7 @@
 
   ,"message.starrail_sim.invalid_path_trial_token": "This token has no valid Path recorded."
 
-  ,"screen.starrail_sim.sought_ruin": "%s Ruin Found: Anchor X=%s, Y=%s, Z=%s"
+  ,"screen.starrail_sim.sought_ruin": "%s Ruin Found in %s: Anchor X=%s, Y=%s, Z=%s"
 
   ,"screen.starrail_sim.sought_ruin_hint": "Use the matching Trial Token from its chest; finish this clue before seeking again."
 
@@ -4320,7 +4320,7 @@
 
   "guide.starrail_sim.help.hud_context": "Context: bubbles and remaining breathing seconds appear underwater or while air is not full. Living mounts show current/max health, and jumpable mounts also show a short charge meter. These readings share the lower row with absorption. A central gap leaves room for experience levels; if a long level number overlaps, status icons and readings take priority. This survival HUD is hidden in Creative and Spectator modes; F1 hides the HUD.",
 
-  "guide.starrail_sim.help.hud_settings": "Display settings: F8 toggles between the mod HUD and vanilla by default; rebind it in Controls. The Display Settings button at the top right of this guide also changes font scope, smooth drawing, motion, HUD style and placement, 75%-100% scale, and number format. Choices save immediately and only affect presentation, not attributes or combat.",
+  "guide.starrail_sim.help.hud_settings": "Display settings: F8 toggles between the mod HUD and vanilla by default; rebind it in Controls. The Display Settings button at the top right of this guide changes smooth drawing, motion, HUD style and placement, 75%-100% scale, and number format. UI text uses Minecraft's active default font. Choices save immediately and only affect presentation, not attributes or combat.",
 
   "ui.starrail_sim.relic.filters": "Filters and Sorting",
 
@@ -4720,11 +4720,11 @@
 
   "message.starrail_sim.arena.build_interrupted": "Construction was interrupted; blocks placed by this job were rolled back.",
 
-  "message.starrail_sim.arena.build_started": "Arena construction started: %s blocks. Use /starrail arena cancel to cancel.",
+  "message.starrail_sim.arena.build_started": "Arena construction started: %s blocks in dimension %s. Use /starrail arena cancel to cancel.",
 
   "message.starrail_sim.arena.build_progress": "Arena construction: %s%%",
 
-  "message.starrail_sim.arena.build_complete": "Arena built: %s blocks; northwest corner at %s %s %s.",
+  "message.starrail_sim.arena.build_complete": "Arena built: %s blocks; northwest corner at %s %s %s in dimension %s.",
 
   "message.starrail_sim.arena.build_materials": "Materials used: ",
 
@@ -4896,15 +4896,15 @@
 
   "ui.starrail_sim.path.shared_growth_unaligned": "Shared Path Growth is inactive until you follow a Path.",
 
-  "screen.starrail_sim.display_preview": "Font and UI Clarity Preview",
+  "screen.starrail_sim.display_preview": "UI Effects Preview",
 
-  "ui.starrail_sim.display.open_preview": "Font and UI Preview",
+  "ui.starrail_sim.display.open_preview": "UI Effects Preview",
 
-  "ui.starrail_sim.display.preview_hint": "Compare text and curves. Hover or click the buttons to try the animations.",
+  "ui.starrail_sim.display.preview_hint": "Both columns use Minecraft's active default font. Hover or click to compare ordinary and smooth shapes and rounded UI animations.",
 
-  "ui.starrail_sim.display.vanilla": "Vanilla Font / Existing Curves",
+  "ui.starrail_sim.display.ordinary_shapes": "Ordinary Shapes / Minecraft Default Font",
 
-  "ui.starrail_sim.display.source_han": "Source Han Sans / Smooth Curves",
+  "ui.starrail_sim.display.smooth_shapes": "Smooth Shapes / Minecraft Default Font",
 
   "ui.starrail_sim.display.sample_cn": "Relics / Path Veteran / Trials",
 
@@ -4924,22 +4924,17 @@
 
   "ui.starrail_sim.display.text_size": "Sample text size",
 
-  "ui.starrail_sim.display.shader_ready": "Smooth rendering enabled / Text size applies to this preview only",
+  "ui.starrail_sim.display.shader_ready": "Smooth shapes enabled / Text uses Minecraft's active default font",
 
-  "ui.starrail_sim.display.shader_fallback": "Smooth rendering unavailable; using ordinary shapes.",
+  "ui.starrail_sim.display.shader_fallback": "Smooth shapes unavailable / Text uses Minecraft's active default font",
 
-  "ui.starrail_sim.display.font_fallback": "Device pixel font unavailable; using native font rendering.",
   "screen.starrail_sim.display_settings": "Display settings",
-  "ui.starrail_sim.settings.font_scope": "Font scope",
   "ui.starrail_sim.settings.quality": "UI rendering",
   "ui.starrail_sim.settings.motion": "UI animation",
   "ui.starrail_sim.settings.hud": "HUD style",
   "ui.starrail_sim.settings.position": "HUD position",
   "ui.starrail_sim.settings.hud_scale": "HUD size",
   "ui.starrail_sim.settings.numbers": "Number display",
-  "ui.starrail_sim.settings.font.original": "Vanilla font",
-  "ui.starrail_sim.settings.font.mod": "Mod UI only",
-  "ui.starrail_sim.settings.font.global": "Global default font",
   "ui.starrail_sim.settings.smooth": "Smooth",
   "ui.starrail_sim.settings.ordinary": "Standard",
   "ui.starrail_sim.settings.full_motion": "Full animation",
@@ -4951,9 +4946,9 @@
   "ui.starrail_sim.settings.abbreviated": "Abbreviated",
   "ui.starrail_sim.settings.exact": "Exact values",
   "ui.starrail_sim.settings.open": "Display settings",
-  "ui.starrail_sim.settings.preview": "Font and corners preview",
+  "ui.starrail_sim.settings.preview": "UI effects preview",
   "ui.starrail_sim.settings.defaults": "Restore display defaults",
-  "ui.starrail_sim.settings.hint": "Choices save immediately; font scope can be changed at any time.",
+  "ui.starrail_sim.settings.hint": "Choices save immediately; all text uses Minecraft's active default font.",
   "ui.starrail_sim.attributes.back": "Back to attributes",
   "ui.starrail_sim.attributes.loading": "Loading active attribute sources…",
   "ui.starrail_sim.attributes.source.base": "Base value",
@@ -4985,7 +4980,7 @@
   "message.starrail_sim.relic.preset_invalid": "Invalid loadout data. No equipment was changed.",
   "guide.starrail_sim.help.relic_presets": "Relic presets: save up to four loadouts shared across all Paths; each records the six relic slots. Expand a preset to apply it, save your current equipment, or clear it. Before applying, the game checks that every required relic is still in your inventory or equipped and that your inventory can hold the relics being removed. If a check fails, your equipment is left unchanged.",
   "guide.starrail_sim.help.attribute_sources": "Attribute sources: open Attribute Details from Character Details and select an attribute row to inspect its base value, Path growth, Traces, Light Cone, equipment, relics and sets, status effects, fixed bonuses, base percentages, final multipliers, and calculated value. Caps and settlement adjustments are listed separately.",
-  "guide.starrail_sim.help.display_settings": "Display options: choose the vanilla font, Source Han Sans for mod screens only, or Source Han Sans globally. Toggle smooth or standard drawing and full or reduced motion, then adjust HUD style, position, scale, and number format. Choices save immediately; use Preview to compare the font and interface.",
+  "guide.starrail_sim.help.display_settings": "Display options: all UI text uses Minecraft's active default font. Toggle smooth or standard drawing and full or reduced motion, then adjust HUD style, position, scale, and number format. Choices save immediately; use Preview to compare ordinary and smooth shapes.",
   "screen.starrail_sim.light_cone.choose": "Choose Light Cone",
   "screen.starrail_sim.light_cone.picker.title": "Choose or Replace Light Cone",
   "screen.starrail_sim.light_cone.picker.search": "Search light cone names",
@@ -5177,5 +5172,137 @@
   ,"tooltip.starrail_sim.summertime_to_the_waves.special_full": "Increases the wearer's CRIT Rate by %s. When the wearer performs an attack, grants “At the Helm,” increasing the wearer's Attack Speed by %s for 3 seconds. If the wearer defeats an enemy, also grants “Current,” increasing the wearer's ATK by %s for 10 seconds."
   ,"screen.starrail_sim.light_cone_you_will_rise_and_sing_special": "Special Effect “Improvisation” (S%s; Path of Remembrance only)"
   ,"screen.starrail_sim.light_cone_colors_for_tomorrow_special": "Special Effect “Brushstroke” (S%s; Path of Elation only)"
-  ,"screen.starrail_sim.light_cone_summertime_to_the_waves_special": "Special Effect “Wave Rider” (S%s; Path of Elation only)"
+  ,"screen.starrail_sim.light_cone_summertime_to_the_waves_special": "Special Effect “Wave Rider” (S%s; Path of Elation only)",
+
+  "block.starrail_sim.starfall_rock": "Starfall Rock",
+
+  "block.starrail_sim.star_dust_gravel": "Stardust Gravel",
+
+  "block.starrail_sim.star_rail_sandstone": "Starrail Sandstone",
+
+  "block.starrail_sim.terminal_floor_panel": "Terminal Floor Panel",
+
+  "block.starrail_sim.terminal_warning_tile": "Platform Warning Tile",
+
+  "block.starrail_sim.terminal_hull_glass": "Terminal Hull Glass",
+
+  "block.starrail_sim.star_vein_rock": "Starvein Rock",
+
+  "block.starrail_sim.star_vein_crystal_bricks": "Starvein Crystal Bricks",
+
+  "block.starrail_sim.terminal_grate": "Terminal Grating",
+
+  "block.starrail_sim.terminal_cable_trough": "Terminal Cable Trough",
+
+  "block.starrail_sim.weathered_terminal_alloy": "Weathered Terminal Alloy",
+
+  "block.starrail_sim.terminal_light_strip": "Terminal Light Strip",
+
+  "block.starrail_sim.star_dust_stone": "Stardust Stone",
+
+  "block.starrail_sim.star_dust_soil": "Stardust Soil",
+
+  "block.starrail_sim.star_rail_sand": "Starrail Sand",
+
+  "block.starrail_sim.star_vein_crystal": "Starvein Crystal Ore",
+
+  "block.starrail_sim.star_rail_cut_stone": "Cut Starrail Stone",
+
+  "block.starrail_sim.star_dust_bricks": "Stardust Bricks",
+
+  "block.starrail_sim.terminal_alloy": "Terminal Alloy",
+
+  "block.starrail_sim.terminal_alloy_bricks": "Terminal Alloy Bricks",
+
+  "block.starrail_sim.terminal_alloy_pillar": "Terminal Alloy Pillar",
+
+  "block.starrail_sim.old_rail_platform": "Old Rail Platform",
+
+  "block.starrail_sim.broken_rail": "Broken Rail Segment",
+
+  "block.starrail_sim.luminous_glass": "Luminous Glass",
+
+  "block.starrail_sim.terminal_signal_lamp": "Terminal Signal Lamp",
+
+  "block.starrail_sim.star_rail_beacon": "Starrail Beacon",
+
+  "block.starrail_sim.star_rail_train": "Astral Express",
+
+  "block.starrail_sim.star_dust_bricks_stairs": "Stardust Brick Stairs",
+
+  "block.starrail_sim.star_dust_bricks_slab": "Stardust Brick Slab",
+
+  "block.starrail_sim.star_dust_bricks_wall": "Stardust Brick Wall",
+
+  "block.starrail_sim.star_rail_cut_stone_stairs": "Cut Starrail Stone Stairs",
+
+  "block.starrail_sim.star_rail_cut_stone_slab": "Cut Starrail Stone Slab",
+
+  "block.starrail_sim.star_rail_cut_stone_wall": "Cut Starrail Stone Wall",
+
+  "block.starrail_sim.terminal_alloy_bricks_stairs": "Terminal Alloy Brick Stairs",
+
+  "block.starrail_sim.terminal_alloy_bricks_slab": "Terminal Alloy Brick Slab",
+
+  "block.starrail_sim.terminal_alloy_bricks_wall": "Terminal Alloy Brick Wall",
+
+  "item.starrail_sim.star_rail_fragment": "Starrail Fragment",
+
+  "biome.starrail_sim.starrail_wilderness": "Starrail Expanse",
+
+  "biome.starrail_sim.echo_terminal": "Echo Terminal",
+
+  "dimension.starrail_sim.the_path": "The Path",
+  "dimension.starrail_sim.overworld": "Overworld",
+
+  "block.starrail_sim.star_rail_train_part": "Astral Express",
+
+  "tooltip.starrail_sim.train_space": "Placement requires a clear 5 x 13 area with 5 blocks of headroom.",
+  "message.starrail_sim.overworld_biomes_progress": "Vanilla Overworld biome exploration: %s/%s",
+  "message.starrail_sim.overworld_biomes_complete": "You have explored all 53 vanilla Overworld biomes. The train will be delivered when your inventory has room; the Path clue unlocks when you receive it.",
+  "message.starrail_sim.train_reward_received": "Astral Express received! Right-click the train to enter The Path.",
+  "block.starrail_sim.weathered_terminal_alloy_ore": "Weathered Terminal Alloy Ore",
+  "item.starrail_sim.terminal_alloy_ingot": "Terminal Alloy Ingot",
+  "guide.starrail_sim.help.dimension_title": "Exploring The Path",
+  "guide.starrail_sim.help.dimension_entry": "Entry and return: Explore all 53 vanilla Overworld biomes to receive the Astral Express; receiving it unlocks the Path clue. Place the train and right-click any part to enter The Path. Right-click the Starrail Beacon at the relay platform or run /starrail dimension return to return to your saved origin.",
+  "guide.starrail_sim.help.dimension_regions": "Regions: The Starrail Expanse is open terrain of star-dust soil, starrail sand, stardust gravel and meteorite outcrops. Echo Terminal has an old rail-platform surface scattered with floor panels, warning tiles, grates and broken rail remnants.",
+  "guide.starrail_sim.help.dimension_ruins": "Ruins and challenges: Ordinary floating ruins and relic dueling arenas generate naturally in The Path. Start path seeking from the Path screen while inside the dimension; it records a target location. Relic arenas use three waves and the selected set, then award 1–3 random relics on victory.",
+  "guide.starrail_sim.help.dimension_navigation": "Navigation: Entering a region records its discovery. Right-click a Starrail Beacon to save its coordinates in your Travel Log; the relay beacon returns you to your saved origin. Operators can use /starrail dimension locate relay for the platform, /starrail dimension locate region starrail_wilderness or echo_terminal for a region, and ordinary_ruin, relic_trial_arena, or path_ruin for those ruins and challenges.",
+  "guide.starrail_sim.help.dimension_materials": "Materials: Mine starvein crystal clusters for Starrail Fragments used to craft starvein crystal bricks and beacons. Weathered Terminal Alloy Ore generates below Echo Terminal and smelts or blasts into Terminal Alloy Ingots. Nine ingots craft one Terminal Alloy block, and the block can be unpacked back into nine ingots. Weathered Terminal Alloy is a decorative block crafted from a Terminal Alloy block and Stardust Gravel.",
+  "screen.starrail_sim.guide_archive": "Travel Log",
+  "screen.starrail_sim.archive_rename": "Custom Coordinate Name",
+  "guide.starrail_sim.archive.title": "Starrail Travel Log",
+  "guide.starrail_sim.archive.intro": "This page records your personal exploration in The Path. Regions, first ruin locations, beacon and arena coordinates, and challenge victories are saved with your player data. Click any coordinate row to give it a custom name.",
+  "guide.starrail_sim.archive.regions": "Regions",
+  "guide.starrail_sim.archive.beacons": "Starrail beacons recorded: %s",
+  "guide.starrail_sim.archive.beacon_default_name": "Starrail Beacon",
+  "guide.starrail_sim.archive.beacon_position": "%s at (%s, %s, %s)",
+  "guide.starrail_sim.archive.ruins": "Ruins discovered (%s/10)",
+  "guide.starrail_sim.archive.ordinary_ruin": "Ordinary Floating Ruin",
+  "guide.starrail_sim.archive.ruin_name": "%s Ruin",
+  "guide.starrail_sim.archive.ruin_position": "%s at (%s, %s, %s)",
+  "guide.starrail_sim.archive.location_missing": "This ruin is discovered, but its coordinates are not recorded yet. Open its chest again to add the location.",
+  "guide.starrail_sim.archive.challenges": "Challenges",
+  "guide.starrail_sim.archive.arena": "Relic Duel Arena",
+  "guide.starrail_sim.archive.victories": "Arena victories: %s",
+  "guide.starrail_sim.archive.arena_default_name": "Relic Duel Arena",
+  "guide.starrail_sim.archive.arena_position": "%s at (%s, %s, %s)",
+  "guide.starrail_sim.archive.record": "%s: %s",
+  "guide.starrail_sim.archive.discovered": "Discovered",
+  "guide.starrail_sim.archive.undiscovered": "Undiscovered",
+  "ui.starrail_sim.archive_rename.input": "Enter a location name",
+  "ui.starrail_sim.archive_rename.hint": "Leave blank to restore the default name",
+  "ui.starrail_sim.archive_rename.target": "Location: %s",
+  "ui.starrail_sim.archive_rename.description": "Names can contain up to 32 characters. Save an empty name to restore the default.",
+  "ui.starrail_sim.archive_rename.save": "Save Name",
+  "message.starrail_sim.archive.name_saved": "Coordinate name saved.",
+  "message.starrail_sim.archive.name_cleared": "Restored the default coordinate name.",
+  "message.starrail_sim.archive.region_found": "Region recorded: %s.",
+  "message.starrail_sim.archive.beacon_found": "Starrail beacon recorded at (%s, %s, %s). Total: %s.",
+  "message.starrail_sim.archive.beacon_location": "Recorded beacon at (%s, %s, %s). Total: %s.",
+  "message.starrail_sim.archive.arena_found": "Relic Duel Arena added to your travel log at (%s, %s, %s).",
+  "message.starrail_sim.archive.ruin_found": "Ruin recorded: %s at (%s, %s, %s).",
+  "message.starrail_sim.dimension.relay_location": "The Path relay platform is at (%s, %s, %s). Click to teleport there.",
+  "message.starrail_sim.dimension.path_ruin_location": "Path ruin: %s in %s at (%s, %s, %s). Click to teleport there.",
+  "message.starrail_sim.dimension.no_path_ruin": "You do not have an assigned Path ruin."
 }

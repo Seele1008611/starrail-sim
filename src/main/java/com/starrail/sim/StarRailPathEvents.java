@@ -10,9 +10,6 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.Enemy;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.ShieldBlockEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -64,10 +61,7 @@ public final class StarRailPathEvents {
         }
 
         player.getCapability(StarRailPathCapability.PATH_DATA).ifPresent(data -> {
-            if (!data.isPathUnlocked() && hasDiamond(player)) {
-                data.setPathUnlocked(true);
-                StarRailPathService.sync(player);
-            }
+            StarRailExplorationService.tick(player, data);
 
             if (data.getTrialPath().isRealPath()
                     && !data.isTrialComplete()
@@ -101,8 +95,10 @@ public final class StarRailPathEvents {
         if (!(event.getEntity() instanceof ServerPlayer player)) {
             return;
         }
-        player.getCapability(StarRailPathCapability.PATH_DATA).ifPresent(data ->
-                StarRailPathEffects.refresh(player, data.getCurrentPath()));
+        player.getCapability(StarRailPathCapability.PATH_DATA).ifPresent(data -> {
+            StarRailExplorationService.onLogin(player, data);
+            StarRailPathEffects.refresh(player, data.getCurrentPath());
+        });
         StarRailLightConeService.refresh(player);
         StarRailPathService.sync(player);
     }
@@ -447,12 +443,4 @@ public final class StarRailPathEvents {
         };
     }
 
-    private static boolean hasDiamond(Player player) {
-        for (ItemStack stack : player.getInventory().items) {
-            if (stack.is(Items.DIAMOND)) {
-                return true;
-            }
-        }
-        return false;
-    }
 }

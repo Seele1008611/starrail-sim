@@ -1,0 +1,36 @@
+{
+  "type": "starrail_sim:the_path",
+  "generator": {
+    "type": "minecraft:noise",
+    "settings": "starrail_sim:the_path",
+    "biome_source": {
+      "type": "minecraft:multi_noise",
+      "biomes": [
+        {
+          "biome": "starrail_sim:starrail_wilderness",
+          "parameters": {
+            "temperature": [-1.0, 1.0],
+            "humidity": [-1.0, 1.0],
+            "continentalness": [-1.0, 0.0],
+            "erosion": [-1.0, 1.0],
+            "depth": [-1.0, 1.0],
+            "weirdness": [-1.0, 1.0],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "starrail_sim:echo_terminal",
+          "parameters": {
+            "temperature": [-1.0, 1.0],
+            "humidity": [-1.0, 1.0],
+            "continentalness": [0.0, 1.0],
+            "erosion": [-1.0, 1.0],
+            "depth": [-1.0, 1.0],
+            "weirdness": [-1.0, 1.0],
+            "offset": 0.0
+          }
+        }
+      ]
+    }
+  }
+}

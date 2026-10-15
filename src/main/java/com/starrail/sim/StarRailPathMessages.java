@@ -42,7 +42,7 @@ public final class StarRailPathMessages {
             "message.starrail_sim.path_locked",
             "message.starrail_sim.path_already_chosen",
             "message.starrail_sim.path_unavailable",
-            "message.starrail_sim.path_seek_overworld_only",
+            "message.starrail_sim.path_seek_the_path_only",
             "message.starrail_sim.path_seek_pending",
             "message.starrail_sim.path_seek_no_spaced_site",
             "message.starrail_sim.path_rank_up");

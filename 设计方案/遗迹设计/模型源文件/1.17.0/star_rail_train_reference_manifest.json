@@ -1,0 +1,28 @@
+{
+  "source": "设计方案/模型资产/星穹列车.litematic",
+  "author": "Su_qing2333",
+  "crop_x_inclusive": [
+    194,
+    258
+  ],
+  "source_blocks": 5596,
+  "scale": 0.2,
+  "size_blocks": [
+    4.6000000000000005,
+    4.6000000000000005,
+    13.0
+  ],
+  "placement": [
+    5,
+    13,
+    5
+  ],
+  "quads": 9866,
+  "optimization": {
+    "before": 26719,
+    "after": 9866
+  },
+  "rear_closed": true,
+  "occupied_cells": 185,
+  "unsupported": []
+}

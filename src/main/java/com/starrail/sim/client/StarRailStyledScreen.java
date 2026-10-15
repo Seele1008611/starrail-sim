@@ -19,7 +19,7 @@ public abstract class StarRailStyledScreen extends Screen {
         uiScale = Math.max(.01, Math.min(actualWidth / referenceWidth(), actualHeight / referenceHeight()));
         width = (int) Math.round(actualWidth / uiScale);
         height = (int) Math.round(actualHeight / uiScale);
-        font = this instanceof StarRailDisplayPreviewScreen ? StarRailUiFonts.original() : StarRailUiFonts.forMod();
+        font = StarRailUiFonts.forMod();
         if (showGlobalClose()) addRenderableWidget(StarRailUiStyle.closeButton(ignored -> onClose(), StarRailUiStyle.panelLeft(width) + StarRailUiStyle.panelWidth(width) - 24,
                 StarRailUiStyle.panelTop(height) + 4));
     }

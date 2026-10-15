@@ -498,9 +498,7 @@ public final class StarRailUiStyle {
                 }
             }
             String[] lines = getMessage().getString().split("\n");
-            if (!(StarRailUiFonts.replaces(StarRailUiFonts.forMod())
-                    && StarRailSharpText.draw(graphics, Component.literal(lines[0]), cx, cy, color, true, true)))
-                graphics.drawCenteredString(StarRailUiFonts.forMod(), Component.literal(lines[0]), cx, cy - 4, color);
+            graphics.drawCenteredString(StarRailUiFonts.forMod(), Component.literal(lines[0]), cx, cy - 4, color);
             if (lines.length > 1) {
                 var font = StarRailUiFonts.forMod();
                 // Fit complete localized rank names, rather than truncating them at narrow widths.

@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "G",
+    "A"
+  ],
+  "key": {
+    "G": {
+      "item": "minecraft:glowstone_dust"
+    },
+    "A": {
+      "item": "starrail_sim:terminal_alloy"
+    }
+  },
+  "result": {
+    "item": "starrail_sim:terminal_light_strip",
+    "count": 4
+  }
+}

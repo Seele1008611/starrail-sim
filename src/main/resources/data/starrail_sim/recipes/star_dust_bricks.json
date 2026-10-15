@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "##",
+    "##"
+  ],
+  "key": {
+    "#": {
+      "item": "starrail_sim:star_rail_cut_stone"
+    }
+  },
+  "result": {
+    "item": "starrail_sim:star_dust_bricks",
+    "count": 4
+  }
+}

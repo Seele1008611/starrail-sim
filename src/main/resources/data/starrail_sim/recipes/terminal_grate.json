@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "I I",
+    "PPP"
+  ],
+  "key": {
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "P": {
+      "item": "starrail_sim:terminal_floor_panel"
+    }
+  },
+  "result": {
+    "item": "starrail_sim:terminal_grate",
+    "count": 4
+  }
+}

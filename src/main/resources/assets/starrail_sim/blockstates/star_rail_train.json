@@ -1,0 +1,439 @@
+{
+  "variants": {
+    "large=false,facing=north,segment=x0_y0_z0": {
+      "model": "starrail_sim:block/star_rail_train_x0_y0_z0"
+    },
+    "large=false,facing=north,segment=x1_y0_z0": {
+      "model": "starrail_sim:block/star_rail_train_x1_y0_z0"
+    },
+    "large=false,facing=north,segment=x0_y1_z0": {
+      "model": "starrail_sim:block/star_rail_train_x0_y1_z0"
+    },
+    "large=false,facing=north,segment=x1_y1_z0": {
+      "model": "starrail_sim:block/star_rail_train_x1_y1_z0"
+    },
+    "large=false,facing=north,segment=x0_y2_z0": {
+      "model": "starrail_sim:block/star_rail_train_x0_y2_z0"
+    },
+    "large=false,facing=north,segment=x1_y2_z0": {
+      "model": "starrail_sim:block/star_rail_train_x1_y2_z0"
+    },
+    "large=false,facing=north,segment=x0_y0_z1": {
+      "model": "starrail_sim:block/star_rail_train_x0_y0_z1"
+    },
+    "large=false,facing=north,segment=x1_y0_z1": {
+      "model": "starrail_sim:block/star_rail_train_x1_y0_z1"
+    },
+    "large=false,facing=north,segment=x0_y1_z1": {
+      "model": "starrail_sim:block/star_rail_train_x0_y1_z1"
+    },
+    "large=false,facing=north,segment=x1_y1_z1": {
+      "model": "starrail_sim:block/star_rail_train_x1_y1_z1"
+    },
+    "large=false,facing=north,segment=x0_y2_z1": {
+      "model": "starrail_sim:block/star_rail_train_x0_y2_z1"
+    },
+    "large=false,facing=north,segment=x1_y2_z1": {
+      "model": "starrail_sim:block/star_rail_train_x1_y2_z1"
+    },
+    "large=false,facing=north,segment=x0_y0_z2": {
+      "model": "starrail_sim:block/star_rail_train_x0_y0_z2"
+    },
+    "large=false,facing=north,segment=x1_y0_z2": {
+      "model": "starrail_sim:block/star_rail_train_x1_y0_z2"
+    },
+    "large=false,facing=north,segment=x0_y1_z2": {
+      "model": "starrail_sim:block/star_rail_train_x0_y1_z2"
+    },
+    "large=false,facing=north,segment=x1_y1_z2": {
+      "model": "starrail_sim:block/star_rail_train_x1_y1_z2"
+    },
+    "large=false,facing=north,segment=x0_y2_z2": {
+      "model": "starrail_sim:block/star_rail_train_x0_y2_z2"
+    },
+    "large=false,facing=north,segment=x1_y2_z2": {
+      "model": "starrail_sim:block/star_rail_train_x1_y2_z2"
+    },
+    "large=false,facing=north,segment=x0_y0_z3": {
+      "model": "starrail_sim:block/star_rail_train_x0_y0_z3"
+    },
+    "large=false,facing=north,segment=x1_y0_z3": {
+      "model": "starrail_sim:block/star_rail_train_x1_y0_z3"
+    },
+    "large=false,facing=north,segment=x0_y1_z3": {
+      "model": "starrail_sim:block/star_rail_train_x0_y1_z3"
+    },
+    "large=false,facing=north,segment=x1_y1_z3": {
+      "model": "starrail_sim:block/star_rail_train_x1_y1_z3"
+    },
+    "large=false,facing=north,segment=x0_y2_z3": {
+      "model": "starrail_sim:block/star_rail_train_x0_y2_z3"
+    },
+    "large=false,facing=north,segment=x1_y2_z3": {
+      "model": "starrail_sim:block/star_rail_train_x1_y2_z3"
+    },
+    "large=false,facing=east,segment=x0_y0_z0": {
+      "model": "starrail_sim:block/star_rail_train_x0_y0_z0",
+      "y": 90,
+      "uvlock": true
+    },
+    "large=false,facing=east,segment=x1_y0_z0": {
+      "model": "starrail_sim:block/star_rail_train_x1_y0_z0",
+      "y": 90,
+      "uvlock": true
+    },
+    "large=false,facing=east,segment=x0_y1_z0": {
+      "model": "starrail_sim:block/star_rail_train_x0_y1_z0",
+      "y": 90,
+      "uvlock": true
+    },
+    "large=false,facing=east,segment=x1_y1_z0": {
+      "model": "starrail_sim:block/star_rail_train_x1_y1_z0",
+      "y": 90,
+      "uvlock": true
+    },
+    "large=false,facing=east,segment=x0_y2_z0": {
+      "model": "starrail_sim:block/star_rail_train_x0_y2_z0",
+      "y": 90,
+      "uvlock": true
+    },
+    "large=false,facing=east,segment=x1_y2_z0": {
+      "model": "starrail_sim:block/star_rail_train_x1_y2_z0",
+      "y": 90,
+      "uvlock": true
+    },
+    "large=false,facing=east,segment=x0_y0_z1": {
+      "model": "starrail_sim:block/star_rail_train_x0_y0_z1",
+      "y": 90,
+      "uvlock": true
+    },
+    "large=false,facing=east,segment=x1_y0_z1": {
+      "model": "starrail_sim:block/star_rail_train_x1_y0_z1",
+      "y": 90,
+      "uvlock": true
+    },
+    "large=false,facing=east,segment=x0_y1_z1": {
+      "model": "starrail_sim:block/star_rail_train_x0_y1_z1",
+      "y": 90,
+      "uvlock": true
+    },
+    "large=false,facing=east,segment=x1_y1_z1": {
+      "model": "starrail_sim:block/star_rail_train_x1_y1_z1",
+      "y": 90,
+      "uvlock": true
+    },
+    "large=false,facing=east,segment=x0_y2_z1": {
+      "model": "starrail_sim:block/star_rail_train_x0_y2_z1",
+      "y": 90,
+      "uvlock": true
+    },
+    "large=false,facing=east,segment=x1_y2_z1": {
+      "model": "starrail_sim:block/star_rail_train_x1_y2_z1",
+      "y": 90,
+      "uvlock": true
+    },
+    "large=false,facing=east,segment=x0_y0_z2": {
+      "model": "starrail_sim:block/star_rail_train_x0_y0_z2",
+      "y": 90,
+      "uvlock": true
+    },
+    "large=false,facing=east,segment=x1_y0_z2": {
+      "model": "starrail_sim:block/star_rail_train_x1_y0_z2",
+      "y": 90,
+      "uvlock": true
+    },
+    "large=false,facing=east,segment=x0_y1_z2": {
+      "model": "starrail_sim:block/star_rail_train_x0_y1_z2",
+      "y": 90,
+      "uvlock": true
+    },
+    "large=false,facing=east,segment=x1_y1_z2": {
+      "model": "starrail_sim:block/star_rail_train_x1_y1_z2",
+      "y": 90,
+      "uvlock": true
+    },
+    "large=false,facing=east,segment=x0_y2_z2": {
+      "model": "starrail_sim:block/star_rail_train_x0_y2_z2",
+      "y": 90,
+      "uvlock": true
+    },
+    "large=false,facing=east,segment=x1_y2_z2": {
+      "model": "starrail_sim:block/star_rail_train_x1_y2_z2",
+      "y": 90,
+      "uvlock": true
+    },
+    "large=false,facing=east,segment=x0_y0_z3": {
+      "model": "starrail_sim:block/star_rail_train_x0_y0_z3",
+      "y": 90,
+      "uvlock": true
+    },
+    "large=false,facing=east,segment=x1_y0_z3": {
+      "model": "starrail_sim:block/star_rail_train_x1_y0_z3",
+      "y": 90,
+      "uvlock": true
+    },
+    "large=false,facing=east,segment=x0_y1_z3": {
+      "model": "starrail_sim:block/star_rail_train_x0_y1_z3",
+      "y": 90,
+      "uvlock": true
+    },
+    "large=false,facing=east,segment=x1_y1_z3": {
+      "model": "starrail_sim:block/star_rail_train_x1_y1_z3",
+      "y": 90,
+      "uvlock": true
+    },
+    "large=false,facing=east,segment=x0_y2_z3": {
+      "model": "starrail_sim:block/star_rail_train_x0_y2_z3",
+      "y": 90,
+      "uvlock": true
+    },
+    "large=false,facing=east,segment=x1_y2_z3": {
+      "model": "starrail_sim:block/star_rail_train_x1_y2_z3",
+      "y": 90,
+      "uvlock": true
+    },
+    "large=false,facing=south,segment=x0_y0_z0": {
+      "model": "starrail_sim:block/star_rail_train_x0_y0_z0",
+      "y": 180,
+      "uvlock": true
+    },
+    "large=false,facing=south,segment=x1_y0_z0": {
+      "model": "starrail_sim:block/star_rail_train_x1_y0_z0",
+      "y": 180,
+      "uvlock": true
+    },
+    "large=false,facing=south,segment=x0_y1_z0": {
+      "model": "starrail_sim:block/star_rail_train_x0_y1_z0",
+      "y": 180,
+      "uvlock": true
+    },
+    "large=false,facing=south,segment=x1_y1_z0": {
+      "model": "starrail_sim:block/star_rail_train_x1_y1_z0",
+      "y": 180,
+      "uvlock": true
+    },
+    "large=false,facing=south,segment=x0_y2_z0": {
+      "model": "starrail_sim:block/star_rail_train_x0_y2_z0",
+      "y": 180,
+      "uvlock": true
+    },
+    "large=false,facing=south,segment=x1_y2_z0": {
+      "model": "starrail_sim:block/star_rail_train_x1_y2_z0",
+      "y": 180,
+      "uvlock": true
+    },
+    "large=false,facing=south,segment=x0_y0_z1": {
+      "model": "starrail_sim:block/star_rail_train_x0_y0_z1",
+      "y": 180,
+      "uvlock": true
+    },
+    "large=false,facing=south,segment=x1_y0_z1": {
+      "model": "starrail_sim:block/star_rail_train_x1_y0_z1",
+      "y": 180,
+      "uvlock": true
+    },
+    "large=false,facing=south,segment=x0_y1_z1": {
+      "model": "starrail_sim:block/star_rail_train_x0_y1_z1",
+      "y": 180,
+      "uvlock": true
+    },
+    "large=false,facing=south,segment=x1_y1_z1": {
+      "model": "starrail_sim:block/star_rail_train_x1_y1_z1",
+      "y": 180,
+      "uvlock": true
+    },
+    "large=false,facing=south,segment=x0_y2_z1": {
+      "model": "starrail_sim:block/star_rail_train_x0_y2_z1",
+      "y": 180,
+      "uvlock": true
+    },
+    "large=false,facing=south,segment=x1_y2_z1": {
+      "model": "starrail_sim:block/star_rail_train_x1_y2_z1",
+      "y": 180,
+      "uvlock": true
+    },
+    "large=false,facing=south,segment=x0_y0_z2": {
+      "model": "starrail_sim:block/star_rail_train_x0_y0_z2",
+      "y": 180,
+      "uvlock": true
+    },
+    "large=false,facing=south,segment=x1_y0_z2": {
+      "model": "starrail_sim:block/star_rail_train_x1_y0_z2",
+      "y": 180,
+      "uvlock": true
+    },
+    "large=false,facing=south,segment=x0_y1_z2": {
+      "model": "starrail_sim:block/star_rail_train_x0_y1_z2",
+      "y": 180,
+      "uvlock": true
+    },
+    "large=false,facing=south,segment=x1_y1_z2": {
+      "model": "starrail_sim:block/star_rail_train_x1_y1_z2",
+      "y": 180,
+      "uvlock": true
+    },
+    "large=false,facing=south,segment=x0_y2_z2": {
+      "model": "starrail_sim:block/star_rail_train_x0_y2_z2",
+      "y": 180,
+      "uvlock": true
+    },
+    "large=false,facing=south,segment=x1_y2_z2": {
+      "model": "starrail_sim:block/star_rail_train_x1_y2_z2",
+      "y": 180,
+      "uvlock": true
+    },
+    "large=false,facing=south,segment=x0_y0_z3": {
+      "model": "starrail_sim:block/star_rail_train_x0_y0_z3",
+      "y": 180,
+      "uvlock": true
+    },
+    "large=false,facing=south,segment=x1_y0_z3": {
+      "model": "starrail_sim:block/star_rail_train_x1_y0_z3",
+      "y": 180,
+      "uvlock": true
+    },
+    "large=false,facing=south,segment=x0_y1_z3": {
+      "model": "starrail_sim:block/star_rail_train_x0_y1_z3",
+      "y": 180,
+      "uvlock": true
+    },
+    "large=false,facing=south,segment=x1_y1_z3": {
+      "model": "starrail_sim:block/star_rail_train_x1_y1_z3",
+      "y": 180,
+      "uvlock": true
+    },
+    "large=false,facing=south,segment=x0_y2_z3": {
+      "model": "starrail_sim:block/star_rail_train_x0_y2_z3",
+      "y": 180,
+      "uvlock": true
+    },
+    "large=false,facing=south,segment=x1_y2_z3": {
+      "model": "starrail_sim:block/star_rail_train_x1_y2_z3",
+      "y": 180,
+      "uvlock": true
+    },
+    "large=false,facing=west,segment=x0_y0_z0": {
+      "model": "starrail_sim:block/star_rail_train_x0_y0_z0",
+      "y": 270,
+      "uvlock": true
+    },
+    "large=false,facing=west,segment=x1_y0_z0": {
+      "model": "starrail_sim:block/star_rail_train_x1_y0_z0",
+      "y": 270,
+      "uvlock": true
+    },
+    "large=false,facing=west,segment=x0_y1_z0": {
+      "model": "starrail_sim:block/star_rail_train_x0_y1_z0",
+      "y": 270,
+      "uvlock": true
+    },
+    "large=false,facing=west,segment=x1_y1_z0": {
+      "model": "starrail_sim:block/star_rail_train_x1_y1_z0",
+      "y": 270,
+      "uvlock": true
+    },
+    "large=false,facing=west,segment=x0_y2_z0": {
+      "model": "starrail_sim:block/star_rail_train_x0_y2_z0",
+      "y": 270,
+      "uvlock": true
+    },
+    "large=false,facing=west,segment=x1_y2_z0": {
+      "model": "starrail_sim:block/star_rail_train_x1_y2_z0",
+      "y": 270,
+      "uvlock": true
+    },
+    "large=false,facing=west,segment=x0_y0_z1": {
+      "model": "starrail_sim:block/star_rail_train_x0_y0_z1",
+      "y": 270,
+      "uvlock": true
+    },
+    "large=false,facing=west,segment=x1_y0_z1": {
+      "model": "starrail_sim:block/star_rail_train_x1_y0_z1",
+      "y": 270,
+      "uvlock": true
+    },
+    "large=false,facing=west,segment=x0_y1_z1": {
+      "model": "starrail_sim:block/star_rail_train_x0_y1_z1",
+      "y": 270,
+      "uvlock": true
+    },
+    "large=false,facing=west,segment=x1_y1_z1": {
+      "model": "starrail_sim:block/star_rail_train_x1_y1_z1",
+      "y": 270,
+      "uvlock": true
+    },
+    "large=false,facing=west,segment=x0_y2_z1": {
+      "model": "starrail_sim:block/star_rail_train_x0_y2_z1",
+      "y": 270,
+      "uvlock": true
+    },
+    "large=false,facing=west,segment=x1_y2_z1": {
+      "model": "starrail_sim:block/star_rail_train_x1_y2_z1",
+      "y": 270,
+      "uvlock": true
+    },
+    "large=false,facing=west,segment=x0_y0_z2": {
+      "model": "starrail_sim:block/star_rail_train_x0_y0_z2",
+      "y": 270,
+      "uvlock": true
+    },
+    "large=false,facing=west,segment=x1_y0_z2": {
+      "model": "starrail_sim:block/star_rail_train_x1_y0_z2",
+      "y": 270,
+      "uvlock": true
+    },
+    "large=false,facing=west,segment=x0_y1_z2": {
+      "model": "starrail_sim:block/star_rail_train_x0_y1_z2",
+      "y": 270,
+      "uvlock": true
+    },
+    "large=false,facing=west,segment=x1_y1_z2": {
+      "model": "starrail_sim:block/star_rail_train_x1_y1_z2",
+      "y": 270,
+      "uvlock": true
+    },
+    "large=false,facing=west,segment=x0_y2_z2": {
+      "model": "starrail_sim:block/star_rail_train_x0_y2_z2",
+      "y": 270,
+      "uvlock": true
+    },
+    "large=false,facing=west,segment=x1_y2_z2": {
+      "model": "starrail_sim:block/star_rail_train_x1_y2_z2",
+      "y": 270,
+      "uvlock": true
+    },
+    "large=false,facing=west,segment=x0_y0_z3": {
+      "model": "starrail_sim:block/star_rail_train_x0_y0_z3",
+      "y": 270,
+      "uvlock": true
+    },
+    "large=false,facing=west,segment=x1_y0_z3": {
+      "model": "starrail_sim:block/star_rail_train_x1_y0_z3",
+      "y": 270,
+      "uvlock": true
+    },
+    "large=false,facing=west,segment=x0_y1_z3": {
+      "model": "starrail_sim:block/star_rail_train_x0_y1_z3",
+      "y": 270,
+      "uvlock": true
+    },
+    "large=false,facing=west,segment=x1_y1_z3": {
+      "model": "starrail_sim:block/star_rail_train_x1_y1_z3",
+      "y": 270,
+      "uvlock": true
+    },
+    "large=false,facing=west,segment=x0_y2_z3": {
+      "model": "starrail_sim:block/star_rail_train_x0_y2_z3",
+      "y": 270,
+      "uvlock": true
+    },
+    "large=false,facing=west,segment=x1_y2_z3": {
+      "model": "starrail_sim:block/star_rail_train_x1_y2_z3",
+      "y": 270,
+      "uvlock": true
+    },
+    "large=true": {
+      "model": "starrail_sim:block/star_rail_train_empty"
+    }
+  }
+}

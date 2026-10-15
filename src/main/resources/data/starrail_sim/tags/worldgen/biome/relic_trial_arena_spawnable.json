@@ -1,9 +1,6 @@
 {
   "replace": false,
   "values": [
-    "#minecraft:is_overworld"
-  ],
-  "remove": [
-    "#minecraft:is_ocean"
+    "#starrail_sim:the_path_regions"
   ]
 }

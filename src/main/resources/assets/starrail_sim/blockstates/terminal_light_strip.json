@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "starrail_sim:block/terminal_light_strip",
+      "y": 90
+    },
+    "facing=east": {
+      "model": "starrail_sim:block/terminal_light_strip"
+    },
+    "facing=south": {
+      "model": "starrail_sim:block/terminal_light_strip",
+      "y": 270
+    },
+    "facing=west": {
+      "model": "starrail_sim:block/terminal_light_strip",
+      "y": 180
+    }
+  }
+}

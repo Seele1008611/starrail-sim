@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "##",
+    "##"
+  ],
+  "key": {
+    "#": {
+      "item": "starrail_sim:star_rail_sand"
+    }
+  },
+  "result": {
+    "item": "starrail_sim:star_rail_sandstone",
+    "count": 1
+  }
+}

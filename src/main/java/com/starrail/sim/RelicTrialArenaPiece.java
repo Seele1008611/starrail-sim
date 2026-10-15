@@ -16,7 +16,7 @@ import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSeriali
 
 import java.util.Map;
 
-/** 分区块生成决斗场：切除场地内高出的地形，并为低处补足地基。 */
+/** 分区块生成决斗场：无视原地形起伏，切除场地内地形并为低处补足地基。 */
 public final class RelicTrialArenaPiece extends StructurePiece {
     private final BlockPos origin;
 
@@ -29,6 +29,10 @@ public final class RelicTrialArenaPiece extends StructurePiece {
         super(StarRailRuinWorldgen.ARENA_PIECE.get(), tag);
         this.origin = new BlockPos(tag.getInt("OriginX"), tag.getInt("OriginY"),
                 tag.getInt("OriginZ"));
+    }
+
+    public BlockPos getOrigin() {
+        return origin;
     }
 
     private static BoundingBox box(BlockPos origin) {

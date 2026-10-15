@@ -22,6 +22,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 /** 保存已生成遗迹的锚点，并为寻迹遗迹执行统一的水平间距检查。 */
@@ -31,6 +32,8 @@ public final class StarRailRuinSpacingData extends SavedData {
     private static final String DATA_NAME = "starrail_sim_ruin_spacing";
     private static final String ANCHORS_KEY = "anchors";
     private static final long MIN_DISTANCE_SQUARED = 400L * 400L;
+    private static final List<String> SPACED_STRUCTURE_IDS = List.of(
+            "ordinary_floating_ruin", "relic_trial_arena");
 
     private final Set<Long> anchors = new LinkedHashSet<>();
 
@@ -76,32 +79,36 @@ public final class StarRailRuinSpacingData extends SavedData {
 
     /** overwrite 命令可重建同一寻迹锚点，但仍须避开所有其他遗迹。 */
     public boolean hasClearance(ServerLevel level, int x, int z, boolean allowSameSite) {
-        if (!hasClearance(x, z, allowSameSite)) {
+        if (!hasClearance(x, z, allowSameSite)
+                || !StarRailDimensionService.hasRuinHubClearance(level, x, z)) {
             return false;
         }
 
-        ResourceKey<Structure> ruinKey = ResourceKey.create(Registries.STRUCTURE,
-                new ResourceLocation(StarRailSimMod.MOD_ID, "ordinary_floating_ruin"));
-        Holder<Structure> ruinHolder = level.registryAccess()
-                .registryOrThrow(Registries.STRUCTURE).getHolderOrThrow(ruinKey);
-        for (StructurePlacement placement : level.getChunkSource().getGeneratorState()
-                .getPlacementsForStructure(ruinHolder)) {
-            if (!(placement instanceof RandomSpreadStructurePlacement spread)) {
-                continue;
-            }
+        var structureRegistry = level.registryAccess().registryOrThrow(Registries.STRUCTURE);
+        for (String structureId : SPACED_STRUCTURE_IDS) {
+            ResourceKey<Structure> structureKey = ResourceKey.create(Registries.STRUCTURE,
+                    ResourceLocation.fromNamespaceAndPath(StarRailSimMod.MOD_ID, structureId));
+            Holder<Structure> structureHolder = structureRegistry.getHolderOrThrow(structureKey);
+            for (StructurePlacement placement : level.getChunkSource().getGeneratorState()
+                    .getPlacementsForStructure(structureHolder)) {
+                if (!(placement instanceof RandomSpreadStructurePlacement spread)) {
+                    continue;
+                }
 
-            int chunkX = Math.floorDiv(x, 16);
-            int chunkZ = Math.floorDiv(z, 16);
-            int regionX = Math.floorDiv(chunkX, spread.spacing());
-            int regionZ = Math.floorDiv(chunkZ, spread.spacing());
-            for (int offsetX = -1; offsetX <= 1; offsetX++) {
-                for (int offsetZ = -1; offsetZ <= 1; offsetZ++) {
-                    ChunkPos candidateChunk = spread.getPotentialStructureChunk(
-                            level.getSeed(), regionX + offsetX, regionZ + offsetZ);
-                    long dx = (long) x - candidateChunk.getMiddleBlockX();
-                    long dz = (long) z - candidateChunk.getMiddleBlockZ();
-                    if (dx * dx + dz * dz < MIN_DISTANCE_SQUARED) {
-                        return false;
+                int chunkX = Math.floorDiv(x, 16);
+                int chunkZ = Math.floorDiv(z, 16);
+                int regionX = Math.floorDiv(chunkX, spread.spacing());
+                int regionZ = Math.floorDiv(chunkZ, spread.spacing());
+                int regionRadius = (int) Math.ceil(400.0D / (spread.spacing() * 16.0D)) + 1;
+                for (int offsetX = -regionRadius; offsetX <= regionRadius; offsetX++) {
+                    for (int offsetZ = -regionRadius; offsetZ <= regionRadius; offsetZ++) {
+                        ChunkPos candidateChunk = spread.getPotentialStructureChunk(
+                                level.getSeed(), regionX + offsetX, regionZ + offsetZ);
+                        long dx = (long) x - candidateChunk.getMiddleBlockX();
+                        long dz = (long) z - candidateChunk.getMiddleBlockZ();
+                        if (dx * dx + dz * dz < MIN_DISTANCE_SQUARED) {
+                            return false;
+                        }
                     }
                 }
             }
@@ -141,13 +148,17 @@ public final class StarRailRuinSpacingData extends SavedData {
 
         ChunkAccess chunk = event.getChunk();
         for (StructureStart start : chunk.getAllStarts().values()) {
-            if (!start.isValid()
-                    || start.getStructure().type() != StarRailRuinWorldgen.ORDINARY.get()) {
-                continue;
-            }
+            if (!start.isValid()) continue;
+            var type = start.getStructure().type();
+            if (type != StarRailRuinWorldgen.ORDINARY.get()
+                    && type != StarRailRuinWorldgen.RELIC_TRIAL_ARENA.get()) continue;
             for (StructurePiece piece : start.getPieces()) {
                 if (piece instanceof FloatingRuinPiece ruinPiece) {
                     get(level).recordRuin(ruinPiece.getOrigin());
+                    break;
+                }
+                if (piece instanceof RelicTrialArenaPiece arenaPiece) {
+                    get(level).recordRuin(arenaPiece.getOrigin());
                     break;
                 }
             }

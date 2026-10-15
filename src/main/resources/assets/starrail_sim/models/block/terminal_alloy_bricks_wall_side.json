@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/template_wall_side",
+  "textures": {
+    "wall": "starrail_sim:block/terminal_alloy_bricks",
+    "particle": "starrail_sim:block/terminal_alloy_bricks"
+  }
+}

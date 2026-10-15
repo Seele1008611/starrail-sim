@@ -3,12 +3,16 @@ package com.starrail.sim;
 import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
+import net.minecraft.commands.arguments.ResourceLocationArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.Block;
@@ -49,22 +53,35 @@ public final class RelicTrialArenaCommands {
         event.getDispatcher().register(Commands.literal("starrail")
                 .then(Commands.literal("arena")
                         .requires(source -> source.hasPermission(2))
-                        .then(Commands.literal("build").executes(RelicTrialArenaCommands::build))
-                        .then(Commands.literal("locate").executes(context ->
-                                context.getSource().getServer().getCommands().performPrefixedCommand(
-                                        context.getSource(),
-                                        "locate structure starrail_sim:relic_trial_arena")))
+                        .then(Commands.literal("build")
+                                .executes(context -> build(context, null))
+                                .then(Commands.argument("dimension", ResourceLocationArgument.id())
+                                        .executes(context -> build(context,
+                                                ResourceLocationArgument.getId(context, "dimension")))))
+                        .then(Commands.literal("locate")
+                                .executes(context -> locate(context, null))
+                                .then(Commands.argument("dimension", ResourceLocationArgument.id())
+                                        .executes(context -> locate(context,
+                                                ResourceLocationArgument.getId(context, "dimension")))))
                         .then(Commands.literal("cancel").executes(RelicTrialArenaCommands::cancel))));
     }
 
-    private static int build(CommandContext<CommandSourceStack> context) {
+    private static int build(CommandContext<CommandSourceStack> context,
+                             ResourceLocation requestedDimension) {
         CommandSourceStack source = context.getSource();
         ServerPlayer player = source.getPlayer();
-        if (player == null || !(player.level() instanceof ServerLevel level)) {
+        if (player == null) {
             source.sendFailure(Component.translatable("message.starrail_sim.arena.build_player_only"));
             return 0;
         }
         MinecraftServer server = source.getServer();
+        ServerLevel level = requestedDimension == null ? player.serverLevel()
+                : server.getLevel(ResourceKey.create(Registries.DIMENSION, requestedDimension));
+        if (level == null) {
+            source.sendFailure(Component.literal("目标维度不存在或尚未加载："
+                    + requestedDimension));
+            return 0;
+        }
         if (ACTIVE_JOBS.containsKey(server) || StarRailRuinCommands.isPlacementActive(server)) {
             source.sendFailure(Component.translatable("message.starrail_sim.arena.build_busy"));
             return 0;
@@ -75,6 +92,13 @@ public final class RelicTrialArenaCommands {
         BlockPos playerPos = player.blockPosition();
         BlockPos origin = new BlockPos(playerPos.getX() - CENTER, playerPos.getY(),
                 playerPos.getZ() + 2);
+        int arenaCenterX = origin.getX() + CENTER;
+        int arenaCenterZ = origin.getZ() + CENTER;
+        if (!StarRailRuinSpacingData.get(level).hasClearance(level, arenaCenterX, arenaCenterZ)) {
+            source.sendFailure(Component.translatable(
+                    "message.starrail_sim.path_seek_no_spaced_site"));
+            return 0;
+        }
         LinkedHashMap<BlockPos, BlockState> plan = createPlan(origin);
         Component issue = validateSite(level, origin, plan, player);
         if (issue != null) {
@@ -85,8 +109,27 @@ public final class RelicTrialArenaCommands {
         BuildJob job = new BuildJob(source, level, origin, plan);
         ACTIVE_JOBS.put(server, job);
         source.sendSuccess(() -> Component.translatable(
-                "message.starrail_sim.arena.build_started", plan.size()), false);
+                "message.starrail_sim.arena.build_started", plan.size(),
+                level.dimension().location()), false);
         return 1;
+    }
+
+    private static int locate(CommandContext<CommandSourceStack> context,
+                              ResourceLocation requestedDimension) {
+        CommandSourceStack source = context.getSource();
+        ServerLevel target = requestedDimension == null ? source.getLevel()
+                : source.getServer().getLevel(ResourceKey.create(Registries.DIMENSION,
+                        requestedDimension));
+        if (target == null) {
+            source.sendFailure(Component.literal("目标维度不存在或尚未加载："
+                    + requestedDimension));
+            return 0;
+        }
+        source.sendSuccess(() -> Component.literal("正在维度 "
+                + target.dimension().location() + " 定位遗器决斗场。"), false);
+        String command = "execute in " + target.dimension().location()
+                + " run locate structure starrail_sim:relic_trial_arena";
+        return source.getServer().getCommands().performPrefixedCommand(source, command);
     }
 
     private static int cancel(CommandContext<CommandSourceStack> context) {
@@ -298,9 +341,12 @@ public final class RelicTrialArenaCommands {
             }
             if (placed < placements.size()) return false;
             releaseTemporaryChunks();
+            StarRailRuinSpacingData.get(level).recordRuin(
+                    new BlockPos(origin.getX() + CENTER, origin.getY(), origin.getZ() + CENTER));
             source.sendSuccess(() -> Component.translatable(
                     "message.starrail_sim.arena.build_complete", placements.size(),
-                    origin.getX(), origin.getY(), origin.getZ()), false);
+                    origin.getX(), origin.getY(), origin.getZ(),
+                    level.dimension().location()), false);
             source.sendSuccess(this::materialSummary, false);
             return true;
         }

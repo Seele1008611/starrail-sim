@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "starrail_sim:block/terminal_alloy_bricks_slab"
+    },
+    "type=double": {
+      "model": "starrail_sim:block/terminal_alloy_bricks"
+    },
+    "type=top": {
+      "model": "starrail_sim:block/terminal_alloy_bricks_slab_top"
+    }
+  }
+}

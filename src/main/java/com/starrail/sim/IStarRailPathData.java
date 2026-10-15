@@ -5,8 +5,11 @@ package com.starrail.sim;
  */
 
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.UUID;
+import java.util.Set;
+import java.util.Map;
 
 /** Persistent player state for path selection and trial progress. */
 public interface IStarRailPathData {
@@ -35,6 +38,31 @@ public interface IStarRailPathData {
 
     void setPathUnlocked(boolean unlocked);
 
+    Set<String> getExploredOverworldBiomes();
+    boolean addExploredOverworldBiome(String biomeId);
+    boolean isTrainRewardIssued();
+    void setTrainRewardIssued(boolean issued);
+    boolean isTrainRewardPending();
+    void setTrainRewardPending(boolean pending);
+    boolean isLegacyExplorationMigrated();
+    void setLegacyExplorationMigrated(boolean migrated);
+    Set<String> getDiscoveredPathRegions();
+    boolean addDiscoveredPathRegion(String regionId);
+    Set<String> getDiscoveredPathRuins();
+    boolean addDiscoveredPathRuin(String ruinId);
+    Map<String, Long> getDiscoveredPathRuinPositions();
+    boolean addDiscoveredPathRuinPosition(String ruinId, long position);
+    Map<String, String> getArchiveCustomNames();
+    void setArchiveCustomName(String recordKey, String name);
+    Set<Long> getDiscoveredPathBeacons();
+    boolean addDiscoveredPathBeacon(long position);
+    boolean removeDiscoveredPathBeacon(long position);
+    Set<Long> getDiscoveredPathArenas();
+    boolean addDiscoveredPathArena(long position);
+    int getPathArenaVictories();
+    void recordPathArenaVictory();
+    boolean isPathArenaDiscovered();
+
     /** 当前玩家已寻迹到、可用于校验试炼凭证的命途遗迹。 */
     StarRailPath getSoughtPath();
 
@@ -44,7 +72,11 @@ public interface IStarRailPathData {
 
     int getSoughtZ();
 
+    ResourceLocation getSoughtDimension();
+
     void setSoughtRuin(StarRailPath path, int x, int y, int z);
+
+    void setSoughtRuin(StarRailPath path, ResourceLocation dimension, int x, int y, int z);
 
     void clearSoughtRuin();
 

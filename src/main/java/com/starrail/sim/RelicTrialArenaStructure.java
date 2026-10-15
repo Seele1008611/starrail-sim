@@ -9,7 +9,7 @@ import net.minecraft.world.level.levelgen.structure.StructureType;
 import java.util.Arrays;
 import java.util.Optional;
 
-/** 自然生成的遗器试炼场：按场地范围的中位地表高度锚定，适配起伏地形。 */
+/** 自然生成的遗器试炼场：不要求平坦地形，按中位高度锚定并切平整片场地。 */
 public final class RelicTrialArenaStructure extends Structure {
     public static final Codec<RelicTrialArenaStructure> CODEC =
             simpleCodec(RelicTrialArenaStructure::new);
@@ -32,9 +32,9 @@ public final class RelicTrialArenaStructure extends Structure {
             }
         }
         Arrays.sort(surfaceHeights);
-        // A median avoids placing the whole arena on the highest hilltop or at the bottom
-        // of a nearby ravine. The piece replaces high terrain and builds a foundation
-        // beneath low columns, so uneven terrain cannot leave the floor floating.
+        // Terrain is not a spawn condition: use the median only as a stable vertical
+        // anchor. The piece clears the full footprint and builds foundations beneath low
+        // columns, so hills, slopes, and ravines do not prevent natural generation.
         int y = surfaceHeights[surfaceHeights.length / 2];
         if (y < context.heightAccessor().getMinBuildHeight()
                 || y + RelicTrialArenaCommands.HEIGHT > context.heightAccessor().getMaxBuildHeight()) {

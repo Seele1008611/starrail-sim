@@ -441,6 +441,7 @@ public final class StarRailPathScreen extends StarRailStyledScreen {
         } else if (StarRailPathClientState.getSoughtPath().isRealPath()) {
             status = Component.translatable("screen.starrail_sim.sought_ruin",
                     StarRailPathClientState.getSoughtPath().getDisplayName(),
+                    soughtDimensionComponent(),
                     StarRailPathClientState.getSoughtX(),
                     StarRailPathClientState.getSoughtY(),
                     StarRailPathClientState.getSoughtZ());
@@ -483,6 +484,18 @@ public final class StarRailPathScreen extends StarRailStyledScreen {
             graphics.drawCenteredString(font, practice, center, statusY + 13,
                     StarRailUiStyle.MUTED_COLOR);
         }
+    }
+
+    private static Component soughtDimensionComponent() {
+        net.minecraft.resources.ResourceLocation dimension =
+                StarRailPathClientState.getSoughtDimension();
+        if (dimension.equals(com.starrail.sim.StarRailDimensionIds.THE_PATH_LOCATION)) {
+            return Component.translatable("dimension.starrail_sim.the_path");
+        }
+        if (dimension.equals(net.minecraft.world.level.Level.OVERWORLD.location())) {
+            return Component.translatable("dimension.starrail_sim.overworld");
+        }
+        return Component.literal(dimension.toString());
     }
 
     private void drawTrialProgress(GuiGraphics graphics, StarRailPath path) {

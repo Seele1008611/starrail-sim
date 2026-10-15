@@ -142,6 +142,7 @@ public final class StarRailPathService {
     // 把服务端的玩家命途和试炼状态打包发送给客户端界面。
     public static void sync(ServerPlayer player) {
         player.getCapability(StarRailPathCapability.PATH_DATA).ifPresent(data -> {
+            StarRailExplorationService.pruneRemovedBeacons(player, data);
             int remaining = 0;
             if (data.getTrialPath().isRealPath()) {
                 long elapsed = player.level().getGameTime() - data.getTrialStartTick();
@@ -162,9 +163,20 @@ public final class StarRailPathService {
                     data.getObjective2Progress(),
                     remaining,
                     data.getSoughtPath(),
+                    data.getSoughtDimension(),
                     data.getSoughtX(),
                     data.getSoughtY(),
-                    data.getSoughtZ()));
+                    data.getSoughtZ(),
+                    StarRailExplorationService.regionMask(data),
+                    StarRailExplorationService.ruinMask(data),
+                    StarRailExplorationService.ruinPositionMask(data),
+                    StarRailExplorationService.ruinPositions(data),
+                    data.getDiscoveredPathBeacons().size(),
+                    data.getDiscoveredPathBeacons().stream().mapToLong(Long::longValue).sorted().toArray(),
+                    data.getDiscoveredPathArenas().stream().mapToLong(Long::longValue).sorted().toArray(),
+                    data.isPathArenaDiscovered(),
+                    data.getPathArenaVictories(),
+                    data.getArchiveCustomNames()));
             StarRailTraceService.sync(player, data);
         });
     }

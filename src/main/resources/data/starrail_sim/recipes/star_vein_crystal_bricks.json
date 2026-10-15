@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "FS",
+    "SF"
+  ],
+  "key": {
+    "F": {
+      "item": "starrail_sim:star_rail_fragment"
+    },
+    "S": {
+      "item": "starrail_sim:star_rail_cut_stone"
+    }
+  },
+  "result": {
+    "item": "starrail_sim:star_vein_crystal_bricks",
+    "count": 4
+  }
+}

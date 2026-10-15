@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " G ",
+    "GFG",
+    " A "
+  ],
+  "key": {
+    "G": {
+      "item": "starrail_sim:terminal_alloy"
+    },
+    "F": {
+      "item": "starrail_sim:star_rail_fragment"
+    },
+    "A": {
+      "item": "starrail_sim:old_rail_platform"
+    }
+  },
+  "result": {
+    "item": "starrail_sim:star_rail_beacon",
+    "count": 1
+  }
+}

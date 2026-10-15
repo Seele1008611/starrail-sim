@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "starrail_sim:star_dust_soil",
+    "starrail_sim:star_rail_sand",
+    "starrail_sim:star_dust_gravel"
+  ]
+}

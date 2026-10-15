@@ -212,6 +212,7 @@ public final class RelicTrialDeviceBlockEntity extends BlockEntity {
         updateClients();
         ServerPlayer player = serverLevel.getServer().getPlayerList().getPlayer(ownerId);
         if (player != null) {
+            StarRailExplorationService.recordArenaVictory(player, worldPosition);
             player.displayClientMessage(Component.translatable(
                     "message.starrail_sim.arena.victory", rewardCount,
                     RelicTrialSet.byIndex(selectedSetIndex).displayName()), false);

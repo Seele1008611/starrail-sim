@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "starrail_sim:terminal_alloy"
+    },
+    {
+      "item": "starrail_sim:star_dust_gravel"
+    }
+  ],
+  "result": {
+    "item": "starrail_sim:weathered_terminal_alloy",
+    "count": 1
+  }
+}

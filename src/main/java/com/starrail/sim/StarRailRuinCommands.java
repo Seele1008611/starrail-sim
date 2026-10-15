@@ -13,10 +13,13 @@ import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.coordinates.BlockPosArgument;
+import net.minecraft.commands.arguments.ResourceLocationArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
@@ -32,6 +35,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.SlabType;
 import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.server.ServerStoppingEvent;
@@ -71,7 +75,12 @@ public final class StarRailRuinCommands {
     public static void register(RegisterCommandsEvent event) {
         var locate = Commands.literal("locate")
                 .then(Commands.literal("ordinary")
-                        .executes(context -> StarRailRuinLocateService.start(context.getSource()))
+                        .executes(context -> StarRailRuinLocateService.start(
+                                context.getSource(), null))
+                        .then(Commands.argument("dimension", ResourceLocationArgument.id())
+                                .executes(context -> StarRailRuinLocateService.start(
+                                        context.getSource(), ResourceLocationArgument.getId(
+                                                context, "dimension"))))
                         .then(Commands.literal("cancel")
                                 .executes(context -> StarRailRuinLocateService.cancel(
                                         context.getSource()))));
@@ -96,21 +105,33 @@ public final class StarRailRuinCommands {
     }
 
     private static LiteralArgumentBuilder<CommandSourceStack> placeCommand(String variantId) {
-        return Commands.literal(variantId)
-                .then(Commands.argument("origin", BlockPosArgument.blockPos())
-                        .executes(context -> start(context, variantId, false))
+        var origin = Commands.argument("origin", BlockPosArgument.blockPos())
+                .executes(context -> start(context, variantId, false, null))
+                .then(Commands.literal("overwrite")
+                        .executes(context -> start(context, variantId, true, null)))
+                .then(Commands.argument("dimension", ResourceLocationArgument.id())
+                        .executes(context -> start(context, variantId, false,
+                                ResourceLocationArgument.getId(context, "dimension")))
                         .then(Commands.literal("overwrite")
-                                .executes(context -> start(context, variantId, true))));
+                                .executes(context -> start(context, variantId, true,
+                                        ResourceLocationArgument.getId(context, "dimension")))));
+        return Commands.literal(variantId).then(origin);
     }
 
     // 验证放置任务、蓝图、世界高度和区块状态，通过后创建分帧放置任务。
     private static int start(CommandContext<CommandSourceStack> context, String variantId,
-                             boolean overwrite) {
+                             boolean overwrite, ResourceLocation targetDimension) {
         CommandSourceStack source = context.getSource();
-        ServerLevel level = source.getLevel();
         MinecraftServer server = source.getServer();
         if (ACTIVE_JOBS.containsKey(server) || RelicTrialArenaCommands.isBuildActive(server)) {
             source.sendFailure(Component.literal("已有遗迹放置任务正在进行；完成后再试，或执行 /starrail ruin cancel。"));
+            return 0;
+        }
+
+        ServerLevel level = targetDimension == null ? source.getLevel()
+                : server.getLevel(ResourceKey.create(Registries.DIMENSION, targetDimension));
+        if (level == null) {
+            source.sendFailure(Component.literal("目标维度不存在或尚未加载：" + targetDimension));
             return 0;
         }
 
@@ -145,7 +166,8 @@ public final class StarRailRuinCommands {
         ACTIVE_JOBS.put(server, job);
         source.sendSuccess(() -> Component.literal("已开始检查" + displayName(blueprint) + "放置区域："
                 + blueprint.placements().size() + " 个方块；锚点 " + origin.getX() + " "
-                + origin.getY() + " " + origin.getZ() + "。每 tick 分批处理。"
+                + origin.getY() + " " + origin.getZ() + "；维度 "
+                + level.dimension().location() + "。每 tick 分批处理。"
                 + (overwrite ? " 将覆盖模型占用位置的现有方块。" : " 若占位会覆盖实体方块则停止，不会留下半座遗迹。")), false);
         return 1;
     }
@@ -163,9 +185,9 @@ public final class StarRailRuinCommands {
             return false;
         }
         if (!(player.level() instanceof ServerLevel level)
-                || level.dimension() != net.minecraft.world.level.Level.OVERWORLD) {
+                || !level.dimension().equals(StarRailDimensionIds.THE_PATH)) {
             player.sendSystemMessage(Component.translatable(
-                    "message.starrail_sim.path_seek_overworld_only"));
+                    "message.starrail_sim.path_seek_the_path_only"));
             return false;
         }
 
@@ -179,7 +201,9 @@ public final class StarRailRuinCommands {
         }
 
         // 先用安全的临时高度校验水平世界边界；正式浮空高度等目标区块载入后计算。
-        BlockPos initialOrigin = new BlockPos(x, 200, z);
+        int centerY = level.getMinBuildHeight() + level.getHeight() / 2;
+        int structureCenterY = (blueprint.bounds().minY() + blueprint.bounds().maxY()) / 2;
+        BlockPos initialOrigin = new BlockPos(x, centerY - structureCenterY, z);
         String boundsError = checkBounds(level, initialOrigin, blueprint.bounds());
         if (boundsError != null) {
             player.sendSystemMessage(Component.translatable(
@@ -200,7 +224,8 @@ public final class StarRailRuinCommands {
         job.forceRequiredChunks();
         ACTIVE_JOBS.put(server, job);
         player.sendSystemMessage(Component.translatable(
-                "message.starrail_sim.path_seek_started", path.getDisplayName(), x, z));
+                "message.starrail_sim.path_seek_started", path.getDisplayName(),
+                Component.translatable("dimension.starrail_sim.the_path"), x, z));
         return true;
     }
 
@@ -497,6 +522,7 @@ public final class StarRailRuinCommands {
                     // 宝箱方块放置后绑定对应变体的战利品表，首次打开时再随机生成内容。
                     if (state.is(Blocks.CHEST)
                             && level.getBlockEntity(worldPos) instanceof ChestBlockEntity chest) {
+                        StarRailRuinGuardService.markArchiveChest(chest, blueprint.variantId());
                         if (blueprint.guarded()) {
                             StarRailRuinGuardService.markChest(chest, origin, blueprint.variantId());
                         } else chest.setLootTable(new ResourceLocation(StarRailSimMod.MOD_ID,
@@ -553,7 +579,19 @@ public final class StarRailRuinCommands {
                             origin.getX() + x, origin.getZ() + z));
                 }
             }
-            int platformY = Math.max(151, highestSurface + 24);
+            int structureHeight = bounds.maxY() - bounds.minY();
+            int highestBaseY = level.getMaxBuildHeight() - 1 - structureHeight;
+            int platformY = Math.max(level.getMinBuildHeight()
+                            + level.getHeight() * 56 / 100,
+                    highestSurface + 24);
+            if (platformY > highestBaseY) {
+                if (highestSurface + 12 > highestBaseY) {
+                    notify("当前维度地表过高，遗迹无法在建造高度内安全悬空，请重新寻迹。", true);
+                    return false;
+                }
+                platformY = highestBaseY;
+            }
+            platformY = Math.max(platformY, level.getMinBuildHeight());
             origin = new BlockPos(origin.getX(), platformY - bounds.minY(), origin.getZ());
             String boundsError = checkBounds(level, origin, bounds);
             if (boundsError != null) {

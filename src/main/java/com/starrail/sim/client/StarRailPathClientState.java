@@ -9,8 +9,11 @@ import com.starrail.sim.StarRailPathEffects;
 import com.starrail.sim.StarRailPathProgress;
 import com.starrail.sim.StarRailPathRank;
 import net.minecraft.client.Minecraft;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
+import java.util.Map;
 
-/** Client-side snapshot for rendering the path screen. */
+/** Client-side snapshot for rendering path progression and the travel archive. */
 public final class StarRailPathClientState {
     private static boolean unlocked;
     private static StarRailPath currentPath = StarRailPath.NONE;
@@ -27,6 +30,17 @@ public final class StarRailPathClientState {
     private static int soughtX;
     private static int soughtY;
     private static int soughtZ;
+    private static ResourceLocation soughtDimension = Level.OVERWORLD.location();
+    private static int pathRegionMask;
+    private static int pathRuinMask;
+    private static int pathRuinPositionMask;
+    private static long[] pathRuinPositions = new long[0];
+    private static int pathBeaconCount;
+    private static long[] pathBeaconPositions = new long[0];
+    private static long[] pathArenaPositions = new long[0];
+    private static boolean pathArenaDiscovered;
+    private static int pathArenaVictories;
+    private static Map<String, String> pathArchiveCustomNames = Map.of();
 
     private StarRailPathClientState() {
     }
@@ -38,8 +52,14 @@ public final class StarRailPathClientState {
                               StarRailPathRank breakthroughRank,
                               int firstObjective,
                               int secondObjective, int remaining,
-                              StarRailPath lastSoughtPath, int lastSoughtX,
-                              int lastSoughtY, int lastSoughtZ) {
+                              StarRailPath lastSoughtPath, ResourceLocation lastSoughtDimension,
+                              int lastSoughtX,
+                              int lastSoughtY, int lastSoughtZ,
+                              int discoveredRegionMask, int discoveredRuinMask,
+                              int discoveredRuinPositionMask, long[] ruinPositions,
+                              int discoveredBeaconCount, long[] beaconPositions,
+                              long[] arenaPositions, boolean arenaDiscovered,
+                              int arenaVictories, Map<String, String> archiveCustomNames) {
         unlocked = pathUnlocked;
         currentPath = current;
         currentPathRank = currentRank;
@@ -52,9 +72,21 @@ public final class StarRailPathClientState {
         objective2 = secondObjective;
         secondsRemaining = remaining;
         soughtPath = lastSoughtPath;
+        soughtDimension = lastSoughtDimension == null
+                ? Level.OVERWORLD.location() : lastSoughtDimension;
         soughtX = lastSoughtX;
         soughtY = lastSoughtY;
         soughtZ = lastSoughtZ;
+        pathRegionMask = discoveredRegionMask;
+        pathRuinMask = discoveredRuinMask;
+        pathRuinPositionMask = discoveredRuinPositionMask;
+        pathRuinPositions = ruinPositions.clone();
+        pathBeaconCount = discoveredBeaconCount;
+        pathBeaconPositions = beaconPositions.clone();
+        pathArenaPositions = arenaPositions.clone();
+        pathArenaDiscovered = arenaDiscovered;
+        pathArenaVictories = arenaVictories;
+        pathArchiveCustomNames = Map.copyOf(archiveCustomNames);
 
         Minecraft minecraft = Minecraft.getInstance();
         if (minecraft.player != null) {
@@ -125,5 +157,22 @@ public final class StarRailPathClientState {
 
     public static int getSoughtZ() {
         return soughtZ;
+    }
+
+    public static ResourceLocation getSoughtDimension() {
+        return soughtDimension;
+    }
+
+    public static int getPathRegionMask() { return pathRegionMask; }
+    public static int getPathRuinMask() { return pathRuinMask; }
+    public static int getPathRuinPositionMask() { return pathRuinPositionMask; }
+    public static long[] getPathRuinPositions() { return pathRuinPositions.clone(); }
+    public static int getPathBeaconCount() { return pathBeaconCount; }
+    public static long[] getPathBeaconPositions() { return pathBeaconPositions.clone(); }
+    public static long[] getPathArenaPositions() { return pathArenaPositions.clone(); }
+    public static boolean isPathArenaDiscovered() { return pathArenaDiscovered; }
+    public static int getPathArenaVictories() { return pathArenaVictories; }
+    public static String getArchiveCustomName(String recordKey) {
+        return pathArchiveCustomNames.getOrDefault(recordKey, "");
     }
 }

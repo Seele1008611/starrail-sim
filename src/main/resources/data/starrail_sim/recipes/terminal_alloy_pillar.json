@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "#",
+    "#"
+  ],
+  "key": {
+    "#": {
+      "item": "starrail_sim:terminal_alloy"
+    }
+  },
+  "result": {
+    "item": "starrail_sim:terminal_alloy_pillar",
+    "count": 2
+  }
+}

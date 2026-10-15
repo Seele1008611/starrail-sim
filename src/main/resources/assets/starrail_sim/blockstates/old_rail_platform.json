@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "starrail_sim:block/old_rail_platform"
+    }
+  }
+}

@@ -49,6 +49,7 @@ public final class RelicTrialDeviceBlock extends Block implements EntityBlock {
                 || !(level.getBlockEntity(pos) instanceof RelicTrialDeviceBlockEntity device)) {
             return InteractionResult.PASS;
         }
+        StarRailExplorationService.discoverArena(serverPlayer, pos);
         MutableComponent title = Component.translatable("block.starrail_sim.relic_trial_device");
         NetworkHooks.openScreen(serverPlayer,
                 new SimpleMenuProvider((id, inventory, ignored) ->

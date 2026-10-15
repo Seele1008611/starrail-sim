@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:smelting",
+  "category": "misc",
+  "ingredient": {
+    "item": "starrail_sim:weathered_terminal_alloy_ore"
+  },
+  "result": "starrail_sim:terminal_alloy_ingot",
+  "experience": 0.7,
+  "cookingtime": 200
+}

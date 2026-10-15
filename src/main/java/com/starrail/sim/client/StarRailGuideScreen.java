@@ -11,6 +11,7 @@ import com.starrail.sim.StarRailPathGrowth;
 import com.starrail.sim.StarRailPathProgress;
 import com.starrail.sim.StarRailPathRank;
 import com.starrail.sim.StarRailPathRules;
+import net.minecraft.core.BlockPos;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
@@ -18,6 +19,8 @@ import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.network.chat.Component;
 
 import java.util.EnumMap;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /** Read-only in-game guide for paths, practice, and rank breakthroughs. */
@@ -26,7 +29,8 @@ public final class StarRailGuideScreen extends StarRailStyledScreen {
         CURRENT,
         PATHS,
         RANKS,
-        HELP
+        HELP,
+        ARCHIVE
     }
 
     private static final StarRailPath[] PATHS = {
@@ -44,7 +48,7 @@ public final class StarRailGuideScreen extends StarRailStyledScreen {
     private final Map<StarRailPath, Button> pathButtons = new EnumMap<>(StarRailPath.class);
     private final Button[] navigationButtons = new Button[
             StarRailUiStyle.CHARACTER_NAVIGATION_KEYS.length];
-    private final Button[] tabButtons = new Button[4];
+    private final Button[] tabButtons = new Button[5];
     private Page page = Page.CURRENT;
     private StarRailPath selectedPath = StarRailPath.HUNT;
     private int panelLeft;
@@ -62,6 +66,8 @@ public final class StarRailGuideScreen extends StarRailStyledScreen {
     private boolean initialPathSelection = true;
     private Button openCurrentPath;
     private long sectionChangedAt;
+    private final List<ArchiveLocationHitbox> archiveLocationHitboxes = new ArrayList<>();
+    private record ArchiveLocationHitbox(int top, int bottom, String key) { }
 
     public StarRailGuideScreen() {
         super(Component.translatable("screen.starrail_sim.guide"));
@@ -120,12 +126,13 @@ public final class StarRailGuideScreen extends StarRailStyledScreen {
         initialPathSelection = false;
 
         int tabGap = 6;
-        int tabWidth = (contentRight - contentLeft - tabGap * 3) / 4;
+        int tabWidth = (contentRight - contentLeft - tabGap * 4) / 5;
         String[] tabKeys = {
                 "screen.starrail_sim.guide_current",
                 "screen.starrail_sim.guide_paths",
                 "screen.starrail_sim.guide_ranks",
-                "screen.starrail_sim.guide_help"
+                "screen.starrail_sim.guide_help",
+                "screen.starrail_sim.guide_archive"
         };
         for (int index = 0; index < tabButtons.length; index++) {
             int tabIndex = index;
@@ -203,11 +210,13 @@ public final class StarRailGuideScreen extends StarRailStyledScreen {
         double entering = Math.min(1, (System.nanoTime() - sectionChangedAt) / 180_000_000.0);
         graphics.pose().translate(0, -bodyScroll.position() + 5 * (1 - entering), 0);
         bodyBottom = contentTop;
+        archiveLocationHitboxes.clear();
         switch (page) {
             case CURRENT -> renderCurrent(graphics);
             case PATHS -> renderPaths(graphics);
             case RANKS -> renderRanks(graphics);
             case HELP -> renderHelp(graphics);
+            case ARCHIVE -> renderArchive(graphics);
         }
         graphics.pose().popPose();
         graphics.disableScissor();
@@ -219,6 +228,38 @@ public final class StarRailGuideScreen extends StarRailStyledScreen {
                     contentLeft, contentTop, StarRailUiStyle.GOLD_ACCENT);
         }
         super.renderPage(graphics, mouseX, mouseY, partialTick);
+    }
+
+    @Override
+    protected boolean logicalMouseClicked(double mouseX, double mouseY, int button) {
+        if (page == Page.ARCHIVE && button == 0
+                && mouseX >= contentLeft && mouseX <= contentRight
+                && mouseY >= contentTop && mouseY < panelBottom - 42) {
+            for (ArchiveLocationHitbox hitbox : archiveLocationHitboxes) {
+                if (mouseY >= hitbox.top() && mouseY <= hitbox.bottom()) {
+                    String currentName = StarRailPathClientState.getArchiveCustomName(hitbox.key());
+                    String defaultName = archiveDefaultName(hitbox.key());
+                    minecraft.setScreen(new StarRailArchiveRenameScreen(
+                            this, hitbox.key(), currentName, defaultName));
+                    return true;
+                }
+            }
+        }
+        return super.logicalMouseClicked(mouseX, mouseY, button);
+    }
+
+    private static String archiveDefaultName(String key) {
+        if (key.startsWith("ruin:")) {
+            String id = key.substring("ruin:".length());
+            if (id.equals("ordinary")) {
+                return Component.translatable("guide.starrail_sim.archive.ordinary_ruin").getString();
+            }
+            return Component.translatable("guide.starrail_sim.archive.ruin_name",
+                    StarRailPath.byId(id).getDisplayName()).getString();
+        }
+        return Component.translatable(key.startsWith("arena:")
+                ? "guide.starrail_sim.archive.arena_default_name"
+                : "guide.starrail_sim.archive.beacon_default_name").getString();
     }
 
     @Override
@@ -450,7 +491,9 @@ public final class StarRailGuideScreen extends StarRailStyledScreen {
                 {"relic_title", "relic_access", "relic_slots", "relic_trial", "relic_growth",
                         "relic_salvage", "relic_reroll", "relic_sets", "relic_presets"},
                 {"interface_title", "attributes", "attribute_sources", "practice_detail", "path_switch",
-                        "notifications", "light_cone", "display_settings"}
+                        "notifications", "light_cone", "display_settings"},
+                {"dimension_title", "dimension_entry", "dimension_regions", "dimension_ruins",
+                        "dimension_navigation", "dimension_materials"}
         };
         int y = contentTop, textWidth = contentRight - contentLeft - 10;
         for (String[] group : groups) {
@@ -462,6 +505,127 @@ public final class StarRailGuideScreen extends StarRailStyledScreen {
             }
             y += 14;
         }
+    }
+
+    private void renderArchive(GuiGraphics graphics) {
+        int y = contentTop;
+        int textWidth = contentRight - contentLeft - 10;
+        drawLine(graphics, Component.translatable("guide.starrail_sim.archive.title"),
+                contentLeft, y);
+        y += 24;
+        y = drawGuideBody(graphics, Component.translatable("guide.starrail_sim.archive.intro"),
+                contentLeft, y, textWidth, StarRailUiStyle.MUTED_COLOR) + 12;
+
+        drawLine(graphics, Component.translatable("guide.starrail_sim.archive.regions"),
+                contentLeft, y);
+        y += 24;
+        y = drawArchiveRecord(graphics, y, "biome.starrail_sim.starrail_wilderness",
+                (StarRailPathClientState.getPathRegionMask() & 1) != 0);
+        y = drawArchiveRecord(graphics, y, "biome.starrail_sim.echo_terminal",
+                (StarRailPathClientState.getPathRegionMask() & 2) != 0);
+        y = drawArchiveRecord(graphics, y,
+                Component.translatable("guide.starrail_sim.archive.beacons",
+                        StarRailPathClientState.getPathBeaconCount()), null);
+        for (long position : StarRailPathClientState.getPathBeaconPositions()) {
+            BlockPos beacon = BlockPos.of(position);
+            String key = "beacon:" + position;
+            Component name = archiveLocationName(key,
+                    Component.translatable("guide.starrail_sim.archive.beacon_default_name"));
+            y = drawArchiveLocation(graphics, y, key, "guide.starrail_sim.archive.beacon_position",
+                    name, beacon, textWidth) + 6;
+        }
+
+        y += 6;
+        int ruinMask = StarRailPathClientState.getPathRuinMask();
+        int ruinPositionMask = StarRailPathClientState.getPathRuinPositionMask();
+        long[] ruinPositions = StarRailPathClientState.getPathRuinPositions();
+        drawLine(graphics, Component.translatable("guide.starrail_sim.archive.ruins",
+                        Integer.bitCount(ruinMask)),
+                contentLeft, y);
+        y += 24;
+        y = drawArchiveRecord(graphics, y,
+                Component.translatable("guide.starrail_sim.archive.ordinary_ruin"),
+                (ruinMask & 1) != 0);
+        y = drawArchiveRuinPosition(graphics, y, "ordinary", 0, ruinMask, ruinPositionMask,
+                ruinPositions, Component.translatable("guide.starrail_sim.archive.ordinary_ruin"), textWidth);
+        for (int index = 0; index < PATHS.length; index++) {
+            boolean discovered = (ruinMask & (1 << (index + 1))) != 0;
+            y = drawArchiveRecord(graphics, y, PATHS[index].getDisplayName(),
+                    discovered);
+            y = drawArchiveRuinPosition(graphics, y, PATHS[index].getId(), index + 1,
+                    ruinMask, ruinPositionMask,
+                    ruinPositions, Component.literal(PATHS[index].getDisplayName()), textWidth);
+        }
+
+        y += 6;
+        drawLine(graphics, Component.translatable("guide.starrail_sim.archive.challenges"),
+                contentLeft, y);
+        y += 24;
+        y = drawArchiveRecord(graphics, y,
+                Component.translatable("guide.starrail_sim.archive.arena"),
+                StarRailPathClientState.isPathArenaDiscovered());
+        y = drawGuideBody(graphics, Component.translatable(
+                        "guide.starrail_sim.archive.victories",
+                        StarRailPathClientState.getPathArenaVictories()),
+                contentLeft, y, textWidth, StarRailUiStyle.MUTED_COLOR);
+        for (long position : StarRailPathClientState.getPathArenaPositions()) {
+            BlockPos arena = BlockPos.of(position);
+            String key = "arena:" + position;
+            Component name = archiveLocationName(key,
+                    Component.translatable("guide.starrail_sim.archive.arena_default_name"));
+            y = drawArchiveLocation(graphics, y, key, "guide.starrail_sim.archive.arena_position",
+                    name, arena, textWidth) + 6;
+        }
+    }
+
+    private int drawArchiveRuinPosition(GuiGraphics graphics, int y, String ruinId, int index,
+                                        int ruinMask, int positionMask, long[] positions,
+                                        Component ruinName, int textWidth) {
+        if ((ruinMask & (1 << index)) == 0) return y;
+        if ((positionMask & (1 << index)) == 0 || index >= positions.length) {
+            return drawGuideBody(graphics,
+                    Component.translatable("guide.starrail_sim.archive.location_missing"),
+                    contentLeft + 8, y, textWidth - 8, StarRailUiStyle.MUTED_COLOR) + 6;
+        }
+        BlockPos position = BlockPos.of(positions[index]);
+        String key = "ruin:" + ruinId;
+        Component defaultName = Component.translatable("guide.starrail_sim.archive.ruin_name", ruinName);
+        Component displayName = archiveLocationName(key, defaultName);
+        return drawArchiveLocation(graphics, y, key, "guide.starrail_sim.archive.ruin_position",
+                displayName, position, textWidth) + 6;
+    }
+
+    private Component archiveLocationName(String key, Component defaultName) {
+        String custom = StarRailPathClientState.getArchiveCustomName(key);
+        return custom.isBlank() ? defaultName : Component.literal(custom);
+    }
+
+    private int drawArchiveLocation(GuiGraphics graphics, int y, String key, String translationKey,
+                                    Component name, BlockPos position, int textWidth) {
+        int top = (int) Math.floor(y - bodyScroll.position());
+        int bottom = drawGuideBody(graphics, Component.translatable(translationKey, name,
+                        position.getX(), position.getY(), position.getZ()),
+                contentLeft, y, textWidth, StarRailUiStyle.CYAN_ACCENT);
+        archiveLocationHitboxes.add(new ArchiveLocationHitbox(top,
+                (int) Math.ceil(bottom - bodyScroll.position()), key));
+        return bottom;
+    }
+
+    private int drawArchiveRecord(GuiGraphics graphics, int y, String nameKey, boolean discovered) {
+        return drawArchiveRecord(graphics, y, Component.translatable(nameKey), discovered);
+    }
+
+    private int drawArchiveRecord(GuiGraphics graphics, int y, Component name, Boolean discovered) {
+        Component state = discovered == null
+                ? Component.empty()
+                : Component.translatable(discovered
+                        ? "guide.starrail_sim.archive.discovered"
+                        : "guide.starrail_sim.archive.undiscovered");
+        Component line = discovered == null
+                ? name
+                : Component.translatable("guide.starrail_sim.archive.record", name, state);
+        return drawGuideBody(graphics, line, contentLeft, y,
+                contentRight - contentLeft - 10, StarRailUiStyle.MUTED_COLOR) + 8;
     }
 
     private void drawLine(GuiGraphics graphics, Component text, int x, int y) {

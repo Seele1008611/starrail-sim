@@ -5,7 +5,7 @@ package com.starrail.sim;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.level.Level;
+import net.minecraft.resources.ResourceLocation;
 
 /** 服务端权威的命途遗迹寻迹入口。 */
 public final class StarRailPathSeekService {
@@ -42,15 +42,16 @@ public final class StarRailPathSeekService {
                     "message.starrail_sim.path_unavailable", path.getDisplayName()));
             return;
         }
-        if (player.level().dimension() != Level.OVERWORLD) {
-            StarRailPathMessages.sendQueued(player, path, Component.translatable(
-                    "message.starrail_sim.path_seek_overworld_only"));
+        // 同一命途已有未使用线索时，重新打开 UI 会再次显示原坐标，不会复制遗迹。
+        if (data.getSoughtPath() == path) {
+            sendTarget(player, path, data.getSoughtDimension(), data.getSoughtX(),
+                    data.getSoughtY(), data.getSoughtZ());
             return;
         }
 
-        // 同一命途已有未使用线索时，重新打开 UI 会再次显示原坐标，不会复制遗迹。
-        if (data.getSoughtPath() == path) {
-            sendTarget(player, path, data.getSoughtX(), data.getSoughtY(), data.getSoughtZ());
+        if (!player.serverLevel().dimension().equals(StarRailDimensionIds.THE_PATH)) {
+            StarRailPathMessages.sendQueued(player, path, Component.translatable(
+                    "message.starrail_sim.path_seek_the_path_only"));
             return;
         }
 
@@ -61,9 +62,7 @@ public final class StarRailPathSeekService {
             return;
         }
 
-        if (!(player.level() instanceof ServerLevel level)) {
-            return;
-        }
+        ServerLevel level = player.serverLevel();
 
         StarRailRuinSpacingData spacing = StarRailRuinSpacingData.get(level);
         int targetX = 0;
@@ -114,8 +113,10 @@ public final class StarRailPathSeekService {
         }
         player.getCapability(StarRailPathCapability.PATH_DATA).ifPresent(data -> {
             if (!data.getCurrentPath().isRealPath() && !data.getTrialPath().isRealPath()) {
-                data.setSoughtRuin(path, origin.getX(), origin.getY(), origin.getZ());
-                sendTarget(player, path, origin.getX(), origin.getY(), origin.getZ());
+                data.setSoughtRuin(path, StarRailDimensionIds.THE_PATH_LOCATION,
+                        origin.getX(), origin.getY(), origin.getZ());
+                sendTarget(player, path, StarRailDimensionIds.THE_PATH_LOCATION,
+                        origin.getX(), origin.getY(), origin.getZ());
                 StarRailPathService.sync(player);
             }
         });
@@ -134,8 +135,12 @@ public final class StarRailPathSeekService {
     }
 
     private static void sendTarget(ServerPlayer player, StarRailPath path,
-                                   int x, int y, int z) {
+                                   ResourceLocation dimension, int x, int y, int z) {
+        Component dimensionName = dimension.equals(StarRailDimensionIds.THE_PATH_LOCATION)
+                ? Component.translatable("dimension.starrail_sim.the_path")
+                : Component.literal(dimension.toString());
         player.sendSystemMessage(Component.translatable(
-                "message.starrail_sim.path_seek_target", path.getDisplayName(), x, y, z));
+                "message.starrail_sim.path_seek_target", path.getDisplayName(),
+                dimensionName, x, y, z));
     }
 }

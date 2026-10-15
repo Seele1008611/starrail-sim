@@ -99,6 +99,7 @@ public final class FloatingRuinPiece extends StructurePiece {
             level.setBlock(target, state, Block.UPDATE_CLIENTS | Block.UPDATE_KNOWN_SHAPE);
             // 原版结构生成阶段绑定战利品表，首次开箱生成奖励。
             if (state.is(Blocks.CHEST) && level.getBlockEntity(target) instanceof ChestBlockEntity chest) {
+                StarRailRuinGuardService.markArchiveChest(chest, blueprint.variantId());
                 if (blueprint.guarded()) {
                     StarRailRuinGuardService.markChest(chest, origin, blueprint.variantId());
                     StarRailRuinGuardService.queue(level.getLevel(), origin);

@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/template_wall_side_tall",
+  "textures": {
+    "wall": "starrail_sim:block/star_rail_cut_stone",
+    "particle": "starrail_sim:block/star_rail_cut_stone"
+  }
+}

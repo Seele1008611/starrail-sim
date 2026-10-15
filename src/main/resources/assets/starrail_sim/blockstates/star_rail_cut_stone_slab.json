@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "starrail_sim:block/star_rail_cut_stone_slab"
+    },
+    "type=double": {
+      "model": "starrail_sim:block/star_rail_cut_stone"
+    },
+    "type=top": {
+      "model": "starrail_sim:block/star_rail_cut_stone_slab_top"
+    }
+  }
+}

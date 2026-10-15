@@ -11,12 +11,12 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.item.ItemStack;
+import org.joml.Quaternionf;
 
 import java.util.Locale;
 
@@ -124,33 +124,55 @@ public final class StarRailCharacterScreen extends StarRailStyledScreen {
         }
 
         if (player != null) {
-            renderPlayerModel(graphics, player, mouseX, mouseY);
+            renderPlayerModel(graphics, player);
             renderPlayerSummary(graphics, player, path, mouseX, mouseY);
         }
 
         super.renderPage(graphics, mouseX, mouseY, partialTick);
     }
 
-    private void renderPlayerModel(GuiGraphics graphics, Player player, int mouseX, int mouseY) {
+    private void renderPlayerModel(GuiGraphics graphics, Player player) {
         int modelCenter = (contentLeft + rightLeft) / 2;
-        int modelBottom = panelBottom - (compactLayout ? 28 : 36);
-        int modelTop = panelTop + 78;
-        int scale = Math.min((modelBottom - modelTop) / 3,
+        int modelBottom = modelAreaBottom();
+        int modelTop = modelAreaTop();
+        int baseScale = Math.min((modelBottom - modelTop) / 3,
                 (rightLeft - contentLeft - 18) / 2);
         StarRailCosmicUi.platform(graphics, modelCenter, modelBottom - 12,
                 Math.max(100, Math.min(220, (rightLeft - contentLeft) * 2 / 3)), width);
         Pose originalPose = player.getPose();
         boolean originalShiftKeyDown = player.isShiftKeyDown();
+        float originalBodyYaw = player.yBodyRot;
+        float originalYaw = player.getYRot();
+        float originalPitch = player.getXRot();
+        float originalHeadYaw = player.yHeadRot;
+        float originalOldHeadYaw = player.yHeadRotO;
         player.setPose(Pose.STANDING);
         player.setShiftKeyDown(false);
+        float yaw = 180.0F;
         try {
-            InventoryScreen.renderEntityInInventoryFollowsMouse(graphics, modelCenter,
-                    modelBottom - 10, scale, 0.0F, 0.0F, player);
+            player.yBodyRot = yaw;
+            player.setYRot(yaw);
+            player.setXRot(0.0F);
+            player.yHeadRot = yaw;
+            player.yHeadRotO = yaw;
+            clip(graphics, contentLeft + 2, modelTop, rightLeft - 2, modelBottom);
+            InventoryScreen.renderEntityInInventory(graphics, modelCenter, modelBottom - 10,
+                    Math.max(1, baseScale), new Quaternionf().rotateZ((float) Math.PI),
+                    new Quaternionf(), player);
         } finally {
+            graphics.disableScissor();
             player.setPose(originalPose);
             player.setShiftKeyDown(originalShiftKeyDown);
+            player.yBodyRot = originalBodyYaw;
+            player.setYRot(originalYaw);
+            player.setXRot(originalPitch);
+            player.yHeadRot = originalHeadYaw;
+            player.yHeadRotO = originalOldHeadYaw;
         }
     }
+
+    private int modelAreaTop() { return panelTop + 78; }
+    private int modelAreaBottom() { return panelBottom - (compactLayout ? 28 : 36); }
 
     private void renderPlayerSummary(GuiGraphics graphics, Player player, StarRailPath path, int mouseX, int mouseY) {
         int x = rightLeft;

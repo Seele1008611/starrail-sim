@@ -79,6 +79,7 @@ public final class StarRailSimMod {
 
     static {
         StarRailRuinContent.registerOtherPaths();
+        StarRailWorldBlocks.register();
     }
 
     // 以下按命途注册自定义光锥；注册 ID 必须与模型、语言文件和战利品表一致。
@@ -371,6 +372,7 @@ public final class StarRailSimMod {
                             output.accept(StarRailTraceMaterials.get(path));
                         }
                         output.accept(RELIC_TRIAL_DEVICE_ITEM.get());
+                        StarRailWorldBlocks.addCreativeItems(output);
                         StarRailRelicItems.addCreativeItems(output);
                         output.accept(IN_THE_NIGHT.get());
                         output.accept(I_WILL_HUNT.get());

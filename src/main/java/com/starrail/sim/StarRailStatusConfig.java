@@ -12,8 +12,6 @@ public final class StarRailStatusConfig {
     public static final ForgeConfigSpec.DoubleValue SCALE, DEFENSE_CAP, DEFENSE_CURVE, TOUGHNESS_WEIGHT;
     public static final ForgeConfigSpec.DoubleValue ARENA_MAX_MOB_HEALTH, ARENA_MAX_MOB_WIDTH,
             ARENA_MAX_MOB_HEIGHT;
-    public enum FontScope { ORIGINAL, MOD, GLOBAL }
-    public static final ForgeConfigSpec.EnumValue<FontScope> FONT_SCOPE;
     public static final ForgeConfigSpec.BooleanValue SMOOTH_UI, REDUCED_MOTION;
     static {
         var b = new ForgeConfigSpec.Builder();
@@ -48,8 +46,6 @@ public final class StarRailStatusConfig {
                 .define("exactNumbers", false);
         SCALE = b.defineInRange("scale", 1.0, .75, 1.0);
         b.push("display");
-        FONT_SCOPE = b.comment("ORIGINAL: vanilla font; MOD: this mod's screens and HUD; GLOBAL: default game font. Special fonts and private-use glyphs keep their providers.")
-                .defineEnum("fontScope", FontScope.MOD);
         SMOOTH_UI = b.define("smoothUi", true);
         REDUCED_MOTION = b.comment("Reduce interface idle and interaction animation; does not change combat effects.")
                 .define("reducedMotion", false);

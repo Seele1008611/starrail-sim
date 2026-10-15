@@ -6,8 +6,11 @@ package com.starrail.sim.client;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import com.starrail.sim.StarRailSimMod;
+import com.starrail.sim.StarRailWorldBlocks;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -36,11 +39,17 @@ public final class StarRailClient {
     @SubscribeEvent
     public static void registerShaders(net.minecraftforge.client.event.RegisterShadersEvent event) {
         StarRailSmoothUi.register(event);
+        StarRailTrainMesh.registerShader(event);
     }
 
     @SubscribeEvent
     public static void registerReloadListeners(net.minecraftforge.client.event.RegisterClientReloadListenersEvent event) {
-        event.registerReloadListener(StarRailSharpText.INSTANCE);
+        event.registerReloadListener(StarRailTrainMesh.INSTANCE);
+    }
+
+    @SubscribeEvent
+    public static void registerTrainRenderer(net.minecraftforge.client.event.EntityRenderersEvent.RegisterRenderers event) {
+        event.registerBlockEntityRenderer(StarRailWorldBlocks.STAR_RAIL_TRAIN_ENTITY.get(), StarRailTrainRenderer::new);
     }
 
     @SubscribeEvent
@@ -51,7 +60,12 @@ public final class StarRailClient {
 
     @SubscribeEvent
     public static void registerMenus(FMLClientSetupEvent event) {
-        event.enqueueWork(() -> MenuScreens.register(
-                StarRailSimMod.RELIC_TRIAL_MENU.get(), RelicTrialScreen::new));
+        event.enqueueWork(() -> {
+            MenuScreens.register(StarRailSimMod.RELIC_TRIAL_MENU.get(), RelicTrialScreen::new);
+            ItemBlockRenderTypes.setRenderLayer(StarRailWorldBlocks.LUMINOUS_GLASS.get(),
+                    RenderType.translucent());
+            ItemBlockRenderTypes.setRenderLayer(StarRailWorldBlocks.TERMINAL_HULL_GLASS.get(),
+                    RenderType.translucent());
+        });
     }
 }

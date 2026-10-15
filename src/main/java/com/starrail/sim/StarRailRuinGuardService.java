@@ -41,6 +41,7 @@ public final class StarRailRuinGuardService extends SavedData {
     private static final String NAME = "starrail_sim_ruin_guards";
     private static final String ORIGIN_TAG = "StarRailGuardOrigin";
     private static final String VARIANT_TAG = "StarRailGuardVariant";
+    private static final String ARCHIVE_VARIANT_TAG = "StarRailArchiveRuinVariant";
     private static final long SUMMON_COOLDOWN_TICKS = 20L * 30L;
     // 世界生成可能在工作线程执行，只排队；SavedData 和实体操作留给服务器主线程。
     private static final Map<ServerLevel, Set<BlockPos>> QUEUED = new ConcurrentHashMap<>();
@@ -115,7 +116,20 @@ public final class StarRailRuinGuardService extends SavedData {
     public static void markChest(ChestBlockEntity chest, BlockPos origin, String variantId) {
         chest.getPersistentData().putLong(ORIGIN_TAG, origin.asLong());
         chest.getPersistentData().putString(VARIANT_TAG, variantId);
+        chest.getPersistentData().putString(ARCHIVE_VARIANT_TAG, variantId);
         chest.setChanged();
+    }
+
+    /** Keep ruin identity after the loot table has been consumed by its first opening. */
+    public static void markArchiveChest(ChestBlockEntity chest, String variantId) {
+        chest.getPersistentData().putString(ARCHIVE_VARIANT_TAG, variantId);
+        chest.setChanged();
+    }
+
+    public static String getArchiveRuinId(ChestBlockEntity chest) {
+        CompoundTag data = chest.getPersistentData();
+        String variant = data.getString(ARCHIVE_VARIANT_TAG);
+        return variant.isBlank() ? data.getString(VARIANT_TAG) : variant;
     }
 
     public static void queue(ServerLevel level, BlockPos origin) {
