@@ -2,7 +2,7 @@
 
 本日志记录模组版本进度。GitHub 仓库中的第一版为 `1.0.0`，`1.1.0` 于 2026-10-01 发布。
 
-## 1.17.0 — 验收通过候选版（2026-10-15）
+## 1.17.0 — 正式版（2026-10-15）
 
 ### 新增与调整
 
@@ -19,8 +19,9 @@
 
 - 用户在全新单人世界反馈普通遗迹修复后可自然定位，Xaero 导致的卡死也已确认修复；此前其他已测玩法未报告明显问题。
 - 旧存档兼容按用户要求不列为验收阻断项；多人服务器与多种子抽样未单独确认。
-- 候选包 `build/libs/starrail_sim-1.17.0.jar`：19,132,849 字节；SHA-256：`196e6e9412c61ea1ebf344cc328f92f1d35f62be4db2dd49c4e547774383348b`，校验文件为同目录 `.sha256`。
+- 发行包 `build/libs/starrail_sim-1.17.0.jar`：19,132,849 字节；SHA-256：`196e6e9412c61ea1ebf344cc328f92f1d35f62be4db2dd49c4e547774383348b`，校验文件为同目录 `.sha256`。
 - 用户已确认候选中的玩家模型全身可见且固定正面显示。多人服务器和多种子采样未单独确认。
+- 发行 JAR：[starrail_sim-1.17.0.jar](https://github.com/Seele1008611/starrail-sim/releases/download/v1.17.0/starrail_sim-1.17.0.jar)；[SHA-256 校验文件](https://github.com/Seele1008611/starrail-sim/releases/download/v1.17.0/starrail_sim-1.17.0.jar.sha256)；[GitHub Release](https://github.com/Seele1008611/starrail-sim/releases/tag/v1.17.0)。
 
 ## 1.15.0 — 正式版（2026-10-14）
 
