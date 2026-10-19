@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "starrail_sim:block/path_ancientdream_ore"
+  }
+}

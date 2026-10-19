@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "SS",
+    "SS"
+  ],
+  "key": {
+    "S": {
+      "item": "starrail_sim:path_smooth_stone"
+    }
+  },
+  "result": {
+    "item": "starrail_sim:path_stone_bricks",
+    "count": 4
+  }
+}

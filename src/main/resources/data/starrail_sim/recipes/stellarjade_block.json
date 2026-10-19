@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "AAA",
+    "AAA",
+    "AAA"
+  ],
+  "key": {
+    "A": {
+      "item": "starrail_sim:path_stellarjade_ingot"
+    }
+  },
+  "result": {
+    "item": "starrail_sim:path_stellarjade_block",
+    "count": 1
+  }
+}

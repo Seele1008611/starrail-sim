@@ -1,7 +1,0 @@
-{
-  "parent": "minecraft:block/template_wall_side",
-  "textures": {
-    "wall": "starrail_sim:block/star_dust_bricks",
-    "particle": "starrail_sim:block/star_dust_bricks"
-  }
-}

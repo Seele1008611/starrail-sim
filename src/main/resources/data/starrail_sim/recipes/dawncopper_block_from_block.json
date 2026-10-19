@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "starrail_sim:path_dawncopper_block"
+    }
+  ],
+  "result": {
+    "item": "starrail_sim:path_dawncopper_ingot",
+    "count": 9
+  }
+}

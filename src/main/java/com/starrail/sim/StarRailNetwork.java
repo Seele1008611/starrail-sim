@@ -15,7 +15,7 @@ import net.minecraftforge.network.simple.SimpleChannel;
 /** Network channel for server-authoritative combat feedback. */
 public final class StarRailNetwork {
     // 数据包字段与注册顺序变更时，客户端和服务端必须同步更新协议版本。
-    private static final String PROTOCOL_VERSION = "16";
+    private static final String PROTOCOL_VERSION = "17";
 
     public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(
             new ResourceLocation(StarRailSimMod.MOD_ID, "main"),
@@ -96,6 +96,14 @@ public final class StarRailNetwork {
         CHANNEL.registerMessage(messageId++, LightConeEquipPacket.class,
                 LightConeEquipPacket::encode, LightConeEquipPacket::decode, LightConeEquipPacket::handle,
                 java.util.Optional.of(net.minecraftforge.network.NetworkDirection.PLAY_TO_SERVER));
+        CHANNEL.registerMessage(messageId++, StarRailPassSelectionPacket.class,
+                StarRailPassSelectionPacket::encode, StarRailPassSelectionPacket::decode,
+                StarRailPassSelectionPacket::handle,
+                java.util.Optional.of(net.minecraftforge.network.NetworkDirection.PLAY_TO_SERVER));
+        CHANNEL.registerMessage(messageId++, OpenLightConePassPickerPacket.class,
+                OpenLightConePassPickerPacket::encode, OpenLightConePassPickerPacket::decode,
+                OpenLightConePassPickerPacket::handle,
+                java.util.Optional.of(net.minecraftforge.network.NetworkDirection.PLAY_TO_CLIENT));
     }
 
     public static void sendDamageNumber(ServerPlayer player, LivingEntity target,

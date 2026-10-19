@@ -1,7 +1,0 @@
-{
-  "parent": "minecraft:block/wall_inventory",
-  "textures": {
-    "wall": "starrail_sim:block/terminal_alloy_bricks",
-    "particle": "starrail_sim:block/terminal_alloy_bricks"
-  }
-}

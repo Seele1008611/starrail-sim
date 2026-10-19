@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "starrail_sim:item/path_ancientdream_sword"
+  }
+}

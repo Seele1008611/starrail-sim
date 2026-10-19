@@ -493,7 +493,7 @@ public final class StarRailGuideScreen extends StarRailStyledScreen {
                 {"interface_title", "attributes", "attribute_sources", "practice_detail", "path_switch",
                         "notifications", "light_cone", "display_settings"},
                 {"dimension_title", "dimension_entry", "dimension_regions", "dimension_ruins",
-                        "dimension_navigation", "dimension_materials"}
+                        "dimension_navigation", "dimension_materials", "dimension_survival"}
         };
         int y = contentTop, textWidth = contentRight - contentLeft - 10;
         for (String[] group : groups) {
@@ -519,9 +519,9 @@ public final class StarRailGuideScreen extends StarRailStyledScreen {
         drawLine(graphics, Component.translatable("guide.starrail_sim.archive.regions"),
                 contentLeft, y);
         y += 24;
-        y = drawArchiveRecord(graphics, y, "biome.starrail_sim.starrail_wilderness",
+        y = drawArchiveRecord(graphics, y, "biome.starrail_sim.sunmeadow",
                 (StarRailPathClientState.getPathRegionMask() & 1) != 0);
-        y = drawArchiveRecord(graphics, y, "biome.starrail_sim.echo_terminal",
+        y = drawArchiveRecord(graphics, y, "biome.starrail_sim.glimmerwood",
                 (StarRailPathClientState.getPathRegionMask() & 2) != 0);
         y = drawArchiveRecord(graphics, y,
                 Component.translatable("guide.starrail_sim.archive.beacons",

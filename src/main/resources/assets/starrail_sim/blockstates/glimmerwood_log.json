@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "starrail_sim:block/glimmerwood_log_horizontal",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y": {
+      "model": "starrail_sim:block/glimmerwood_log"
+    },
+    "axis=z": {
+      "model": "starrail_sim:block/glimmerwood_log_horizontal",
+      "x": 90
+    }
+  }
+}

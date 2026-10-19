@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/slab_top",
+  "textures": {
+    "bottom": "starrail_sim:block/glimmerwood_planks",
+    "side": "starrail_sim:block/glimmerwood_planks",
+    "top": "starrail_sim:block/glimmerwood_planks"
+  }
+}

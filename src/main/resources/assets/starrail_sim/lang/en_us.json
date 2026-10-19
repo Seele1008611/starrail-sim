@@ -630,7 +630,7 @@
 
   ,"guide.starrail_sim.help.relic_slots": "The outer ring has Head, Hands, Body and Feet slots. The inner ring has Planar Sphere and Link Rope slots. Relic details and tooltips show the set, rarity, main stat and substats."
 
-  ,"guide.starrail_sim.help.relic_trial": "Choose an outer- or inner-ring set at the arena's central device. Defeat 3 waves of 4 enemies to receive 1–3 random relics from that set. Reward count, rarity, and stats are locked when the battle starts; rarity follows the owner's Path rank: rank 1 can drop 2–3 stars, ranks 2–4 improve gradually, and rank 5 or higher guarantees 5 stars. Trial arenas and ordinary floating ruins naturally generate in The Path's Starrail Wilderness and Echo Terminal regions; arenas are more common for quick relic farming. Arena generation does not require flat terrain: it clears the footprint and builds foundations beneath low areas. Only vanilla hostile mobs are selected; creepers, vexes, phantoms, and vanilla bosses are excluded. Mobs added by other mods are never summoned. Operators can locate one with /starrail arena locate [dimension]; use /starrail arena pool [all|normal|ranged] to list candidates or /starrail arena inspect namespace:entity_id to see why an entity was included or excluded. The arena_allowed, arena_excluded, and arena_ranged tags can adjust risk filtering, exclusions, and ranged classification for vanilla hostile mobs only; they cannot add modded mobs. To build the 25×25 test arena manually, stand at a clear site and run /starrail arena build [dimension]."
+  ,"guide.starrail_sim.help.relic_trial": "Choose an outer- or inner-ring set at the arena's central device. Defeat 3 waves of 4 enemies to receive 1–3 random relics from that set. Reward count, rarity, and stats are locked when the battle starts; rarity follows the owner's Path rank: rank 1 can drop 2–3 stars, ranks 2–4 improve gradually, and rank 5 or higher guarantees 5 stars. Ordinary floating ruins and Relic Duel Arenas naturally generate across The Path's Clear Sky Meadow and Firefly Grove. Arena generation does not require flat terrain: it clears the footprint and builds foundations beneath low areas. Only vanilla hostile mobs are selected; creepers, vexes, phantoms, and vanilla bosses are excluded. Mobs added by other mods are never summoned. Operators can locate one with /starrail arena locate [dimension]; use /starrail arena pool [all|normal|ranged] to list candidates or /starrail arena inspect namespace:entity_id to see why an entity was included or excluded. The arena_allowed, arena_excluded, and arena_ranged tags can adjust risk filtering, exclusions, and ranged classification for vanilla hostile mobs only; they cannot add modded mobs. To build the 25×25 test arena manually, stand at a clear site and run /starrail arena build [dimension]."
 
   ,"guide.starrail_sim.help.relic_growth": "A substat is added or enhanced every 3 enhancement levels. Maximum levels are +6 for 2-star, +9 for 3-star, +12 for 4-star and +15 for 5-star relics. Enhancement consumes Lost Crystals; the page previews the level and stat changes."
 
@@ -670,7 +670,10 @@
 
   ,"item.starrail_sim.star_rail_logo": "Star Rail Sim Emblem"
 
-  ,"itemGroup.starrail_sim.main": "Star Rail Sim"
+  ,"itemGroup.starrail_sim.materials": "Star Rail Sim: Blocks & Materials"
+  ,"itemGroup.starrail_sim.equipment": "Star Rail Sim: Tools & Equipment"
+  ,"itemGroup.starrail_sim.paths": "Star Rail Sim: Path-related"
+  ,"itemGroup.starrail_sim.food": "Star Rail Sim: Food & Seeds"
 
   ,"tooltip.starrail_sim.in_the_night.superimposition": "Superimposition: S%s"
 
@@ -5174,83 +5177,48 @@
   ,"screen.starrail_sim.light_cone_colors_for_tomorrow_special": "Special Effect “Brushstroke” (S%s; Path of Elation only)"
   ,"screen.starrail_sim.light_cone_summertime_to_the_waves_special": "Special Effect “Wave Rider” (S%s; Path of Elation only)",
 
-  "block.starrail_sim.starfall_rock": "Starfall Rock",
 
-  "block.starrail_sim.star_dust_gravel": "Stardust Gravel",
 
-  "block.starrail_sim.star_rail_sandstone": "Starrail Sandstone",
 
-  "block.starrail_sim.terminal_floor_panel": "Terminal Floor Panel",
 
-  "block.starrail_sim.terminal_warning_tile": "Platform Warning Tile",
 
-  "block.starrail_sim.terminal_hull_glass": "Terminal Hull Glass",
 
-  "block.starrail_sim.star_vein_rock": "Starvein Rock",
 
-  "block.starrail_sim.star_vein_crystal_bricks": "Starvein Crystal Bricks",
 
-  "block.starrail_sim.terminal_grate": "Terminal Grating",
 
-  "block.starrail_sim.terminal_cable_trough": "Terminal Cable Trough",
 
-  "block.starrail_sim.weathered_terminal_alloy": "Weathered Terminal Alloy",
 
-  "block.starrail_sim.terminal_light_strip": "Terminal Light Strip",
 
-  "block.starrail_sim.star_dust_stone": "Stardust Stone",
 
-  "block.starrail_sim.star_dust_soil": "Stardust Soil",
 
-  "block.starrail_sim.star_rail_sand": "Starrail Sand",
 
-  "block.starrail_sim.star_vein_crystal": "Starvein Crystal Ore",
 
-  "block.starrail_sim.star_rail_cut_stone": "Cut Starrail Stone",
 
-  "block.starrail_sim.star_dust_bricks": "Stardust Bricks",
 
-  "block.starrail_sim.terminal_alloy": "Terminal Alloy",
 
-  "block.starrail_sim.terminal_alloy_bricks": "Terminal Alloy Bricks",
 
-  "block.starrail_sim.terminal_alloy_pillar": "Terminal Alloy Pillar",
 
-  "block.starrail_sim.old_rail_platform": "Old Rail Platform",
 
-  "block.starrail_sim.broken_rail": "Broken Rail Segment",
 
-  "block.starrail_sim.luminous_glass": "Luminous Glass",
 
-  "block.starrail_sim.terminal_signal_lamp": "Terminal Signal Lamp",
 
   "block.starrail_sim.star_rail_beacon": "Starrail Beacon",
 
   "block.starrail_sim.star_rail_train": "Astral Express",
 
-  "block.starrail_sim.star_dust_bricks_stairs": "Stardust Brick Stairs",
 
-  "block.starrail_sim.star_dust_bricks_slab": "Stardust Brick Slab",
 
-  "block.starrail_sim.star_dust_bricks_wall": "Stardust Brick Wall",
 
-  "block.starrail_sim.star_rail_cut_stone_stairs": "Cut Starrail Stone Stairs",
 
-  "block.starrail_sim.star_rail_cut_stone_slab": "Cut Starrail Stone Slab",
 
-  "block.starrail_sim.star_rail_cut_stone_wall": "Cut Starrail Stone Wall",
 
-  "block.starrail_sim.terminal_alloy_bricks_stairs": "Terminal Alloy Brick Stairs",
 
-  "block.starrail_sim.terminal_alloy_bricks_slab": "Terminal Alloy Brick Slab",
 
-  "block.starrail_sim.terminal_alloy_bricks_wall": "Terminal Alloy Brick Wall",
 
-  "item.starrail_sim.star_rail_fragment": "Starrail Fragment",
 
-  "biome.starrail_sim.starrail_wilderness": "Starrail Expanse",
+  "biome.starrail_sim.sunmeadow": "Clear Sky Meadow",
 
-  "biome.starrail_sim.echo_terminal": "Echo Terminal",
+  "biome.starrail_sim.glimmerwood": "Firefly Grove",
 
   "dimension.starrail_sim.the_path": "The Path",
   "dimension.starrail_sim.overworld": "Overworld",
@@ -5261,20 +5229,19 @@
   "message.starrail_sim.overworld_biomes_progress": "Vanilla Overworld biome exploration: %s/%s",
   "message.starrail_sim.overworld_biomes_complete": "You have explored all 53 vanilla Overworld biomes. The train will be delivered when your inventory has room; the Path clue unlocks when you receive it.",
   "message.starrail_sim.train_reward_received": "Astral Express received! Right-click the train to enter The Path.",
-  "block.starrail_sim.weathered_terminal_alloy_ore": "Weathered Terminal Alloy Ore",
-  "item.starrail_sim.terminal_alloy_ingot": "Terminal Alloy Ingot",
   "guide.starrail_sim.help.dimension_title": "Exploring The Path",
-  "guide.starrail_sim.help.dimension_entry": "Entry and return: Explore all 53 vanilla Overworld biomes to receive the Astral Express; receiving it unlocks the Path clue. Place the train and right-click any part to enter The Path. Right-click the Starrail Beacon at the relay platform or run /starrail dimension return to return to your saved origin.",
-  "guide.starrail_sim.help.dimension_regions": "Regions: The Starrail Expanse is open terrain of star-dust soil, starrail sand, stardust gravel and meteorite outcrops. Echo Terminal has an old rail-platform surface scattered with floor panels, warning tiles, grates and broken rail remnants.",
+  "guide.starrail_sim.help.dimension_entry": "Entry and return: Explore all 53 vanilla Overworld biomes to receive the Astral Express; receiving it unlocks the Path clue. Place the train and right-click any part to enter The Path. Right-click the Return Beacon at the relay platform or run /starrail dimension return to return to your saved origin.",
+  "guide.starrail_sim.help.dimension_regions": "Regions: Clear Sky Meadow has open grassland, gentle slopes, river valleys and sparse groves. Firefly Grove has bright woodland, lakeshores and clearings. The surface uses grass and soil, humus, waterside sediment and local slope materials; underground layers transition from Path Stone to Deep Path Stone. River gravel belongs around waterways and low ground, with celestial details used sparingly.",
   "guide.starrail_sim.help.dimension_ruins": "Ruins and challenges: Ordinary floating ruins and relic dueling arenas generate naturally in The Path. Start path seeking from the Path screen while inside the dimension; it records a target location. Relic arenas use three waves and the selected set, then award 1–3 random relics on victory.",
-  "guide.starrail_sim.help.dimension_navigation": "Navigation: Entering a region records its discovery. Right-click a Starrail Beacon to save its coordinates in your Travel Log; the relay beacon returns you to your saved origin. Operators can use /starrail dimension locate relay for the platform, /starrail dimension locate region starrail_wilderness or echo_terminal for a region, and ordinary_ruin, relic_trial_arena, or path_ruin for those ruins and challenges.",
-  "guide.starrail_sim.help.dimension_materials": "Materials: Mine starvein crystal clusters for Starrail Fragments used to craft starvein crystal bricks and beacons. Weathered Terminal Alloy Ore generates below Echo Terminal and smelts or blasts into Terminal Alloy Ingots. Nine ingots craft one Terminal Alloy block, and the block can be unpacked back into nine ingots. Weathered Terminal Alloy is a decorative block crafted from a Terminal Alloy block and Stardust Gravel.",
-  "screen.starrail_sim.guide_archive": "Travel Log",
+  "guide.starrail_sim.help.dimension_navigation": "Navigation: Entering a region records its discovery. Right-click a beacon to save its coordinates in the Travel Archive and give it a custom name; breaking a recorded beacon removes its coordinates. The Return Beacon at the relay platform takes you back to your saved origin. Operators can use /starrail dimension locate relay for the platform, and ordinary_ruin, relic_trial_arena, or path_ruin for ruins and challenges. Use /starrail dimension locate ore followed by starcoal, dawncopper, suniron, dawn_gold, resonance, memory, starmarrow, stellarjade, or ancientdream to search for a mineral in nearby generated chunks.",
+  "guide.starrail_sim.help.dimension_materials": "Shared ores: Both regions generate all nine local minerals. Starcoal, Dawn Copper, Suniron and Memory Crystal mainly occur in shallow to middle Path Stone; Dawn Gold, Resonance Crystal, Starmarrow, Stellarjade and Ancient Dream mainly occur in Deep Path Stone. Y ranges: Starcoal 0–96, Dawn Copper -16–112, Suniron -48–96, Memory Crystal -32–48, Dawn Gold -48–24, Resonance Crystal -56–16, Starmarrow -48–16, Stellarjade -56–8, Ancient Dream -60–-32. Higher-tier ores are deeper. Ancient Dream is somewhat less common than Stellarjade, but not dramatically so. Rare Dawn Copper outcrops only try to generate on naturally exposed Path Stone. Operators can use /starrail dimension locate ore <mineral> to search nearby generated chunks; it does not generate new chunks.",
+  "guide.starrail_sim.help.dimension_survival": "Survival and progression: Sunmeadow and Firefly trees can be regrown from saplings; their logs make planks and sticks or renewable charcoal. Starcoal works directly as fuel: one burns for 1,600 ticks, and a block crafted from nine burns for 16,000 ticks. Morning Berry Bushes regrow after harvest and can be propagated with berries; Forestbeans grow on farmland and yield pods that can be cooked. The Path uses vanilla water, farmland and crop rules. Clear Sky Grass, Clear Sky Dirt, ordinary dirt and humus can be hoed into farmland or shoveled into dirt paths; coarse slope soil first becomes dirt when hoed. Gear progresses from Suniron to Starmarrow, then smithing templates upgrade it to Netherite-tier Stellarjade and the higher Ancient Dream tier.",
+  "screen.starrail_sim.guide_archive": "Travel Archive",
   "screen.starrail_sim.archive_rename": "Custom Coordinate Name",
-  "guide.starrail_sim.archive.title": "Starrail Travel Log",
-  "guide.starrail_sim.archive.intro": "This page records your personal exploration in The Path. Regions, first ruin locations, beacon and arena coordinates, and challenge victories are saved with your player data. Click any coordinate row to give it a custom name.",
+  "guide.starrail_sim.archive.title": "Travel Archive",
+  "guide.starrail_sim.archive.intro": "This page records your regions, first ruin discoveries, beacon and Relic Duel Arena coordinates, and challenge victories in The Path. Click a coordinate row to give it a custom name. Breaking a recorded beacon removes its coordinates. The Return Beacon at the relay platform takes you back to your saved origin.",
   "guide.starrail_sim.archive.regions": "Regions",
-  "guide.starrail_sim.archive.beacons": "Starrail beacons recorded: %s",
+  "guide.starrail_sim.archive.beacons": "Beacon locations recorded: %s",
   "guide.starrail_sim.archive.beacon_default_name": "Starrail Beacon",
   "guide.starrail_sim.archive.beacon_position": "%s at (%s, %s, %s)",
   "guide.starrail_sim.archive.ruins": "Ruins discovered (%s/10)",
@@ -5299,10 +5266,150 @@
   "message.starrail_sim.archive.name_cleared": "Restored the default coordinate name.",
   "message.starrail_sim.archive.region_found": "Region recorded: %s.",
   "message.starrail_sim.archive.beacon_found": "Starrail beacon recorded at (%s, %s, %s). Total: %s.",
-  "message.starrail_sim.archive.beacon_location": "Recorded beacon at (%s, %s, %s). Total: %s.",
+  "message.starrail_sim.archive.beacon_location": "This beacon is already in your archive at (%s, %s, %s). Total: %s.",
   "message.starrail_sim.archive.arena_found": "Relic Duel Arena added to your travel log at (%s, %s, %s).",
   "message.starrail_sim.archive.ruin_found": "Ruin recorded: %s at (%s, %s, %s).",
   "message.starrail_sim.dimension.relay_location": "The Path relay platform is at (%s, %s, %s). Click to teleport there.",
   "message.starrail_sim.dimension.path_ruin_location": "Path ruin: %s in %s at (%s, %s, %s). Click to teleport there.",
-  "message.starrail_sim.dimension.no_path_ruin": "You do not have an assigned Path ruin."
+  "message.starrail_sim.dimension.no_path_ruin": "You do not have an assigned Path ruin.",
+  "block.starrail_sim.path_grass_block": "Path Grass Block",
+  "block.starrail_sim.path_dirt": "Path Dirt",
+  "block.starrail_sim.path_forest_humus": "Forest Humus",
+  "block.starrail_sim.path_coarse_soil": "Coarse Hillside Soil",
+  "block.starrail_sim.path_river_sand": "Clearwater River Sand",
+  "block.starrail_sim.path_river_sandstone": "Clearwater Sandstone",
+  "block.starrail_sim.path_river_gravel": "Riverbed Gravel",
+  "block.starrail_sim.path_stone": "Skystone",
+  "block.starrail_sim.path_cobblestone": "Skystone Cobblestone",
+  "block.starrail_sim.path_smooth_stone": "Smooth Skystone",
+  "block.starrail_sim.path_deep_stone": "Deep Skystone",
+  "block.starrail_sim.path_deep_cobblestone": "Deep Skystone Cobblestone",
+  "block.starrail_sim.path_smooth_deep_stone": "Smooth Deep Skystone",
+  "block.starrail_sim.path_stone_bricks": "Skystone Bricks",
+  "block.starrail_sim.path_deep_stone_bricks": "Deep Skystone Bricks",
+  "item.starrail_sim.path_starcoal": "Starcoal",
+  "item.starrail_sim.path_raw_dawncopper": "Raw Dawncopper",
+  "item.starrail_sim.path_dawncopper_ingot": "Dawncopper Ingot",
+  "item.starrail_sim.path_raw_suniron": "Raw Suniron",
+  "item.starrail_sim.path_suniron_ingot": "Suniron Ingot",
+  "item.starrail_sim.path_suniron_nugget": "Suniron Nugget",
+  "item.starrail_sim.path_raw_dawn_gold": "Raw Dawngold",
+  "item.starrail_sim.path_dawn_gold_ingot": "Dawngold Ingot",
+  "item.starrail_sim.path_dawn_gold_nugget": "Dawngold Nugget",
+  "item.starrail_sim.path_resonance_crystal": "Resonance Crystal",
+  "item.starrail_sim.path_memory_crystal": "Memory Crystal",
+  "item.starrail_sim.path_starmarrow": "Starmarrow",
+  "item.starrail_sim.path_raw_stellarjade": "Raw Stellarjade",
+  "item.starrail_sim.path_stellarjade_ingot": "Stellarjade Ingot",
+  "item.starrail_sim.path_raw_ancientdream": "Raw Ancient Dream",
+  "item.starrail_sim.path_ancientdream_ingot": "Ancient Dream Ingot",
+  "block.starrail_sim.path_starcoal_block": "Starcoal Block",
+  "block.starrail_sim.path_dawncopper_block": "Dawncopper Block",
+  "block.starrail_sim.path_suniron_block": "Suniron Block",
+  "block.starrail_sim.path_dawn_gold_block": "Dawngold Block",
+  "block.starrail_sim.path_resonance_block": "Resonance Crystal Block",
+  "block.starrail_sim.path_memory_block": "Memory Crystal Block",
+  "block.starrail_sim.path_starmarrow_block": "Starmarrow Block",
+  "block.starrail_sim.path_stellarjade_block": "Stellarjade Block",
+  "block.starrail_sim.path_ancientdream_block": "Ancient Dream Block",
+  "block.starrail_sim.path_starcoal_ore": "Starcoal Ore",
+  "block.starrail_sim.path_dawncopper_ore": "Dawncopper Ore",
+  "block.starrail_sim.path_suniron_ore": "Suniron Ore",
+  "block.starrail_sim.path_dawn_gold_ore": "Dawngold Ore",
+  "block.starrail_sim.path_resonance_ore": "Resonance Crystal Ore",
+  "block.starrail_sim.path_memory_ore": "Memory Crystal Ore",
+  "block.starrail_sim.path_starmarrow_ore": "Starmarrow Ore",
+  "block.starrail_sim.path_stellarjade_ore": "Stellarjade Ore",
+  "block.starrail_sim.path_ancientdream_ore": "Ancient Dream Ore",
+  "item.starrail_sim.path_suniron_sword": "Suniron Sword",
+  "item.starrail_sim.path_suniron_pickaxe": "Suniron Pickaxe",
+  "item.starrail_sim.path_suniron_axe": "Suniron Axe",
+  "item.starrail_sim.path_suniron_shovel": "Suniron Shovel",
+  "item.starrail_sim.path_suniron_hoe": "Suniron Hoe",
+  "item.starrail_sim.path_suniron_helmet": "Suniron Helmet",
+  "item.starrail_sim.path_suniron_chestplate": "Suniron Chestplate",
+  "item.starrail_sim.path_suniron_leggings": "Suniron Leggings",
+  "item.starrail_sim.path_suniron_boots": "Suniron Boots",
+  "item.starrail_sim.path_starmarrow_sword": "Starmarrow Sword",
+  "item.starrail_sim.path_starmarrow_pickaxe": "Starmarrow Pickaxe",
+  "item.starrail_sim.path_starmarrow_axe": "Starmarrow Axe",
+  "item.starrail_sim.path_starmarrow_shovel": "Starmarrow Shovel",
+  "item.starrail_sim.path_starmarrow_hoe": "Starmarrow Hoe",
+  "item.starrail_sim.path_starmarrow_helmet": "Starmarrow Helmet",
+  "item.starrail_sim.path_starmarrow_chestplate": "Starmarrow Chestplate",
+  "item.starrail_sim.path_starmarrow_leggings": "Starmarrow Leggings",
+  "item.starrail_sim.path_starmarrow_boots": "Starmarrow Boots",
+  "item.starrail_sim.path_stellarjade_sword": "Stellarjade Sword",
+  "item.starrail_sim.path_stellarjade_pickaxe": "Stellarjade Pickaxe",
+  "item.starrail_sim.path_stellarjade_axe": "Stellarjade Axe",
+  "item.starrail_sim.path_stellarjade_shovel": "Stellarjade Shovel",
+  "item.starrail_sim.path_stellarjade_hoe": "Stellarjade Hoe",
+  "item.starrail_sim.path_stellarjade_helmet": "Stellarjade Helmet",
+  "item.starrail_sim.path_stellarjade_chestplate": "Stellarjade Chestplate",
+  "item.starrail_sim.path_stellarjade_leggings": "Stellarjade Leggings",
+  "item.starrail_sim.path_stellarjade_boots": "Stellarjade Boots",
+  "item.starrail_sim.path_ancientdream_sword": "Ancient Dream Sword",
+  "item.starrail_sim.path_ancientdream_pickaxe": "Ancient Dream Pickaxe",
+  "item.starrail_sim.path_ancientdream_axe": "Ancient Dream Axe",
+  "item.starrail_sim.path_ancientdream_shovel": "Ancient Dream Shovel",
+  "item.starrail_sim.path_ancientdream_hoe": "Ancient Dream Hoe",
+  "item.starrail_sim.path_ancientdream_helmet": "Ancient Dream Helmet",
+  "item.starrail_sim.path_ancientdream_chestplate": "Ancient Dream Chestplate",
+  "item.starrail_sim.path_ancientdream_leggings": "Ancient Dream Leggings",
+  "item.starrail_sim.path_ancientdream_boots": "Ancient Dream Boots",
+  "item.starrail_sim.path_stellarjade_upgrade_smithing_template": "Stellarjade Smithing Template",
+  "item.starrail_sim.path_ancientdream_upgrade_smithing_template": "Ancient Dream Smithing Template",
+  "block.starrail_sim.sunmeadow_log": "Sunmeadow Log",
+  "block.starrail_sim.sunmeadow_wood": "Sunmeadow Wood",
+  "block.starrail_sim.stripped_sunmeadow_log": "Stripped Sunmeadow Log",
+  "block.starrail_sim.stripped_sunmeadow_wood": "Stripped Sunmeadow Wood",
+  "block.starrail_sim.sunmeadow_leaves": "Sunmeadow Leaves",
+  "block.starrail_sim.sunmeadow_sapling": "Sunmeadow Sapling",
+  "block.starrail_sim.sunmeadow_planks": "Sunmeadow Planks",
+  "block.starrail_sim.sunmeadow_stairs": "Sunmeadow Stairs",
+  "block.starrail_sim.sunmeadow_slab": "Sunmeadow Slab",
+  "block.starrail_sim.sunmeadow_fence": "Sunmeadow Fence",
+  "block.starrail_sim.sunmeadow_fence_gate": "Sunmeadow Fence Gate",
+  "block.starrail_sim.sunmeadow_door": "Sunmeadow Door",
+  "block.starrail_sim.sunmeadow_trapdoor": "Sunmeadow Trapdoor",
+  "block.starrail_sim.sunmeadow_pressure_plate": "Sunmeadow Pressure Plate",
+  "block.starrail_sim.sunmeadow_button": "Sunmeadow Button",
+  "block.starrail_sim.glimmerwood_log": "Glimmerwood Log",
+  "block.starrail_sim.glimmerwood_wood": "Glimmerwood Wood",
+  "block.starrail_sim.stripped_glimmerwood_log": "Stripped Glimmerwood Log",
+  "block.starrail_sim.stripped_glimmerwood_wood": "Stripped Glimmerwood Wood",
+  "block.starrail_sim.glimmerwood_leaves": "Glimmerwood Leaves",
+  "block.starrail_sim.glimmerwood_sapling": "Glimmerwood Sapling",
+  "block.starrail_sim.glimmerwood_planks": "Glimmerwood Planks",
+  "block.starrail_sim.glimmerwood_stairs": "Glimmerwood Stairs",
+  "block.starrail_sim.glimmerwood_slab": "Glimmerwood Slab",
+  "block.starrail_sim.glimmerwood_fence": "Glimmerwood Fence",
+  "block.starrail_sim.glimmerwood_fence_gate": "Glimmerwood Fence Gate",
+  "block.starrail_sim.glimmerwood_door": "Glimmerwood Door",
+  "block.starrail_sim.glimmerwood_trapdoor": "Glimmerwood Trapdoor",
+  "block.starrail_sim.glimmerwood_pressure_plate": "Glimmerwood Pressure Plate",
+  "block.starrail_sim.glimmerwood_button": "Glimmerwood Button",
+  "block.starrail_sim.morning_berry_bush": "Morning Berry Bush",
+  "block.starrail_sim.forestbean_wild": "Wild Forestbean Plant",
+  "block.starrail_sim.forestbean_crop": "Forestbean Crop",
+  "block.starrail_sim.sunmeadow_bloom": "Sunmeadow Bloom",
+  "block.starrail_sim.glimmer_moss": "Glimmer Moss",
+  "item.starrail_sim.morning_berry": "Morning Berry",
+  "item.starrail_sim.forestbean_seeds": "Forestbean Seeds",
+  "item.starrail_sim.forestbean_pod": "Forestbean Pod",
+  "item.starrail_sim.roasted_forestbean": "Roasted Forestbean",
+  "item.starrail_sim.star_rail_pass": "Star Rail Pass",
+  "item.starrail_sim.star_rail_special_pass": "Star Rail Special Pass",
+  "tooltip.starrail_sim.star_rail_pass": "Right-click to draw a random Light Cone for your current Path.",
+  "tooltip.starrail_sim.star_rail_special_pass": "Right-click to choose a Light Cone for your current Path.",
+  "message.starrail_sim.pass.no_path": "You have not embarked on a Path. The pass was not consumed.",
+  "message.starrail_sim.pass.empty_pool": "No Light Cones are available for your current Path. The pass was not consumed.",
+  "message.starrail_sim.pass.random_received": "Random Light Cone obtained: %s",
+  "message.starrail_sim.pass.selected_received": "Light Cone selected: %s",
+  "message.starrail_sim.pass.path_changed": "Your Path changed. The pass was not consumed.",
+  "message.starrail_sim.pass.invalid_choice": "That Light Cone is not available for your current Path. The pass was not consumed.",
+  "screen.starrail_sim.pass_picker.title": "Select a Light Cone for %s",
+  "screen.starrail_sim.pass_picker.hint": "Click a Light Cone to claim it; press Esc to cancel.",
+  "screen.starrail_sim.pass_picker.empty": "No Light Cones are available for this Path.",
+  "screen.starrail_sim.pass_picker.scroll": "Scroll to see more"
 }

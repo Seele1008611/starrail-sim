@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:blasting",
+  "category": "misc",
+  "ingredient": {
+    "item": "starrail_sim:path_raw_ancientdream"
+  },
+  "result": "starrail_sim:path_ancientdream_ingot",
+  "experience": 1.5,
+  "cookingtime": 100
+}

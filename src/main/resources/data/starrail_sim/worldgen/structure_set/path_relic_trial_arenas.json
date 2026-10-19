@@ -1,0 +1,15 @@
+{
+  "structures": [
+    {
+      "structure": "starrail_sim:relic_trial_arena",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "spacing": 46,
+    "separation": 16,
+    "salt": 18374629,
+    "spread_type": "linear"
+  }
+}

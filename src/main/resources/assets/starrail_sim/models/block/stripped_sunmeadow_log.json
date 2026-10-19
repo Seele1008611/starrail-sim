@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "starrail_sim:block/stripped_sunmeadow_log_top",
+    "side": "starrail_sim:block/stripped_sunmeadow_log"
+  }
+}

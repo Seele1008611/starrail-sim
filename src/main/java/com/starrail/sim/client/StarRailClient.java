@@ -6,6 +6,7 @@ package com.starrail.sim.client;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import com.starrail.sim.StarRailSimMod;
+import com.starrail.sim.PathEcologyContent;
 import com.starrail.sim.StarRailWorldBlocks;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.screens.MenuScreens;
@@ -62,10 +63,26 @@ public final class StarRailClient {
     public static void registerMenus(FMLClientSetupEvent event) {
         event.enqueueWork(() -> {
             MenuScreens.register(StarRailSimMod.RELIC_TRIAL_MENU.get(), RelicTrialScreen::new);
-            ItemBlockRenderTypes.setRenderLayer(StarRailWorldBlocks.LUMINOUS_GLASS.get(),
-                    RenderType.translucent());
-            ItemBlockRenderTypes.setRenderLayer(StarRailWorldBlocks.TERMINAL_HULL_GLASS.get(),
-                    RenderType.translucent());
+            ItemBlockRenderTypes.setRenderLayer(PathEcologyContent.SUNMEADOW.leaves().get(),
+                    RenderType.cutoutMipped());
+            ItemBlockRenderTypes.setRenderLayer(PathEcologyContent.GLIMMERWOOD.leaves().get(),
+                    RenderType.cutoutMipped());
+            ItemBlockRenderTypes.setRenderLayer(PathEcologyContent.SUNMEADOW.sapling().get(),
+                    RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(PathEcologyContent.GLIMMERWOOD.sapling().get(),
+                    RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(PathEcologyContent.SUNMEADOW.trapdoor().get(),
+                    RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(PathEcologyContent.GLIMMERWOOD.trapdoor().get(),
+                    RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(PathEcologyContent.MORNING_BERRY_BUSH.get(),
+                    RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(PathEcologyContent.FORESTBEAN_WILD.get(),
+                    RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(PathEcologyContent.FORESTBEAN_CROP.get(),
+                    RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(PathEcologyContent.SUNMEADOW_BLOOM.get(),
+                    RenderType.cutout());
         });
     }
 }

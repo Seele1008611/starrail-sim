@@ -1,0 +1,1 @@
+{"type":"minecraft:crafting_shaped","category":"misc","pattern":["PPP","PBP","PPP"],"key":{"P":{"item":"minecraft:paper"},"B":{"item":"starrail_sim:path_starmarrow_block"}},"result":{"item":"starrail_sim:path_stellarjade_upgrade_smithing_template","count":1}}

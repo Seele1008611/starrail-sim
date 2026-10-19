@@ -163,7 +163,7 @@ public final class StarRailDimensionService {
                 BlockPos floor = new BlockPos(x, HUB_Y, z);
                 if (level.getBlockState(floor).isAir()) {
                     level.setBlockAndUpdate(floor,
-                            StarRailWorldBlocks.OLD_RAIL_PLATFORM.get().defaultBlockState());
+                            PathTerrainBlocks.PATH_STONE_BRICKS.get().defaultBlockState());
                 }
             }
         }

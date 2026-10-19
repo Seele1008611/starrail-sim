@@ -863,7 +863,9 @@ public final class StarRailPathData implements IStarRailPathData {
         discoveredPathRegions.clear();
         if (tag.contains("path_regions_discovered", 9)) {
             ListTag regions = tag.getList("path_regions_discovered", 8);
-            for (int i = 0; i < regions.size(); i++) discoveredPathRegions.add(regions.getString(i));
+            for (int i = 0; i < regions.size(); i++) {
+                discoveredPathRegions.add(regions.getString(i));
+            }
         }
         discoveredPathRuins.clear();
         if (tag.contains("path_ruins_discovered", 9)) {

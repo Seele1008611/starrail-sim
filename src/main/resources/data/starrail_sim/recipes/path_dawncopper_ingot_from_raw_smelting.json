@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:smelting",
+  "category": "misc",
+  "ingredient": {
+    "item": "starrail_sim:path_raw_dawncopper"
+  },
+  "result": "starrail_sim:path_dawncopper_ingot",
+  "experience": 0.7,
+  "cookingtime": 200
+}

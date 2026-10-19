@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "item": "starrail_sim:sunmeadow_wood"
+    }
+  ],
+  "result": {
+    "item": "starrail_sim:sunmeadow_planks",
+    "count": 4
+  }
+}

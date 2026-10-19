@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:blasting",
+  "ingredient": {
+    "item": "starrail_sim:path_cobblestone"
+  },
+  "result": "starrail_sim:path_stone",
+  "experience": 0.1,
+  "cookingtime": 100
+}

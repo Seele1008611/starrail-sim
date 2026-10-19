@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    "starrail_sim:sunmeadow_log",
+    "starrail_sim:sunmeadow_wood",
+    "starrail_sim:stripped_sunmeadow_log",
+    "starrail_sim:stripped_sunmeadow_wood",
+    "starrail_sim:glimmerwood_log",
+    "starrail_sim:glimmerwood_wood",
+    "starrail_sim:stripped_glimmerwood_log",
+    "starrail_sim:stripped_glimmerwood_wood"
+  ]
+}

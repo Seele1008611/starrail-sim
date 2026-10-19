@@ -7,13 +7,13 @@
   ],
   "key": {
     "G": {
-      "item": "starrail_sim:terminal_alloy"
+      "item": "starrail_sim:path_dawncopper_ingot"
     },
     "F": {
-      "item": "starrail_sim:star_rail_fragment"
+      "item": "starrail_sim:path_resonance_crystal"
     },
     "A": {
-      "item": "starrail_sim:old_rail_platform"
+      "item": "starrail_sim:path_stone_bricks"
     }
   },
   "result": {

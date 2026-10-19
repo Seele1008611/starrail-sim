@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "starrail_sim:path_suniron_hoe",
+    "starrail_sim:path_starmarrow_hoe",
+    "starrail_sim:path_stellarjade_hoe",
+    "starrail_sim:path_ancientdream_hoe"
+  ]
+}

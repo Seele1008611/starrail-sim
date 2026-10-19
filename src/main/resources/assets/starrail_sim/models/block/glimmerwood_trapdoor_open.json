@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/template_trapdoor_open",
+  "textures": {
+    "texture": "starrail_sim:block/glimmerwood_trapdoor"
+  }
+}

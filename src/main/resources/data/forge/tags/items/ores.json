@@ -1,0 +1,14 @@
+{
+  "replace": false,
+  "values": [
+    "starrail_sim:path_starcoal_ore",
+    "starrail_sim:path_dawncopper_ore",
+    "starrail_sim:path_suniron_ore",
+    "starrail_sim:path_dawn_gold_ore",
+    "starrail_sim:path_resonance_ore",
+    "starrail_sim:path_memory_ore",
+    "starrail_sim:path_starmarrow_ore",
+    "starrail_sim:path_stellarjade_ore",
+    "starrail_sim:path_ancientdream_ore"
+  ]
+}

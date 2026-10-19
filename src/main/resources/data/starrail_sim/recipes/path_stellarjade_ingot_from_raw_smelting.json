@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:smelting",
+  "category": "misc",
+  "ingredient": {
+    "item": "starrail_sim:path_raw_stellarjade"
+  },
+  "result": "starrail_sim:path_stellarjade_ingot",
+  "experience": 1.0,
+  "cookingtime": 200
+}

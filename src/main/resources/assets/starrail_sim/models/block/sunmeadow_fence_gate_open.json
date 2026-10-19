@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/template_fence_gate_open",
+  "textures": {
+    "texture": "starrail_sim:block/sunmeadow_planks"
+  }
+}

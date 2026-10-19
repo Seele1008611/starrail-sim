@@ -1,0 +1,1 @@
+{"type":"minecraft:smithing_transform","template":{"item":"starrail_sim:path_stellarjade_upgrade_smithing_template"},"base":{"item":"starrail_sim:path_starmarrow_sword"},"addition":{"item":"starrail_sim:path_stellarjade_ingot"},"result":{"item":"starrail_sim:path_stellarjade_sword"}}

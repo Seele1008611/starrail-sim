@@ -1,7 +1,7 @@
 {
   "replace": false,
   "values": [
-    "starrail_sim:starrail_wilderness",
-    "starrail_sim:echo_terminal"
+    "starrail_sim:sunmeadow",
+    "starrail_sim:glimmerwood"
   ]
 }

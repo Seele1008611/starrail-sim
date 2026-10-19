@@ -31,11 +31,15 @@ import java.util.Set;
 public final class StarRailRuinSpacingData extends SavedData {
     private static final String DATA_NAME = "starrail_sim_ruin_spacing";
     private static final String ANCHORS_KEY = "anchors";
+    private static final String ORDINARY_ANCHORS_KEY = "ordinary_anchors";
+    private static final String ARENA_ANCHORS_KEY = "arena_anchors";
     private static final long MIN_DISTANCE_SQUARED = 400L * 400L;
     private static final List<String> SPACED_STRUCTURE_IDS = List.of(
             "ordinary_floating_ruin", "relic_trial_arena");
 
     private final Set<Long> anchors = new LinkedHashSet<>();
+    private final Set<Long> ordinaryAnchors = new LinkedHashSet<>();
+    private final Set<Long> arenaAnchors = new LinkedHashSet<>();
 
     private StarRailRuinSpacingData() {
     }
@@ -54,6 +58,18 @@ public final class StarRailRuinSpacingData extends SavedData {
         for (int i = 0; i < savedAnchors.size(); i++) {
             data.anchors.add(((net.minecraft.nbt.LongTag) savedAnchors.get(i)).getAsLong());
         }
+        ListTag savedOrdinaryAnchors = tag.getList(ORDINARY_ANCHORS_KEY, Tag.TAG_LONG);
+        for (int i = 0; i < savedOrdinaryAnchors.size(); i++) {
+            long anchor = ((net.minecraft.nbt.LongTag) savedOrdinaryAnchors.get(i)).getAsLong();
+            data.ordinaryAnchors.add(anchor);
+            data.anchors.add(anchor);
+        }
+        ListTag savedArenaAnchors = tag.getList(ARENA_ANCHORS_KEY, Tag.TAG_LONG);
+        for (int i = 0; i < savedArenaAnchors.size(); i++) {
+            long anchor = ((net.minecraft.nbt.LongTag) savedArenaAnchors.get(i)).getAsLong();
+            data.arenaAnchors.add(anchor);
+            data.anchors.add(anchor);
+        }
         return data;
     }
 
@@ -64,6 +80,16 @@ public final class StarRailRuinSpacingData extends SavedData {
             savedAnchors.add(net.minecraft.nbt.LongTag.valueOf(anchor));
         }
         tag.put(ANCHORS_KEY, savedAnchors);
+        ListTag savedOrdinaryAnchors = new ListTag();
+        for (long anchor : ordinaryAnchors) {
+            savedOrdinaryAnchors.add(net.minecraft.nbt.LongTag.valueOf(anchor));
+        }
+        tag.put(ORDINARY_ANCHORS_KEY, savedOrdinaryAnchors);
+        ListTag savedArenaAnchors = new ListTag();
+        for (long anchor : arenaAnchors) {
+            savedArenaAnchors.add(net.minecraft.nbt.LongTag.valueOf(anchor));
+        }
+        tag.put(ARENA_ANCHORS_KEY, savedArenaAnchors);
         return tag;
     }
 
@@ -139,6 +165,50 @@ public final class StarRailRuinSpacingData extends SavedData {
         }
     }
 
+    /** 记录普通母体，供跨区块距离的定位命令直接查询。 */
+    public void recordOrdinaryRuin(BlockPos origin) {
+        boolean changed = anchors.add(origin.asLong());
+        changed |= ordinaryAnchors.add(origin.asLong());
+        if (changed) {
+            setDirty();
+        }
+    }
+
+    /** 返回已探索范围中距给定位置最近的普通母体锚点。 */
+    public BlockPos findNearestOrdinaryRuin(int x, int z) {
+        return findNearest(ordinaryAnchors, x, z);
+    }
+
+    /** 登记自然生成或手动建造的遗器决斗场，供定位命令查找。 */
+    public void recordArena(BlockPos origin) {
+        boolean changed = anchors.add(origin.asLong());
+        changed |= arenaAnchors.add(origin.asLong());
+        if (changed) {
+            setDirty();
+        }
+    }
+
+    /** 返回距给定位置最近的已登记决斗场锚点。 */
+    public BlockPos findNearestArena(int x, int z) {
+        return findNearest(arenaAnchors, x, z);
+    }
+
+    private static BlockPos findNearest(Set<Long> positions, int x, int z) {
+        BlockPos nearest = null;
+        long nearestDistanceSquared = Long.MAX_VALUE;
+        for (long packedAnchor : positions) {
+            BlockPos anchor = BlockPos.of(packedAnchor);
+            long dx = (long) anchor.getX() - x;
+            long dz = (long) anchor.getZ() - z;
+            long distanceSquared = dx * dx + dz * dz;
+            if (distanceSquared < nearestDistanceSquared) {
+                nearest = anchor;
+                nearestDistanceSquared = distanceSquared;
+            }
+        }
+        return nearest;
+    }
+
     /** 区块载入时登记其中已保存的遗迹结构，兼容更新前生成的遗迹。 */
     @SubscribeEvent
     public static void onChunkLoad(ChunkEvent.Load event) {
@@ -154,11 +224,16 @@ public final class StarRailRuinSpacingData extends SavedData {
                     && type != StarRailRuinWorldgen.RELIC_TRIAL_ARENA.get()) continue;
             for (StructurePiece piece : start.getPieces()) {
                 if (piece instanceof FloatingRuinPiece ruinPiece) {
-                    get(level).recordRuin(ruinPiece.getOrigin());
+                    if ("ordinary".equals(ruinPiece.getVariantId())) {
+                        get(level).recordOrdinaryRuin(ruinPiece.getOrigin());
+                    } else {
+                        get(level).recordRuin(ruinPiece.getOrigin());
+                    }
                     break;
                 }
                 if (piece instanceof RelicTrialArenaPiece arenaPiece) {
-                    get(level).recordRuin(arenaPiece.getOrigin());
+                    get(level).recordArena(arenaPiece.getOrigin().offset(
+                            RelicTrialArenaCommands.CENTER, 0, RelicTrialArenaCommands.CENTER));
                     break;
                 }
             }

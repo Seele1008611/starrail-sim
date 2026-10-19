@@ -1,0 +1,33 @@
+{
+  "feature": "starrail_sim:path_ancientdream_ore",
+  "placement": [
+    {
+      "type": "minecraft:count",
+      "count": {
+        "type": "minecraft:uniform",
+        "value": {
+          "min_inclusive": 1,
+          "max_inclusive": 2
+        }
+      }
+    },
+    {
+      "type": "minecraft:in_square"
+    },
+    {
+      "type": "minecraft:height_range",
+      "height": {
+        "type": "minecraft:uniform",
+        "min_inclusive": {
+          "absolute": -60
+        },
+        "max_inclusive": {
+          "absolute": -32
+        }
+      }
+    },
+    {
+      "type": "minecraft:biome"
+    }
+  ]
+}

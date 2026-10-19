@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:blasting",
+  "ingredient": {
+    "item": "starrail_sim:path_river_sand"
+  },
+  "result": "minecraft:glass",
+  "experience": 0.1,
+  "cookingtime": 100
+}

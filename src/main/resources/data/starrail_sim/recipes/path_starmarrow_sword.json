@@ -1,0 +1,1 @@
+{"type":"minecraft:crafting_shaped","category":"equipment","pattern":[" M "," M "," S "],"key":{"M":{"item":"starrail_sim:path_starmarrow"},"S":{"item":"minecraft:stick"}},"result":{"item":"starrail_sim:path_starmarrow_sword","count":1}}

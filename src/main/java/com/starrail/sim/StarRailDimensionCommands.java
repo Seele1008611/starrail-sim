@@ -23,15 +23,28 @@ public final class StarRailDimensionCommands {
                 .requires(source -> source.hasPermission(2))
                 .then(Commands.literal("relay").executes(StarRailDimensionCommands::locateRelay))
                 .then(Commands.literal("region")
-                        .then(Commands.literal("starrail_wilderness")
-                                .executes(context -> locateBiome(context, "starrail_wilderness")))
-                        .then(Commands.literal("echo_terminal")
-                                .executes(context -> locateBiome(context, "echo_terminal"))))
+                        .then(Commands.literal("sunmeadow")
+                                .executes(context -> locateBiome(context, "sunmeadow")))
+                        .then(Commands.literal("glimmerwood")
+                                .executes(context -> locateBiome(context, "glimmerwood"))))
+                .then(Commands.literal("ore")
+                        .then(Commands.literal("starcoal").executes(context -> locateOre(context, "starcoal")))
+                        .then(Commands.literal("dawncopper").executes(context -> locateOre(context, "dawncopper")))
+                        .then(Commands.literal("suniron").executes(context -> locateOre(context, "suniron")))
+                        .then(Commands.literal("dawn_gold").executes(context -> locateOre(context, "dawn_gold")))
+                        .then(Commands.literal("resonance").executes(context -> locateOre(context, "resonance")))
+                        .then(Commands.literal("memory").executes(context -> locateOre(context, "memory")))
+                        .then(Commands.literal("starmarrow").executes(context -> locateOre(context, "starmarrow")))
+                        .then(Commands.literal("stellarjade").executes(context -> locateOre(context, "stellarjade")))
+                        .then(Commands.literal("ancientdream").executes(context -> locateOre(context, "ancientdream")))
+                        .then(Commands.literal("cancel").executes(context ->
+                                StarRailPathOreLocateService.cancel(context.getSource()))))
                 .then(Commands.literal("ordinary_ruin").executes(context ->
-                        StarRailRuinLocateService.start(context.getSource(),
-                                StarRailDimensionIds.THE_PATH.location())))
-                .then(Commands.literal("relic_trial_arena").executes(context -> runInPath(
-                        context, "locate structure starrail_sim:relic_trial_arena")))
+                        locatePathStructure(context, false)))
+                .then(Commands.literal("relic_trial_arena").executes(context ->
+                        locatePathStructure(context, true)))
+                .then(Commands.literal("cancel").executes(context ->
+                        StarRailRuinLocateService.cancel(context.getSource())))
                 .then(Commands.literal("path_ruin").executes(StarRailDimensionCommands::locatePathRuin));
 
         event.getDispatcher().register(Commands.literal("starrail")
@@ -75,6 +88,23 @@ public final class StarRailDimensionCommands {
 
     private static int locateBiome(CommandContext<CommandSourceStack> context, String biome) {
         return runInPath(context, "locate biome starrail_sim:" + biome);
+    }
+
+    private static int locateOre(CommandContext<CommandSourceStack> context, String ore) {
+        return StarRailPathOreLocateService.start(context.getSource(), ore);
+    }
+
+    private static int locatePathStructure(CommandContext<CommandSourceStack> context,
+                                           boolean arena) {
+        CommandSourceStack source = context.getSource();
+        if (source.getPlayer() == null
+                || !source.getLevel().dimension().equals(StarRailDimensionIds.THE_PATH)) {
+            source.sendFailure(Component.literal(
+                    "请在命途遗境维度中由玩家执行此结构定位命令。"));
+            return 0;
+        }
+        return arena ? StarRailRuinLocateService.startArena(source, null)
+                : StarRailRuinLocateService.start(source);
     }
 
     private static int locatePathRuin(CommandContext<CommandSourceStack> context) {

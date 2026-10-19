@@ -1,0 +1,31 @@
+{
+  "replace": false,
+  "values": [
+    "starrail_sim:sunmeadow_log",
+    "starrail_sim:sunmeadow_wood",
+    "starrail_sim:stripped_sunmeadow_log",
+    "starrail_sim:stripped_sunmeadow_wood",
+    "starrail_sim:glimmerwood_log",
+    "starrail_sim:glimmerwood_wood",
+    "starrail_sim:stripped_glimmerwood_log",
+    "starrail_sim:stripped_glimmerwood_wood",
+    "starrail_sim:sunmeadow_planks",
+    "starrail_sim:glimmerwood_planks",
+    "starrail_sim:sunmeadow_stairs",
+    "starrail_sim:sunmeadow_slab",
+    "starrail_sim:sunmeadow_fence",
+    "starrail_sim:sunmeadow_fence_gate",
+    "starrail_sim:sunmeadow_door",
+    "starrail_sim:sunmeadow_trapdoor",
+    "starrail_sim:sunmeadow_pressure_plate",
+    "starrail_sim:sunmeadow_button",
+    "starrail_sim:glimmerwood_stairs",
+    "starrail_sim:glimmerwood_slab",
+    "starrail_sim:glimmerwood_fence",
+    "starrail_sim:glimmerwood_fence_gate",
+    "starrail_sim:glimmerwood_door",
+    "starrail_sim:glimmerwood_trapdoor",
+    "starrail_sim:glimmerwood_pressure_plate",
+    "starrail_sim:glimmerwood_button"
+  ]
+}

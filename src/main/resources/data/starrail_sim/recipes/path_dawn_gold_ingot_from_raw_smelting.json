@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:smelting",
+  "category": "misc",
+  "ingredient": {
+    "item": "starrail_sim:path_raw_dawn_gold"
+  },
+  "result": "starrail_sim:path_dawn_gold_ingot",
+  "experience": 1.0,
+  "cookingtime": 200
+}

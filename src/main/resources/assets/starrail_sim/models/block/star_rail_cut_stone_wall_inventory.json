@@ -1,7 +1,0 @@
-{
-  "parent": "minecraft:block/wall_inventory",
-  "textures": {
-    "wall": "starrail_sim:block/star_rail_cut_stone",
-    "particle": "starrail_sim:block/star_rail_cut_stone"
-  }
-}

@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "starrail_sim:path_raw_dawncopper",
+    "starrail_sim:path_raw_suniron",
+    "starrail_sim:path_raw_dawn_gold",
+    "starrail_sim:path_raw_stellarjade",
+    "starrail_sim:path_raw_ancientdream"
+  ]
+}

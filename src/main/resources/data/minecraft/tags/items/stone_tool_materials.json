@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    "starrail_sim:path_cobblestone",
+    "starrail_sim:path_deep_cobblestone"
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    { "item": "starrail_sim:path_stellarjade_ingot" },
+    { "item": "starrail_sim:path_stellarjade_ingot" },
+    { "item": "starrail_sim:path_stellarjade_ingot" },
+    { "item": "starrail_sim:path_stellarjade_ingot" }
+  ],
+  "result": {
+    "item": "starrail_sim:star_rail_pass",
+    "count": 1
+  }
+}

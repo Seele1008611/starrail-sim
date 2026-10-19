@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smoking",
+  "ingredient": {
+    "item": "starrail_sim:forestbean_pod"
+  },
+  "result": "starrail_sim:roasted_forestbean",
+  "experience": 0.1,
+  "cookingtime": 100
+}

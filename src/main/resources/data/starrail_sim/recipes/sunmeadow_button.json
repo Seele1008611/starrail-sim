@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "pattern": [
+    "P"
+  ],
+  "key": {
+    "P": {
+      "item": "starrail_sim:sunmeadow_planks"
+    }
+  },
+  "result": {
+    "item": "starrail_sim:sunmeadow_button",
+    "count": 1
+  }
+}

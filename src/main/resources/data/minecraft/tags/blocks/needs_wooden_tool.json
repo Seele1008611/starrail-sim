@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "starrail_sim:path_stone",
+    "starrail_sim:path_cobblestone",
+    "starrail_sim:path_smooth_stone",
+    "starrail_sim:path_stone_bricks",
+    "starrail_sim:path_river_sandstone"
+  ]
+}

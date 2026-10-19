@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "starrail_sim:path_grass_block",
+    "starrail_sim:path_dirt",
+    "starrail_sim:path_forest_humus",
+    "starrail_sim:path_coarse_soil"
+  ]
+}

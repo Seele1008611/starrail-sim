@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:blasting",
+  "category": "misc",
+  "ingredient": {
+    "item": "starrail_sim:path_raw_suniron"
+  },
+  "result": "starrail_sim:path_suniron_ingot",
+  "experience": 0.7,
+  "cookingtime": 100
+}

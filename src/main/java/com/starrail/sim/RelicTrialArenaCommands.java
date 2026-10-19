@@ -125,11 +125,7 @@ public final class RelicTrialArenaCommands {
                     + requestedDimension));
             return 0;
         }
-        source.sendSuccess(() -> Component.literal("正在维度 "
-                + target.dimension().location() + " 定位遗器决斗场。"), false);
-        String command = "execute in " + target.dimension().location()
-                + " run locate structure starrail_sim:relic_trial_arena";
-        return source.getServer().getCommands().performPrefixedCommand(source, command);
+        return StarRailRuinLocateService.startArena(source, target.dimension().location());
     }
 
     private static int cancel(CommandContext<CommandSourceStack> context) {
@@ -341,7 +337,7 @@ public final class RelicTrialArenaCommands {
             }
             if (placed < placements.size()) return false;
             releaseTemporaryChunks();
-            StarRailRuinSpacingData.get(level).recordRuin(
+            StarRailRuinSpacingData.get(level).recordArena(
                     new BlockPos(origin.getX() + CENTER, origin.getY(), origin.getZ() + CENTER));
             source.sendSuccess(() -> Component.translatable(
                     "message.starrail_sim.arena.build_complete", placements.size(),

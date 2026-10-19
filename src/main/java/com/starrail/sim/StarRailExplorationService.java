@@ -19,8 +19,8 @@ import java.util.Set;
 /** Tracks Overworld eligibility, Path discoveries, and each player's train reward. */
 @Mod.EventBusSubscriber(modid = StarRailSimMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public final class StarRailExplorationService {
-    private static final String PATH_REGION_WILDERNESS = "starrail_wilderness";
-    private static final String PATH_REGION_TERMINAL = "echo_terminal";
+    private static final String PATH_REGION_SUNMEADOW = "sunmeadow";
+    private static final String PATH_REGION_GLIMMERWOOD = "glimmerwood";
     private static final List<String> PATH_RUIN_IDS = List.of(
             "ordinary", "preservation", "destruction", "hunt", "erudition", "harmony",
             "nihility", "abundance", "remembrance", "elation");
@@ -83,9 +83,13 @@ public final class StarRailExplorationService {
         } else if (player.level().dimension().equals(StarRailDimensionIds.THE_PATH)) {
             player.level().getBiome(player.blockPosition()).unwrapKey().ifPresent(key -> {
                 String id = key.location().getPath();
-                if ((id.equals(PATH_REGION_WILDERNESS) || id.equals(PATH_REGION_TERMINAL))
-                        && data.addDiscoveredPathRegion(id)) {
-                    Component region = Component.translatable("biome.starrail_sim." + id);
+                String currentRegionId = switch (id) {
+                    case PATH_REGION_SUNMEADOW -> PATH_REGION_SUNMEADOW;
+                    case PATH_REGION_GLIMMERWOOD -> PATH_REGION_GLIMMERWOOD;
+                    default -> null;
+                };
+                if (currentRegionId != null && data.addDiscoveredPathRegion(currentRegionId)) {
+                    Component region = Component.translatable("biome.starrail_sim." + currentRegionId);
                     player.sendSystemMessage(Component.translatable(
                             "message.starrail_sim.archive.region_found", region));
                     StarRailPathService.sync(player);
@@ -160,8 +164,9 @@ public final class StarRailExplorationService {
 
     public static int regionMask(IStarRailPathData data) {
         int mask = 0;
-        if (data.getDiscoveredPathRegions().contains(PATH_REGION_WILDERNESS)) mask |= 1;
-        if (data.getDiscoveredPathRegions().contains(PATH_REGION_TERMINAL)) mask |= 2;
+        Set<String> regions = data.getDiscoveredPathRegions();
+        if (regions.contains(PATH_REGION_SUNMEADOW)) mask |= 1;
+        if (regions.contains(PATH_REGION_GLIMMERWOOD)) mask |= 2;
         return mask;
     }
 

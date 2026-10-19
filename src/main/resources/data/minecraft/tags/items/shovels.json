@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "starrail_sim:path_suniron_shovel",
+    "starrail_sim:path_starmarrow_shovel",
+    "starrail_sim:path_stellarjade_shovel",
+    "starrail_sim:path_ancientdream_shovel"
+  ]
+}

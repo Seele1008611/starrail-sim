@@ -80,6 +80,10 @@ public final class StarRailSimMod {
     static {
         StarRailRuinContent.registerOtherPaths();
         StarRailWorldBlocks.register();
+        PathTerrainBlocks.register();
+        PathMineralContent.register();
+        PathEquipmentContent.register();
+        PathEcologyContent.register();
     }
 
     // 以下按命途注册自定义光锥；注册 ID 必须与模型、语言文件和战利品表一致。
@@ -355,102 +359,133 @@ public final class StarRailSimMod {
             "push_stream", PushStreamEffect::new);
     public static final RegistryObject<Item> STAR_RAIL_LOGO = ITEMS.register(
             "star_rail_logo", () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> STAR_RAIL_PASS = ITEMS.register(
+            "star_rail_pass", () -> new StarRailPassItem(false));
+    public static final RegistryObject<Item> STAR_RAIL_SPECIAL_PASS = ITEMS.register(
+            "star_rail_special_pass", () -> new StarRailPassItem(true));
     public static final RegistryObject<RecipeSerializer<InTheNightSuperimpositionRecipe>>
             IN_THE_NIGHT_SUPERIMPOSITION_SERIALIZER = RECIPE_SERIALIZERS.register(
                     "in_the_night_superimposition",
                     () -> new SimpleCraftingRecipeSerializer<>(
                             (id, category) -> new InTheNightSuperimpositionRecipe(
                                     id, category)));
-    public static final RegistryObject<CreativeModeTab> MAIN_TAB = CREATIVE_TABS.register(
-            "main", () -> CreativeModeTab.builder()
-                    .title(Component.translatable("itemGroup.starrail_sim.main"))
-                    .icon(() -> new ItemStack(STAR_RAIL_LOGO.get()))
+    public static final RegistryObject<CreativeModeTab> MATERIALS_TAB = CREATIVE_TABS.register(
+            "materials", () -> CreativeModeTab.builder()
+                    .title(Component.translatable("itemGroup.starrail_sim.materials"))
+                    .icon(() -> new ItemStack(PathTerrainBlocks.PATH_GRASS_BLOCK.get()))
                     .displayItems((parameters, output) -> {
-                        for (StarRailPath path : StarRailPath.values()) if (path.isRealPath()) {
-                            output.accept(StarRailRuinContent.key(path).get());
-                            output.accept(StarRailRuinContent.anchorItem(path).get());
-                            output.accept(StarRailTraceMaterials.get(path));
-                        }
-                        output.accept(RELIC_TRIAL_DEVICE_ITEM.get());
-                        StarRailWorldBlocks.addCreativeItems(output);
-                        StarRailRelicItems.addCreativeItems(output);
-                        output.accept(IN_THE_NIGHT.get());
-                        output.accept(I_WILL_HUNT.get());
-                        output.accept(WORRISOME_BLISSFUL.get());
-                        output.accept(SLEEP_LIKE_THE_DEAD.get());
-                        output.accept(PURE_THOUGHT_BAPTISM.get());
-                        output.accept(IDEAL_BURNING_HELL.get());
-                        output.accept(EMBARK_ON_SECOND_LIFE.get());
-                        output.accept(FINALE_OF_A_LIE.get());
-                        output.accept(SOMETHING_IRREPLACEABLE.get());
-                        output.accept(BRIGHTER_THAN_THE_SUN.get());
-                        output.accept(DANCE_AT_SUNSET.get());
-                        output.accept(THE_UNREACHABLE_SIDE.get());
-                        output.accept(THIS_BODY_AS_SWORD.get());
-                        output.accept(NO_REWARD_CROWNING.get());
-                        output.accept(BLOOD_FIRE_BURNING_PATH.get());
-                        output.accept(WHERE_DREAMS_BELONG.get());
-                        output.accept(DAWN_BURNS_JUST_SO.get());
-                        output.accept(WHAT_YOU_SEE_IS_ME.get());
-                        output.accept(GALAXY_RAILWAY.get());
-                        output.accept(MOMENT_OF_GLORY.get());
-                        output.accept(BEFORE_DAWN.get());
-                        output.accept(PRICE_OF_PEACE.get());
-                        output.accept(TOWARDS_UNANSWERABLE.get());
-                        output.accept(NINJA_SCROLL.get());
-                        output.accept(LIFE_AS_A_LIGHT.get());
-                        output.accept(A_STAR_ILLUMINATES_NIGHT_SKY.get());
-                        output.accept(SPARKLE_QUIETLY_SHINES.get());
-                        output.accept(BATTLE_ISNT_OVER.get());
-                        output.accept(MEMORY_OF_ME.get());
-                        output.accept(NIGHT_FLOWING_COLORS.get());
-                        output.accept(GAME_OF_COSMIC_WORLDS.get());
-                        output.accept(RETURNING_TO_EARTH.get());
-                        output.accept(IF_TIME_WERE_A_FLOWER.get());
-                        output.accept(AN_AGE_ETCHED_IN_GOLDEN_BLOOD.get());
-                        output.accept(IN_THE_NAME_OF_THE_WORLD.get());
-                        output.accept(ON_THE_SHORE_IN_THE_FLOW_OF_TIME.get());
-                        output.accept(A_THOUSAND_FOLD_SPRING.get());
-                        output.accept(ONLY_WAIT.get());
-                        output.accept(RAIN_NEVER_STOPS.get());
-                        output.accept(LIES_IN_THE_WIND.get());
-                        output.accept(RETURN_TO_LONG_ROAD.get());
-                        output.accept(REFORGED_REMEMBRANCE.get());
-                        output.accept(OCEAN_WHY_SINGS.get());
-                        output.accept(DO_NOT_FORGET_HER_FLAME.get());
-                        output.accept(NEW_FLESH_OF_INFERNO.get());
-                        output.accept(MOMENT_OF_VICTORY.get());
-                        output.accept(SHE_HAS_CLOSED_HER_EYES.get());
-                        output.accept(THOUGH_RIVERS_AND_MOUNTAINS.get());
-                        output.accept(FATE_NEVER_FAIR.get());
-                        output.accept(ECHOES_OF_THE_COFFIN.get());
-                        output.accept(TIME_WAITS_FOR_NO_ONE.get());
-                        output.accept(NIGHT_OF_FRIGHT.get());
-                        output.accept(ONLY_THE_SCENT_REMAINS.get());
-                        output.accept(WEAVE_TIME_INTO_GOLD.get());
-                        output.accept(MAKE_FAREWELL_MORE_BEAUTIFUL.get());
-                        output.accept(LOVE_IS_ETERNAL.get());
-                        output.accept(STARLIGHT_FOR_LONG_NIGHTS.get());
-                        output.accept(WELCOME_TO_GALACTIC_CITY.get());
-                        output.accept(MEET_IN_THE_NEXT_FLOWER_SEASON.get());
-                        output.accept(WHEN_SHE_DECIDES_TO_SEE.get());
-                        output.accept(FLOWER_WORLD_MESMERIZING_EYES.get());
-                        output.accept(MAY_RAINBOW_STAY_IN_THE_SKY.get());
-                        output.accept(YOU_WILL_RISE_AND_SING.get());
-                        output.accept(COLORS_FOR_TOMORROW.get());
-                        output.accept(SUMMERTIME_TO_THE_WAVES.get());
-                        // 创造模式中提供九种命途凭证，供测试各自的试炼流程。
-                        output.accept(pathTrialTokenForCreative(StarRailPath.PRESERVATION));
-                        output.accept(pathTrialTokenForCreative(StarRailPath.DESTRUCTION));
-                        output.accept(pathTrialTokenForCreative(StarRailPath.HUNT));
-                        output.accept(pathTrialTokenForCreative(StarRailPath.ERUDITION));
-                        output.accept(pathTrialTokenForCreative(StarRailPath.HARMONY));
-                        output.accept(pathTrialTokenForCreative(StarRailPath.NIHILITY));
-                        output.accept(pathTrialTokenForCreative(StarRailPath.ABUNDANCE));
-                        output.accept(pathTrialTokenForCreative(StarRailPath.REMEMBRANCE));
-                        output.accept(pathTrialTokenForCreative(StarRailPath.ELATION));
+                        PathTerrainBlocks.addCreativeItems(output);
+                        PathMineralContent.addCreativeItems(output);
+                        PathEcologyContent.addMaterialCreativeItems(output);
                     })
                     .build());
+    public static final RegistryObject<CreativeModeTab> EQUIPMENT_TAB = CREATIVE_TABS.register(
+            "equipment", () -> CreativeModeTab.builder()
+                    .title(Component.translatable("itemGroup.starrail_sim.equipment"))
+                    .icon(() -> new ItemStack(PathEquipmentContent.SUNIRON_SWORD.get()))
+                    .displayItems((parameters, output) -> PathEquipmentContent.addCreativeItems(output))
+                    .build());
+    public static final RegistryObject<CreativeModeTab> PATHS_TAB = CREATIVE_TABS.register(
+            "paths", () -> CreativeModeTab.builder()
+                    .title(Component.translatable("itemGroup.starrail_sim.paths"))
+                    .icon(() -> new ItemStack(IN_THE_NIGHT.get()))
+                    .displayItems((parameters, output) -> addPathCreativeItems(output))
+                    .build());
+    public static final RegistryObject<CreativeModeTab> FOOD_TAB = CREATIVE_TABS.register(
+            "food", () -> CreativeModeTab.builder()
+                    .title(Component.translatable("itemGroup.starrail_sim.food"))
+                    .icon(() -> new ItemStack(PathEcologyContent.FORESTBEAN_SEEDS.get()))
+                    .displayItems((parameters, output) -> PathEcologyContent.addFoodCreativeItems(output))
+                    .build());
+
+    private static void addPathCreativeItems(CreativeModeTab.Output output) {
+        for (StarRailPath path : StarRailPath.values()) if (path.isRealPath()) {
+            output.accept(StarRailRuinContent.key(path).get());
+            output.accept(StarRailRuinContent.anchorItem(path).get());
+            output.accept(StarRailTraceMaterials.get(path));
+        }
+        output.accept(RELIC_TRIAL_DEVICE_ITEM.get());
+        StarRailWorldBlocks.addCreativeItems(output);
+        StarRailRelicItems.addCreativeItems(output);
+        output.accept(STAR_RAIL_LOGO.get());
+        output.accept(STAR_RAIL_PASS.get());
+        output.accept(STAR_RAIL_SPECIAL_PASS.get());
+        output.accept(IN_THE_NIGHT.get());
+        output.accept(I_WILL_HUNT.get());
+        output.accept(WORRISOME_BLISSFUL.get());
+        output.accept(SLEEP_LIKE_THE_DEAD.get());
+        output.accept(PURE_THOUGHT_BAPTISM.get());
+        output.accept(IDEAL_BURNING_HELL.get());
+        output.accept(EMBARK_ON_SECOND_LIFE.get());
+        output.accept(FINALE_OF_A_LIE.get());
+        output.accept(SOMETHING_IRREPLACEABLE.get());
+        output.accept(BRIGHTER_THAN_THE_SUN.get());
+        output.accept(DANCE_AT_SUNSET.get());
+        output.accept(THE_UNREACHABLE_SIDE.get());
+        output.accept(THIS_BODY_AS_SWORD.get());
+        output.accept(NO_REWARD_CROWNING.get());
+        output.accept(BLOOD_FIRE_BURNING_PATH.get());
+        output.accept(WHERE_DREAMS_BELONG.get());
+        output.accept(DAWN_BURNS_JUST_SO.get());
+        output.accept(WHAT_YOU_SEE_IS_ME.get());
+        output.accept(GALAXY_RAILWAY.get());
+        output.accept(MOMENT_OF_GLORY.get());
+        output.accept(BEFORE_DAWN.get());
+        output.accept(PRICE_OF_PEACE.get());
+        output.accept(TOWARDS_UNANSWERABLE.get());
+        output.accept(NINJA_SCROLL.get());
+        output.accept(LIFE_AS_A_LIGHT.get());
+        output.accept(A_STAR_ILLUMINATES_NIGHT_SKY.get());
+        output.accept(SPARKLE_QUIETLY_SHINES.get());
+        output.accept(BATTLE_ISNT_OVER.get());
+        output.accept(MEMORY_OF_ME.get());
+        output.accept(NIGHT_FLOWING_COLORS.get());
+        output.accept(GAME_OF_COSMIC_WORLDS.get());
+        output.accept(RETURNING_TO_EARTH.get());
+        output.accept(IF_TIME_WERE_A_FLOWER.get());
+        output.accept(AN_AGE_ETCHED_IN_GOLDEN_BLOOD.get());
+        output.accept(IN_THE_NAME_OF_THE_WORLD.get());
+        output.accept(ON_THE_SHORE_IN_THE_FLOW_OF_TIME.get());
+        output.accept(A_THOUSAND_FOLD_SPRING.get());
+        output.accept(ONLY_WAIT.get());
+        output.accept(RAIN_NEVER_STOPS.get());
+        output.accept(LIES_IN_THE_WIND.get());
+        output.accept(RETURN_TO_LONG_ROAD.get());
+        output.accept(REFORGED_REMEMBRANCE.get());
+        output.accept(OCEAN_WHY_SINGS.get());
+        output.accept(DO_NOT_FORGET_HER_FLAME.get());
+        output.accept(NEW_FLESH_OF_INFERNO.get());
+        output.accept(MOMENT_OF_VICTORY.get());
+        output.accept(SHE_HAS_CLOSED_HER_EYES.get());
+        output.accept(THOUGH_RIVERS_AND_MOUNTAINS.get());
+        output.accept(FATE_NEVER_FAIR.get());
+        output.accept(ECHOES_OF_THE_COFFIN.get());
+        output.accept(TIME_WAITS_FOR_NO_ONE.get());
+        output.accept(NIGHT_OF_FRIGHT.get());
+        output.accept(ONLY_THE_SCENT_REMAINS.get());
+        output.accept(WEAVE_TIME_INTO_GOLD.get());
+        output.accept(MAKE_FAREWELL_MORE_BEAUTIFUL.get());
+        output.accept(LOVE_IS_ETERNAL.get());
+        output.accept(STARLIGHT_FOR_LONG_NIGHTS.get());
+        output.accept(WELCOME_TO_GALACTIC_CITY.get());
+        output.accept(MEET_IN_THE_NEXT_FLOWER_SEASON.get());
+        output.accept(WHEN_SHE_DECIDES_TO_SEE.get());
+        output.accept(FLOWER_WORLD_MESMERIZING_EYES.get());
+        output.accept(MAY_RAINBOW_STAY_IN_THE_SKY.get());
+        output.accept(YOU_WILL_RISE_AND_SING.get());
+        output.accept(COLORS_FOR_TOMORROW.get());
+        output.accept(SUMMERTIME_TO_THE_WAVES.get());
+        // 创造模式中提供九种命途凭证，供测试各自的试炼流程。
+        output.accept(pathTrialTokenForCreative(StarRailPath.PRESERVATION));
+        output.accept(pathTrialTokenForCreative(StarRailPath.DESTRUCTION));
+        output.accept(pathTrialTokenForCreative(StarRailPath.HUNT));
+        output.accept(pathTrialTokenForCreative(StarRailPath.ERUDITION));
+        output.accept(pathTrialTokenForCreative(StarRailPath.HARMONY));
+        output.accept(pathTrialTokenForCreative(StarRailPath.NIHILITY));
+        output.accept(pathTrialTokenForCreative(StarRailPath.ABUNDANCE));
+        output.accept(pathTrialTokenForCreative(StarRailPath.REMEMBRANCE));
+        output.accept(pathTrialTokenForCreative(StarRailPath.ELATION));
+    }
 
     // 创建带命途标记和可辨识名称的创造模式占位凭证。
     private static ItemStack pathTrialTokenForCreative(StarRailPath path) {

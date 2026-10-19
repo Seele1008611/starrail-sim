@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "starrail_sim:path_dawncopper_ingot",
+    "starrail_sim:path_suniron_ingot",
+    "starrail_sim:path_dawn_gold_ingot",
+    "starrail_sim:path_stellarjade_ingot",
+    "starrail_sim:path_ancientdream_ingot"
+  ]
+}
