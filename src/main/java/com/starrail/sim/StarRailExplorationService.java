@@ -21,6 +21,8 @@ import java.util.Set;
 public final class StarRailExplorationService {
     private static final String PATH_REGION_SUNMEADOW = "sunmeadow";
     private static final String PATH_REGION_GLIMMERWOOD = "glimmerwood";
+    private static final String PATH_REGION_STAR_TIDE_OCEAN = "star_tide_ocean";
+    private static final String PATH_REGION_CLEAR_SAND_BEACH = "clear_sand_beach";
     private static final List<String> PATH_RUIN_IDS = List.of(
             "ordinary", "preservation", "destruction", "hunt", "erudition", "harmony",
             "nihility", "abundance", "remembrance", "elation");
@@ -86,6 +88,8 @@ public final class StarRailExplorationService {
                 String currentRegionId = switch (id) {
                     case PATH_REGION_SUNMEADOW -> PATH_REGION_SUNMEADOW;
                     case PATH_REGION_GLIMMERWOOD -> PATH_REGION_GLIMMERWOOD;
+                    case PATH_REGION_STAR_TIDE_OCEAN -> PATH_REGION_STAR_TIDE_OCEAN;
+                    case PATH_REGION_CLEAR_SAND_BEACH -> PATH_REGION_CLEAR_SAND_BEACH;
                     default -> null;
                 };
                 if (currentRegionId != null && data.addDiscoveredPathRegion(currentRegionId)) {
@@ -167,6 +171,8 @@ public final class StarRailExplorationService {
         Set<String> regions = data.getDiscoveredPathRegions();
         if (regions.contains(PATH_REGION_SUNMEADOW)) mask |= 1;
         if (regions.contains(PATH_REGION_GLIMMERWOOD)) mask |= 2;
+        if (regions.contains(PATH_REGION_STAR_TIDE_OCEAN)) mask |= 4;
+        if (regions.contains(PATH_REGION_CLEAR_SAND_BEACH)) mask |= 8;
         return mask;
     }
 

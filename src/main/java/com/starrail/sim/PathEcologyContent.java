@@ -67,6 +67,18 @@ public final class PathEcologyContent {
     public static final RegistryObject<Block> GLIMMER_MOSS = foodBlock("glimmer_moss",
             () -> new MossBlock(BlockBehaviour.Properties.of().mapColor(MapColor.PLANT)
                     .strength(0.1F).sound(SoundType.GRASS)));
+    public static final RegistryObject<Block> TIDE_GRASS = foodBlock("tide_grass",
+            () -> new PathShorePlantBlock(plantProperties(MapColor.PLANT)));
+    public static final RegistryObject<Block> CLEAR_SAND_BELLFLOWER = foodBlock("clear_sand_bellflower",
+            () -> new PathClearSandBellflowerBlock(plantProperties(MapColor.PLANT)));
+    public static final RegistryObject<Block> STAR_TIDE_ALGAE = StarRailSimMod.BLOCKS.register(
+            "star_tide_algae", () -> new PathTideAlgaeBlock(plantProperties(MapColor.COLOR_CYAN)));
+    public static final RegistryObject<Item> STAR_TIDE_ALGAE_ITEM = foodBlockItem("star_tide_algae",
+            () -> new BlockItem(STAR_TIDE_ALGAE.get(), new Item.Properties().food(
+                    new FoodProperties.Builder().nutrition(1).saturationMod(0.1F).build())));
+    public static final RegistryObject<Item> ROASTED_STAR_TIDE_ALGAE = item("roasted_star_tide_algae",
+            () -> new Item(new Item.Properties().food(
+                    new FoodProperties.Builder().nutrition(4).saturationMod(0.5F).build())));
 
     private PathEcologyContent() {
     }
@@ -84,6 +96,10 @@ public final class PathEcologyContent {
             ComposterBlock.COMPOSTABLES.put(ROASTED_FORESTBEAN.get(), 0.3F);
             ComposterBlock.COMPOSTABLES.put(SUNMEADOW_BLOOM.get(), 0.65F);
             ComposterBlock.COMPOSTABLES.put(GLIMMER_MOSS.get(), 0.3F);
+            ComposterBlock.COMPOSTABLES.put(TIDE_GRASS.get(), 0.3F);
+            ComposterBlock.COMPOSTABLES.put(CLEAR_SAND_BELLFLOWER.get(), 0.65F);
+            ComposterBlock.COMPOSTABLES.put(STAR_TIDE_ALGAE_ITEM.get(), 0.3F);
+            ComposterBlock.COMPOSTABLES.put(ROASTED_STAR_TIDE_ALGAE.get(), 0.3F);
             ComposterBlock.COMPOSTABLES.put(FORESTBEAN_WILD.get(), 0.3F);
             ComposterBlock.COMPOSTABLES.put(SUNMEADOW.leaves().get(), 0.3F);
             ComposterBlock.COMPOSTABLES.put(SUNMEADOW.sapling().get(), 0.3F);
@@ -163,6 +179,12 @@ public final class PathEcologyContent {
     private static RegistryObject<Item> item(String id, Supplier<? extends Item> factory) {
         RegistryObject<Item> item = StarRailSimMod.ITEMS.register(id, factory::get);
         FOOD_ITEMS.add(item);
+        return item;
+    }
+
+    private static RegistryObject<Item> foodBlockItem(String id, Supplier<? extends Item> factory) {
+        RegistryObject<Item> item = StarRailSimMod.ITEMS.register(id, factory::get);
+        FOOD_BLOCK_ITEMS.add(item);
         return item;
     }
 

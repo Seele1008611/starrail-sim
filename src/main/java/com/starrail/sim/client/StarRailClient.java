@@ -83,6 +83,12 @@ public final class StarRailClient {
                     RenderType.cutout());
             ItemBlockRenderTypes.setRenderLayer(PathEcologyContent.SUNMEADOW_BLOOM.get(),
                     RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(PathEcologyContent.TIDE_GRASS.get(),
+                    RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(PathEcologyContent.CLEAR_SAND_BELLFLOWER.get(),
+                    RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(PathEcologyContent.STAR_TIDE_ALGAE.get(),
+                    RenderType.cutout());
         });
     }
 }

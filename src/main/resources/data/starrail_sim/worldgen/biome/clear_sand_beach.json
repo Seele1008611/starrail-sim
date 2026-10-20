@@ -1,0 +1,98 @@
+{
+  "creature_spawn_probability": 0.25,
+  "carvers": {
+    "air": [
+      "minecraft:cave",
+      "minecraft:cave_extra_underground",
+      "minecraft:canyon"
+    ]
+  },
+  "downfall": 0.4,
+  "temperature": 0.8,
+  "effects": {
+    "fog_color": 12638463,
+    "mood_sound": {
+      "block_search_extent": 8,
+      "offset": 2.0,
+      "sound": "minecraft:ambient.cave",
+      "tick_delay": 10000
+    },
+    "sky_color": 7907327,
+    "water_color": 5158823,
+    "water_fog_color": 4022647
+  },
+  "features": [
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [
+      "starrail_sim:path_starcoal_ore",
+      "starrail_sim:path_dawncopper_ore",
+      "starrail_sim:path_suniron_ore",
+      "starrail_sim:path_dawn_gold_ore",
+      "starrail_sim:path_resonance_ore",
+      "starrail_sim:path_memory_ore",
+      "starrail_sim:path_starmarrow_ore",
+      "starrail_sim:path_stellarjade_ore",
+      "starrail_sim:path_ancientdream_ore"
+    ],
+    [],
+    [],
+    [
+      "starrail_sim:tide_grass_patch",
+      "starrail_sim:clear_sand_bellflower_patch"
+    ]
+  ],
+  "has_precipitation": true,
+  "spawners": {
+    "ambient": [],
+    "axolotls": [],
+    "creature": [
+      {
+        "type": "minecraft:turtle",
+        "weight": 5,
+        "minCount": 2,
+        "maxCount": 5
+      }
+    ],
+    "misc": [],
+    "monster": [
+      {
+        "type": "minecraft:spider",
+        "weight": 75,
+        "minCount": 2,
+        "maxCount": 4
+      },
+      {
+        "type": "minecraft:zombie",
+        "weight": 70,
+        "minCount": 2,
+        "maxCount": 4
+      },
+      {
+        "type": "minecraft:skeleton",
+        "weight": 70,
+        "minCount": 2,
+        "maxCount": 4
+      },
+      {
+        "type": "minecraft:creeper",
+        "weight": 55,
+        "minCount": 2,
+        "maxCount": 3
+      },
+      {
+        "type": "minecraft:drowned",
+        "weight": 12,
+        "minCount": 1,
+        "maxCount": 2
+      }
+    ],
+    "water_ambient": [],
+    "water_creature": []
+  },
+  "spawn_costs": {}
+}
