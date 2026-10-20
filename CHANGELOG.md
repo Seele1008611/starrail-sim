@@ -2,7 +2,7 @@
 
 本日志记录模组版本进度。GitHub 仓库中的第一版为 `1.0.0`，`1.1.0` 于 2026-10-01 发布。
 
-## 1.19.0 — 发布候选（2026-10-20）
+## 1.19.0 — 正式版（2026-10-20）
 
 ### 新增与调整
 
@@ -15,8 +15,9 @@
 
 - 用户已确认阶段 0 至 5 的单机内容验收通过，包括多种子海陆衔接、海洋食物、海床矿物与气泡泉、海龟生成、群系定位和探索档案。
 - 多人服务器同步尚未测试，不据此宣称联机验收通过。
-- 当前候选 JAR：`build/libs/starrail_sim-1.19.0.jar`，20,112,309 字节；SHA-256：`175A105D38014F36B6123B8DCCB1E2D50CA3B234F338BDE17307B123FF01E979`。校验文件：`build/libs/starrail_sim-1.19.0.jar.sha256`。
-- 当前为本地发布候选，尚未发布到 GitHub。
+- 发行 JAR：[starrail_sim-1.19.0.jar](https://github.com/Seele1008611/starrail-sim/releases/download/v1.19.0/starrail_sim-1.19.0.jar)，20,112,309 字节；SHA-256：`175A105D38014F36B6123B8DCCB1E2D50CA3B234F338BDE17307B123FF01E979`。
+- 校验文件：[starrail_sim-1.19.0.jar.sha256](https://github.com/Seele1008611/starrail-sim/releases/download/v1.19.0/starrail_sim-1.19.0.jar.sha256)。
+- GitHub Release：[v1.19.0](https://github.com/Seele1008611/starrail-sim/releases/tag/v1.19.0)。
 
 ## 1.18.0 — 正式版（2026-10-19）
 
