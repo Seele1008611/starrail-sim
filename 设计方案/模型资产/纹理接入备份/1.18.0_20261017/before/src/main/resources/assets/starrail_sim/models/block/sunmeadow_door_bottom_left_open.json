@@ -1,7 +1,0 @@
-{
-  "parent": "minecraft:block/door_bottom_left_open",
-  "textures": {
-    "bottom": "starrail_sim:block/sunmeadow_planks",
-    "top": "starrail_sim:block/sunmeadow_planks"
-  }
-}

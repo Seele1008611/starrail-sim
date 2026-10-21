@@ -82,6 +82,7 @@ public final class StarRailSimMod {
         StarRailWorldBlocks.register();
         PathTerrainBlocks.register();
         PathMineralContent.register();
+        PathCaveContent.register();
         PathEquipmentContent.register();
         PathEcologyContent.register();
     }
@@ -376,6 +377,7 @@ public final class StarRailSimMod {
                     .displayItems((parameters, output) -> {
                         PathTerrainBlocks.addCreativeItems(output);
                         PathMineralContent.addCreativeItems(output);
+                        PathCaveContent.addCreativeItems(output);
                         PathEcologyContent.addMaterialCreativeItems(output);
                     })
                     .build());

@@ -23,6 +23,7 @@ public final class StarRailExplorationService {
     private static final String PATH_REGION_GLIMMERWOOD = "glimmerwood";
     private static final String PATH_REGION_STAR_TIDE_OCEAN = "star_tide_ocean";
     private static final String PATH_REGION_CLEAR_SAND_BEACH = "clear_sand_beach";
+    private static final String PATH_REGION_STARVEIN_CAVERN = "starvein_cavern";
     private static final List<String> PATH_RUIN_IDS = List.of(
             "ordinary", "preservation", "destruction", "hunt", "erudition", "harmony",
             "nihility", "abundance", "remembrance", "elation");
@@ -90,6 +91,7 @@ public final class StarRailExplorationService {
                     case PATH_REGION_GLIMMERWOOD -> PATH_REGION_GLIMMERWOOD;
                     case PATH_REGION_STAR_TIDE_OCEAN -> PATH_REGION_STAR_TIDE_OCEAN;
                     case PATH_REGION_CLEAR_SAND_BEACH -> PATH_REGION_CLEAR_SAND_BEACH;
+                    case PATH_REGION_STARVEIN_CAVERN -> PATH_REGION_STARVEIN_CAVERN;
                     default -> null;
                 };
                 if (currentRegionId != null && data.addDiscoveredPathRegion(currentRegionId)) {
@@ -173,6 +175,7 @@ public final class StarRailExplorationService {
         if (regions.contains(PATH_REGION_GLIMMERWOOD)) mask |= 2;
         if (regions.contains(PATH_REGION_STAR_TIDE_OCEAN)) mask |= 4;
         if (regions.contains(PATH_REGION_CLEAR_SAND_BEACH)) mask |= 8;
+        if (regions.contains(PATH_REGION_STARVEIN_CAVERN)) mask |= 16;
         return mask;
     }
 

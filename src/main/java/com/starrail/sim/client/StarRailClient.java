@@ -7,6 +7,7 @@ package com.starrail.sim.client;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.starrail.sim.StarRailSimMod;
 import com.starrail.sim.PathEcologyContent;
+import com.starrail.sim.PathCaveContent;
 import com.starrail.sim.StarRailWorldBlocks;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.screens.MenuScreens;
@@ -88,6 +89,14 @@ public final class StarRailClient {
             ItemBlockRenderTypes.setRenderLayer(PathEcologyContent.CLEAR_SAND_BELLFLOWER.get(),
                     RenderType.cutout());
             ItemBlockRenderTypes.setRenderLayer(PathEcologyContent.STAR_TIDE_ALGAE.get(),
+                    RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(PathCaveContent.SMALL_STARVEIN_BUD.get(),
+                    RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(PathCaveContent.MEDIUM_STARVEIN_BUD.get(),
+                    RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(PathCaveContent.LARGE_STARVEIN_BUD.get(),
+                    RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(PathCaveContent.STARVEIN_CRYSTAL_CLUSTER.get(),
                     RenderType.cutout());
         });
     }

@@ -1,7 +1,6 @@
 package com.starrail.sim;
 
-import com.starrail.sim.client.StarRailPassPickerScreen;
-import net.minecraft.client.Minecraft;
+import com.starrail.sim.client.StarRailPassPickerClient;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.InteractionHand;
 import net.minecraftforge.api.distmarker.Dist;
@@ -26,8 +25,7 @@ public record OpenLightConePassPickerPacket(StarRailPath path, InteractionHand h
                               Supplier<NetworkEvent.Context> contextSupplier) {
         NetworkEvent.Context context = contextSupplier.get();
         context.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () ->
-                Minecraft.getInstance().setScreen(
-                        new StarRailPassPickerScreen(packet.path(), packet.hand()))));
+                StarRailPassPickerClient.open(packet.path(), packet.hand())));
         context.setPacketHandled(true);
     }
 }

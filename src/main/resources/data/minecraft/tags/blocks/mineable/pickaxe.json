@@ -27,6 +27,14 @@
     "starrail_sim:path_memory_block",
     "starrail_sim:path_starmarrow_block",
     "starrail_sim:path_stellarjade_block",
-    "starrail_sim:path_ancientdream_block"
+    "starrail_sim:path_ancientdream_block",
+    "starrail_sim:starvein_crystal",
+    "starrail_sim:starvein_geode_crust",
+    "starrail_sim:starvein_geode_shell",
+    "starrail_sim:budding_starvein_crystal",
+    "starrail_sim:small_starvein_bud",
+    "starrail_sim:medium_starvein_bud",
+    "starrail_sim:large_starvein_bud",
+    "starrail_sim:starvein_crystal_cluster"
   ]
 }

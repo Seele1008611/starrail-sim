@@ -9,24 +9,120 @@
         {
           "biome": "starrail_sim:star_tide_ocean",
           "parameters": {
-            "temperature": [-1.0, 1.0],
-            "humidity": [-1.0, 1.0],
-            "continentalness": [-1.0, -0.19],
-            "erosion": [-1.0, 1.0],
-            "depth": [-1.0, 1.0],
-            "weirdness": [-1.0, 1.0],
+            "temperature": [
+              -1.0,
+              1.0
+            ],
+            "humidity": [
+              -1.0,
+              1.0
+            ],
+            "continentalness": [
+              -1.0,
+              -0.19
+            ],
+            "erosion": [
+              -1.0,
+              1.0
+            ],
+            "depth": [
+              0.0,
+              0.0
+            ],
+            "weirdness": [
+              -1.0,
+              1.0
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "starrail_sim:star_tide_ocean",
+          "parameters": {
+            "temperature": [
+              -1.0,
+              1.0
+            ],
+            "humidity": [
+              -1.0,
+              1.0
+            ],
+            "continentalness": [
+              -1.0,
+              -0.19
+            ],
+            "erosion": [
+              -1.0,
+              1.0
+            ],
+            "depth": [
+              1.0,
+              1.0
+            ],
+            "weirdness": [
+              -1.0,
+              1.0
+            ],
             "offset": 0.0
           }
         },
         {
           "biome": "starrail_sim:clear_sand_beach",
           "parameters": {
-            "temperature": [-1.0, 1.0],
-            "humidity": [-1.0, 1.0],
-            "continentalness": [-0.19, -0.11],
-            "erosion": [-1.0, 1.0],
-            "depth": [-1.0, 1.0],
-            "weirdness": [-1.0, 1.0],
+            "temperature": [
+              -1.0,
+              1.0
+            ],
+            "humidity": [
+              -1.0,
+              1.0
+            ],
+            "continentalness": [
+              -0.19,
+              -0.11
+            ],
+            "erosion": [
+              -1.0,
+              1.0
+            ],
+            "depth": [
+              0.0,
+              0.0
+            ],
+            "weirdness": [
+              -1.0,
+              1.0
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "starrail_sim:clear_sand_beach",
+          "parameters": {
+            "temperature": [
+              -1.0,
+              1.0
+            ],
+            "humidity": [
+              -1.0,
+              1.0
+            ],
+            "continentalness": [
+              -0.19,
+              -0.11
+            ],
+            "erosion": [
+              -1.0,
+              1.0
+            ],
+            "depth": [
+              1.0,
+              1.0
+            ],
+            "weirdness": [
+              -1.0,
+              1.0
+            ],
             "offset": 0.0
           }
         },
@@ -41,13 +137,46 @@
               -1.0,
               0.0
             ],
-            "continentalness": [-0.11, 1.0],
+            "continentalness": [
+              -0.11,
+              1.0
+            ],
             "erosion": [
               -1.0,
               1.0
             ],
             "depth": [
+              0.0,
+              0.0
+            ],
+            "weirdness": [
               -1.0,
+              1.0
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "starrail_sim:sunmeadow",
+          "parameters": {
+            "temperature": [
+              -1.0,
+              1.0
+            ],
+            "humidity": [
+              -1.0,
+              0.0
+            ],
+            "continentalness": [
+              -0.11,
+              1.0
+            ],
+            "erosion": [
+              -1.0,
+              1.0
+            ],
+            "depth": [
+              1.0,
               1.0
             ],
             "weirdness": [
@@ -77,7 +206,37 @@
               1.0
             ],
             "depth": [
+              0.0,
+              0.0
+            ],
+            "weirdness": [
               -1.0,
+              1.0
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "starrail_sim:glimmerwood",
+          "parameters": {
+            "temperature": [
+              -1.0,
+              1.0
+            ],
+            "humidity": [
+              0.0,
+              1.0
+            ],
+            "continentalness": [
+              -0.11,
+              1.0
+            ],
+            "erosion": [
+              -1.0,
+              1.0
+            ],
+            "depth": [
+              1.0,
               1.0
             ],
             "weirdness": [
@@ -85,6 +244,36 @@
               1.0
             ],
             "offset": 0.0
+          }
+        },
+        {
+          "biome": "starrail_sim:starvein_cavern",
+          "parameters": {
+            "continentalness": [
+              -1.0,
+              1.0
+            ],
+            "depth": [
+              0.2,
+              0.9
+            ],
+            "temperature": [
+              -1.0,
+              1.0
+            ],
+            "weirdness": [
+              -1.0,
+              1.0
+            ],
+            "humidity": [
+              -1.0,
+              1.0
+            ],
+            "offset": 0.0,
+            "erosion": [
+              -1.0,
+              1.0
+            ]
           }
         }
       ]

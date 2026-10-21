@@ -1,0 +1,96 @@
+{
+  "carvers": {
+    "air": [
+      "minecraft:cave",
+      "minecraft:cave_extra_underground",
+      "minecraft:canyon"
+    ]
+  },
+  "downfall": 0.8,
+  "temperature": 0.5,
+  "effects": {
+    "fog_color": 7907327,
+    "mood_sound": {
+      "block_search_extent": 8,
+      "offset": 2.0,
+      "sound": "minecraft:ambient.cave",
+      "tick_delay": 10000
+    },
+    "sky_color": 7907327,
+    "water_color": 5158823,
+    "water_fog_color": 2645346
+  },
+  "features": [
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [
+      "starrail_sim:path_starcoal_ore",
+      "starrail_sim:path_dawncopper_ore",
+      "starrail_sim:path_suniron_ore",
+      "starrail_sim:path_dawn_gold_ore",
+      "starrail_sim:path_resonance_ore",
+      "starrail_sim:path_memory_ore",
+      "starrail_sim:path_starmarrow_ore",
+      "starrail_sim:path_stellarjade_ore",
+      "starrail_sim:path_ancientdream_ore",
+      "starrail_sim:starvein_geode",
+      "starrail_sim:starvein_crystal_chamber"
+    ],
+    [],
+    [],
+    [
+      "starrail_sim:starvein_glimmer_moss"
+    ],
+    []
+  ],
+  "has_precipitation": false,
+  "spawners": {
+    "ambient": [],
+    "axolotls": [],
+    "creature": [],
+    "misc": [],
+    "monster": [
+      {
+        "type": "minecraft:spider",
+        "weight": 100,
+        "minCount": 4,
+        "maxCount": 4
+      },
+      {
+        "type": "minecraft:zombie",
+        "weight": 95,
+        "minCount": 4,
+        "maxCount": 4
+      },
+      {
+        "type": "minecraft:skeleton",
+        "weight": 100,
+        "minCount": 4,
+        "maxCount": 4
+      },
+      {
+        "type": "minecraft:creeper",
+        "weight": 80,
+        "minCount": 4,
+        "maxCount": 4
+      },
+      {
+        "type": "minecraft:enderman",
+        "weight": 10,
+        "minCount": 1,
+        "maxCount": 4
+      },
+      {
+        "type": "minecraft:witch",
+        "weight": 5,
+        "minCount": 1,
+        "maxCount": 1
+      }
+    ]
+  },
+  "spawn_costs": {}
+}

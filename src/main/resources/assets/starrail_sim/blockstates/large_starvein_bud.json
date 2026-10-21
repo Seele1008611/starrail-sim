@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "facing=down": { "model": "starrail_sim:block/large_starvein_bud", "x": 180 },
+    "facing=east": { "model": "starrail_sim:block/large_starvein_bud", "x": 90, "y": 90 },
+    "facing=north": { "model": "starrail_sim:block/large_starvein_bud", "x": 90 },
+    "facing=south": { "model": "starrail_sim:block/large_starvein_bud", "x": 90, "y": 180 },
+    "facing=up": { "model": "starrail_sim:block/large_starvein_bud" },
+    "facing=west": { "model": "starrail_sim:block/large_starvein_bud", "x": 90, "y": 270 }
+  }
+}

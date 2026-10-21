@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cross",
+  "textures": {
+    "cross": "starrail_sim:block/small_starvein_bud",
+    "particle": "starrail_sim:block/small_starvein_bud"
+  }
+}
