@@ -1,0 +1,23 @@
+{
+  "parent": "starrail_sim:journey/the_path",
+  "display": {
+    "icon": {
+      "item": "starrail_sim:path_trial_token"
+    },
+    "title": {
+      "translate": "advancements.starrail_sim.path.first.title"
+    },
+    "description": {
+      "translate": "advancements.starrail_sim.path.first.description"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": false,
+    "hidden": false
+  },
+  "criteria": {
+    "server_confirmed": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

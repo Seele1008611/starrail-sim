@@ -1,0 +1,30 @@
+{
+  "parent": "starrail_sim:exploration/starvein_cavern",
+  "display": {
+    "icon": {
+      "item": "starrail_sim:starvein_crystal_cluster"
+    },
+    "title": {
+      "translate": "advancements.starrail_sim.cavern.crystal_cluster.title"
+    },
+    "description": {
+      "translate": "advancements.starrail_sim.cavern.crystal_cluster.description"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": false,
+    "hidden": false
+  },
+  "criteria": {
+    "obtain_crystal_cluster": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": ["starrail_sim:starvein_crystal_cluster"]
+          }
+        ]
+      }
+    }
+  }
+}

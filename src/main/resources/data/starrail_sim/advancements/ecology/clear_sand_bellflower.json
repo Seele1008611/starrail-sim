@@ -1,0 +1,30 @@
+{
+  "parent": "starrail_sim:exploration/clear_sand_beach",
+  "display": {
+    "icon": {
+      "item": "starrail_sim:clear_sand_bellflower"
+    },
+    "title": {
+      "translate": "advancements.starrail_sim.ecology.clear_sand_bellflower.title"
+    },
+    "description": {
+      "translate": "advancements.starrail_sim.ecology.clear_sand_bellflower.description"
+    },
+    "frame": "task",
+    "show_toast": false,
+    "announce_to_chat": false,
+    "hidden": false
+  },
+  "criteria": {
+    "obtain_clear_sand_bellflower": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": ["starrail_sim:clear_sand_bellflower"]
+          }
+        ]
+      }
+    }
+  }
+}

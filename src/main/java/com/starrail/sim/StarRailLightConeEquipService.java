@@ -54,6 +54,7 @@ public final class StarRailLightConeEquipService {
         inventory.setItem(inventorySlot, previous);
         inventory.setChanged();
         syncInventory(player);
+        StarRailAdvancementService.award(player, "light_cone/equipped");
         return new Result(true, "message.starrail_sim.light_cone.equipped");
     }
 

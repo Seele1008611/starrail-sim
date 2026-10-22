@@ -1,0 +1,30 @@
+{
+  "parent": "starrail_sim:exploration/star_tide_ocean",
+  "display": {
+    "icon": {
+      "item": "starrail_sim:roasted_star_tide_algae"
+    },
+    "title": {
+      "translate": "advancements.starrail_sim.ecology.roasted_algae.title"
+    },
+    "description": {
+      "translate": "advancements.starrail_sim.ecology.roasted_algae.description"
+    },
+    "frame": "task",
+    "show_toast": false,
+    "announce_to_chat": false,
+    "hidden": false
+  },
+  "criteria": {
+    "obtain_roasted_algae": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": ["starrail_sim:roasted_star_tide_algae"]
+          }
+        ]
+      }
+    }
+  }
+}

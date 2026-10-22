@@ -1,0 +1,36 @@
+{
+  "parent": "starrail_sim:journey/the_path",
+  "display": {
+    "icon": {
+      "item": "starrail_sim:starvein_crystal_cluster"
+    },
+    "title": {
+      "translate": "advancements.starrail_sim.exploration.starvein_cavern.title"
+    },
+    "description": {
+      "translate": "advancements.starrail_sim.exploration.starvein_cavern.description"
+    },
+    "frame": "task",
+    "show_toast": false,
+    "announce_to_chat": false,
+    "hidden": false
+  },
+  "criteria": {
+    "visit_starvein_cavern": {
+      "trigger": "minecraft:location",
+      "conditions": {
+        "player": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "location": {
+                "biome": "starrail_sim:starvein_cavern"
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+}

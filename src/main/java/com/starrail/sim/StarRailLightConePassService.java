@@ -38,6 +38,7 @@ public final class StarRailLightConePassService {
         Item rewardItem = pool.get(player.getRandom().nextInt(pool.size()));
         giveReward(player, rewardItem);
         consumeTicket(player, ticket);
+        StarRailAdvancementService.award(player, "light_cone/random_pass");
         player.sendSystemMessage(Component.translatable("message.starrail_sim.pass.random_received",
                 Component.translatable(rewardItem.getDescriptionId())));
     }
@@ -88,6 +89,7 @@ public final class StarRailLightConePassService {
 
         giveReward(player, selected);
         consumeTicket(player, ticket);
+        StarRailAdvancementService.award(player, "light_cone/special_pass");
         player.sendSystemMessage(Component.translatable("message.starrail_sim.pass.selected_received",
                 Component.translatable(selected.getDescriptionId())));
     }

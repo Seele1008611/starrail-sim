@@ -1,0 +1,36 @@
+{
+  "parent": "starrail_sim:journey/the_path",
+  "display": {
+    "icon": {
+      "item": "starrail_sim:clear_sand_bellflower"
+    },
+    "title": {
+      "translate": "advancements.starrail_sim.exploration.clear_sand_beach.title"
+    },
+    "description": {
+      "translate": "advancements.starrail_sim.exploration.clear_sand_beach.description"
+    },
+    "frame": "task",
+    "show_toast": false,
+    "announce_to_chat": false,
+    "hidden": false
+  },
+  "criteria": {
+    "visit_clear_sand_beach": {
+      "trigger": "minecraft:location",
+      "conditions": {
+        "player": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "location": {
+                "biome": "starrail_sim:clear_sand_beach"
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+}

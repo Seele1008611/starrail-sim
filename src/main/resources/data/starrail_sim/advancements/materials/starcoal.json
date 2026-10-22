@@ -1,0 +1,30 @@
+{
+  "parent": "starrail_sim:journey/the_path",
+  "display": {
+    "icon": {
+      "item": "starrail_sim:path_starcoal"
+    },
+    "title": {
+      "translate": "advancements.starrail_sim.materials.starcoal.title"
+    },
+    "description": {
+      "translate": "advancements.starrail_sim.materials.starcoal.description"
+    },
+    "frame": "task",
+    "show_toast": false,
+    "announce_to_chat": false,
+    "hidden": false
+  },
+  "criteria": {
+    "obtain_starcoal": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": ["starrail_sim:path_starcoal"]
+          }
+        ]
+      }
+    }
+  }
+}

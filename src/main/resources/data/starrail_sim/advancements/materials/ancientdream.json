@@ -1,0 +1,30 @@
+{
+  "parent": "starrail_sim:journey/the_path",
+  "display": {
+    "icon": {
+      "item": "starrail_sim:path_ancientdream_ingot"
+    },
+    "title": {
+      "translate": "advancements.starrail_sim.materials.ancientdream.title"
+    },
+    "description": {
+      "translate": "advancements.starrail_sim.materials.ancientdream.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": false,
+    "hidden": false
+  },
+  "criteria": {
+    "obtain_ancientdream": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": ["starrail_sim:path_ancientdream_ingot"]
+          }
+        ]
+      }
+    }
+  }
+}

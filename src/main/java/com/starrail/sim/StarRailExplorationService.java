@@ -1,6 +1,9 @@
 package com.starrail.sim;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.CompoundContainer;
+import net.minecraft.world.Container;
+import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -8,6 +11,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.entity.player.PlayerContainerEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -60,6 +64,7 @@ public final class StarRailExplorationService {
         if (!data.isLegacyExplorationMigrated()) {
             data.setLegacyExplorationMigrated(true);
         }
+        StarRailAdvancementMigrationService.migrate(player, data);
         tryDeliver(player, data);
         if (data.isPathUnlocked()) StarRailPathService.sync(player);
     }
@@ -78,6 +83,7 @@ public final class StarRailExplorationService {
                     }
                     if (count == OVERWORLD_BIOMES.size()) {
                         data.setTrainRewardPending(true);
+                        StarRailAdvancementService.award(player, "journey/overworld");
                         player.sendSystemMessage(net.minecraft.network.chat.Component.translatable(
                                 "message.starrail_sim.overworld_biomes_complete"));
                     }
@@ -122,6 +128,7 @@ public final class StarRailExplorationService {
 
     public static void discoverArena(ServerPlayer player, BlockPos pos) {
         if (!player.serverLevel().dimension().equals(StarRailDimensionIds.THE_PATH)) return;
+        StarRailAdvancementService.award(player, "exploration/arena_discovered");
         player.getCapability(StarRailPathCapability.PATH_DATA).ifPresent(data -> {
             if (data.addDiscoveredPathArena(pos.asLong())) {
                 player.sendSystemMessage(Component.translatable(
@@ -159,6 +166,7 @@ public final class StarRailExplorationService {
         player.getCapability(StarRailPathCapability.PATH_DATA).ifPresent(data -> {
             boolean newlyDiscovered = data.addDiscoveredPathArena(arenaPos.asLong());
             data.recordPathArenaVictory();
+            StarRailAdvancementService.award(player, "exploration/arena_victory");
             StarRailPathService.sync(player);
             if (newlyDiscovered) {
                 player.sendSystemMessage(Component.translatable(
@@ -279,6 +287,36 @@ public final class StarRailExplorationService {
                 StarRailPathService.sync(player);
             }
         });
+    }
+
+    @SubscribeEvent
+    public static void onRuinChestOpened(PlayerContainerEvent.Open event) {
+        if (!(event.getEntity() instanceof ServerPlayer player)
+                || !player.serverLevel().dimension().equals(StarRailDimensionIds.THE_PATH)
+                || !(event.getContainer() instanceof ChestMenu chestMenu)) return;
+
+        Container openedContainer = chestMenu.getContainer();
+        if (openedContainer instanceof ChestBlockEntity chest
+                && isOrdinaryRuinChest(chest)) {
+            StarRailAdvancementService.award(player, "exploration/ordinary_ruin");
+            return;
+        }
+        if (!(openedContainer instanceof CompoundContainer doubleChest)) return;
+
+        BlockPos origin = player.blockPosition();
+        BlockPos.betweenClosedStream(origin.offset(-8, -4, -8), origin.offset(8, 4, 8))
+                .map(player.serverLevel()::getBlockEntity)
+                .filter(ChestBlockEntity.class::isInstance)
+                .map(ChestBlockEntity.class::cast)
+                .filter(doubleChest::contains)
+                .filter(StarRailExplorationService::isOrdinaryRuinChest)
+                .findFirst()
+                .ifPresent(chest -> StarRailAdvancementService.award(
+                        player, "exploration/ordinary_ruin"));
+    }
+
+    private static boolean isOrdinaryRuinChest(ChestBlockEntity chest) {
+        return StarRailRuinGuardService.getArchiveRuinId(chest).equals("ordinary");
     }
 
     /** Activating a placed train establishes that this player already acquired the item. */

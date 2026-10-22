@@ -1,0 +1,23 @@
+{
+  "parent": "starrail_sim:path/first",
+  "display": {
+    "icon": {
+      "item": "minecraft:experience_bottle"
+    },
+    "title": {
+      "translate": "advancements.starrail_sim.path.practice.title"
+    },
+    "description": {
+      "translate": "advancements.starrail_sim.path.practice.description"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": false,
+    "hidden": false
+  },
+  "criteria": {
+    "server_confirmed": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

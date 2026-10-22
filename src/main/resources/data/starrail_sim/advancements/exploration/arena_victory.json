@@ -1,0 +1,23 @@
+{
+  "parent": "starrail_sim:exploration/arena_discovered",
+  "display": {
+    "icon": {
+      "item": "starrail_sim:relic_trial_device"
+    },
+    "title": {
+      "translate": "advancements.starrail_sim.exploration.arena_victory.title"
+    },
+    "description": {
+      "translate": "advancements.starrail_sim.exploration.arena_victory.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": false,
+    "hidden": false
+  },
+  "criteria": {
+    "server_confirmed": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

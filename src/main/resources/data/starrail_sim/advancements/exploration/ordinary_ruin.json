@@ -1,0 +1,23 @@
+{
+  "parent": "starrail_sim:journey/the_path",
+  "display": {
+    "icon": {
+      "item": "minecraft:chest"
+    },
+    "title": {
+      "translate": "advancements.starrail_sim.exploration.ordinary_ruin.title"
+    },
+    "description": {
+      "translate": "advancements.starrail_sim.exploration.ordinary_ruin.description"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": false,
+    "hidden": false
+  },
+  "criteria": {
+    "server_confirmed": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

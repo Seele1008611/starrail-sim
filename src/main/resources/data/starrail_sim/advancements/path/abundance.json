@@ -1,0 +1,24 @@
+{
+  "parent": "starrail_sim:path/first",
+  "display": {
+    "icon": {
+      "item": "starrail_sim:path_trial_token",
+      "nbt": "{Path:\"abundance\"}"
+    },
+    "title": {
+      "translate": "advancements.starrail_sim.path.abundance.title"
+    },
+    "description": {
+      "translate": "advancements.starrail_sim.path.abundance.description"
+    },
+    "frame": "task",
+    "show_toast": false,
+    "announce_to_chat": false,
+    "hidden": false
+  },
+  "criteria": {
+    "server_confirmed": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

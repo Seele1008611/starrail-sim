@@ -1,0 +1,30 @@
+{
+  "parent": "starrail_sim:exploration/glimmerwood",
+  "display": {
+    "icon": {
+      "item": "starrail_sim:forestbean_pod"
+    },
+    "title": {
+      "translate": "advancements.starrail_sim.ecology.forestbean.title"
+    },
+    "description": {
+      "translate": "advancements.starrail_sim.ecology.forestbean.description"
+    },
+    "frame": "task",
+    "show_toast": false,
+    "announce_to_chat": false,
+    "hidden": false
+  },
+  "criteria": {
+    "obtain_forestbean_pod": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": ["starrail_sim:forestbean_pod"]
+          }
+        ]
+      }
+    }
+  }
+}

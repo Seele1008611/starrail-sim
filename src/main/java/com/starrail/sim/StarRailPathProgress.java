@@ -101,6 +101,7 @@ public final class StarRailPathProgress {
             data.setPracticeProgress(path, 0);
             StarRailPracticeService.clearAccumulation(player);
             StarRailPathEffects.refresh(player, path);
+            StarRailAdvancementService.award(player, "path/glimpse");
         } else if (after >= target) {
             beginRankTrial(player, data, path, rank);
         }

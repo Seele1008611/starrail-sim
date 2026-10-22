@@ -86,6 +86,8 @@ public final class StarRailPathService {
             data.setCurrentPath(path);
             data.resetTrial();
             StarRailPathEffects.refresh(player, path);
+            StarRailAdvancementService.award(player, "path/first");
+            StarRailAdvancementService.award(player, "path/" + path.getId());
             StarRailPathMessages.sendQueued(player, path,
                     Component.translatable(confirmMessageKey(path)));
             sync(player);
@@ -107,6 +109,11 @@ public final class StarRailPathService {
             StarRailPracticeService.clearAccumulation(player);
             data.resetTrial();
             StarRailPathEffects.refresh(player, path);
+            if (nextRank == StarRailPathRank.PRACTICE) {
+                StarRailAdvancementService.award(player, "path/practice");
+            } else if (nextRank == StarRailPathRank.PATH_PINNACLE) {
+                StarRailAdvancementService.award(player, "path/pinnacle");
+            }
             StarRailPathMessages.sendQueued(player, path, Component.translatable(
                     "message.starrail_sim.path_rank_up",
                     path.getDisplayName(),
