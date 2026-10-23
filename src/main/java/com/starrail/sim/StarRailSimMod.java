@@ -508,6 +508,7 @@ public final class StarRailSimMod {
         StarRailRuinWorldgen.register(modEventBus);
         StarRailNetwork.register();
         StarRailAttributes.ATTRIBUTES.register(modEventBus);
+        StarRailCombatSounds.SOUNDS.register(modEventBus);
         EFFECTS.register(modEventBus);
         StarRailTraceMaterials.register();
         BLOCKS.register(modEventBus);

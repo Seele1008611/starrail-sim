@@ -361,7 +361,7 @@ public final class StarRailPathEvents {
         event.getEntity().getPersistentData().putBoolean(paid, true);
         player.getCapability(StarRailPathCapability.PATH_DATA).ifPresent(data -> {
             if (data.getCurrentPath() == StarRailPath.HARMONY || data.getTrialPath() == StarRailPath.HARMONY)
-                StarRailHarmonyService.onResonanceKill(player, data);
+                StarRailHarmonyService.onResonanceKill(player, event.getEntity(), data);
             StarRailPracticeService.duringAttack(event.getSource(), () -> {
                 StarRailRankTrialService.killed(player, data, event.getEntity());
                 StarRailDebuffService.onNihilityMarkedDeath(player, event.getEntity());

@@ -1,22 +1,29 @@
 package com.starrail.sim.client;
 
 import com.mojang.blaze3d.vertex.*;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.starrail.sim.CombatVfxPacket;
 import com.starrail.sim.StarRailPath;
 import com.starrail.sim.StarRailSimMod;
+import com.starrail.sim.StarRailStatusConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.ParticleStatus;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.level.ClipContext;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderLevelStageEvent;
+import net.minecraftforge.client.event.ViewportEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.joml.Matrix4f;
+import org.joml.Vector4f;
 import java.util.*;
 import java.util.function.DoubleFunction;
 
@@ -26,11 +33,14 @@ public final class StarRailCombatMesh {
     private static final Vec3 UP = new Vec3(0, 1, 0), X = new Vec3(1, 0, 0), Z = new Vec3(0, 0, 1);
     private static final List<Effect> EFFECTS = new ArrayList<>();
     private static final List<Face> FACES = new ArrayList<>();
-    private static final MultiBufferSource.BufferSource BUFFERS = MultiBufferSource.immediate(new BufferBuilder(262144));
+    private static MultiBufferSource.BufferSource buffers = MultiBufferSource.immediate(new BufferBuilder(262144));
     private static ClientLevel activeLevel;
     private static long clock;
     private static Matrix4f worldViewPose;
-    private record Face(Vec3 a, Vec3 b, Vec3 c, Vec3 d, int color, float alpha, double distance) {}
+    private static int lastFaceCount;
+    private static long lastBuildNanos;
+    private record Face(Vec3 a, Vec3 b, Vec3 c, Vec3 d, int color, float alpha, double distance,
+                        int material, float ua, float ub, float uc, float ud) {}
     private record Palette(int main, int shade, int accent) {}
     private static final class Effect {
         final CombatVfxPacket packet;
@@ -55,20 +65,23 @@ public final class StarRailCombatMesh {
             return new Vec3(delta.dot(side), delta.y, delta.dot(forward));
         }
     }
-    /** Unlit colour geometry, ordinary alpha blending, world depth; no additive white bloom. */
+    /** Direct mesh and HDR emission share depth-tested geometry and the same sorting. */
     private static final class MeshType extends RenderType {
         private MeshType() {
-            super("starrail_combat_mesh", DefaultVertexFormat.POSITION_COLOR, VertexFormat.Mode.QUADS,
+            super("starrail_combat_mesh", DefaultVertexFormat.POSITION_COLOR_TEX, VertexFormat.Mode.QUADS,
                 262144, false, false, () -> {}, () -> {});
         }
-        static final RenderType TYPE = create("starrail_combat_mesh", DefaultVertexFormat.POSITION_COLOR,
+        static final RenderType TYPE = create("starrail_combat_mesh", DefaultVertexFormat.POSITION_COLOR_TEX,
             VertexFormat.Mode.QUADS, 262144, false, false,
-            CompositeState.builder().setShaderState(POSITION_COLOR_SHADER)
+            CompositeState.builder().setShaderState(new ShaderStateShard(StarRailCombatShaders::current))
                 .setTransparencyState(TRANSLUCENT_TRANSPARENCY).setCullState(NO_CULL)
                 .setDepthTestState(LEQUAL_DEPTH_TEST).setWriteMaskState(COLOR_WRITE)
-                .setOutputState(MAIN_TARGET).createCompositeState(false));
+                .setOutputState(new OutputStateShard("combat_target",StarRailCombatPost::bindGeometryOutput,()->{})).createCompositeState(false));
     }
     private StarRailCombatMesh() {}
+    static int activeEffects() { return EFFECTS.size(); }
+    static int lastFaceCount() { return lastFaceCount; }
+    static double lastBuildMillis() { return lastBuildNanos / 1_000_000D; }
     private static double clamp(double v) { return Math.max(0, Math.min(1, v)); }
     private static double ease(double v) { v = clamp(v); return v * v * (3 - 2 * v); }
     private static Vec3 v(double x, double y, double z) { return new Vec3(x, y, z); }
@@ -109,7 +122,7 @@ public final class StarRailCombatMesh {
         EFFECTS.add(new Effect(packet));
     }
     private static void sync(Minecraft mc) {
-        if(mc.level!=activeLevel || mc.player==null) { EFFECTS.clear(); FACES.clear(); worldViewPose=null; activeLevel=mc.level;clock=0; }
+        if(mc.level!=activeLevel || mc.player==null) { EFFECTS.clear(); FACES.clear(); worldViewPose=null; activeLevel=mc.level;clock=0;lastFaceCount=0;lastBuildNanos=0;StarRailCombatPost.release(); }
     }
     @SubscribeEvent public static void tick(TickEvent.ClientTickEvent event) {
         if(event.phase!=TickEvent.Phase.END)return;
@@ -130,11 +143,15 @@ public final class StarRailCombatMesh {
         Matrix4f matrix=worldViewPose;
         worldViewPose=null;
         Minecraft mc=Minecraft.getInstance();sync(mc);
-        if(mc.level==null||mc.player==null||EFFECTS.isEmpty()||matrix==null)return;
+        if(mc.level==null||mc.player==null||EFFECTS.isEmpty()||matrix==null) { lastFaceCount=0;lastBuildNanos=0;StarRailCombatPost.idle();return; }
         float partial=mc.isPaused()?0:event.getPartialTick();
         Vec3 camera=event.getCamera().getPosition();
         ParticleStatus quality=mc.options.particles().get();
         int detail=quality==ParticleStatus.MINIMAL?10:quality==ParticleStatus.DECREASED?16:24;
+        long buildStart=System.nanoTime();
+        List<StarRailCombatPost.Impulse> impulses=new ArrayList<>();
+        // Match BufferUploader: projection * RenderSystem model-view * CPU vertex pose.
+        Matrix4f projectionView=new Matrix4f(RenderSystem.getProjectionMatrix()).mul(RenderSystem.getModelViewMatrix()).mul(matrix);
         FACES.clear();
         for(Effect effect:EFFECTS) {
             Entity target=mc.level.getEntity(effect.packet.targetId());
@@ -143,25 +160,190 @@ public final class StarRailCombatMesh {
                 effect.anchor=interpolate(target,partial).add(0,effect.bodyHeight,0);
             }
             if(effect.anchor.distanceToSqr(camera)>48*48)continue;
-            new Scene(effect,(clock-effect.start+partial)/20D,detail,camera,mc,partial).draw();
+            double age=(clock-effect.start+partial)/20D;
+            new Scene(effect,age,detail,camera,mc,partial).draw();
+            addPathImpulses(effect,age,partial,camera,mc,projectionView,impulses);
         }
         FACES.sort(Comparator.comparingDouble(Face::distance).reversed());
+        lastFaceCount=FACES.size();lastBuildNanos=System.nanoTime()-buildStart;
+        StarRailCombatShaders.prepare((float)((clock+partial)/20D % 3600));
+        boolean enhanced=StarRailCombatShaders.enhanced();
+        impulses.sort(Comparator.comparingDouble(StarRailCombatPost.Impulse::strength).reversed());
+        if(impulses.size()>4)impulses=impulses.subList(0,4);
+        ShaderInstance previousShader=RenderSystem.getShader();
         PoseStack poses=event.getPoseStack();poses.pushPose();
         try {
-            VertexConsumer vertices=BUFFERS.getBuffer(MeshType.TYPE);
-            for(Face face:FACES) {
-                vertex(vertices,matrix,face.a,camera,face.color,face.alpha);
-                vertex(vertices,matrix,face.b,camera,face.color,face.alpha);
-                vertex(vertices,matrix,face.c,camera,face.color,face.alpha);
-                vertex(vertices,matrix,face.d,camera,face.color,face.alpha);
+            try {
+                drawFaces(matrix,camera,false);
+            } catch(RuntimeException exception) {
+                if(!enhanced)throw exception;
+                StarRailCombatShaders.disable(exception);
+                MeshType.TYPE.clearRenderState();
+                // A failed upload may leave its builder open; retry the same sorted faces cleanly.
+                buffers=MultiBufferSource.immediate(new BufferBuilder(262144));
+                drawFaces(matrix,camera,false);
             }
-        } finally { BUFFERS.endBatch(MeshType.TYPE);poses.popPose();FACES.clear(); }
+            if(FACES.stream().anyMatch(face->face.material>0)) {
+                StarRailCombatPost.render(()-> {
+                    try {drawFaces(matrix,camera,true);}
+                    catch(RuntimeException exception) {buffers=MultiBufferSource.immediate(new BufferBuilder(262144));throw exception;}
+                },impulses);
+            } else StarRailCombatPost.idle();
+        } finally {
+            MeshType.TYPE.clearRenderState();
+            RenderSystem.setShader(()->previousShader);
+            poses.popPose();FACES.clear();
+        }
     }
-    private static void vertex(VertexConsumer out, Matrix4f pose, Vec3 point, Vec3 camera,int color,float alpha) {
+    private static boolean hunt(Effect effect) {
+        return effect.packet.kind()==CombatVfxPacket.Kind.HUNT_STRIKE||effect.packet.kind()==CombatVfxPacket.Kind.HUNT_REVERSE;
+    }
+    private static double shockPhase(Effect effect,double age) {
+        return (age-(effect.packet.kind().strong()?1.37:.97))/.55;
+    }
+    private static boolean visible(Vec3 point,Vec3 camera,Minecraft mc) {
+        HitResult hit=mc.level.clip(new ClipContext(camera,point,ClipContext.Block.VISUAL,ClipContext.Fluid.NONE,mc.player));
+        return hit.getType()==HitResult.Type.MISS||hit.getLocation().distanceToSqr(camera)>=point.distanceToSqr(camera)-.04;
+    }
+    private static void addPathImpulses(Effect effect,double age,float partial,Vec3 camera,Minecraft mc,Matrix4f projectionView,
+                                        List<StarRailCombatPost.Impulse> out) {
+        var kind=effect.packet.kind();
+        Vec3 feet=effect.anchor.add(0,-effect.bodyHeight+.08,0);
+        if(hunt(effect)) {
+            double phase=shockPhase(effect,age);
+            if(phase>=0&&phase<=1)addImpulse(effect.anchor.add(0,-effect.bodyHeight+.12,0),camera,mc,projectionView,
+                    phase,effect.packet.kind().strong()?1.4F:.85F,effect.packet.kind().strong()?1F:.65F,
+                    0.24F,.70F,1F,0F,out);
+        } else if(kind==CombatVfxPacket.Kind.PRESERVATION_WALL) {
+            // Two shield layers unfold in sequence; each leaves a small gold-edged refraction ripple.
+            double first=(age-.42)/.62,second=(age-1.05)/.62;
+            if(first>=0&&first<=1)addImpulse(feet.add(0,.8,0),camera,mc,projectionView,first,.7F,.48F,
+                    1F,.62F,.20F,1F,out);
+            if(second>=0&&second<=1)addImpulse(feet.add(0,.8,0),camera,mc,projectionView,second,.85F,.34F,
+                    1F,.62F,.20F,1F,out);
+        } else if(kind==CombatVfxPacket.Kind.PRESERVATION_COUNTER) {
+            // The amber counter wave starts at the blocking player and expands toward the struck target.
+            Entity owner=mc.level.getEntity(effect.packet.sourceId());
+            Vec3 source=owner!=null&&!owner.isRemoved()
+                    ?interpolate(owner,partial).add(0,owner.getBbHeight()*.55,0):effect.packet.origin();
+            double phase=(age-.77)/.55;
+            if(phase>=0&&phase<=1)addImpulse(source,camera,mc,projectionView,phase,.92F,.86F,
+                    1F,.56F,.12F,1F,out);
+        } else if(kind==CombatVfxPacket.Kind.ABUNDANCE_MERCY) {
+            // The first soft wave tracks the lotus opening, the second follows its falling life motes.
+            double opening=(age-.43)/.72,afterglow=(age-.77)/.72;
+            if(opening>=0&&opening<=1)addImpulse(feet,camera,mc,projectionView,opening,.72F,.30F,
+                    .38F,1F,.58F,2F,out);
+            if(afterglow>=0&&afterglow<=1)addImpulse(feet,camera,mc,projectionView,afterglow,.78F,.20F,
+                    .38F,1F,.58F,2F,out);
+        } else if(kind==CombatVfxPacket.Kind.DESTRUCTION_BURN) {
+            addPhaseImpulse(effect.anchor,age,.57,.68,.95F,.65F,1F,.34F,.10F,3F,camera,mc,projectionView,out);
+        } else if(kind==CombatVfxPacket.Kind.DESTRUCTION_DESPERATE) {
+            double start=effect.packet.targetId()==effect.packet.sourceId()?.24:.57;
+            addPhaseImpulse(effect.anchor,age,start,.78,1.32F,1.08F,1F,.30F,.07F,3F,camera,mc,projectionView,out);
+        } else if(kind==CombatVfxPacket.Kind.ERUDITION_ECHO) {
+            addPhaseImpulse(effect.anchor,age,.57,.58,.86F,.62F,.76F,.44F,1F,4F,camera,mc,projectionView,out);
+        } else if(kind==CombatVfxPacket.Kind.ERUDITION_FINAL) {
+            addPhaseImpulse(effect.anchor,age,.72,.54,.94F,.78F,.76F,.44F,1F,4F,camera,mc,projectionView,out);
+            addPhaseImpulse(effect.anchor,age,1.03,.5F,.72F,.48F,.76F,.44F,1F,4F,camera,mc,projectionView,out);
+        } else if(kind==CombatVfxPacket.Kind.NIHILITY_MARK) {
+            addPhaseImpulse(effect.anchor,age,.12,.68,.88F,.64F,.56F,.26F,.92F,5F,camera,mc,projectionView,out);
+        } else if(kind==CombatVfxPacket.Kind.NIHILITY_SPREAD) {
+            addPhaseImpulse(effect.anchor,age,.35,.72,.86F,.4F,.56F,.26F,.92F,5.1F,camera,mc,projectionView,out);
+        } else if(kind==CombatVfxPacket.Kind.NIHILITY_END) {
+            addPhaseImpulse(effect.anchor,age,.12,.4,.9F,.82F,.56F,.26F,.92F,5F,camera,mc,projectionView,out);
+            addPhaseImpulse(effect.anchor,age,.54,.6,1.1F,.7F,.62F,.32F,1F,5.2F,camera,mc,projectionView,out);
+        } else if(kind==CombatVfxPacket.Kind.HARMONY_RESONANCE) {
+            addPhaseImpulse(effect.anchor,age,.18,.42,.72F,.32F,1F,.55F,.82F,6F,camera,mc,projectionView,out);
+            addPhaseImpulse(effect.anchor,age,.69,.42,.72F,.30F,1F,.55F,.82F,6F,camera,mc,projectionView,out);
+            addPhaseImpulse(effect.anchor,age,1.2,.42,.72F,.28F,1F,.55F,.82F,6F,camera,mc,projectionView,out);
+        } else if(kind==CombatVfxPacket.Kind.HARMONY_AFTERGLOW) {
+            addPhaseImpulse(effect.anchor,age,.57,.55,.8F,.48F,1F,.55F,.82F,6F,camera,mc,projectionView,out);
+        } else if(kind==CombatVfxPacket.Kind.HARMONY_CONCERT) {
+            double phase=(age-.18)/.78;
+            if(phase>=0&&phase<=1) {
+                Vec3 returnPoint=effect.packet.origin().lerp(effect.packet.impact(),phase);
+                addImpulse(returnPoint,camera,mc,projectionView,phase,.72F,.46F,1F,.62F,.86F,6F,out);
+            }
+        } else if(kind==CombatVfxPacket.Kind.HARMONY_UNISON) {
+            addPhaseImpulse(effect.anchor,age,.18,.55,.84F,.66F,1F,.55F,.82F,6F,camera,mc,projectionView,out);
+            addPhaseImpulse(effect.anchor,age,.86,.52,.9F,.52F,1F,.55F,.82F,6F,camera,mc,projectionView,out);
+        } else if(kind==CombatVfxPacket.Kind.REMEMBRANCE_RECORD) {
+            addPhaseImpulse(effect.anchor,age,.16,.72,.92F,.74F,.52F,.86F,1F,7F,camera,mc,projectionView,out);
+        } else if(kind==CombatVfxPacket.Kind.REMEMBRANCE_ECHO) {
+            addPhaseImpulse(effect.anchor,age,.8,.58,.86F,.72F,.52F,.86F,1F,7F,camera,mc,projectionView,out);
+        } else if(kind==CombatVfxPacket.Kind.REMEMBRANCE_ETERNAL) {
+            addPhaseImpulse(effect.anchor,age,.99,.68,1.05F,.96F,.52F,.86F,1F,7F,camera,mc,projectionView,out);
+            addPhaseImpulse(effect.anchor,age,1.38,.5F,.72F,.54F,.52F,.86F,1F,7F,camera,mc,projectionView,out);
+        } else if(kind==CombatVfxPacket.Kind.ELATION_BURST) {
+            addPhaseImpulse(effect.anchor,age,.57,.46,.8F,.58F,1F,.36F,.72F,8F,camera,mc,projectionView,out);
+        } else if(kind==CombatVfxPacket.Kind.ELATION_GRAND) {
+            addPhaseImpulse(effect.anchor,age,.57,.48,.9F,.92F,1F,.36F,.72F,8F,camera,mc,projectionView,out);
+            addPhaseImpulse(effect.anchor,age,1.02,.5F,.76F,.66F,1F,.72F,.28F,8F,camera,mc,projectionView,out);
+        }
+    }
+    private static void addPhaseImpulse(Vec3 point,double age,double start,double duration,float worldRadius,float strength,
+                                        float red,float green,float blue,float style,Vec3 camera,Minecraft mc,
+                                        Matrix4f projectionView,List<StarRailCombatPost.Impulse> out) {
+        double phase=(age-start)/duration;
+        if(phase>=0&&phase<=1)addImpulse(point,camera,mc,projectionView,phase,worldRadius,strength,
+                red,green,blue,style,out);
+    }
+    private static void addImpulse(Vec3 point,Vec3 camera,Minecraft mc,Matrix4f projectionView,double phase,float worldRadius,
+                                   float strength,float red,float green,float blue,float style,
+                                   List<StarRailCombatPost.Impulse> out) {
+        if(out.size()>=64||!visible(point,camera,mc))return;
+        Vector4f clip=projectionView.transform(new Vector4f((float)(point.x-camera.x),(float)(point.y-camera.y),(float)(point.z-camera.z),1));
+        Vector4f edge=projectionView.transform(new Vector4f((float)(point.x-camera.x),(float)(point.y-camera.y+worldRadius),
+                (float)(point.z-camera.z),1));
+        if(clip.w<=.01||edge.w<=.01)return;
+        float x=clip.x/clip.w*.5F+.5F,y=clip.y/clip.w*.5F+.5F,depth=clip.z/clip.w*.5F+.5F;
+        float radius=Math.max(.012F,Math.min(.32F,Math.abs(edge.y/edge.w*.5F+.5F-y)));
+        if(x<0||x>1||y<0||y>1||depth<0||depth>1)return;
+        float attenuated=(float)(strength/(1+point.distanceTo(camera)/28));
+        out.add(new StarRailCombatPost.Impulse(x,y,depth,radius,(float)phase,attenuated,red,green,blue,style));
+    }
+    @SubscribeEvent public static void camera(ViewportEvent.ComputeCameraAngles event) {
+        Minecraft mc=Minecraft.getInstance();
+        if(mc.level==null||mc.player==null||mc.isPaused()||!StarRailCombatShaders.enhanced()
+                ||!StarRailCombatPost.available()||!StarRailStatusConfig.COMBAT_CAMERA_SHAKE.get())return;
+        double sum=0,phase=0;Vec3 camera=event.getCamera().getPosition();
+        for(Effect effect:EFFECTS) {
+            boolean heavyDestruction=effect.packet.kind()==CombatVfxPacket.Kind.DESTRUCTION_DESPERATE;
+            if(!hunt(effect)&&!heavyDestruction)continue;
+            double age=(clock-effect.start+event.getPartialTick())/20D;
+            double start=hunt(effect)?(effect.packet.kind().strong()?1.37:.97)
+                    :(effect.packet.targetId()==effect.packet.sourceId()?.24:.57);
+            double t=(age-start)/(heavyDestruction?.78:.55);
+            if(t<0||t>1)continue;
+            Entity target=mc.level.getEntity(effect.packet.targetId());
+            Vec3 point=target!=null&&!target.isRemoved()?interpolate(target,(float)event.getPartialTick()).add(0,target.getBbHeight()*.55,0):effect.anchor;
+            Vec3 toward=point.subtract(camera);var look=event.getCamera().getLookVector();
+            if(toward.lengthSqr()>48*48||toward.dot(v(look.x(),look.y(),look.z()))<=0||!visible(point,camera,mc))continue;
+            sum+=Math.sin(t*Math.PI)*Math.pow(1-t,2)*(heavyDestruction?1.65:effect.packet.kind().strong()?1.5:.65)/(1+toward.length()/12);
+            phase=age*82;
+        }
+        double amount=Math.min(1.2,sum*StarRailStatusConfig.COMBAT_STRENGTH.get());
+        event.setPitch(event.getPitch()+(float)(Math.sin(phase)*amount));
+        event.setRoll(event.getRoll()+(float)(Math.cos(phase*1.17)*amount*.45));
+    }
+    private static void drawFaces(Matrix4f matrix,Vec3 camera,boolean emission) {
+        VertexConsumer vertices=buffers.getBuffer(MeshType.TYPE);
+        for(Face face:FACES) {
+            if(emission&&face.material==0)continue;
+            float band=face.material*4;
+            vertex(vertices,matrix,face.a,camera,face.color,face.alpha,face.ua,band);
+            vertex(vertices,matrix,face.b,camera,face.color,face.alpha,face.ub,band+1);
+            vertex(vertices,matrix,face.c,camera,face.color,face.alpha,face.uc,band+1);
+            vertex(vertices,matrix,face.d,camera,face.color,face.alpha,face.ud,band);
+        }
+        buffers.endBatch(MeshType.TYPE);
+    }
+    private static void vertex(VertexConsumer out, Matrix4f pose, Vec3 point, Vec3 camera,int color,float alpha,float u,float v) {
         float near=(float)clamp((point.distanceTo(camera)-.15)/.5);
         Vec3 relative=point.subtract(camera);
         out.vertex(pose,(float)relative.x,(float)relative.y,(float)relative.z)
-            .color(((color>>16)&255)/255F,((color>>8)&255)/255F,(color&255)/255F,alpha*near).endVertex();
+            .color(((color>>16)&255)/255F,((color>>8)&255)/255F,(color&255)/255F,alpha*near).uv(u,v).endVertex();
     }
     private static final class Scene {
         final Effect effect;
@@ -170,11 +352,24 @@ public final class StarRailCombatMesh {
         final double age;
         final int detail;
         final boolean strong;
+        final int material;
         final Vec3 camera, c=Vec3.ZERO, foot, source, sourceFoot, incoming;
         int faces;
         Scene(Effect effect,double age,int detail,Vec3 camera,Minecraft mc,float partial) {
             this.effect=effect;this.packet=effect.packet;this.age=age;this.detail=detail;this.camera=camera;
             p=palette(packet.path());strong=packet.kind().strong();
+            material=switch(packet.kind()) {
+                case HUNT_STRIKE,HUNT_REVERSE -> 1;
+                case PRESERVATION_WALL,PRESERVATION_COUNTER -> 2;
+                case ABUNDANCE_HEAL,ABUNDANCE_MANNA,ABUNDANCE_MERCY -> 3;
+                case DESTRUCTION_RAGE,DESTRUCTION_BURN,DESTRUCTION_DESPERATE -> 4;
+                case ERUDITION_ECHO,ERUDITION_FINAL -> 5;
+                case NIHILITY_MARK,NIHILITY_SPREAD,NIHILITY_END -> 6;
+                case HARMONY_RESONANCE,HARMONY_AFTERGLOW,HARMONY_CONCERT,HARMONY_UNISON -> 7;
+                case REMEMBRANCE_RECORD,REMEMBRANCE_ECHO,REMEMBRANCE_ETERNAL -> 8;
+                case ELATION_BURST,ELATION_GRAND -> 9;
+                default -> 0;
+            };
             foot=v(0,-effect.bodyHeight+.06,0);
             Entity owner=mc.level.getEntity(packet.sourceId());
             Vec3 from=packet.origin();
@@ -196,7 +391,22 @@ public final class StarRailCombatMesh {
             if(opacity<.002)return;
             Vec3 a=effect.world(points[0]),b=effect.world(points[1]),c=effect.world(points[2]),d=effect.world(points.length>3?points[3]:points[2]);
             double distance=a.add(b).add(c).add(d).scale(.25).distanceToSqr(camera);
-            FACES.add(new Face(a,b,c,d,color,opacity,distance));faces++;
+            FACES.add(new Face(a,b,c,d,color,opacity,distance,material,
+                flow(points[0]),flow(points[1]),flow(points[2]),flow(points.length>3?points[3]:points[2])));faces++;
+        }
+        float flow(Vec3 point) {
+            return (float)switch(material) {
+                case 1 -> point.y*1.8+point.z*.8+point.x*.45;
+                case 2 -> point.y*.8+point.x*.4+point.z*.3;
+                case 3 -> point.y*1.4+point.x*.25+point.z*.25;
+                case 4 -> point.y*2.4+point.x*.6+point.z*.5;
+                case 5 -> point.y*1.2+Math.atan2(point.z,point.x)*.65;
+                case 6 -> Math.atan2(point.z,point.x)*1.8+point.y*.35;
+                case 7 -> point.y*.8+Math.atan2(point.z,point.x)*.7;
+                case 8 -> point.y*1.6+point.x*.8-point.z*.45;
+                case 9 -> point.y*1.7+Math.atan2(point.z,point.x)*1.1;
+                default -> point.y;
+            };
         }
         void line(List<Vec3> points,Vec3 normal,double width,int color,double alpha,double birth,double life) {
             if(age<birth||age>birth+life+.15)return;
@@ -447,8 +657,9 @@ public final class StarRailCombatMesh {
         void preservation() {
             boolean counter=packet.kind()==CombatVfxPacket.Kind.PRESERVATION_COUNTER;
             Vec3 owner=counter?source:c,base=counter?sourceFoot:foot;
+            double shieldWidth=counter?1-.13*Math.sin(Math.PI*clamp((age-.12)/.3)):1;
             for(int sign:new int[]{-1,1})line(.08,p.main,.65,0,.95,Z,
-                owner.add(0,.75,0),owner.add(sign*.54,.45,0),owner.add(sign*.5,-.38,0),owner.add(0,-.78,0));
+                owner.add(0,.75,0),owner.add(sign*.54*shieldWidth,.45,0),owner.add(sign*.5*shieldWidth,-.38,0),owner.add(0,-.78,0));
             double grow=ease((age-.14)/.45);
             for(int i=0;i<8;i++) {
                 double theta=i*Math.PI/4;
@@ -590,13 +801,35 @@ public final class StarRailCombatMesh {
                 double t=ease((age-.62-i*.02)/.8);
                 gem(radial(theta,.65*(1-t),1.25-t*1.1),.026,p.accent,.62+i*.02,1,theta);
             }
-            if(strong)for(int i=0;i<12;i++) {
-                double theta=i*Math.PI/6;Vec3 dir=radial(theta,1,0);
-                leaf(foot.add(dir.scale(.12)),dir.scale(1.65).add(0,.25,0),.15,p.main,.32+i*.025,1.02);
-                gem(foot.add(dir.scale(1.5)).add(0,.16,0),.035,p.accent,.58+i*.018,.75,theta);
-            }
+            if(packet.kind()==CombatVfxPacket.Kind.ABUNDANCE_MERCY)mercyLotus();
             if(packet.kind()==CombatVfxPacket.Kind.ABUNDANCE_MANNA)for(int i=0;i<6;i++) {
                 double theta=i*Math.PI/3;diamond(radial(theta,.85,.2),radial(theta+Math.PI/2,1,0),.14,p.accent,.65+i*.03,.85);}
+        }
+        void mercyLotus() {
+            int petals=detail<=10?6:detail<=16?8:12,segments=Math.max(4,detail/3);
+            for(int layer=0;layer<2;layer++)for(int i=0;i<petals;i++) {
+                double theta=i*Math.PI*2/petals+layer*Math.PI/petals,birth=.18+layer*.12+i*.014;
+                double grow=ease((age-birth)/.5),reach=(layer==0?1.5:1.05)*grow;
+                Vec3 dir=radial(theta,1,0),side=radial(theta+Math.PI/2,1,0);
+                for(int segment=0;segment<segments;segment++) {
+                    double t0=segment/(double)segments,t1=(segment+1D)/segments;
+                    Vec3 a=lotusPoint(dir,t0,reach,layer),b=lotusPoint(dir,t1,reach,layer);
+                    double w0=Math.sin(t0*Math.PI)*.25*grow,w1=Math.sin(t1*Math.PI)*.25*grow;
+                    face(layer==0?p.main:p.shade,.18,birth+segment*.022,1.5,
+                        a.add(side.scale(w0)),a.subtract(side.scale(w0)),b.subtract(side.scale(w1)),b.add(side.scale(w1)));
+                    line(.014,p.accent,.42,birth+segment*.022,1.5,side,a,b);
+                }
+            }
+            int drops=detail<=10?6:detail<=16?10:14;
+            for(int i=0;i<drops;i++) {
+                double birth=.6+i*.045,t=ease((age-birth)/.95),theta=i*2.39996;
+                Vec3 drop=radial(theta,(1-t)*(1.05+i%3*.12),1.35*(1-t)+.08);
+                gem(drop,.028,p.accent,birth,1.02,theta);
+                line(.012,p.main,.38,birth,1.02,Z,drop,drop.add(radial(theta,.035*(1-t),.15*(1-t))));
+            }
+        }
+        Vec3 lotusPoint(Vec3 dir,double t,double reach,int layer) {
+            return foot.add(dir.scale(.1+reach*t)).add(0,.04+Math.sin(t*Math.PI*.88)*(.3+layer*.2)*reach+t*.06,0);
         }
         void remembrance() {
             int planes=strong?3:2;
@@ -667,7 +900,6 @@ public final class StarRailCombatMesh {
                 }
                 case ABUNDANCE -> {
                     for(int sign:new int[]{-1,1})for(int i=0;i<3;i++)leaf(v(sign*(.45+i*.12),-.5+i*.43,.12),v(sign*.43,.32,.1),.13,p.main,.15+i*.08,.9);
-                    if(strong)for(int i=0;i<8;i++) {double theta=i*Math.PI/4;leaf(foot.add(radial(theta,.08,0)),radial(theta,1.15,.32),.18,p.main,.18+i*.035,.95);}
                 }
                 case REMEMBRANCE -> {
                     for(int arm=0;arm<6;arm++) {

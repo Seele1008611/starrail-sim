@@ -12,7 +12,8 @@ public final class StarRailStatusConfig {
     public static final ForgeConfigSpec.DoubleValue SCALE, DEFENSE_CAP, DEFENSE_CURVE, TOUGHNESS_WEIGHT;
     public static final ForgeConfigSpec.DoubleValue ARENA_MAX_MOB_HEALTH, ARENA_MAX_MOB_WIDTH,
             ARENA_MAX_MOB_HEIGHT;
-    public static final ForgeConfigSpec.BooleanValue SMOOTH_UI, REDUCED_MOTION;
+    public static final ForgeConfigSpec.BooleanValue SMOOTH_UI, REDUCED_MOTION, COMBAT_SHADERS, COMBAT_CAMERA_SHAKE;
+    public static final ForgeConfigSpec.DoubleValue COMBAT_STRENGTH;
     static {
         var b = new ForgeConfigSpec.Builder();
         EXTEND_LIMITS = b.comment("Restart required. AttributeFix, when installed, owns vanilla ranges.")
@@ -47,6 +48,12 @@ public final class StarRailStatusConfig {
         SCALE = b.defineInRange("scale", 1.0, .75, 1.0);
         b.push("display");
         SMOOTH_UI = b.define("smoothUi", true);
+        COMBAT_SHADERS = b.comment("Enhance local combat meshes with animated materials. False keeps base mesh colours; no gameplay changes.")
+                .define("combatShaders", true);
+        COMBAT_CAMERA_SHAKE=b.comment("Local combat camera feedback only; does not turn the player or change aim.")
+                .define("combatCameraShake",true);
+        COMBAT_STRENGTH=b.comment("Intensity of combat bloom, refraction and camera feedback.")
+                .defineInRange("combatEffectStrength",1.0,.25,2.0);
         REDUCED_MOTION = b.comment("Reduce interface idle and interaction animation; does not change combat effects.")
                 .define("reducedMotion", false);
         b.pop();

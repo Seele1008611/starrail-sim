@@ -2,6 +2,23 @@
 
 本日志记录模组版本进度。GitHub 仓库中的第一版为 `1.0.0`，`1.1.0` 于 2026-10-01 发布。
 
+## 1.22.0 — 正式版（2026-10-23）
+
+### 新增与调整
+
+- 为九命途 26 类战斗事件加入专属动态着色器表现，包括选择性 HDR 泛光、场景折射、冲击反馈、短时像素化与节拍变化；保留基础网格回退。
+- 新增战斗特效增强/基础模式、强度和镜头反馈设置，以及本地 `/starrailvfx preview` 预览命令。
+- 为 26 类事件加入模组原创程序合成单声道 OGG 音效，并按命途与动作强度设计不同音色。
+- 不改变战斗数值、技能触发、伤害结算或掉落。
+
+### 验收状态
+
+- 用户确认阶段 1 至 5 单人实机验收通过，第二版分层音效效果合适。
+- 多人客户端/服务端同步尚未测试。
+- 发行 JAR：[starrail_sim-1.22.0.jar](https://github.com/Seele1008611/starrail-sim/releases/download/v1.22.0/starrail_sim-1.22.0.jar)，20,374,489 字节；SHA-256：`b8523f5155d8dcf4916fc12c2352fa8bfd2095e6ac4deb2f18074d1cd35a4529`。
+- 校验文件：[starrail_sim-1.22.0.jar.sha256](https://github.com/Seele1008611/starrail-sim/releases/download/v1.22.0/starrail_sim-1.22.0.jar.sha256)。
+- 正式发布至 [GitHub Release v1.22.0](https://github.com/Seele1008611/starrail-sim/releases/tag/v1.22.0)。
+
 ## 1.21.0 — 正式版（2026-10-22）
 
 ### 新增与调整

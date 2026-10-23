@@ -1,0 +1,10 @@
+{
+  "vertex": "starrail_sim:combat_post",
+  "fragment": "starrail_sim:combat_blur",
+  "attributes": ["Position", "UV0"],
+  "samplers": [{"name":"SourceSampler"}],
+  "uniforms": [
+    {"name":"TexelStep","type":"float","count":2,"values":[0,0]},
+    {"name":"BlurRadius","type":"float","count":1,"values":[6]}
+  ]
+}

@@ -42,6 +42,8 @@ public final class StarRailClient {
     public static void registerShaders(net.minecraftforge.client.event.RegisterShadersEvent event) {
         StarRailSmoothUi.register(event);
         StarRailTrainMesh.registerShader(event);
+        StarRailCombatShaders.register(event);
+        StarRailCombatPost.register(event);
     }
 
     @SubscribeEvent

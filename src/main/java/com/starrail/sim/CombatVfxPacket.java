@@ -1,6 +1,6 @@
 package com.starrail.sim;
 
-import com.starrail.sim.client.StarRailCombatMesh;
+import com.starrail.sim.client.StarRailCombatClientEffects;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
@@ -61,7 +61,7 @@ public record CombatVfxPacket(Kind kind, StarRailPath path, boolean ranged,
     public static void handle(CombatVfxPacket packet, Supplier<NetworkEvent.Context> supplier) {
         var context = supplier.get();
         context.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
-                () -> () -> StarRailCombatMesh.accept(packet)));
+                () -> () -> StarRailCombatClientEffects.accept(packet)));
         context.setPacketHandled(true);
     }
 }

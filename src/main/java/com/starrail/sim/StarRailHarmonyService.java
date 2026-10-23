@@ -9,6 +9,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.LivingEntity;
 
 /** Server-side resonance and support mechanics for the Harmony path. */
 public final class StarRailHarmonyService {
@@ -80,7 +81,7 @@ public final class StarRailHarmonyService {
     }
 
     /** Applies rank-six recovery and rank-seven resonance extension on a kill. */
-    public static void onResonanceKill(ServerPlayer player, IStarRailPathData data) {
+    public static void onResonanceKill(ServerPlayer player, LivingEntity deceased, IStarRailPathData data) {
         if (!isResonating(player)) {
             return;
         }
@@ -95,7 +96,8 @@ public final class StarRailHarmonyService {
             player.heal(player.getMaxHealth() * heal);
             state.putLong(LAST_RESTORE_TICK_TAG, now + KILL_HEAL_COOLDOWN);
             StarRailRankRuntime.cooldown(player, "skill_harmony_heal", KILL_HEAL_COOLDOWN);
-            StarRailCombatVfx.self(player, CombatVfxPacket.Kind.HARMONY_CONCERT);
+            // Keep the death point as the visual source and return the pulse to the player.
+            StarRailCombatVfx.emit(player, deceased, player, CombatVfxPacket.Kind.HARMONY_CONCERT, false);
             StarRailPathMessages.send(player, StarRailPath.HARMONY, Component.translatable(
                     "message.starrail_sim.harmony_concert_echo"));
         }
