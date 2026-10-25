@@ -84,6 +84,8 @@ public final class StarRailSimMod {
         PathMineralContent.register();
         PathCaveContent.register();
         PathEquipmentContent.register();
+        PathDawncopperEquipment.register();
+        PathDawnGoldEquipment.register();
         PathEcologyContent.register();
     }
 
@@ -385,7 +387,11 @@ public final class StarRailSimMod {
             "equipment", () -> CreativeModeTab.builder()
                     .title(Component.translatable("itemGroup.starrail_sim.equipment"))
                     .icon(() -> new ItemStack(PathEquipmentContent.SUNIRON_SWORD.get()))
-                    .displayItems((parameters, output) -> PathEquipmentContent.addCreativeItems(output))
+                    .displayItems((parameters, output) -> {
+                        PathEquipmentContent.addCreativeItems(output);
+                        PathDawncopperEquipment.addCreativeItems(output);
+                        PathDawnGoldEquipment.addCreativeItems(output);
+                    })
                     .build());
     public static final RegistryObject<CreativeModeTab> PATHS_TAB = CREATIVE_TABS.register(
             "paths", () -> CreativeModeTab.builder()

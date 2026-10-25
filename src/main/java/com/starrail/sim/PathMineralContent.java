@@ -3,6 +3,7 @@ package com.starrail.sim;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemNameBlockItem;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.MapColor;
@@ -22,6 +23,8 @@ public final class PathMineralContent {
     public static final RegistryObject<Block> SUNIRON_ORE = ore("path_suniron_ore", 3.0F);
     public static final RegistryObject<Block> DAWN_GOLD_ORE = ore("path_dawn_gold_ore", 3.5F);
     public static final RegistryObject<Block> RESONANCE_ORE = ore("path_resonance_ore", 3.5F);
+    public static final RegistryObject<Block> RESONANCE_CRYSTAL_WIRE = StarRailSimMod.BLOCKS.register(
+            "path_resonance_crystal_wire", PathResonanceWireBlock::new);
     public static final RegistryObject<Block> MEMORY_ORE = ore("path_memory_ore", 3.0F);
     public static final RegistryObject<Block> STARMARROW_ORE = ore("path_starmarrow_ore", 4.0F);
     public static final RegistryObject<Block> STELLARJADE_ORE = ore("path_stellarjade_ore", 4.0F);
@@ -46,7 +49,8 @@ public final class PathMineralContent {
     public static final RegistryObject<Item> RAW_DAWN_GOLD = item("path_raw_dawn_gold");
     public static final RegistryObject<Item> DAWN_GOLD_INGOT = item("path_dawn_gold_ingot");
     public static final RegistryObject<Item> DAWN_GOLD_NUGGET = item("path_dawn_gold_nugget");
-    public static final RegistryObject<Item> RESONANCE_CRYSTAL = item("path_resonance_crystal");
+    public static final RegistryObject<Item> RESONANCE_CRYSTAL = itemForBlock(
+            "path_resonance_crystal", RESONANCE_CRYSTAL_WIRE);
     public static final RegistryObject<Item> MEMORY_CRYSTAL = item("path_memory_crystal");
     public static final RegistryObject<Item> STARMARROW = item("path_starmarrow");
     public static final RegistryObject<Item> RAW_STELLARJADE = item("path_raw_stellarjade");
@@ -86,6 +90,13 @@ public final class PathMineralContent {
 
     private static RegistryObject<Item> item(String id) {
         RegistryObject<Item> item = StarRailSimMod.ITEMS.register(id, () -> new Item(new Item.Properties()));
+        MATERIAL_ITEMS.add(item);
+        return item;
+    }
+
+    private static RegistryObject<Item> itemForBlock(String id, RegistryObject<Block> block) {
+        RegistryObject<Item> item = StarRailSimMod.ITEMS.register(id,
+                () -> new ItemNameBlockItem(block.get(), new Item.Properties()));
         MATERIAL_ITEMS.add(item);
         return item;
     }

@@ -8,7 +8,9 @@ import com.mojang.blaze3d.platform.InputConstants;
 import com.starrail.sim.StarRailSimMod;
 import com.starrail.sim.PathEcologyContent;
 import com.starrail.sim.PathCaveContent;
-import com.starrail.sim.StarRailWorldBlocks;
+import com.starrail.sim.PathMineralContent;
+import com.starrail.sim.StarRailPath;
+import com.starrail.sim.StarRailRuinContent;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.RenderType;
@@ -41,19 +43,8 @@ public final class StarRailClient {
     @SubscribeEvent
     public static void registerShaders(net.minecraftforge.client.event.RegisterShadersEvent event) {
         StarRailSmoothUi.register(event);
-        StarRailTrainMesh.registerShader(event);
         StarRailCombatShaders.register(event);
         StarRailCombatPost.register(event);
-    }
-
-    @SubscribeEvent
-    public static void registerReloadListeners(net.minecraftforge.client.event.RegisterClientReloadListenersEvent event) {
-        event.registerReloadListener(StarRailTrainMesh.INSTANCE);
-    }
-
-    @SubscribeEvent
-    public static void registerTrainRenderer(net.minecraftforge.client.event.EntityRenderersEvent.RegisterRenderers event) {
-        event.registerBlockEntityRenderer(StarRailWorldBlocks.STAR_RAIL_TRAIN_ENTITY.get(), StarRailTrainRenderer::new);
     }
 
     @SubscribeEvent
@@ -92,6 +83,18 @@ public final class StarRailClient {
                     RenderType.cutout());
             ItemBlockRenderTypes.setRenderLayer(PathEcologyContent.STAR_TIDE_ALGAE.get(),
                     RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(PathEcologyContent.MARSH_REED.get(),
+                    RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(PathEcologyContent.RIDGE_CUSHION.get(),
+                    RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(PathMineralContent.RESONANCE_CRYSTAL_WIRE.get(),
+                    RenderType.cutout());
+            for (StarRailPath path : StarRailPath.values()) {
+                var anchor = StarRailRuinContent.anchor(path);
+                if (anchor != null) {
+                    ItemBlockRenderTypes.setRenderLayer(anchor.get(), RenderType.translucent());
+                }
+            }
             ItemBlockRenderTypes.setRenderLayer(PathCaveContent.SMALL_STARVEIN_BUD.get(),
                     RenderType.cutout());
             ItemBlockRenderTypes.setRenderLayer(PathCaveContent.MEDIUM_STARVEIN_BUD.get(),

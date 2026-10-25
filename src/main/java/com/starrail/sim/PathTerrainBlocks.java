@@ -34,6 +34,11 @@ public final class PathTerrainBlocks {
                     .strength(0.6F).sound(SoundType.GRAVEL),
                     () -> Blocks.FARMLAND.defaultBlockState(),
                     () -> Blocks.DIRT_PATH.defaultBlockState()));
+    public static final RegistryObject<Block> PATH_MARSH_HUMUS = block("path_marsh_humus",
+            () -> new PathTillableSoilBlock(BlockBehaviour.Properties.of().mapColor(MapColor.DIRT)
+                    .strength(0.6F).sound(SoundType.GRAVEL),
+                    () -> Blocks.FARMLAND.defaultBlockState(),
+                    () -> Blocks.DIRT_PATH.defaultBlockState()));
     public static final RegistryObject<Block> PATH_COARSE_SOIL = block("path_coarse_soil",
             () -> new PathTillableSoilBlock(BlockBehaviour.Properties.of().mapColor(MapColor.DIRT)
                     .strength(0.6F).sound(SoundType.GRAVEL),
@@ -45,6 +50,9 @@ public final class PathTerrainBlocks {
     public static final RegistryObject<Block> PATH_RIVER_SANDSTONE = block("path_river_sandstone",
             stone(MapColor.SAND, 1.8F, 5.0F));
     public static final RegistryObject<Block> PATH_RIVER_GRAVEL = block("path_river_gravel",
+            () -> new FallingBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE)
+                    .strength(0.6F).sound(SoundType.GRAVEL)));
+    public static final RegistryObject<Block> PATH_RIDGE_SCREE = block("path_ridge_scree",
             () -> new FallingBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE)
                     .strength(0.6F).sound(SoundType.GRAVEL)));
 

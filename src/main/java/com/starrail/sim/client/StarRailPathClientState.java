@@ -31,7 +31,7 @@ public final class StarRailPathClientState {
     private static int soughtY;
     private static int soughtZ;
     private static ResourceLocation soughtDimension = Level.OVERWORLD.location();
-    private static int pathRegionMask;
+    private static long pathRegionMask;
     private static int pathRuinMask;
     private static int pathRuinPositionMask;
     private static long[] pathRuinPositions = new long[0];
@@ -55,7 +55,7 @@ public final class StarRailPathClientState {
                               StarRailPath lastSoughtPath, ResourceLocation lastSoughtDimension,
                               int lastSoughtX,
                               int lastSoughtY, int lastSoughtZ,
-                              int discoveredRegionMask, int discoveredRuinMask,
+                              long discoveredRegionMask, int discoveredRuinMask,
                               int discoveredRuinPositionMask, long[] ruinPositions,
                               int discoveredBeaconCount, long[] beaconPositions,
                               long[] arenaPositions, boolean arenaDiscovered,
@@ -163,7 +163,7 @@ public final class StarRailPathClientState {
         return soughtDimension;
     }
 
-    public static int getPathRegionMask() { return pathRegionMask; }
+    public static long getPathRegionMask() { return pathRegionMask; }
     public static int getPathRuinMask() { return pathRuinMask; }
     public static int getPathRuinPositionMask() { return pathRuinPositionMask; }
     public static long[] getPathRuinPositions() { return pathRuinPositions.clone(); }

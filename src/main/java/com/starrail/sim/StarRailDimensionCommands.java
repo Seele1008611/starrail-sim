@@ -32,7 +32,11 @@ public final class StarRailDimensionCommands {
                         .then(Commands.literal("clear_sand_beach")
                                 .executes(context -> locateBiome(context, "clear_sand_beach")))
                         .then(Commands.literal("starvein_cavern")
-                                .executes(context -> locateBiome(context, "starvein_cavern"))))
+                                .executes(context -> locateBiome(context, "starvein_cavern")))
+                        .then(Commands.literal("star_scree_highlands")
+                                .executes(context -> locateBiome(context, "star_scree_highlands")))
+                        .then(Commands.literal("stilltide_marsh")
+                                .executes(context -> locateBiome(context, "stilltide_marsh"))))
                 .then(Commands.literal("ore")
                         .then(Commands.literal("starcoal").executes(context -> locateOre(context, "starcoal")))
                         .then(Commands.literal("dawncopper").executes(context -> locateOre(context, "dawncopper")))
@@ -82,8 +86,9 @@ public final class StarRailDimensionCommands {
     }
 
     private static int locateRelay(CommandContext<CommandSourceStack> context) {
-        BlockPos target = new BlockPos(0, 129, 0);
-        String command = "/execute in starrail_sim:the_path run tp @s 0.5 129 0.5";
+        BlockPos target = new BlockPos(0, StarRailTrainHubService.THE_PATH_CENTER_Y, 0);
+        String command = "/execute in starrail_sim:the_path run tp @s 0.5 "
+                + StarRailTrainHubService.THE_PATH_CENTER_Y + " 0.5";
         context.getSource().sendSuccess(() -> Component.translatable(
                         "message.starrail_sim.dimension.relay_location",
                         target.getX(), target.getY(), target.getZ())

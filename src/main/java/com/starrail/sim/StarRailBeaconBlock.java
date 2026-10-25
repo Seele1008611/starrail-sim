@@ -21,7 +21,8 @@ public final class StarRailBeaconBlock extends Block {
     public void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState,
                         boolean moving) {
         if (state.getBlock() != oldState.getBlock() && level instanceof ServerLevel serverLevel
-                && serverLevel.dimension().equals(StarRailDimensionIds.THE_PATH)) {
+                && serverLevel.dimension().equals(StarRailDimensionIds.THE_PATH)
+                && !StarRailDimensionService.isHubBeacon(serverLevel, pos)) {
             StarRailBeaconArchiveData.get(serverLevel).markPresent(pos.asLong());
         }
         super.onPlace(state, level, pos, oldState, moving);
@@ -41,12 +42,12 @@ public final class StarRailBeaconBlock extends Block {
                                  InteractionHand hand, BlockHitResult hit) {
         if (hand != InteractionHand.MAIN_HAND) return InteractionResult.PASS;
         if (!level.isClientSide && player instanceof ServerPlayer serverPlayer) {
-            StarRailExplorationService.discoverBeacon(serverPlayer, pos);
-            if (StarRailDimensionService.isHubReturnBeacon(pos)
-                    && level.dimension().equals(StarRailDimensionIds.THE_PATH)) {
-                StarRailDimensionService.returnToOrigin(serverPlayer);
+            if (level instanceof ServerLevel serverLevel
+                    && StarRailDimensionService.isHubBeacon(serverLevel, pos)) {
+                StarRailDimensionService.travelFromBeacon(serverPlayer, pos);
                 return InteractionResult.SUCCESS;
             }
+            StarRailExplorationService.discoverBeacon(serverPlayer, pos);
         }
         return InteractionResult.sidedSuccess(level.isClientSide);
     }

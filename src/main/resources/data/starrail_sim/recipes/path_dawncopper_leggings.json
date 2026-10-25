@@ -1,0 +1,18 @@
+{
+  "pattern": [
+    "III",
+    "I I",
+    "I I"
+  ],
+  "key": {
+    "I": {
+      "item": "starrail_sim:path_dawncopper_ingot"
+    }
+  },
+  "category": "equipment",
+  "type": "minecraft:crafting_shaped",
+  "result": {
+    "item": "starrail_sim:path_dawncopper_leggings",
+    "count": 1
+  }
+}

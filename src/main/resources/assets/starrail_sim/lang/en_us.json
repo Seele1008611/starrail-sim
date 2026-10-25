@@ -146,7 +146,7 @@
 
   "screen.starrail_sim.paths": "Path Search",
 
-  "screen.starrail_sim.path_locked": "Explore all 53 vanilla Overworld biomes and receive the Astral Express to unlock the Path clue.",
+  "screen.starrail_sim.path_locked": "Board the Astral Express in the Overworld and activate its Star Rail Beacon to enter The Path.",
 
   "screen.starrail_sim.current_path": "Current Path: %s",
 
@@ -212,7 +212,7 @@
 
   "screen.starrail_sim.trial_time": "Time remaining: %s seconds",
 
-  "message.starrail_sim.path_locked": "Explore all 53 vanilla Overworld biomes to receive the Astral Express and unlock the Path clue.",
+  "message.starrail_sim.path_locked": "Board the fixed Astral Express in the Overworld and activate its Star Rail Beacon to enter The Path.",
 
   "message.starrail_sim.path_already_chosen": "You have already chosen a path.",
 
@@ -422,7 +422,7 @@
 
   ,"screen.starrail_sim.guide_help": "System Guide"
 
-  ,"guide.starrail_sim.current.locked": "Explore all 53 vanilla Overworld biomes and receive the Astral Express to unlock the Path clue."
+  ,"guide.starrail_sim.current.locked": "Board the Astral Express in the Overworld and activate its Star Rail Beacon to enter The Path."
 
   ,"guide.starrail_sim.current.unaligned": "A Path clue is available. Seek a ruin and complete its initial trial to enter that Path automatically."
 
@@ -5219,7 +5219,6 @@
 
   "block.starrail_sim.star_rail_beacon": "Starrail Beacon",
 
-  "block.starrail_sim.star_rail_train": "Astral Express",
 
 
 
@@ -5240,27 +5239,23 @@
   "biome.starrail_sim.clear_sand_beach": "Clear Sand Beach",
 
   "biome.starrail_sim.starvein_cavern": "Starvein Cavern",
+  "biome.starrail_sim.star_scree_highlands": "Starfall Highlands",
+  "biome.starrail_sim.stilltide_marsh": "Stilltide Marsh",
 
   "dimension.starrail_sim.the_path": "The Path",
   "dimension.starrail_sim.overworld": "Overworld",
 
-  "block.starrail_sim.star_rail_train_part": "Astral Express",
-
-  "tooltip.starrail_sim.train_space": "Placement requires a clear 5 x 13 area with 5 blocks of headroom.",
-  "message.starrail_sim.overworld_biomes_progress": "Vanilla Overworld biome exploration: %s/%s",
-  "message.starrail_sim.overworld_biomes_complete": "You have explored all 53 vanilla Overworld biomes. The train will be delivered when your inventory has room; the Path clue unlocks when you receive it.",
-  "message.starrail_sim.train_reward_received": "Astral Express received! Right-click the train to enter The Path.",
   "guide.starrail_sim.help.dimension_title": "Exploring The Path",
-  "guide.starrail_sim.help.dimension_entry": "Entry and return: Explore all 53 vanilla Overworld biomes to receive the Astral Express; receiving it unlocks the Path clue. Place the train and right-click any part to enter The Path. Right-click the Return Beacon at the relay platform or run /starrail dimension return to return to your saved origin.",
-  "guide.starrail_sim.help.dimension_regions": "Regions: Clear Sky Meadow has open grassland, gentle slopes, river valleys and sparse groves. Firefly Grove has bright woodland, lakeshores and clearings. Starlit Tide Ocean ranges from shallow reefs to deep water and trenches, with seabed ores and sparse bubble vents. Clear Sand Beach connects the land to shallow water along the coast. Riverbed Gravel stays near waterways and low ground, while Clearwater River Sand covers most of the beach. Tide Grass grows on sand or gravel; Clear Sand Bellflower roots only in Clearwater River Sand in Clear Sand Beach. Turtles spawn naturally on these beaches. Starvein Cavern is an underground biome with original Starvein Geodes, rare large crystal chambers, and shared minerals in its walls and rock layers.",
+  "guide.starrail_sim.help.dimension_entry": "Entry and return: The Astral Express is fixed at (0, 280, 0) in the Overworld and (0, 350, 0) in The Path. Activate the Star Rail Beacon inside either train to travel between them. The Path arrival is at (0, 350, 0), and the return point is inside the Overworld train.",
+  "guide.starrail_sim.help.dimension_regions": "Regions: Clear Sky Meadow has open grassland, gentle slopes, river valleys and sparse groves. Firefly Grove has bright woodland, lakeshores and clearings. Starlit Tide Ocean ranges from shallow reefs to deep water and trenches, with seabed ores and sparse bubble vents. Clear Sand Beach connects the land to shallow water along the coast. Riverbed Gravel stays near waterways and low ground, while Clearwater River Sand covers most of the beach. Tide Grass grows on sand or gravel; Clear Sand Bellflower roots only in Clearwater River Sand in Clear Sand Beach. Turtles spawn naturally on these beaches. Starvein Cavern is an underground biome with original Starvein Geodes, rare large crystal chambers, and shared minerals in its walls and rock layers. Starfall Highlands have open rocky slopes, scattered scree, and low cushiongrass. Stilltide Marsh is a lowland of humus soil and scattered shallow pools edged with reeds.",
   "guide.starrail_sim.help.dimension_ruins": "Ruins and challenges: Ordinary floating ruins and relic dueling arenas generate naturally in The Path. Start path seeking from the Path screen while inside the dimension; it records a target location. Relic arenas use three waves and the selected set, then award 1–3 random relics on victory.",
-  "guide.starrail_sim.help.dimension_navigation": "Navigation: Entering any of the five biomes records its discovery. Right-click a beacon to save its coordinates in the Travel Archive and give it a custom name; breaking a recorded beacon removes its coordinates. The Return Beacon at the relay platform takes you back to your saved origin. Operators can use /starrail dimension locate relay for the platform; locate region accepts sunmeadow, glimmerwood, star_tide_ocean, clear_sand_beach, or starvein_cavern. Use ordinary_ruin, relic_trial_arena, or path_ruin for ruins and challenges. locate ore accepts starcoal, dawncopper, suniron, dawn_gold, resonance, memory, starmarrow, stellarjade, or ancientdream; mineral searches only inspect nearby generated chunks and do not generate new ones.",
-  "guide.starrail_sim.help.dimension_materials": "Shared ores: All five biomes generate all nine local minerals. Starcoal, Dawn Copper, Suniron and Memory Crystal mainly occur in shallow to middle Path Stone; Dawn Gold, Resonance Crystal, Starmarrow, Stellarjade and Ancient Dream mainly occur in Deep Path Stone. Y ranges: Starcoal 0–96, Dawn Copper -16–112, Suniron -48–96, Memory Crystal -32–48, Dawn Gold -48–24, Resonance Crystal -56–16, Starmarrow -48–16, Stellarjade -56–8, Ancient Dream -60–-32. Higher-tier ores are deeper. Ancient Dream is somewhat less common than Stellarjade, but not dramatically so. Rare Dawn Copper outcrops only try to generate on naturally exposed Path Stone. Operators can use /starrail dimension locate ore <mineral> to search nearby generated chunks; it does not generate new chunks.",
-  "guide.starrail_sim.help.dimension_survival": "Survival and progression: Sunmeadow and Firefly trees can be regrown from saplings; their logs make planks and sticks or renewable charcoal. Starcoal works directly as fuel: one burns for 1,600 ticks, and a block crafted from nine burns for 16,000 ticks. Morning Berry Bushes regrow after harvest and can be propagated with berries; Forestbeans grow on farmland and yield pods that can be cooked. Star Tide Algae grows on the seabed, can be replanted, and can be cooked as food. Tide Grass decorates the shore; Clear Sand Bellflower can be replanted, composted, or crafted into light blue dye. Underwater bubble vents form upward currents that serve as vertical landmarks and help you rise to the surface. The Path uses vanilla water, farmland and crop rules. Clear Sky Grass, Clear Sky Dirt, ordinary dirt and humus can be hoed into farmland or shoveled into dirt paths; coarse slope soil first becomes dirt when hoed. Gear progresses from Suniron to Starmarrow, then smithing templates upgrade it to Netherite-tier Stellarjade and the higher Ancient Dream tier.",
+  "guide.starrail_sim.help.dimension_navigation": "Navigation: The Star Rail Beacon inside each train connects the two fixed hubs. Right-click other beacons to save their coordinates in the Travel Archive and give them a custom name; breaking a recorded beacon removes its coordinates. Operators can use /starrail dimension locate relay to locate the Path train at (0, 350, 0); locate region accepts sunmeadow, glimmerwood, star_tide_ocean, clear_sand_beach, starvein_cavern, star_scree_highlands, or stilltide_marsh. Use ordinary_ruin, relic_trial_arena, or path_ruin for ruins and challenges. locate ore accepts starcoal, dawncopper, suniron, dawn_gold, resonance, memory, starmarrow, stellarjade, or ancientdream; mineral searches only inspect nearby generated chunks and do not generate new ones.",
+  "guide.starrail_sim.help.dimension_materials": "Shared ores: All seven biomes generate all nine local minerals. Starcoal, Dawn Copper, Suniron and Memory Crystal mainly occur in shallow to middle Path Stone; Dawn Gold, Resonance Crystal, Starmarrow, Stellarjade and Ancient Dream mainly occur in Deep Path Stone. Y ranges: Starcoal 0–96, Dawn Copper -16–112, Suniron -48–96, Memory Crystal -32–48, Dawn Gold -48–24, Resonance Crystal -56–16, Starmarrow -48–16, Stellarjade -56–8, Ancient Dream -60–-32. Higher-tier ores are deeper. Ancient Dream is somewhat less common than Stellarjade, but not dramatically so. Rare Dawn Copper outcrops only try to generate on naturally exposed Path Stone. Operators can use /starrail dimension locate ore <mineral> to search nearby generated chunks; it does not generate new chunks.",
+  "guide.starrail_sim.help.dimension_survival": "Survival and progression: Sunmeadow and Firefly trees can be regrown from saplings; their logs make planks and sticks or renewable charcoal. Starcoal works directly as fuel: one burns for 1,600 ticks, and a block crafted from nine burns for 16,000 ticks. Morning Berry Bushes regrow after harvest and can be propagated with berries; Forestbeans grow on farmland and yield pods that can be cooked. Star Tide Algae grows on the seabed, can be replanted, and can be cooked as food. Tide Grass decorates the shore; Clear Sand Bellflower can be replanted, composted, or crafted into light blue dye. Underwater bubble vents form upward currents that serve as vertical landmarks and help you rise to the surface. The Path uses vanilla water, farmland and crop rules. Clear Sky Grass, Clear Sky Dirt, ordinary dirt and humus can be hoed into farmland or shoveled into dirt paths; coarse slope soil first becomes dirt when hoed. Starfall Scree can be collected and placed for terrain detailing. Stilltide Humus can be hoed into farmland or shoveled into a dirt path. Stilltide Reed grows on suitable soil beside water; Starfall Cushiongrass grows on Path grass, coarse slope soil, or Starfall Scree. Both plants can be collected and replanted, but do not grow or spread by themselves. Gear progresses from Suniron to Starmarrow, then smithing templates upgrade it to Netherite-tier Stellarjade and the higher Ancient Dream tier.",
   "screen.starrail_sim.guide_archive": "Travel Archive",
   "screen.starrail_sim.archive_rename": "Custom Coordinate Name",
   "guide.starrail_sim.archive.title": "Travel Archive",
-  "guide.starrail_sim.archive.intro": "This page records discovery of all five biomes, first ruin discoveries, beacon and Relic Duel Arena coordinates, and challenge victories in The Path. Entering Starlit Tide Ocean, Clear Sand Beach, or Starvein Cavern for the first time is recorded too. Click a coordinate row to give it a custom name. Breaking a recorded beacon removes its coordinates. The Return Beacon at the relay platform takes you back to your saved origin.",
+  "guide.starrail_sim.archive.intro": "This page records discovery of all seven biomes, first ruin discoveries, beacon and Relic Duel Arena coordinates, and challenge victories in The Path. Entering Starlit Tide Ocean, Clear Sand Beach, Starvein Cavern, Starfall Highlands, or Stilltide Marsh for the first time is recorded too. Click a coordinate row to give it a custom name. Breaking a recorded beacon removes its coordinates. The Star Rail Beacons inside the trains travel between the two fixed train hubs.",
   "guide.starrail_sim.archive.regions": "Regions",
   "guide.starrail_sim.archive.beacons": "Beacon locations recorded: %s",
   "guide.starrail_sim.archive.beacon_default_name": "Starrail Beacon",
@@ -5290,7 +5285,15 @@
   "message.starrail_sim.archive.beacon_location": "This beacon is already in your archive at (%s, %s, %s). Total: %s.",
   "message.starrail_sim.archive.arena_found": "Relic Duel Arena added to your travel log at (%s, %s, %s).",
   "message.starrail_sim.archive.ruin_found": "Ruin recorded: %s at (%s, %s, %s).",
-  "message.starrail_sim.dimension.relay_location": "The Path relay platform is at (%s, %s, %s). Click to teleport there.",
+  "message.starrail_sim.dimension.relay_location": "The Path Astral Express hub is at (%s, %s, %s). Click to teleport there.",
+  "message.starrail_sim.dimension.hub_not_ready": "The destination Astral Express hub has not generated or its beacon is missing.",
+  "message.starrail_sim.dimension.hub_landing_unsafe": "The train landing area is currently unsafe; travel was cancelled.",
+  "message.starrail_sim.dimension.travel_failed": "Dimension travel failed.",
+  "message.starrail_sim.dimension.already_in_path": "You are already in The Path.",
+  "message.starrail_sim.dimension.wrong_source": "You can enter The Path only from the Overworld Astral Express.",
+  "message.starrail_sim.dimension.return_requires_path": "You can return to the Overworld train only from The Path.",
+  "message.starrail_sim.dimension.arrived_path": "Arrived at the Astral Express in The Path.",
+  "message.starrail_sim.dimension.arrived_overworld": "Returned to the Astral Express in the Overworld.",
   "message.starrail_sim.dimension.path_ruin_location": "Path ruin: %s in %s at (%s, %s, %s). Click to teleport there.",
   "message.starrail_sim.dimension.no_path_ruin": "You do not have an assigned Path ruin.",
   "block.starrail_sim.path_grass_block": "Path Grass Block",
@@ -5318,6 +5321,7 @@
   "item.starrail_sim.path_dawn_gold_ingot": "Dawngold Ingot",
   "item.starrail_sim.path_dawn_gold_nugget": "Dawngold Nugget",
   "item.starrail_sim.path_resonance_crystal": "Resonance Crystal",
+  "block.starrail_sim.path_resonance_crystal_wire": "Resonance Crystal",
   "item.starrail_sim.path_memory_crystal": "Memory Crystal",
   "item.starrail_sim.path_starmarrow": "Starmarrow",
   "item.starrail_sim.path_raw_stellarjade": "Raw Stellarjade",
@@ -5342,6 +5346,24 @@
   "block.starrail_sim.path_starmarrow_ore": "Starmarrow Ore",
   "block.starrail_sim.path_stellarjade_ore": "Stellarjade Ore",
   "block.starrail_sim.path_ancientdream_ore": "Ancient Dream Ore",
+  "item.starrail_sim.path_dawn_gold_sword": "Dawn Gold Sword",
+  "item.starrail_sim.path_dawn_gold_pickaxe": "Dawn Gold Pickaxe",
+  "item.starrail_sim.path_dawn_gold_axe": "Dawn Gold Axe",
+  "item.starrail_sim.path_dawn_gold_shovel": "Dawn Gold Shovel",
+  "item.starrail_sim.path_dawn_gold_hoe": "Dawn Gold Hoe",
+  "item.starrail_sim.path_dawn_gold_helmet": "Dawn Gold Helmet",
+  "item.starrail_sim.path_dawn_gold_chestplate": "Dawn Gold Chestplate",
+  "item.starrail_sim.path_dawn_gold_leggings": "Dawn Gold Leggings",
+  "item.starrail_sim.path_dawn_gold_boots": "Dawn Gold Boots",
+  "item.starrail_sim.path_dawncopper_sword": "Dawncopper Sword",
+  "item.starrail_sim.path_dawncopper_pickaxe": "Dawncopper Pickaxe",
+  "item.starrail_sim.path_dawncopper_axe": "Dawncopper Axe",
+  "item.starrail_sim.path_dawncopper_shovel": "Dawncopper Shovel",
+  "item.starrail_sim.path_dawncopper_hoe": "Dawncopper Hoe",
+  "item.starrail_sim.path_dawncopper_helmet": "Dawncopper Helmet",
+  "item.starrail_sim.path_dawncopper_chestplate": "Dawncopper Chestplate",
+  "item.starrail_sim.path_dawncopper_leggings": "Dawncopper Leggings",
+  "item.starrail_sim.path_dawncopper_boots": "Dawncopper Boots",
   "item.starrail_sim.path_suniron_sword": "Suniron Sword",
   "item.starrail_sim.path_suniron_pickaxe": "Suniron Pickaxe",
   "item.starrail_sim.path_suniron_axe": "Suniron Axe",
@@ -5447,8 +5469,6 @@
   "screen.starrail_sim.pass_picker.scroll": "Scroll to see more",
   "advancements.starrail_sim.root.title": "The Journey Begins",
   "advancements.starrail_sim.root.description": "Begin a new journey in this world.",
-  "advancements.starrail_sim.journey.overworld.title": "Far and Wide",
-  "advancements.starrail_sim.journey.overworld.description": "Explore all 53 vanilla Overworld biomes.",
   "advancements.starrail_sim.journey.the_path.title": "Bound for the Path",
   "advancements.starrail_sim.journey.the_path.description": "Enter the Path dimension for the first time.",
   "advancements.starrail_sim.exploration.glimmerwood.title": "Light Between the Glimmerwood",
@@ -5518,5 +5538,13 @@
   "advancements.starrail_sim.light_cone.random_pass.title": "Let Fate Choose",
   "advancements.starrail_sim.light_cone.random_pass.description": "Use a Star Rail Pass to receive a random Light Cone from your current Path.",
   "advancements.starrail_sim.light_cone.special_pass.title": "Choose Your Path",
-  "advancements.starrail_sim.light_cone.special_pass.description": "Use a Star Rail Special Pass to select and receive a Light Cone from your current Path."
+  "advancements.starrail_sim.light_cone.special_pass.description": "Use a Star Rail Special Pass to select and receive a Light Cone from your current Path.",
+  "block.starrail_sim.path_ridge_scree": "Starfall Scree",
+  "block.starrail_sim.path_marsh_humus": "Stilltide Humus",
+  "block.starrail_sim.path_marsh_reed": "Stilltide Reed",
+  "block.starrail_sim.path_ridge_cushion": "Starfall Cushiongrass",
+  "advancements.starrail_sim.exploration.star_scree_highlands.title": "Starfall Highlands Discovered",
+  "advancements.starrail_sim.exploration.star_scree_highlands.description": "Enter the open rocky slopes of the Starfall Highlands.",
+  "advancements.starrail_sim.exploration.stilltide_marsh.title": "Stilltide Marsh Discovered",
+  "advancements.starrail_sim.exploration.stilltide_marsh.description": "Find the lowlands of humus soil and scattered pools."
 }

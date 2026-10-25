@@ -1,0 +1,6 @@
+{
+  "textures": {
+    "layer0": "starrail_sim:item/path_dawn_gold_leggings"
+  },
+  "parent": "minecraft:item/generated"
+}

@@ -29,10 +29,6 @@ public final class StarRailPathData implements IStarRailPathData {
     private StarRailPath trialPath = StarRailPath.NONE;
     private StarRailPathRank trialRank = StarRailPathRank.UNALIGNED;
     private boolean pathUnlocked;
-    private final Set<String> exploredOverworldBiomes = new HashSet<>();
-    private boolean trainRewardIssued;
-    private boolean trainRewardPending;
-    private boolean legacyExplorationMigrated;
     private final Set<String> discoveredPathRegions = new HashSet<>();
     private final Set<String> discoveredPathRuins = new HashSet<>();
     private final Map<String, Long> discoveredPathRuinPositions = new HashMap<>();
@@ -122,18 +118,6 @@ public final class StarRailPathData implements IStarRailPathData {
         pathUnlocked = unlocked;
     }
 
-    @Override public Set<String> getExploredOverworldBiomes() {
-        return Collections.unmodifiableSet(exploredOverworldBiomes);
-    }
-    @Override public boolean addExploredOverworldBiome(String biomeId) {
-        return biomeId != null && exploredOverworldBiomes.add(biomeId);
-    }
-    @Override public boolean isTrainRewardIssued() { return trainRewardIssued; }
-    @Override public void setTrainRewardIssued(boolean issued) { trainRewardIssued = issued; }
-    @Override public boolean isTrainRewardPending() { return trainRewardPending; }
-    @Override public void setTrainRewardPending(boolean pending) { trainRewardPending = pending; }
-    @Override public boolean isLegacyExplorationMigrated() { return legacyExplorationMigrated; }
-    @Override public void setLegacyExplorationMigrated(boolean migrated) { legacyExplorationMigrated = migrated; }
     @Override public Set<String> getDiscoveredPathRegions() {
         return Collections.unmodifiableSet(discoveredPathRegions);
     }
@@ -652,11 +636,6 @@ public final class StarRailPathData implements IStarRailPathData {
         trialPath = other.getTrialPath();
         trialRank = other.getTrialRank();
         pathUnlocked = other.isPathUnlocked();
-        exploredOverworldBiomes.clear();
-        exploredOverworldBiomes.addAll(other.getExploredOverworldBiomes());
-        trainRewardIssued = other.isTrainRewardIssued();
-        trainRewardPending = other.isTrainRewardPending();
-        legacyExplorationMigrated = other.isLegacyExplorationMigrated();
         discoveredPathRegions.clear();
         discoveredPathRegions.addAll(other.getDiscoveredPathRegions());
         discoveredPathRuins.clear();
@@ -732,12 +711,6 @@ public final class StarRailPathData implements IStarRailPathData {
         tag.putString("trial_path", trialPath.getId());
         tag.putInt("trial_rank", trialRank.getLevel());
         tag.putBoolean("path_unlocked", pathUnlocked);
-        ListTag exploredBiomes = new ListTag();
-        for (String biome : exploredOverworldBiomes) exploredBiomes.add(net.minecraft.nbt.StringTag.valueOf(biome));
-        tag.put("explored_overworld_biomes", exploredBiomes);
-        tag.putBoolean("train_reward_issued", trainRewardIssued);
-        tag.putBoolean("train_reward_pending", trainRewardPending);
-        tag.putBoolean("legacy_exploration_migrated", legacyExplorationMigrated);
         ListTag pathRegions = new ListTag();
         for (String region : discoveredPathRegions) pathRegions.add(net.minecraft.nbt.StringTag.valueOf(region));
         tag.put("path_regions_discovered", pathRegions);
@@ -852,14 +825,6 @@ public final class StarRailPathData implements IStarRailPathData {
                 ? StarRailPathRank.fromLevel(tag.getInt("trial_rank"))
                 : StarRailPathRank.UNALIGNED;
         pathUnlocked = tag.getBoolean("path_unlocked");
-        exploredOverworldBiomes.clear();
-        if (tag.contains("explored_overworld_biomes", 9)) {
-            ListTag explored = tag.getList("explored_overworld_biomes", 8);
-            for (int i = 0; i < explored.size(); i++) exploredOverworldBiomes.add(explored.getString(i));
-        }
-        trainRewardIssued = tag.getBoolean("train_reward_issued");
-        trainRewardPending = tag.getBoolean("train_reward_pending");
-        legacyExplorationMigrated = tag.getBoolean("legacy_exploration_migrated");
         discoveredPathRegions.clear();
         if (tag.contains("path_regions_discovered", 9)) {
             ListTag regions = tag.getList("path_regions_discovered", 8);

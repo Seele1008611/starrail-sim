@@ -6,6 +6,8 @@
     "starrail_sim:path_forest_humus",
     "starrail_sim:path_coarse_soil",
     "starrail_sim:path_river_sand",
-    "starrail_sim:path_river_gravel"
+    "starrail_sim:path_river_gravel",
+    "starrail_sim:path_ridge_scree",
+    "starrail_sim:path_marsh_humus"
   ]
 }

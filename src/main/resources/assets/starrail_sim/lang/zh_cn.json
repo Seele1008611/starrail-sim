@@ -134,7 +134,7 @@
 
   "screen.starrail_sim.paths": "\u547d\u9014\u5bfb\u8ff9",
 
-  "screen.starrail_sim.path_locked": "探索完主世界全部53种原版群系并获得星穹列车后，解锁命途线索。",
+  "screen.starrail_sim.path_locked": "前往主世界星穹列车，点击车内的星轨信标即可进入命途遗境。",
 
   "screen.starrail_sim.current_path": "\u5f53\u524d\u547d\u9014\uff1a%s",
 
@@ -200,7 +200,7 @@
 
   "screen.starrail_sim.trial_time": "\u5269\u4f59\u65f6\u95f4\uff1a%s \u79d2",
 
-  "message.starrail_sim.path_locked": "先探索完主世界全部53种原版群系，获得星穹列车以解锁命途线索。",
+  "message.starrail_sim.path_locked": "请先乘坐主世界固定生成的星穹列车，并点击车内星轨信标进入命途遗境。",
 
   "message.starrail_sim.path_already_chosen": "\u4f60\u5df2\u7ecf\u8e0f\u4e0a\u4e86\u4e00\u6761\u547d\u9014\u3002",
 
@@ -422,7 +422,7 @@
 
   ,"screen.starrail_sim.guide_help": "系统说明"
 
-  ,"guide.starrail_sim.current.locked": "探索完主世界全部53种原版群系并获得星穹列车，即可解锁命途线索。"
+  ,"guide.starrail_sim.current.locked": "前往主世界星穹列车，点击车内的星轨信标即可进入命途遗境。"
 
   ,"guide.starrail_sim.current.unaligned": "已经发现命途线索；先寻迹并完成对应初始试炼，即可自动踏上命途。"
 
@@ -5225,7 +5225,6 @@
 
   "block.starrail_sim.star_rail_beacon": "星轨信标",
 
-  "block.starrail_sim.star_rail_train": "星穹列车",
 
 
 
@@ -5246,27 +5245,23 @@
   "biome.starrail_sim.clear_sand_beach": "澄沙海滩",
 
   "biome.starrail_sim.starvein_cavern": "星脉洞窟",
+  "biome.starrail_sim.star_scree_highlands": "星砾高地",
+  "biome.starrail_sim.stilltide_marsh": "静潮泽地",
 
   "dimension.starrail_sim.the_path": "命途遗境",
   "dimension.starrail_sim.overworld": "主世界",
 
-  "block.starrail_sim.star_rail_train_part": "星穹列车",
-
-  "tooltip.starrail_sim.train_space": "放置需预留5×13格地面空间和5格净空。",
-  "message.starrail_sim.overworld_biomes_progress": "原版主世界群系探索进度：%s/%s",
-  "message.starrail_sim.overworld_biomes_complete": "你已探索完主世界全部53种原版群系，列车将在背包有空间时发放；领取后解锁命途线索。",
-  "message.starrail_sim.train_reward_received": "获得星穹列车！右键列车可进入命途遗境。",
   "guide.starrail_sim.help.dimension_title": "命途遗境探索",
-  "guide.starrail_sim.help.dimension_entry": "入口与返回：在主世界探索全部53种原版群系后可获得星穹列车；领取列车时解锁命途线索。放置列车后右键任一车体部分进入命途遗境；回到中继平台右键返程信标，或执行 /starrail dimension return，可返回进入前的位置。",
-  "guide.starrail_sim.help.dimension_regions": "区域：晴穹草甸以开阔草地、缓坡、河谷和疏林为主；流萤林地以明亮森林、湖岸和林间空地为主。星潮海域从近岸浅海与礁群延伸至深水和海沟，可见海床矿脉与稀疏气泡泉；澄沙海滩沿海岸连接陆地和浅海。河床砾集中在水系低地，海滩以澄溪砂为主。潮汐草可生长在沙砾上，澄沙铃花只扎根于澄沙海滩的澄溪砂；海龟也会在此自然生成。星脉洞窟是地下群系，洞中可找到原创星脉晶洞与稀有的大型晶簇厅，洞壁和地层也会生成共享矿物。",
+  "guide.starrail_sim.help.dimension_entry": "入口与返回：主世界星穹列车固定生成在（0，280，0），命途遗境列车生成在（0，350，0）。进入列车后点击车内星轨信标即可往返；进入命途遗境的落点为（0，350，0），返回点为主世界列车内部。",
+  "guide.starrail_sim.help.dimension_regions": "区域：晴穹草甸以开阔草地、缓坡、河谷和疏林为主；流萤林地以明亮森林、湖岸和林间空地为主。星潮海域从近岸浅海与礁群延伸至深水和海沟，可见海床矿脉与稀疏气泡泉；澄沙海滩沿海岸连接陆地和浅海。河床砾集中在水系低地，海滩以澄溪砂为主。潮汐草可生长在沙砾上，澄沙铃花只扎根于澄沙海滩的澄溪砂；海龟也会在此自然生成。星脉洞窟是地下群系，洞中可找到原创星脉晶洞与稀有的大型晶簇厅，洞壁和地层也会生成共享矿物。星砾高地由开阔岩坡、零散星砾和低矮垫草构成；静潮泽地是有腐殖土、芦苇和散布浅水洼的低地。",
   "guide.starrail_sim.help.dimension_ruins": "遗迹与挑战：普通浮空遗迹和遗器决斗场会在命途遗境自然生成。命途寻迹需要身处命途遗境时从命途页面发起，界面会记录目标位置；遗器决斗场按所选套装进行三波挑战，胜利后随机掉落1至3件遗器。",
-  "guide.starrail_sim.help.dimension_navigation": "导航：首次进入五个群系时会分别记录探索进度；右键信标可在行旅档案中保存坐标并自定义名称，拆除信标后对应坐标会从档案中移除。中继平台的返程信标可带你返回进入命途遗境前的位置。管理员可用 /starrail dimension locate relay 定位中继平台；locate region 后可选 sunmeadow、glimmerwood、star_tide_ocean、clear_sand_beach 或 starvein_cavern 定位群系；ordinary_ruin、relic_trial_arena 和 path_ruin 可定位遗迹或挑战。locate ore 后可选 starcoal、dawncopper、suniron、dawn_gold、resonance、memory、starmarrow、stellarjade、ancientdream 定位矿物；矿物定位只搜索附近已生成区块，不会生成新区块。",
-  "guide.starrail_sim.help.dimension_materials": "共享矿脉：五个群系都会生成九种本地矿物。星炭、霞铜、曦铁和记忆晶主要分布在浅至中层天穹岩；曜金、谐振晶、星髓、星琼和古老梦华主要分布在深层天穹岩。按 Y 高度：星炭 0～96、霞铜 -16～112、曦铁 -48～96、记忆晶 -32～48、曜金 -48～24、谐振晶 -56～16、星髓 -48～16、星琼 -56～8、古老梦华 -60～-32。高阶矿物更深；古老梦华比星琼少一些，但不会少很多。少量霞铜露头只会尝试出现在自然裸露的天穹岩上。管理员可用 /starrail dimension locate ore <矿物名> 搜索附近已生成区块；它不会替你生成新区块。",
-  "guide.starrail_sim.help.dimension_survival": "生存与成长：晴穗树和流萤树可由树苗再生，原木能制木板、木棍，也能烧成可再生木炭；星炭可直接作燃料，单个燃烧 1600 游戏刻，9 个合成的星炭块燃烧 16000 游戏刻。晨露莓丛可重复采收并用莓果扩繁；林息豆种在耕地上，成熟后收获豆荚并可烧成熟食。海床上的星潮藻可采集、再种并烹饪成食物；海滩潮汐草可作装饰，澄沙铃花可重新种植、堆肥或制成浅蓝染料。海底气泡泉形成向上的水流，可作为水下探索的垂直地标并帮助玩家上升到水面。命途遗境使用原版水源、耕地和作物规则。晴穹草方块、晴穹泥土、普通泥土和腐殖土可用锄变耕地、用锹变土径；坡地粗土先用锄转成泥土。装备成长从曦铁档到星髓档，再用锻造模板升级为下界合金档星琼装备和更高一档古老梦华装备。",
+  "guide.starrail_sim.help.dimension_navigation": "导航：列车内的星轨信标负责两维度固定往返；点击其他信标会在行旅档案中保存坐标并可自定义名称，拆除已记录的信标后对应坐标会从档案中移除。管理员可用 /starrail dimension locate relay 定位命途遗境列车（0，350，0）；locate region 后可选 sunmeadow、glimmerwood、star_tide_ocean、clear_sand_beach、starvein_cavern、star_scree_highlands 或 stilltide_marsh 定位群系；ordinary_ruin、relic_trial_arena 和 path_ruin 可定位遗迹或挑战。locate ore 后可选 starcoal、dawncopper、suniron、dawn_gold、resonance、memory、starmarrow、stellarjade、ancientdream 定位矿物；矿物定位只搜索附近已生成区块，不会生成新区块。",
+  "guide.starrail_sim.help.dimension_materials": "共享矿脉：七个群系都会生成九种本地矿物。星炭、霞铜、曦铁和记忆晶主要分布在浅至中层天穹岩；曜金、谐振晶、星髓、星琼和古老梦华主要分布在深层天穹岩。按 Y 高度：星炭 0～96、霞铜 -16～112、曦铁 -48～96、记忆晶 -32～48、曜金 -48～24、谐振晶 -56～16、星髓 -48～16、星琼 -56～8、古老梦华 -60～-32。高阶矿物更深；古老梦华比星琼少一些，但不会少很多。少量霞铜露头只会尝试出现在自然裸露的天穹岩上。管理员可用 /starrail dimension locate ore <矿物名> 搜索附近已生成区块；它不会替你生成新区块。",
+  "guide.starrail_sim.help.dimension_survival": "生存与成长：晴穗树和流萤树可由树苗再生，原木能制木板、木棍，也能烧成可再生木炭；星炭可直接作燃料，单个燃烧 1600 游戏刻，9 个合成的星炭块燃烧 16000 游戏刻。晨露莓丛可重复采收并用莓果扩繁；林息豆种在耕地上，成熟后收获豆荚并可烧成熟食。海床上的星潮藻可采集、再种并烹饪成食物；海滩潮汐草可作装饰，澄沙铃花可重新种植、堆肥或制成浅蓝染料。海底气泡泉形成向上的水流，可作为水下探索的垂直地标并帮助玩家上升到水面。命途遗境使用原版水源、耕地和作物规则。晴穹草方块、晴穹泥土、普通泥土和腐殖土可用锄变耕地、用锹变土径；坡地粗土先用锄转成泥土。星砾可采集后用于地貌装饰；静潮腐殖土可锄成耕地，也可用铲处理成土径。静潮芦苇可种在适宜土壤和水边；星砾垫草可种在命途草方块、坡地粗土或星砾上。两种植物都可采集后重种，但不会自行生长或蔓延。装备成长从曦铁档到星髓档，再用锻造模板升级为下界合金档星琼装备和更高一档古老梦华装备。",
   "screen.starrail_sim.guide_archive": "行旅档案",
   "screen.starrail_sim.archive_rename": "自定义坐标名称",
   "guide.starrail_sim.archive.title": "行旅档案",
-  "guide.starrail_sim.archive.intro": "这里记录你发现的五个群系、遗迹首次发现位置、信标与遗器决斗场坐标及挑战胜利。首次踏入星潮海域、澄沙海滩或星脉洞窟时也会记录发现。点击坐标行可自定义名称；拆除已记录的信标后，对应坐标会从档案中移除。中继平台的返程信标用于返回进入命途遗境前的位置。",
+  "guide.starrail_sim.archive.intro": "这里记录你发现的七个群系、遗迹首次发现位置、信标与遗器决斗场坐标及挑战胜利。首次踏入星潮海域、澄沙海滩、星脉洞窟、星砾高地或静潮泽地时也会记录发现。点击坐标行可自定义名称；拆除已记录的信标后，对应坐标会从档案中移除。列车中的星轨信标可在两界列车枢纽之间往返。",
   "guide.starrail_sim.archive.regions": "区域探索",
   "guide.starrail_sim.archive.beacons": "已记录的信标坐标：%s处",
   "guide.starrail_sim.archive.beacon_default_name": "星轨信标",
@@ -5296,7 +5291,15 @@
   "message.starrail_sim.archive.beacon_location": "该信标已在档案中，坐标（%s，%s，%s），当前共记录%s处。",
   "message.starrail_sim.archive.arena_found": "遗器决斗场已加入行旅档案，位置（%s，%s，%s）。",
   "message.starrail_sim.archive.ruin_found": "遗迹记录已更新：%s，位置（%s，%s，%s）。",
-  "message.starrail_sim.dimension.relay_location": "命途遗境中继平台坐标：（%s，%s，%s），点击此消息传送。",
+  "message.starrail_sim.dimension.relay_location": "命途遗境星穹列车枢纽坐标：（%s，%s，%s），点击此消息传送。",
+  "message.starrail_sim.dimension.hub_not_ready": "目标星穹列车枢纽尚未生成或信标已缺失，暂时无法传送。",
+  "message.starrail_sim.dimension.hub_landing_unsafe": "列车内的落点当前不安全，暂时无法传送。",
+  "message.starrail_sim.dimension.travel_failed": "维度传送失败。",
+  "message.starrail_sim.dimension.already_in_path": "你已身处命途遗境。",
+  "message.starrail_sim.dimension.wrong_source": "只能从主世界星穹列车进入命途遗境。",
+  "message.starrail_sim.dimension.return_requires_path": "只有身处命途遗境时才能返回主世界列车。",
+  "message.starrail_sim.dimension.arrived_path": "已抵达命途遗境星穹列车。",
+  "message.starrail_sim.dimension.arrived_overworld": "已返回主世界星穹列车。",
   "message.starrail_sim.dimension.path_ruin_location": "命途遗迹：%s，维度 %s，坐标（%s，%s，%s），点击此消息传送。",
   "message.starrail_sim.dimension.no_path_ruin": "你还没有已分配的命途遗迹。",
   "block.starrail_sim.path_grass_block": "晴穹草方块",
@@ -5324,6 +5327,7 @@
   "item.starrail_sim.path_dawn_gold_ingot": "曜金锭",
   "item.starrail_sim.path_dawn_gold_nugget": "曜金粒",
   "item.starrail_sim.path_resonance_crystal": "谐振晶",
+  "block.starrail_sim.path_resonance_crystal_wire": "谐振晶",
   "item.starrail_sim.path_memory_crystal": "记忆晶",
   "item.starrail_sim.path_starmarrow": "星髓",
   "item.starrail_sim.path_raw_stellarjade": "星琼原料",
@@ -5348,6 +5352,24 @@
   "block.starrail_sim.path_starmarrow_ore": "星髓矿",
   "block.starrail_sim.path_stellarjade_ore": "星琼矿",
   "block.starrail_sim.path_ancientdream_ore": "古老梦华矿",
+  "item.starrail_sim.path_dawn_gold_sword": "曜金剑",
+  "item.starrail_sim.path_dawn_gold_pickaxe": "曜金镐",
+  "item.starrail_sim.path_dawn_gold_axe": "曜金斧",
+  "item.starrail_sim.path_dawn_gold_shovel": "曜金锹",
+  "item.starrail_sim.path_dawn_gold_hoe": "曜金锄",
+  "item.starrail_sim.path_dawn_gold_helmet": "曜金头盔",
+  "item.starrail_sim.path_dawn_gold_chestplate": "曜金胸甲",
+  "item.starrail_sim.path_dawn_gold_leggings": "曜金护腿",
+  "item.starrail_sim.path_dawn_gold_boots": "曜金靴子",
+  "item.starrail_sim.path_dawncopper_sword": "霞铜剑",
+  "item.starrail_sim.path_dawncopper_pickaxe": "霞铜镐",
+  "item.starrail_sim.path_dawncopper_axe": "霞铜斧",
+  "item.starrail_sim.path_dawncopper_shovel": "霞铜锹",
+  "item.starrail_sim.path_dawncopper_hoe": "霞铜锄",
+  "item.starrail_sim.path_dawncopper_helmet": "霞铜头盔",
+  "item.starrail_sim.path_dawncopper_chestplate": "霞铜胸甲",
+  "item.starrail_sim.path_dawncopper_leggings": "霞铜护腿",
+  "item.starrail_sim.path_dawncopper_boots": "霞铜靴子",
   "item.starrail_sim.path_suniron_sword": "曦铁剑",
   "item.starrail_sim.path_suniron_pickaxe": "曦铁镐",
   "item.starrail_sim.path_suniron_axe": "曦铁斧",
@@ -5453,8 +5475,6 @@
   "screen.starrail_sim.pass_picker.scroll": "滚动查看更多",
   "advancements.starrail_sim.root.title": "旅途的起点",
   "advancements.starrail_sim.root.description": "在这个世界开始新的旅程。",
-  "advancements.starrail_sim.journey.overworld.title": "踏遍山海",
-  "advancements.starrail_sim.journey.overworld.description": "探索主世界全部 53 种原版群系。",
   "advancements.starrail_sim.journey.the_path.title": "驶向命途遗境",
   "advancements.starrail_sim.journey.the_path.description": "首次进入命途遗境。",
   "advancements.starrail_sim.exploration.glimmerwood.title": "流萤林间拾光",
@@ -5524,5 +5544,13 @@
   "advancements.starrail_sim.light_cone.random_pass.title": "命途随缘",
   "advancements.starrail_sim.light_cone.random_pass.description": "使用星轨通票，从当前命途的光锥中随机获得一张。",
   "advancements.starrail_sim.light_cone.special_pass.title": "此行有选",
-  "advancements.starrail_sim.light_cone.special_pass.description": "使用星轨专票，选择并获得当前命途的一张光锥。"
+  "advancements.starrail_sim.light_cone.special_pass.description": "使用星轨专票，选择并获得当前命途的一张光锥。",
+  "block.starrail_sim.path_ridge_scree": "星砾",
+  "block.starrail_sim.path_marsh_humus": "静潮腐殖土",
+  "block.starrail_sim.path_marsh_reed": "静潮芦苇",
+  "block.starrail_sim.path_ridge_cushion": "星砾垫草",
+  "advancements.starrail_sim.exploration.star_scree_highlands.title": "初探星砾高地",
+  "advancements.starrail_sim.exploration.star_scree_highlands.description": "首次踏入开阔岩坡与低矮垫草交错的星砾高地。",
+  "advancements.starrail_sim.exploration.stilltide_marsh.title": "初探静潮泽地",
+  "advancements.starrail_sim.exploration.stilltide_marsh.description": "发现有腐殖土与散布浅水洼的静潮低地。"
 }

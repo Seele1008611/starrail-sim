@@ -31,7 +31,7 @@ public final class PathStatePacket {
     private final int soughtY;
     private final int soughtZ;
     private final ResourceLocation soughtDimension;
-    private final int pathRegionMask;
+    private final long pathRegionMask;
     private final int pathRuinMask;
     private final int pathRuinPositionMask;
     private final long[] pathRuinPositions;
@@ -51,7 +51,7 @@ public final class PathStatePacket {
                            int objective2, int secondsRemaining,
                            StarRailPath soughtPath, ResourceLocation soughtDimension,
                            int soughtX, int soughtY, int soughtZ,
-                           int pathRegionMask, int pathRuinMask,
+                           long pathRegionMask, int pathRuinMask,
                            int pathRuinPositionMask, long[] pathRuinPositions,
                            int pathBeaconCount,
                            long[] pathBeaconPositions, long[] pathArenaPositions,
@@ -102,7 +102,7 @@ public final class PathStatePacket {
         buffer.writeInt(packet.soughtX);
         buffer.writeInt(packet.soughtY);
         buffer.writeInt(packet.soughtZ);
-        buffer.writeInt(packet.pathRegionMask);
+        buffer.writeLong(packet.pathRegionMask);
         buffer.writeInt(packet.pathRuinMask);
         buffer.writeInt(packet.pathRuinPositionMask);
         writePositions(buffer, packet.pathRuinPositions);
@@ -136,7 +136,7 @@ public final class PathStatePacket {
                 buffer.readInt(),
                 buffer.readInt(),
                 buffer.readInt(),
-                buffer.readInt(),
+                buffer.readLong(),
                 buffer.readInt(),
                 buffer.readInt(),
                 readPositions(buffer),

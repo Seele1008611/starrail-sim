@@ -1,0 +1,145 @@
+{
+  "source_sha256": {
+    "dimension/the_path.json": "1328ee6656a6c27bc81a5c06668cc342165d11be70027060d66048ea7d358d6f",
+    "worldgen/noise_settings/the_path.json": "5d087b66ac7a04aa8012590eb25bc9ede34553356df2b83907d57c61e9be303e",
+    "worldgen/biome/sunmeadow.json": "b0a7ce7173b2f5281a5d1d3cfc88d13c20f37c6269579e0a6c1fb730baef7e13",
+    "worldgen/biome/glimmerwood.json": "d46cc8449552a1661581b42186840f35627e1d01c4ae94245f22f265662428b4"
+  },
+  "parameter_space_checks": {
+    "open_cells_unique": 108,
+    "boundary_points_covered": 224,
+    "boundary_points_with_multiple_biomes": 138
+  },
+  "candidate_routes": {
+    "starrail_sim:star_scree_highlands": [
+      {
+        "temperature": [
+          -1.0,
+          1.0
+        ],
+        "humidity": [
+          -1.0,
+          1.0
+        ],
+        "continentalness": [
+          0.03,
+          1.0
+        ],
+        "erosion": [
+          -1.0,
+          -0.375
+        ],
+        "depth": [
+          0.0,
+          0.0
+        ],
+        "weirdness": [
+          -1.0,
+          1.0
+        ],
+        "offset": 0.0
+      },
+      {
+        "temperature": [
+          -1.0,
+          1.0
+        ],
+        "humidity": [
+          -1.0,
+          1.0
+        ],
+        "continentalness": [
+          0.03,
+          1.0
+        ],
+        "erosion": [
+          -1.0,
+          -0.375
+        ],
+        "depth": [
+          1.0,
+          1.0
+        ],
+        "weirdness": [
+          -1.0,
+          1.0
+        ],
+        "offset": 0.0
+      }
+    ],
+    "starrail_sim:stilltide_marsh": [
+      {
+        "temperature": [
+          -1.0,
+          1.0
+        ],
+        "humidity": [
+          0.1,
+          1.0
+        ],
+        "continentalness": [
+          -0.105,
+          0.2
+        ],
+        "erosion": [
+          0.3,
+          1.0
+        ],
+        "depth": [
+          0.0,
+          0.0
+        ],
+        "weirdness": [
+          -1.0,
+          1.0
+        ],
+        "offset": 0.0
+      },
+      {
+        "temperature": [
+          -1.0,
+          1.0
+        ],
+        "humidity": [
+          0.1,
+          1.0
+        ],
+        "continentalness": [
+          -0.105,
+          0.2
+        ],
+        "erosion": [
+          0.3,
+          1.0
+        ],
+        "depth": [
+          1.0,
+          1.0
+        ],
+        "weirdness": [
+          -1.0,
+          1.0
+        ],
+        "offset": 0.0
+      }
+    ]
+  },
+  "biome_source_entries": 25,
+  "status": "prototype_not_gameplay_accepted",
+  "unchanged": [
+    "noise_router",
+    "sea_level",
+    "cavern_route",
+    "ocean_route",
+    "beach_route"
+  ],
+  "placeholder_assets": [
+    "path_river_gravel",
+    "path_forest_humus",
+    "vanilla_grass"
+  ],
+  "final_plants_not_yet_implemented": [
+    "path_marsh_reed",
+    "path_ridge_cushion"
+  ]
+}

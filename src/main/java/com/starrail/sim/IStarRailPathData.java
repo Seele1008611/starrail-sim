@@ -38,14 +38,6 @@ public interface IStarRailPathData {
 
     void setPathUnlocked(boolean unlocked);
 
-    Set<String> getExploredOverworldBiomes();
-    boolean addExploredOverworldBiome(String biomeId);
-    boolean isTrainRewardIssued();
-    void setTrainRewardIssued(boolean issued);
-    boolean isTrainRewardPending();
-    void setTrainRewardPending(boolean pending);
-    boolean isLegacyExplorationMigrated();
-    void setLegacyExplorationMigrated(boolean migrated);
     Set<String> getDiscoveredPathRegions();
     boolean addDiscoveredPathRegion(String regionId);
     Set<String> getDiscoveredPathRuins();

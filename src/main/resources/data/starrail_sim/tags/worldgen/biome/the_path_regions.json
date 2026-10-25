@@ -2,6 +2,8 @@
   "replace": false,
   "values": [
     "starrail_sim:sunmeadow",
-    "starrail_sim:glimmerwood"
+    "starrail_sim:glimmerwood",
+    "starrail_sim:star_scree_highlands",
+    "starrail_sim:stilltide_marsh"
   ]
 }

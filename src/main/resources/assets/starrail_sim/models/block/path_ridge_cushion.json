@@ -1,0 +1,40 @@
+{
+  "render_type": "minecraft:cutout",
+  "ambientocclusion": false,
+  "textures": {
+    "cross": "starrail_sim:block/path_ridge_cushion",
+    "particle": "starrail_sim:block/path_ridge_cushion"
+  },
+  "elements": [
+    {
+      "from": [0, 0, 8],
+      "to": [16, 16, 8],
+      "rotation": {
+        "origin": [8, 8, 8],
+        "axis": "y",
+        "angle": 45,
+        "rescale": false
+      },
+      "shade": false,
+      "faces": {
+        "north": { "uv": [0, 0, 16, 13], "texture": "#cross" },
+        "south": { "uv": [0, 0, 16, 13], "texture": "#cross" }
+      }
+    },
+    {
+      "from": [0, 0, 8],
+      "to": [16, 16, 8],
+      "rotation": {
+        "origin": [8, 8, 8],
+        "axis": "y",
+        "angle": -45,
+        "rescale": false
+      },
+      "shade": false,
+      "faces": {
+        "north": { "uv": [0, 0, 16, 13], "texture": "#cross" },
+        "south": { "uv": [0, 0, 16, 13], "texture": "#cross" }
+      }
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "render_type": "minecraft:cutout",
+  "parent": "starrail_sim:block/path_resonance_wire_side",
+  "textures": {
+    "line": "starrail_sim:block/path_resonance_wire_line0"
+  }
+}

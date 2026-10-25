@@ -529,6 +529,10 @@ public final class StarRailGuideScreen extends StarRailStyledScreen {
                 (StarRailPathClientState.getPathRegionMask() & 8) != 0);
         y = drawArchiveRecord(graphics, y, "biome.starrail_sim.starvein_cavern",
                 (StarRailPathClientState.getPathRegionMask() & 16) != 0);
+        y = drawArchiveRecord(graphics, y, "biome.starrail_sim.star_scree_highlands",
+                (StarRailPathClientState.getPathRegionMask() & 32L) != 0L);
+        y = drawArchiveRecord(graphics, y, "biome.starrail_sim.stilltide_marsh",
+                (StarRailPathClientState.getPathRegionMask() & 64L) != 0L);
         y = drawArchiveRecord(graphics, y,
                 Component.translatable("guide.starrail_sim.archive.beacons",
                         StarRailPathClientState.getPathBeaconCount()), null);

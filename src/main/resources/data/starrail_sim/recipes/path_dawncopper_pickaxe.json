@@ -1,0 +1,21 @@
+{
+  "pattern": [
+    "III",
+    " S ",
+    " S "
+  ],
+  "key": {
+    "I": {
+      "item": "starrail_sim:path_dawncopper_ingot"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    }
+  },
+  "category": "equipment",
+  "type": "minecraft:crafting_shaped",
+  "result": {
+    "item": "starrail_sim:path_dawncopper_pickaxe",
+    "count": 1
+  }
+}

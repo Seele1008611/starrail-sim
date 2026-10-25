@@ -71,6 +71,10 @@ public final class PathEcologyContent {
             () -> new PathShorePlantBlock(plantProperties(MapColor.PLANT)));
     public static final RegistryObject<Block> CLEAR_SAND_BELLFLOWER = foodBlock("clear_sand_bellflower",
             () -> new PathClearSandBellflowerBlock(plantProperties(MapColor.PLANT)));
+    public static final RegistryObject<Block> MARSH_REED = block("path_marsh_reed",
+            () -> new PathMarshReedBlock(plantProperties(MapColor.PLANT)));
+    public static final RegistryObject<Block> RIDGE_CUSHION = block("path_ridge_cushion",
+            () -> new PathRidgeCushionBlock(plantProperties(MapColor.PLANT)));
     public static final RegistryObject<Block> STAR_TIDE_ALGAE = StarRailSimMod.BLOCKS.register(
             "star_tide_algae", () -> new PathTideAlgaeBlock(plantProperties(MapColor.COLOR_CYAN)));
     public static final RegistryObject<Item> STAR_TIDE_ALGAE_ITEM = foodBlockItem("star_tide_algae",
@@ -98,6 +102,8 @@ public final class PathEcologyContent {
             ComposterBlock.COMPOSTABLES.put(GLIMMER_MOSS.get(), 0.3F);
             ComposterBlock.COMPOSTABLES.put(TIDE_GRASS.get(), 0.3F);
             ComposterBlock.COMPOSTABLES.put(CLEAR_SAND_BELLFLOWER.get(), 0.65F);
+            ComposterBlock.COMPOSTABLES.put(MARSH_REED.get(), 0.3F);
+            ComposterBlock.COMPOSTABLES.put(RIDGE_CUSHION.get(), 0.3F);
             ComposterBlock.COMPOSTABLES.put(STAR_TIDE_ALGAE_ITEM.get(), 0.3F);
             ComposterBlock.COMPOSTABLES.put(ROASTED_STAR_TIDE_ALGAE.get(), 0.3F);
             ComposterBlock.COMPOSTABLES.put(FORESTBEAN_WILD.get(), 0.3F);

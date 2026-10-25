@@ -1,7 +1,7 @@
 {
   "display": {
     "icon": {
-      "item": "starrail_sim:star_rail_train"
+      "item": "starrail_sim:star_rail_beacon"
     },
     "title": {
       "translate": "advancements.starrail_sim.root.title"

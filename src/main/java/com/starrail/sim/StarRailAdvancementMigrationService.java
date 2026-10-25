@@ -14,12 +14,13 @@ import java.util.List;
 /** One-time, evidence-based advancement backfill for players upgrading existing saves. */
 public final class StarRailAdvancementMigrationService {
     private static final String MIGRATION_KEY = "starrail_sim_advancement_migration_version";
-    private static final int MIGRATION_VERSION = 1;
+    private static final int MIGRATION_VERSION = 2;
     private static final TagKey<Item> LIGHT_CONES = ItemTags.create(
             new ResourceLocation("curios", "light_cone"));
 
     private static final List<String> PATH_REGIONS = List.of(
-            "glimmerwood", "sunmeadow", "star_tide_ocean", "clear_sand_beach", "starvein_cavern");
+            "glimmerwood", "sunmeadow", "star_tide_ocean", "clear_sand_beach", "starvein_cavern",
+            "star_scree_highlands", "stilltide_marsh");
 
     private StarRailAdvancementMigrationService() { }
 
@@ -32,10 +33,6 @@ public final class StarRailAdvancementMigrationService {
                 || !data.getDiscoveredPathBeacons().isEmpty()
                 || data.isPathArenaDiscovered()
                 || data.getPathArenaVictories() > 0;
-
-        if (data.getExploredOverworldBiomes().size() >= 53) {
-            award(player, "journey/overworld");
-        }
 
         for (String region : PATH_REGIONS) {
             if (data.getDiscoveredPathRegions().contains(region)) {

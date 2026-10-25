@@ -1,4 +1,5 @@
 {
+  "render_type": "minecraft:translucent",
   "parent": "minecraft:block/lodestone",
   "textures": {
     "particle": "starrail_sim:block/abundance_ruin_anchor",

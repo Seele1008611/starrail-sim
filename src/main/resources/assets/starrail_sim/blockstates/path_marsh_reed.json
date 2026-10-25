@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "half=lower": {
+      "model": "starrail_sim:block/path_marsh_reed"
+    },
+    "half=upper": {
+      "model": "starrail_sim:block/path_marsh_reed_upper"
+    }
+  }
+}

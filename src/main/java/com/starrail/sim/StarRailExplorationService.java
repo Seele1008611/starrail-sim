@@ -8,8 +8,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerContainerEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -20,7 +18,7 @@ import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import java.util.List;
 import java.util.Set;
 
-/** Tracks Overworld eligibility, Path discoveries, and each player's train reward. */
+/** Tracks Path discoveries and exploration archives. */
 @Mod.EventBusSubscriber(modid = StarRailSimMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public final class StarRailExplorationService {
     private static final String PATH_REGION_SUNMEADOW = "sunmeadow";
@@ -28,87 +26,51 @@ public final class StarRailExplorationService {
     private static final String PATH_REGION_STAR_TIDE_OCEAN = "star_tide_ocean";
     private static final String PATH_REGION_CLEAR_SAND_BEACH = "clear_sand_beach";
     private static final String PATH_REGION_STARVEIN_CAVERN = "starvein_cavern";
+    private static final String PATH_REGION_STAR_SCREE_HIGHLANDS = "star_scree_highlands";
+    private static final String PATH_REGION_STILLTIDE_MARSH = "stilltide_marsh";
     private static final List<String> PATH_RUIN_IDS = List.of(
             "ordinary", "preservation", "destruction", "hunt", "erudition", "harmony",
             "nihility", "abundance", "remembrance", "elation");
-    private static final Set<String> OVERWORLD_BIOMES = Set.of(
-            "minecraft:badlands", "minecraft:bamboo_jungle", "minecraft:beach",
-            "minecraft:birch_forest", "minecraft:cherry_grove", "minecraft:cold_ocean",
-            "minecraft:dark_forest", "minecraft:deep_cold_ocean", "minecraft:deep_dark",
-            "minecraft:deep_frozen_ocean", "minecraft:deep_lukewarm_ocean", "minecraft:deep_ocean",
-            "minecraft:desert", "minecraft:dripstone_caves", "minecraft:eroded_badlands",
-            "minecraft:flower_forest", "minecraft:forest", "minecraft:frozen_ocean",
-            "minecraft:frozen_peaks", "minecraft:frozen_river", "minecraft:grove",
-            "minecraft:ice_spikes", "minecraft:jagged_peaks", "minecraft:jungle",
-            "minecraft:lukewarm_ocean", "minecraft:lush_caves", "minecraft:mangrove_swamp",
-            "minecraft:meadow", "minecraft:mushroom_fields", "minecraft:ocean",
-            "minecraft:old_growth_birch_forest", "minecraft:old_growth_pine_taiga",
-            "minecraft:old_growth_spruce_taiga", "minecraft:plains", "minecraft:river",
-            "minecraft:savanna", "minecraft:savanna_plateau", "minecraft:snowy_beach",
-            "minecraft:snowy_plains", "minecraft:snowy_slopes", "minecraft:snowy_taiga",
-            "minecraft:sparse_jungle", "minecraft:stony_peaks", "minecraft:stony_shore",
-            "minecraft:sunflower_plains", "minecraft:swamp", "minecraft:taiga",
-            "minecraft:warm_ocean", "minecraft:windswept_forest",
-            "minecraft:windswept_gravelly_hills", "minecraft:windswept_hills",
-            "minecraft:windswept_savanna", "minecraft:wooded_badlands");
     private StarRailExplorationService() {}
 
     /** Run once on login. Existing path state stays intact; future exploration is dimension-checked. */
     public static void onLogin(ServerPlayer player, IStarRailPathData data) {
         if (data.getCurrentPath().isRealPath()) data.setPathUnlocked(true);
-        if (hasTrain(player)) {
-            data.setTrainRewardIssued(true);
-            data.setTrainRewardPending(false);
-            data.setPathUnlocked(true);
-        }
-        if (!data.isLegacyExplorationMigrated()) {
-            data.setLegacyExplorationMigrated(true);
-        }
         StarRailAdvancementMigrationService.migrate(player, data);
-        tryDeliver(player, data);
         if (data.isPathUnlocked()) StarRailPathService.sync(player);
     }
 
-    /** Called from the server player tick; only the 53 vanilla Overworld biomes count. */
+    /** Records Path region exploration for the server-side player tick. */
     public static void tick(ServerPlayer player, IStarRailPathData data) {
-        if (player.level().dimension().equals(Level.OVERWORLD)) {
-            player.level().getBiome(player.blockPosition()).unwrapKey().ifPresent(key -> {
-                String id = key.location().toString();
-                if (OVERWORLD_BIOMES.contains(id) && data.addExploredOverworldBiome(id)) {
-                    int count = data.getExploredOverworldBiomes().size();
-                    if (count % 5 == 0 && count < OVERWORLD_BIOMES.size()) {
-                        player.sendSystemMessage(net.minecraft.network.chat.Component.translatable(
-                                "message.starrail_sim.overworld_biomes_progress", count,
-                                OVERWORLD_BIOMES.size()));
-                    }
-                    if (count == OVERWORLD_BIOMES.size()) {
-                        data.setTrainRewardPending(true);
-                        StarRailAdvancementService.award(player, "journey/overworld");
-                        player.sendSystemMessage(net.minecraft.network.chat.Component.translatable(
-                                "message.starrail_sim.overworld_biomes_complete"));
-                    }
-                }
-            });
-        } else if (player.level().dimension().equals(StarRailDimensionIds.THE_PATH)) {
-            player.level().getBiome(player.blockPosition()).unwrapKey().ifPresent(key -> {
-                String id = key.location().getPath();
-                String currentRegionId = switch (id) {
-                    case PATH_REGION_SUNMEADOW -> PATH_REGION_SUNMEADOW;
-                    case PATH_REGION_GLIMMERWOOD -> PATH_REGION_GLIMMERWOOD;
-                    case PATH_REGION_STAR_TIDE_OCEAN -> PATH_REGION_STAR_TIDE_OCEAN;
-                    case PATH_REGION_CLEAR_SAND_BEACH -> PATH_REGION_CLEAR_SAND_BEACH;
-                    case PATH_REGION_STARVEIN_CAVERN -> PATH_REGION_STARVEIN_CAVERN;
-                    default -> null;
-                };
-                if (currentRegionId != null && data.addDiscoveredPathRegion(currentRegionId)) {
-                    Component region = Component.translatable("biome.starrail_sim." + currentRegionId);
-                    player.sendSystemMessage(Component.translatable(
-                            "message.starrail_sim.archive.region_found", region));
-                    StarRailPathService.sync(player);
-                }
-            });
-        }
-        tryDeliver(player, data);
+        if (!player.level().dimension().equals(StarRailDimensionIds.THE_PATH)) return;
+        player.level().getBiome(player.blockPosition()).unwrapKey().ifPresent(key -> {
+            String id = key.location().getPath();
+            String currentRegionId = switch (id) {
+                case PATH_REGION_SUNMEADOW -> PATH_REGION_SUNMEADOW;
+                case PATH_REGION_GLIMMERWOOD -> PATH_REGION_GLIMMERWOOD;
+                case PATH_REGION_STAR_TIDE_OCEAN -> PATH_REGION_STAR_TIDE_OCEAN;
+                case PATH_REGION_CLEAR_SAND_BEACH -> PATH_REGION_CLEAR_SAND_BEACH;
+                case PATH_REGION_STARVEIN_CAVERN -> PATH_REGION_STARVEIN_CAVERN;
+                case PATH_REGION_STAR_SCREE_HIGHLANDS -> PATH_REGION_STAR_SCREE_HIGHLANDS;
+                case PATH_REGION_STILLTIDE_MARSH -> PATH_REGION_STILLTIDE_MARSH;
+                default -> null;
+            };
+            if (currentRegionId != null && data.addDiscoveredPathRegion(currentRegionId)) {
+                Component region = Component.translatable("biome.starrail_sim." + currentRegionId);
+                player.sendSystemMessage(Component.translatable(
+                        "message.starrail_sim.archive.region_found", region));
+                StarRailPathService.sync(player);
+            }
+        });
+    }
+
+    /** Unlocks Path content after the player successfully arrives in The Path. */
+    public static void markPathVisited(ServerPlayer player) {
+        if (!player.serverLevel().dimension().equals(StarRailDimensionIds.THE_PATH)) return;
+        player.getCapability(StarRailPathCapability.PATH_DATA).ifPresent(data -> {
+            data.setPathUnlocked(true);
+            StarRailPathService.sync(player);
+        });
     }
 
     public static void discoverBeacon(ServerPlayer player, BlockPos pos) {
@@ -176,14 +138,16 @@ public final class StarRailExplorationService {
         });
     }
 
-    public static int regionMask(IStarRailPathData data) {
-        int mask = 0;
+    public static long regionMask(IStarRailPathData data) {
+        long mask = 0L;
         Set<String> regions = data.getDiscoveredPathRegions();
-        if (regions.contains(PATH_REGION_SUNMEADOW)) mask |= 1;
-        if (regions.contains(PATH_REGION_GLIMMERWOOD)) mask |= 2;
-        if (regions.contains(PATH_REGION_STAR_TIDE_OCEAN)) mask |= 4;
-        if (regions.contains(PATH_REGION_CLEAR_SAND_BEACH)) mask |= 8;
-        if (regions.contains(PATH_REGION_STARVEIN_CAVERN)) mask |= 16;
+        if (regions.contains(PATH_REGION_SUNMEADOW)) mask |= 1L;
+        if (regions.contains(PATH_REGION_GLIMMERWOOD)) mask |= 2L;
+        if (regions.contains(PATH_REGION_STAR_TIDE_OCEAN)) mask |= 4L;
+        if (regions.contains(PATH_REGION_CLEAR_SAND_BEACH)) mask |= 8L;
+        if (regions.contains(PATH_REGION_STARVEIN_CAVERN)) mask |= 16L;
+        if (regions.contains(PATH_REGION_STAR_SCREE_HIGHLANDS)) mask |= 32L;
+        if (regions.contains(PATH_REGION_STILLTIDE_MARSH)) mask |= 64L;
         return mask;
     }
 
@@ -319,41 +283,4 @@ public final class StarRailExplorationService {
         return StarRailRuinGuardService.getArchiveRuinId(chest).equals("ordinary");
     }
 
-    /** Activating a placed train establishes that this player already acquired the item. */
-    public static void markTrainUsed(ServerPlayer player) {
-        player.getCapability(StarRailPathCapability.PATH_DATA).ifPresent(data -> {
-            data.setTrainRewardIssued(true);
-            data.setTrainRewardPending(false);
-            data.setPathUnlocked(true);
-            StarRailPathService.sync(player);
-        });
-    }
-
-    private static void tryDeliver(ServerPlayer player, IStarRailPathData data) {
-        if (hasTrain(player)) {
-            data.setTrainRewardPending(false);
-            data.setTrainRewardIssued(true);
-            data.setPathUnlocked(true);
-            return;
-        }
-        if (data.getExploredOverworldBiomes().size() >= OVERWORLD_BIOMES.size()
-                && !data.isTrainRewardIssued()) {
-            data.setTrainRewardPending(true);
-        }
-        if (!data.isTrainRewardPending() || data.isTrainRewardIssued()) return;
-        int slot = player.getInventory().getFreeSlot();
-        if (slot < 0) return;
-        player.getInventory().setItem(slot, new ItemStack(StarRailWorldBlocks.STAR_RAIL_TRAIN.get()));
-        player.getInventory().setChanged();
-        data.setTrainRewardPending(false);
-        data.setTrainRewardIssued(true);
-        data.setPathUnlocked(true);
-        StarRailPathService.sync(player);
-        player.sendSystemMessage(net.minecraft.network.chat.Component.translatable(
-                "message.starrail_sim.train_reward_received"));
-    }
-
-    private static boolean hasTrain(ServerPlayer player) {
-        return player.getInventory().contains(new ItemStack(StarRailWorldBlocks.STAR_RAIL_TRAIN.get()));
-    }
 }

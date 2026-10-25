@@ -1,8 +1,8 @@
 {
-  "parent": "starrail_sim:journey/overworld",
+  "parent": "starrail_sim:root",
   "display": {
     "icon": {
-      "item": "starrail_sim:star_rail_train"
+      "item": "starrail_sim:star_rail_beacon"
     },
     "title": {
       "translate": "advancements.starrail_sim.journey.the_path.title"
