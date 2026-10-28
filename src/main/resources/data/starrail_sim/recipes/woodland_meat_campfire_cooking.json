@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:campfire_cooking",
+  "ingredient": {
+    "item": "starrail_sim:woodland_meat"
+  },
+  "result": "starrail_sim:cooked_woodland_meat",
+  "experience": 0.35,
+  "cookingtime": 600
+}

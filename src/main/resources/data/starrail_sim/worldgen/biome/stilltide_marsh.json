@@ -46,7 +46,10 @@
     [
       "starrail_sim:path_marsh_reed_patch"
     ],
-    []
+    [
+      "starrail_sim:stilltide_rice_wild_patch",
+      "starrail_sim:path_marsh_root_tuft_patch"
+    ]
   ],
   "has_precipitation": true,
   "spawners": {
@@ -54,28 +57,16 @@
     "axolotls": [],
     "creature": [
       {
-        "type": "minecraft:sheep",
-        "weight": 12,
-        "minCount": 4,
-        "maxCount": 4
-      },
-      {
-        "type": "minecraft:pig",
-        "weight": 10,
-        "minCount": 4,
-        "maxCount": 4
-      },
-      {
-        "type": "minecraft:chicken",
-        "weight": 10,
-        "minCount": 4,
-        "maxCount": 4
-      },
-      {
-        "type": "minecraft:cow",
+        "type": "starrail_sim:woodland_forager",
         "weight": 8,
-        "minCount": 4,
-        "maxCount": 4
+        "minCount": 2,
+        "maxCount": 3
+      },
+      {
+        "type": "starrail_sim:stilltide_fowl",
+        "weight": 10,
+        "minCount": 2,
+        "maxCount": 3
       }
     ],
     "misc": [],

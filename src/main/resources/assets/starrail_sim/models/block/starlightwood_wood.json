@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "starrail_sim:block/starlightwood_log",
+    "side": "starrail_sim:block/starlightwood_log"
+  }
+}

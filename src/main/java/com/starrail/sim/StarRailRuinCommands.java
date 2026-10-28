@@ -149,20 +149,16 @@ public final class StarRailRuinCommands {
             source.sendFailure(Component.literal(boundsError));
             return 0;
         }
-        if (!StarRailRuinSpacingData.get(level).hasClearance(
+        if (!StarRailRuinSpacingData.get(level).hasManualPlacementClearance(
                 level, origin.getX(), origin.getZ(), overwrite)) {
-            source.sendFailure(Component.translatable(
-                    "message.starrail_sim.path_seek_no_spaced_site"));
-            return 0;
-        }
-        String chunksError = checkChunksLoaded(level, origin, blueprint.bounds());
-        if (chunksError != null) {
-            source.sendFailure(Component.literal(chunksError));
+            source.sendFailure(Component.literal(
+                    "锚点距已登记遗迹或星穹列车枢纽不足 400 格；请换一个位置。"));
             return 0;
         }
 
         PlacementJob job = new PlacementJob(source, level, origin, blueprint, overwrite,
-                false, false, null, null);
+                true, false, null, null);
+        job.forceRequiredChunks();
         ACTIVE_JOBS.put(server, job);
         source.sendSuccess(() -> Component.literal("已开始检查" + displayName(blueprint) + "放置区域："
                 + blueprint.placements().size() + " 个方块；锚点 " + origin.getX() + " "

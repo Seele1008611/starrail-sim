@@ -1,7 +1,0 @@
-{
-  "parent": "minecraft:block/door_top_right_open",
-  "textures": {
-    "bottom": "starrail_sim:block/glimmerwood_door_bottom",
-    "top": "starrail_sim:block/glimmerwood_door_top"
-  }
-}

@@ -69,7 +69,8 @@ public final class StarRailEffectService {
         if (customResistance != null) {
             return Mth.clamp(customResistance.getValue(), 0.0D, 1.0D);
         }
-        if (target.getType() == EntityType.WARDEN
+        if (target instanceof StarveinConstructGuardian
+                || target.getType() == EntityType.WARDEN
                 || target.getType() == EntityType.WITHER
                 || target.getType() == EntityType.ENDER_DRAGON) {
             return 0.25D;

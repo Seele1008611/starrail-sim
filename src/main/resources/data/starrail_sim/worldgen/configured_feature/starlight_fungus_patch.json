@@ -1,0 +1,61 @@
+{
+  "type": "minecraft:random_patch",
+  "config": {
+    "feature": {
+      "feature": {
+        "type": "minecraft:simple_block",
+        "config": {
+          "to_place": {
+            "type": "minecraft:simple_state_provider",
+            "state": {
+              "Name": "starrail_sim:starlight_fungus"
+            }
+          }
+        }
+      },
+      "placement": [
+        {
+          "type": "minecraft:block_predicate_filter",
+          "predicate": {
+            "type": "minecraft:all_of",
+            "predicates": [
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": [
+                  "minecraft:air",
+                  "minecraft:cave_air"
+                ]
+              },
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": [
+                  "starrail_sim:path_forest_humus",
+                  "starrail_sim:path_marsh_humus",
+                  "starrail_sim:path_dirt",
+                  "starrail_sim:path_stone",
+                  "starrail_sim:path_deep_stone",
+                  "minecraft:dirt",
+                  "minecraft:coarse_dirt",
+                  "minecraft:rooted_dirt",
+                  "minecraft:podzol",
+                  "minecraft:mycelium",
+                  "minecraft:grass_block",
+                  "minecraft:stone",
+                  "minecraft:deepslate"
+                ],
+                "offset": [
+                  0,
+                  -1,
+                  0
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "tries": 8,
+    "xz_spread": 4,
+    "y_spread": 1
+  }
+}

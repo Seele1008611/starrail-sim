@@ -32,7 +32,8 @@ public final class StarRailRuinBattleSync {
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void hit(LivingDamageEvent event) {
         if (event.isCanceled() || event.getAmount() <= 0 || event.getEntity().level().isClientSide()
-                || !(event.getEntity() instanceof Warden)) return;
+                || (!(event.getEntity() instanceof Warden)
+                    && !(event.getEntity() instanceof StarveinConstructGuardian))) return;
         ServerPlayer player = StarRailCombatEvents.getPlayerAttacker(event.getSource());
         if (player != null) TARGETS.put(player, new Target(player.level().dimension().location(),
                 event.getEntity().getUUID(), player.level().getGameTime() + 100));

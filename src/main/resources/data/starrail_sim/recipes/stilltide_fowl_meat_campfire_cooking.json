@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:campfire_cooking",
+  "ingredient": {
+    "item": "starrail_sim:stilltide_fowl_meat"
+  },
+  "result": "starrail_sim:cooked_stilltide_fowl_meat",
+  "experience": 0.35,
+  "cookingtime": 600
+}

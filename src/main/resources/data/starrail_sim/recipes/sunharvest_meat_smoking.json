@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smoking",
+  "ingredient": {
+    "item": "starrail_sim:sunharvest_meat"
+  },
+  "result": "starrail_sim:cooked_sunharvest_meat",
+  "experience": 0.35,
+  "cookingtime": 100
+}

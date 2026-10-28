@@ -1,6 +1,0 @@
-{
-  "parent": "minecraft:block/cross",
-  "textures": {
-    "cross": "starrail_sim:block/glimmerwood_sapling"
-  }
-}

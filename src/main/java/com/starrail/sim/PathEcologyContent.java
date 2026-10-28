@@ -41,7 +41,7 @@ public final class PathEcologyContent {
     private static final List<RegistryObject<Item>> FOOD_ITEMS = new ArrayList<>();
 
     public static final WoodSet SUNMEADOW = woodSet("sunmeadow", MapColor.WOOD, "sunmeadow_tree");
-    public static final WoodSet GLIMMERWOOD = woodSet("glimmerwood", MapColor.COLOR_GREEN, "glimmerwood_tree");
+    public static final WoodSet STARLIGHTWOOD = woodSet("starlightwood", MapColor.COLOR_GREEN, "starlightwood_tree");
 
     public static final RegistryObject<Block> MORNING_BERRY_BUSH = foodBlock("morning_berry_bush",
             () -> new PathBerryBushBlock(plantProperties(MapColor.PLANT).randomTicks()));
@@ -62,9 +62,40 @@ public final class PathEcologyContent {
             () -> new Item(new Item.Properties().food(
                     new FoodProperties.Builder().nutrition(5).saturationMod(0.6F).build())));
 
+    public static final RegistryObject<Block> STAR_TUBER_CROP = StarRailSimMod.BLOCKS.register(
+            "star_tuber_crop", () -> new PathStarTuberCropBlock(plantProperties(MapColor.PLANT).randomTicks()));
+    public static final RegistryObject<Item> STAR_TUBER_SEEDS = item("star_tuber_seeds",
+            () -> new ItemNameBlockItem(STAR_TUBER_CROP.get(), new Item.Properties()));
+    public static final RegistryObject<Item> STAR_TUBER = item("star_tuber",
+            () -> new Item(new Item.Properties().food(
+                    new FoodProperties.Builder().nutrition(2).saturationMod(0.2F).build())));
+    public static final RegistryObject<Item> BAKED_STAR_TUBER = item("baked_star_tuber",
+            () -> new Item(new Item.Properties().food(
+                    new FoodProperties.Builder().nutrition(5).saturationMod(0.6F).build())));
+
+    public static final RegistryObject<Block> STILLTIDE_RICE_CROP = StarRailSimMod.BLOCKS.register(
+            "stilltide_rice_crop", () -> new PathStilltideRiceCropBlock(plantProperties(MapColor.PLANT).randomTicks()));
+    public static final RegistryObject<Item> STILLTIDE_RICE_SEEDS = item("stilltide_rice_seeds",
+            () -> new ItemNameBlockItem(STILLTIDE_RICE_CROP.get(), new Item.Properties()));
+    public static final RegistryObject<Item> STILLTIDE_RICE_GRAIN = item("stilltide_rice_grain",
+            () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> COOKED_STILLTIDE_RICE = item("cooked_stilltide_rice",
+            () -> new Item(new Item.Properties().food(
+                    new FoodProperties.Builder().nutrition(5).saturationMod(0.6F).build())));
+
+    public static final RegistryObject<Block> STARLIGHT_FUNGUS = StarRailSimMod.BLOCKS.register(
+            "starlight_fungus", () -> new PathStarlightFungusBlock(plantProperties(MapColor.COLOR_PURPLE)
+                    .randomTicks().lightLevel(state -> 2)));
+    public static final RegistryObject<Item> STARLIGHT_FUNGUS_ITEM = foodBlockItem("starlight_fungus",
+            () -> new BlockItem(STARLIGHT_FUNGUS.get(), new Item.Properties().food(
+                    new FoodProperties.Builder().nutrition(2).saturationMod(0.2F).build())));
+    public static final RegistryObject<Item> ROASTED_STARLIGHT_FUNGUS = item("roasted_starlight_fungus",
+            () -> new Item(new Item.Properties().food(
+                    new FoodProperties.Builder().nutrition(4).saturationMod(0.5F).build())));
+
     public static final RegistryObject<Block> SUNMEADOW_BLOOM = foodBlock("sunmeadow_bloom",
             () -> new net.minecraft.world.level.block.BushBlock(plantProperties(MapColor.PLANT)));
-    public static final RegistryObject<Block> GLIMMER_MOSS = foodBlock("glimmer_moss",
+    public static final RegistryObject<Block> STARLIGHT_MOSS = foodBlock("starlight_moss",
             () -> new MossBlock(BlockBehaviour.Properties.of().mapColor(MapColor.PLANT)
                     .strength(0.1F).sound(SoundType.GRASS)));
     public static final RegistryObject<Block> TIDE_GRASS = foodBlock("tide_grass",
@@ -75,6 +106,10 @@ public final class PathEcologyContent {
             () -> new PathMarshReedBlock(plantProperties(MapColor.PLANT)));
     public static final RegistryObject<Block> RIDGE_CUSHION = block("path_ridge_cushion",
             () -> new PathRidgeCushionBlock(plantProperties(MapColor.PLANT)));
+    public static final RegistryObject<Block> RIDGE_WINDBUSH = foodBlock("path_ridge_windbush",
+            () -> new PathRidgeCushionBlock(plantProperties(MapColor.PLANT)));
+    public static final RegistryObject<Block> MARSH_ROOT_TUFT = foodBlock("path_marsh_root_tuft",
+            () -> new PathMarshRootTuftBlock(plantProperties(MapColor.PLANT)));
     public static final RegistryObject<Block> STAR_TIDE_ALGAE = StarRailSimMod.BLOCKS.register(
             "star_tide_algae", () -> new PathTideAlgaeBlock(plantProperties(MapColor.COLOR_CYAN)));
     public static final RegistryObject<Item> STAR_TIDE_ALGAE_ITEM = foodBlockItem("star_tide_algae",
@@ -98,19 +133,29 @@ public final class PathEcologyContent {
             ComposterBlock.COMPOSTABLES.put(FORESTBEAN_SEEDS.get(), 0.3F);
             ComposterBlock.COMPOSTABLES.put(FORESTBEAN_POD.get(), 0.5F);
             ComposterBlock.COMPOSTABLES.put(ROASTED_FORESTBEAN.get(), 0.3F);
+            ComposterBlock.COMPOSTABLES.put(STAR_TUBER_SEEDS.get(), 0.3F);
+            ComposterBlock.COMPOSTABLES.put(STAR_TUBER.get(), 0.65F);
+            ComposterBlock.COMPOSTABLES.put(BAKED_STAR_TUBER.get(), 0.3F);
+            ComposterBlock.COMPOSTABLES.put(STILLTIDE_RICE_SEEDS.get(), 0.3F);
+            ComposterBlock.COMPOSTABLES.put(STILLTIDE_RICE_GRAIN.get(), 0.3F);
+            ComposterBlock.COMPOSTABLES.put(COOKED_STILLTIDE_RICE.get(), 0.3F);
+            ComposterBlock.COMPOSTABLES.put(STARLIGHT_FUNGUS_ITEM.get(), 0.65F);
+            ComposterBlock.COMPOSTABLES.put(ROASTED_STARLIGHT_FUNGUS.get(), 0.3F);
             ComposterBlock.COMPOSTABLES.put(SUNMEADOW_BLOOM.get(), 0.65F);
-            ComposterBlock.COMPOSTABLES.put(GLIMMER_MOSS.get(), 0.3F);
+            ComposterBlock.COMPOSTABLES.put(STARLIGHT_MOSS.get(), 0.3F);
             ComposterBlock.COMPOSTABLES.put(TIDE_GRASS.get(), 0.3F);
             ComposterBlock.COMPOSTABLES.put(CLEAR_SAND_BELLFLOWER.get(), 0.65F);
             ComposterBlock.COMPOSTABLES.put(MARSH_REED.get(), 0.3F);
             ComposterBlock.COMPOSTABLES.put(RIDGE_CUSHION.get(), 0.3F);
+            ComposterBlock.COMPOSTABLES.put(RIDGE_WINDBUSH.get(), 0.3F);
+            ComposterBlock.COMPOSTABLES.put(MARSH_ROOT_TUFT.get(), 0.3F);
             ComposterBlock.COMPOSTABLES.put(STAR_TIDE_ALGAE_ITEM.get(), 0.3F);
             ComposterBlock.COMPOSTABLES.put(ROASTED_STAR_TIDE_ALGAE.get(), 0.3F);
             ComposterBlock.COMPOSTABLES.put(FORESTBEAN_WILD.get(), 0.3F);
             ComposterBlock.COMPOSTABLES.put(SUNMEADOW.leaves().get(), 0.3F);
             ComposterBlock.COMPOSTABLES.put(SUNMEADOW.sapling().get(), 0.3F);
-            ComposterBlock.COMPOSTABLES.put(GLIMMERWOOD.leaves().get(), 0.3F);
-            ComposterBlock.COMPOSTABLES.put(GLIMMERWOOD.sapling().get(), 0.3F);
+            ComposterBlock.COMPOSTABLES.put(STARLIGHTWOOD.leaves().get(), 0.3F);
+            ComposterBlock.COMPOSTABLES.put(STARLIGHTWOOD.sapling().get(), 0.3F);
         });
     }
 
@@ -121,6 +166,7 @@ public final class PathEcologyContent {
     public static void addFoodCreativeItems(CreativeModeTab.Output output) {
         for (RegistryObject<Item> item : FOOD_BLOCK_ITEMS) output.accept(item.get());
         for (RegistryObject<Item> item : FOOD_ITEMS) output.accept(item.get());
+        PathAnimalFoodContent.addCreativeItems(output);
     }
 
     private static WoodSet woodSet(String id, MapColor color, String feature) {

@@ -59,21 +59,27 @@ public final class StarRailClient {
             MenuScreens.register(StarRailSimMod.RELIC_TRIAL_MENU.get(), RelicTrialScreen::new);
             ItemBlockRenderTypes.setRenderLayer(PathEcologyContent.SUNMEADOW.leaves().get(),
                     RenderType.cutoutMipped());
-            ItemBlockRenderTypes.setRenderLayer(PathEcologyContent.GLIMMERWOOD.leaves().get(),
+            ItemBlockRenderTypes.setRenderLayer(PathEcologyContent.STARLIGHTWOOD.leaves().get(),
                     RenderType.cutoutMipped());
             ItemBlockRenderTypes.setRenderLayer(PathEcologyContent.SUNMEADOW.sapling().get(),
                     RenderType.cutout());
-            ItemBlockRenderTypes.setRenderLayer(PathEcologyContent.GLIMMERWOOD.sapling().get(),
+            ItemBlockRenderTypes.setRenderLayer(PathEcologyContent.STARLIGHTWOOD.sapling().get(),
                     RenderType.cutout());
             ItemBlockRenderTypes.setRenderLayer(PathEcologyContent.SUNMEADOW.trapdoor().get(),
                     RenderType.cutout());
-            ItemBlockRenderTypes.setRenderLayer(PathEcologyContent.GLIMMERWOOD.trapdoor().get(),
+            ItemBlockRenderTypes.setRenderLayer(PathEcologyContent.STARLIGHTWOOD.trapdoor().get(),
                     RenderType.cutout());
             ItemBlockRenderTypes.setRenderLayer(PathEcologyContent.MORNING_BERRY_BUSH.get(),
                     RenderType.cutout());
             ItemBlockRenderTypes.setRenderLayer(PathEcologyContent.FORESTBEAN_WILD.get(),
                     RenderType.cutout());
             ItemBlockRenderTypes.setRenderLayer(PathEcologyContent.FORESTBEAN_CROP.get(),
+                    RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(PathEcologyContent.STAR_TUBER_CROP.get(),
+                    RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(PathEcologyContent.STILLTIDE_RICE_CROP.get(),
+                    RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(PathEcologyContent.STARLIGHT_FUNGUS.get(),
                     RenderType.cutout());
             ItemBlockRenderTypes.setRenderLayer(PathEcologyContent.SUNMEADOW_BLOOM.get(),
                     RenderType.cutout());
@@ -86,6 +92,10 @@ public final class StarRailClient {
             ItemBlockRenderTypes.setRenderLayer(PathEcologyContent.MARSH_REED.get(),
                     RenderType.cutout());
             ItemBlockRenderTypes.setRenderLayer(PathEcologyContent.RIDGE_CUSHION.get(),
+                    RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(PathEcologyContent.RIDGE_WINDBUSH.get(),
+                    RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(PathEcologyContent.MARSH_ROOT_TUFT.get(),
                     RenderType.cutout());
             ItemBlockRenderTypes.setRenderLayer(PathMineralContent.RESONANCE_CRYSTAL_WIRE.get(),
                     RenderType.cutout());

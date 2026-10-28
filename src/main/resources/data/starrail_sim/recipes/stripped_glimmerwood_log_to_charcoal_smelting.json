@@ -1,9 +1,0 @@
-{
-  "type": "minecraft:smelting",
-  "ingredient": {
-    "item": "starrail_sim:stripped_glimmerwood_log"
-  },
-  "result": "minecraft:charcoal",
-  "experience": 0.15,
-  "cookingtime": 200
-}

@@ -19,7 +19,7 @@ public final class StarRailAdvancementMigrationService {
             new ResourceLocation("curios", "light_cone"));
 
     private static final List<String> PATH_REGIONS = List.of(
-            "glimmerwood", "sunmeadow", "star_tide_ocean", "clear_sand_beach", "starvein_cavern",
+            "starlight_grove", "sunmeadow", "star_tide_ocean", "clear_sand_beach", "starvein_cavern",
             "star_scree_highlands", "stilltide_marsh");
 
     private StarRailAdvancementMigrationService() { }

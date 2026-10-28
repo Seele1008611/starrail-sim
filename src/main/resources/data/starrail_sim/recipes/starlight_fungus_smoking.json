@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:smoking",
+  "ingredient": { "item": "starrail_sim:starlight_fungus" },
+  "result": "starrail_sim:roasted_starlight_fungus",
+  "experience": 0.35,
+  "cookingtime": 100
+}

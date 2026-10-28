@@ -120,6 +120,9 @@ public final class StarRailToughnessService {
         target.addEffect(new net.minecraft.world.effect.MobEffectInstance(
                 net.minecraft.world.effect.MobEffects.GLOWING,
                 BROKEN_DURATION, 0, false, false, true));
+        if (target instanceof StarveinConstructGuardian guardian) {
+            guardian.staggerFor(BROKEN_DURATION);
+        }
 
         float breakEffect = (float) StarRailAttributes.getValue(
                 player, StarRailAttributes.BREAK_EFFECT, 0.0D);
@@ -174,7 +177,8 @@ public final class StarRailToughnessService {
     }
 
     private static float maxToughness(LivingEntity target) {
-        if (target.getType() == EntityType.WARDEN
+        if (target instanceof StarveinConstructGuardian
+                || target.getType() == EntityType.WARDEN
                 || target.getType() == EntityType.WITHER
                 || target.getType() == EntityType.ENDER_DRAGON) {
             return BOSS_TOUGHNESS;

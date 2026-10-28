@@ -1,0 +1,16 @@
+Animal sound credits
+====================
+
+Elk 7.wav by Hyperionn, Freesound
+https://freesound.org/people/Hyperionn/sounds/250191/
+License: Creative Commons Attribution 4.0 International (CC BY 4.0)
+https://creativecommons.org/licenses/by/4.0/
+Modified for this project: converted to mono 44.1 kHz OGG Vorbis and peak-normalized; pitch and original duration preserved.
+
+Other animal calls in this release are CC0:
+- Sheep - Bleat; Medium Perspective by TheKingOfGeeks360: https://freesound.org/people/TheKingOfGeeks360/sounds/840891/
+- Oink.mp3 by awr1001 (remix of Angry Pig Oinking by Jofae): https://freesound.org/people/awr1001/sounds/473519/ and https://freesound.org/people/Jofae/sounds/352698/
+- Chicken clucking 1 by MBPL: https://freesound.org/people/MBPL/sounds/668805/
+- Renill de cavall / Horse Neigh by Salsero_classic: https://freesound.org/people/Salsero_classic/sounds/826753/
+
+All CC0 recordings were converted to mono 44.1 kHz OGG Vorbis and peak-normalized; pitch and original duration were preserved.

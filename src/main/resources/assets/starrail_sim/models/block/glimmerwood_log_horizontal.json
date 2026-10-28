@@ -1,7 +1,0 @@
-{
-  "parent": "minecraft:block/cube_column_horizontal",
-  "textures": {
-    "end": "starrail_sim:block/glimmerwood_log_top",
-    "side": "starrail_sim:block/glimmerwood_log"
-  }
-}

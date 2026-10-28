@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smoking",
+  "ingredient": {
+    "item": "starrail_sim:starfleece_mutton"
+  },
+  "result": "starrail_sim:cooked_starfleece_mutton",
+  "experience": 0.35,
+  "cookingtime": 100
+}

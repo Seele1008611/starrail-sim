@@ -87,6 +87,7 @@ public final class StarRailSimMod {
         PathDawncopperEquipment.register();
         PathDawnGoldEquipment.register();
         PathEcologyContent.register();
+        PathAnimalFoodContent.register();
     }
 
     // 以下按命途注册自定义光锥；注册 ID 必须与模型、语言文件和战利品表一致。
@@ -403,7 +404,10 @@ public final class StarRailSimMod {
             "food", () -> CreativeModeTab.builder()
                     .title(Component.translatable("itemGroup.starrail_sim.food"))
                     .icon(() -> new ItemStack(PathEcologyContent.FORESTBEAN_SEEDS.get()))
-                    .displayItems((parameters, output) -> PathEcologyContent.addFoodCreativeItems(output))
+                    .displayItems((parameters, output) -> {
+                        PathEcologyContent.addFoodCreativeItems(output);
+                        PathAnimalEntities.addCreativeItems(output);
+                    })
                     .build());
 
     private static void addPathCreativeItems(CreativeModeTab.Output output) {
@@ -514,6 +518,9 @@ public final class StarRailSimMod {
         StarRailRuinWorldgen.register(modEventBus);
         StarRailNetwork.register();
         StarRailAttributes.ATTRIBUTES.register(modEventBus);
+        PathAnimalEntities.register(modEventBus);
+        StarveinConstructEntities.register(modEventBus);
+        PathAnimalSounds.SOUNDS.register(modEventBus);
         StarRailCombatSounds.SOUNDS.register(modEventBus);
         EFFECTS.register(modEventBus);
         StarRailTraceMaterials.register();
@@ -525,5 +532,7 @@ public final class StarRailSimMod {
         CREATIVE_TABS.register(modEventBus);
         RECIPE_SERIALIZERS.register(modEventBus);
         modEventBus.addListener(StarRailAttributes::addPlayerAttributes);
+        modEventBus.addListener(PathAnimalEntities::registerAttributes);
+        modEventBus.addListener(PathAnimalEntities::registerSpawnPlacements);
     }
 }

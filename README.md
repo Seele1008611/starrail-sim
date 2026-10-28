@@ -5,20 +5,21 @@
 ## 版本与依赖
 
 - Mod ID：`starrail_sim`
-- 当前版本：`1.23.0`（2026-10-25）；发行信息见 [1.23.0 发布记录](releases/1.23.0.md)。
+- 当前候选版本：`1.24.0`（2026-10-28，本地发行准备完成，尚未对外发布）；最新公开发行版为 [1.23.0](releases/1.23.0.md)。1.24.0 本地 JAR、校验值与验收范围见 [发行准备记录](releases/1.24.0.md)。
 - Minecraft：`1.20.1`
 - Forge：`47.x`；1.14.0 单人验收使用开发客户端 `47.4.10`。
 - Java：`17`
 - 必需依赖：Curios API（Forge、Minecraft 1.20.1）；发行包使用 `5.14.1` 核验。
 
-1.23.0 正式包：[starrail_sim-1.23.0.jar](https://github.com/Seele1008611/starrail-sim/releases/download/v1.23.0/starrail_sim-1.23.0.jar)。
+1.23.0 最新公开发行包：[starrail_sim-1.23.0.jar](https://github.com/Seele1008611/starrail-sim/releases/download/v1.23.0/starrail_sim-1.23.0.jar)。
 
-1.23.0 扩展命途遗境的地表生态，并将星穹列车改为主世界与命途遗境间的固定枢纽。单人阶段验收与最终列车外观验收通过；多人测试曾执行，最终整包复测状态见 [发行记录](releases/1.23.0.md)。
+1.24.0 扩展命途遗境七个既有群系的生态，加入五种原创环境生物、本地食物与作物，并以原创构装守卫替换遗迹中的原版 Warden。用户确认阶段 6 剩余实机测试及多人客户端测试无问题；旧世界迁移未测试，专用服务端未确认测试。该版本仍是本地候选，尚未发布。
 
 ## 功能概览
 
 - 1.21.0 将现有玩法整理为 37 项原版进度，并加入旧存档一次性安全补录。
 - 1.22.0 为九命途战斗特效加入动态着色器表现和 26 段原创音效。
+- 1.24.0 扩展七群系生态、加入五种原创动物与本地农耕食物，并将普通及命途遗迹统一接入原创构装守卫；本地候选验收范围见 [1.24.0 发行准备记录](releases/1.24.0.md)。
 - 1.23.0 新增星砾高地与静潮泽地、两种本地植物生态、曜金/霞铜工具盔甲套装、谐振晶红石式铺设，以及主世界与命途遗境间的星穹列车枢纽。
 - 1.20.0 新增星脉洞窟、原创晶簇和地下生态，扩展命途遗境的洞穴探索。
 - 1.19.0 新增星潮海域与澄沙海滩、海洋植物与食物、海底气泡泉和海龟生成，并加入群系探索记录与定位。
@@ -53,7 +54,7 @@
 
 1. 安装 Minecraft 1.20.1、Java 17 和 Forge 47.x。
 2. 安装适用于 Forge 1.20.1 的 Curios API 5.14.1 或更高版本。
-3. 将 `starrail_sim-1.22.0.jar` 和 Curios API JAR 放入游戏实例的 `mods` 文件夹。
+3. 将对应公开发行版本的 JAR 和 Curios API JAR 放入游戏实例的 `mods` 文件夹。当前公开版本为 `starrail_sim-1.23.0.jar`；1.24.0 仍是未发布的本地候选。
 4. 启动 Forge 配置文件。
 
 建议先在新存档中体验。自然生成只会发生在首次生成的区块；已经生成过的区块不会因为安装模组而自动补出遗迹。普通遗迹会在满足高度和结构放置条件时尝试生成，命途主题遗迹由命途寻迹安排。
@@ -69,6 +70,7 @@ Windows 下可用项目自带 Gradle Wrapper 启动开发客户端或构建项�
 
 ## 验证状态
 
+- 1.24.0 阶段 6：用户确认剩余整合测试及多人客户端测试无问题；旧世界迁移未测试，专用服务端和强制崩溃恢复未验收。1.24.0 本地候选发行包与范围见 [发行准备记录](releases/1.24.0.md)。
 - 1.22.0 阶段 1 至 5 的单人实机验收已通过；多人同步未测试。发行信息见 [1.22.0 发布记录](releases/1.22.0.md)。
 - 1.21.0 阶段 1 至 4 的单人实机验收已通过；多人同步未测试。发行信息见 [1.21.0 发布记录](releases/1.21.0.md)。
 - 1.20.0 用户确认单机整体验收通过；多人客户端/服务端同步未测试。详见 [1.20.0 发布记录](releases/1.20.0.md)。
@@ -96,6 +98,6 @@ Windows 下可用项目自带 Gradle Wrapper 启动开发客户端或构建项�
 
 项目文档与设计资料已按主题整理在 [`设计方案/README.md`](设计方案/README.md)：命途、战斗和版本记录见 [`项目文档`](设计方案/项目文档/README.md)；遗迹概念图、模型源文件和测试记录见 [`遗迹设计`](设计方案/遗迹设计/README.md)。当前版本的详细规则可从 [设计总纲](设计方案/项目文档/系统设计/DESIGN.md)、[命途试炼与寻迹](设计方案/项目文档/系统设计/PATH_TRIALS.md)、[命途等级](设计方案/项目文档/系统设计/PATH_RANKS.md) 开始。版本记录见 [CHANGELOG.md](CHANGELOG.md)；1.6.0 行迹设计与验收记录见 [1.6.0 版本计划](设计方案/项目文档/版本规划/PLAN_1.6.0.md) 和 [九命途行迹设计表](设计方案/项目文档/系统设计/1.6.0巡猎行迹设计表.md)。
 
-`README.txt` 和根目录 `changelog.txt` 是 Forge MDK 上游模板文件；项目说明和版本记录以本文件及 `CHANGELOG.md` 为准。发布归档见 [releases/1.15.0.md](releases/1.15.0.md)、[releases/1.14.0.md](releases/1.14.0.md)、[releases/1.13.0.md](releases/1.13.0.md)、[releases/1.12.0.md](releases/1.12.0.md)、[releases/1.11.0.md](releases/1.11.0.md)、[releases/1.10.0.md](releases/1.10.0.md)、[releases/1.9.0.md](releases/1.9.0.md)、[releases/1.8.0.md](releases/1.8.0.md)、[releases/1.7.0.md](releases/1.7.0.md)、[releases/1.6.0.md](releases/1.6.0.md)、[releases/1.5.0.md](releases/1.5.0.md)、[releases/1.4.0.md](releases/1.4.0.md)、[releases/1.3.0.md](releases/1.3.0.md)、[releases/1.2.0.md](releases/1.2.0.md) 和 [releases/1.1.0.md](releases/1.1.0.md)。
+`README.txt` 和根目录 `changelog.txt` 是 Forge MDK 上游模板文件；项目说明和版本记录以本文件及 `CHANGELOG.md` 为准。版本归档见本地候选 [releases/1.24.0.md](releases/1.24.0.md)、[releases/1.23.0.md](releases/1.23.0.md)、[releases/1.22.0.md](releases/1.22.0.md)、[releases/1.21.0.md](releases/1.21.0.md)、[releases/1.20.0.md](releases/1.20.0.md)、[releases/1.19.0.md](releases/1.19.0.md)、[releases/1.18.0.md](releases/1.18.0.md)、[releases/1.17.0.md](releases/1.17.0.md)、[releases/1.16.0.md](releases/1.16.0.md)、[releases/1.15.0.md](releases/1.15.0.md)、[releases/1.14.0.md](releases/1.14.0.md)、[releases/1.13.0.md](releases/1.13.0.md)、[releases/1.12.0.md](releases/1.12.0.md)、[releases/1.11.0.md](releases/1.11.0.md)、[releases/1.10.0.md](releases/1.10.0.md)、[releases/1.9.0.md](releases/1.9.0.md)、[releases/1.8.0.md](releases/1.8.0.md)、[releases/1.7.0.md](releases/1.7.0.md)、[releases/1.6.0.md](releases/1.6.0.md)、[releases/1.5.0.md](releases/1.5.0.md)、[releases/1.4.0.md](releases/1.4.0.md)、[releases/1.3.0.md](releases/1.3.0.md)、[releases/1.2.0.md](releases/1.2.0.md) 和 [releases/1.1.0.md](releases/1.1.0.md)。
 
 

@@ -521,7 +521,7 @@ public final class StarRailGuideScreen extends StarRailStyledScreen {
         y += 24;
         y = drawArchiveRecord(graphics, y, "biome.starrail_sim.sunmeadow",
                 (StarRailPathClientState.getPathRegionMask() & 1) != 0);
-        y = drawArchiveRecord(graphics, y, "biome.starrail_sim.glimmerwood",
+        y = drawArchiveRecord(graphics, y, "biome.starrail_sim.starlight_grove",
                 (StarRailPathClientState.getPathRegionMask() & 2) != 0);
         y = drawArchiveRecord(graphics, y, "biome.starrail_sim.star_tide_ocean",
                 (StarRailPathClientState.getPathRegionMask() & 4) != 0);

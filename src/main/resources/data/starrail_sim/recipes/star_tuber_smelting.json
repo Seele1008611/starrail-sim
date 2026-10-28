@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": { "item": "starrail_sim:star_tuber" },
+  "result": "starrail_sim:baked_star_tuber",
+  "experience": 0.35,
+  "cookingtime": 200
+}

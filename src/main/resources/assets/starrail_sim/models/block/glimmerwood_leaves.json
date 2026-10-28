@@ -1,6 +1,0 @@
-{
-  "parent": "minecraft:block/leaves",
-  "textures": {
-    "all": "starrail_sim:block/glimmerwood_leaves"
-  }
-}

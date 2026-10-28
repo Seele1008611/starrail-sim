@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "PPP"
+  ],
+  "key": {
+    "P": {
+      "item": "starrail_sim:starlightwood_planks"
+    }
+  },
+  "result": {
+    "item": "starrail_sim:starlightwood_slab",
+    "count": 6
+  }
+}

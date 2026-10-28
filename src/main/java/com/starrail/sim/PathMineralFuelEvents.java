@@ -28,7 +28,7 @@ public final class PathMineralFuelEvents {
 
     private static int woodBurnTime(ItemStack stack) {
         for (PathEcologyContent.WoodSet set : new PathEcologyContent.WoodSet[]{
-                PathEcologyContent.SUNMEADOW, PathEcologyContent.GLIMMERWOOD}) {
+                PathEcologyContent.SUNMEADOW, PathEcologyContent.STARLIGHTWOOD}) {
             if (is(stack, set.log(), set.wood(), set.strippedLog(), set.strippedWood(), set.planks(),
                     set.stairs(), set.fence(), set.fenceGate(), set.trapdoor(), set.button())) return 300;
             if (stack.is(set.slab().get().asItem())) return 150;

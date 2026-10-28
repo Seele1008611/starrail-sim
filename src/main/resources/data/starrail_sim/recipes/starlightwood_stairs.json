@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "P  ",
+    "PP ",
+    "PPP"
+  ],
+  "key": {
+    "P": {
+      "item": "starrail_sim:starlightwood_planks"
+    }
+  },
+  "result": {
+    "item": "starrail_sim:starlightwood_stairs",
+    "count": 4
+  }
+}

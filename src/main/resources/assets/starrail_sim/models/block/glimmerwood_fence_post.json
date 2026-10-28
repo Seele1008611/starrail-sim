@@ -1,6 +1,0 @@
-{
-  "parent": "minecraft:block/fence_post",
-  "textures": {
-    "texture": "starrail_sim:block/glimmerwood_planks"
-  }
-}

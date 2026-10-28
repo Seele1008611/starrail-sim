@@ -24,5 +24,20 @@
   "combat_remembrance_echo": { "sounds": ["starrail_sim:combat/remembrance_echo"] },
   "combat_remembrance_eternal": { "sounds": ["starrail_sim:combat/remembrance_eternal"] },
   "combat_elation_burst": { "sounds": ["starrail_sim:combat/elation_burst"] },
-  "combat_elation_grand": { "sounds": ["starrail_sim:combat/elation_grand"] }
+  "combat_elation_grand": { "sounds": ["starrail_sim:combat/elation_grand"] },
+  "sunnyharvest_deer_ambient": { "sounds": ["starrail_sim:animals/sunnyharvest_deer_call"] },
+  "sunnyharvest_deer_hurt": { "sounds": ["starrail_sim:animals/sunnyharvest_deer_call"] },
+  "sunnyharvest_deer_death": { "sounds": ["starrail_sim:animals/sunnyharvest_deer_call"] },
+  "starvelvet_ram_ambient": { "sounds": ["starrail_sim:animals/starvelvet_ram_call"] },
+  "starvelvet_ram_hurt": { "sounds": ["starrail_sim:animals/starvelvet_ram_call"] },
+  "starvelvet_ram_death": { "sounds": ["starrail_sim:animals/starvelvet_ram_call"] },
+  "woodland_forager_ambient": { "sounds": ["starrail_sim:animals/woodland_forager_call"] },
+  "woodland_forager_hurt": { "sounds": ["starrail_sim:animals/woodland_forager_call"] },
+  "woodland_forager_death": { "sounds": ["starrail_sim:animals/woodland_forager_call"] },
+  "stilltide_fowl_ambient": { "sounds": ["starrail_sim:animals/stilltide_fowl_call"] },
+  "stilltide_fowl_hurt": { "sounds": ["starrail_sim:animals/stilltide_fowl_call"] },
+  "stilltide_fowl_death": { "sounds": ["starrail_sim:animals/stilltide_fowl_call"] },
+  "star_scree_packbeast_ambient": { "sounds": ["starrail_sim:animals/star_scree_packbeast_call"] },
+  "star_scree_packbeast_hurt": { "sounds": ["starrail_sim:animals/star_scree_packbeast_call"] },
+  "star_scree_packbeast_death": { "sounds": ["starrail_sim:animals/star_scree_packbeast_call"] }
 }

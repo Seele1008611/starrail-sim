@@ -9,7 +9,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.warden.Warden;
 import net.minecraft.world.level.block.Blocks;
@@ -42,17 +41,23 @@ public final class StarRailRuinGuardService extends SavedData {
     private static final String ORIGIN_TAG = "StarRailGuardOrigin";
     private static final String VARIANT_TAG = "StarRailGuardVariant";
     private static final String ARCHIVE_VARIANT_TAG = "StarRailArchiveRuinVariant";
+    private static final String MIGRATION_SOURCE_TAG = "StarRailGuardianMigrationFrom";
     private static final long SUMMON_COOLDOWN_TICKS = 20L * 30L;
     // 世界生成可能在工作线程执行，只排队；SavedData 和实体操作留给服务器主线程。
     private static final Map<ServerLevel, Set<BlockPos>> QUEUED = new ConcurrentHashMap<>();
+    private static final Map<ServerLevel, Set<UUID>> PENDING_GUARDIAN_RECONCILES = new ConcurrentHashMap<>();
     private final Map<BlockPos, Guard> guards = new HashMap<>();
-    private final Map<UUID, Warden> pendingDeaths = new HashMap<>();
+    private final Map<UUID, net.minecraft.world.entity.LivingEntity> pendingDeaths = new HashMap<>();
     private record DropRoll(LivingDropsEvent event, ItemEntity material, StarRailPath path) {}
     private final Map<UUID, DropRoll> pendingDrops = new HashMap<>();
 
     private static final class Guard {
         UUID entity;
+        UUID legacyEntity;
         String variantId = "ordinary";
+        boolean constructGuardian = true;
+        // Retained only to read the accepted Phase 4 prototype saves.
+        boolean constructPrototype;
         boolean defeated;
         boolean rewarded;
         boolean respawn;
@@ -74,7 +79,12 @@ public final class StarRailRuinGuardService extends SavedData {
             CompoundTag entry = list.getCompound(i);
             Guard guard = new Guard();
             if (entry.hasUUID("Entity")) guard.entity = entry.getUUID("Entity");
+            if (entry.hasUUID("LegacyEntity")) guard.legacyEntity = entry.getUUID("LegacyEntity");
             if (entry.contains("Variant")) guard.variantId = entry.getString("Variant");
+            guard.constructPrototype = entry.getBoolean("ConstructPrototype");
+            guard.constructGuardian = entry.contains("ConstructGuardian")
+                    ? entry.getBoolean("ConstructGuardian")
+                    : guard.constructPrototype || !entry.hasUUID("Entity");
             guard.defeated = entry.getBoolean("Defeated");
             guard.rewarded = entry.getBoolean("Rewarded");
             guard.respawn = entry.getBoolean("Respawn");
@@ -98,7 +108,10 @@ public final class StarRailRuinGuardService extends SavedData {
             CompoundTag entry = new CompoundTag();
             entry.putLong("Origin", origin.asLong());
             if (guard.entity != null) entry.putUUID("Entity", guard.entity);
+            if (guard.legacyEntity != null) entry.putUUID("LegacyEntity", guard.legacyEntity);
             entry.putString("Variant", guard.variantId);
+            entry.putBoolean("ConstructGuardian", guard.constructGuardian);
+            entry.putBoolean("ConstructPrototype", guard.constructPrototype);
             entry.putBoolean("Defeated", guard.defeated);
             entry.putBoolean("Rewarded", guard.rewarded);
             entry.putBoolean("Respawn", guard.respawn);
@@ -147,6 +160,12 @@ public final class StarRailRuinGuardService extends SavedData {
         }
     }
 
+    private static boolean matchesGuardian(Guard guard, Entity entity) {
+        return guard.constructGuardian
+                ? entity instanceof StarveinConstructGuardian
+                : entity instanceof Warden;
+    }
+
     /** 只读调试信息，便于核对守卫绑定与存档恢复，不提供跳过战斗的入口。 */
     public static int status(net.minecraft.commands.CommandSourceStack source) {
         ServerLevel level = source.getLevel();
@@ -173,6 +192,7 @@ public final class StarRailRuinGuardService extends SavedData {
                 + "；" + state + "；UUID=" + guard.entity + "；奖励已解锁=" + guard.rewarded
                 + "；召唤冷却剩余=" + Math.max(0L,
                         (guard.summonCooldownUntil - level.getGameTime() + 19L) / 20L) + "秒"
+                + "；守卫类型=" + (guard.constructGuardian ? "星脉构装守卫" : "待迁移旧监守者")
                 + "；已处理门格=" + Integer.bitCount(guard.openedGate) + "/25"), false);
         return 1;
     }
@@ -191,7 +211,8 @@ public final class StarRailRuinGuardService extends SavedData {
         if (level.getDifficulty() == Difficulty.PEACEFUL)
             return new AnchorView(path, AnchorPhase.PEACEFUL, 0);
         Entity found = guard.entity == null ? null : level.getEntity(guard.entity);
-        boolean alive = found instanceof Warden warden && warden.isAlive() && !warden.isRemoved();
+        boolean alive = found instanceof net.minecraft.world.entity.LivingEntity living
+                && matchesGuardian(guard, living) && living.isAlive() && !living.isRemoved();
         if (guard.respawn || ((!guard.defeated || guard.summonActive) && !alive))
             return new AnchorView(path, AnchorPhase.WAITING, 0);
         if (!guard.defeated) return new AnchorView(path, AnchorPhase.FIRST_CLEAR, 0);
@@ -202,7 +223,8 @@ public final class StarRailRuinGuardService extends SavedData {
         return new AnchorView(path, AnchorPhase.READY, 0);
     }
 
-    public record BattleGuard(Warden entity, StarRailPath path, boolean rematch) {}
+    public record BattleGuard(net.minecraft.world.entity.LivingEntity entity,
+                              StarRailPath path, boolean rematch) {}
     public static final double BATTLE_VIEW_RANGE = 48.0;
 
     /** Only registered, living guards; UUID lookups do not load chunks or invent a victory. */
@@ -215,10 +237,11 @@ public final class StarRailRuinGuardService extends SavedData {
         for (Guard guard : get(level).guards.values()) {
             if ((guard.defeated && !guard.summonActive) || guard.entity == null) continue;
             Entity found = level.getEntity(guard.entity);
-            if (!(found instanceof Warden warden) || !warden.isAlive() || warden.isRemoved()) continue;
-            double candidateDistance = player.distanceToSqr(warden);
+            if (!(found instanceof net.minecraft.world.entity.LivingEntity living)
+                    || !matchesGuardian(guard, living) || !living.isAlive() || living.isRemoved()) continue;
+            double candidateDistance = player.distanceToSqr(living);
             if (candidateDistance > BATTLE_VIEW_RANGE * BATTLE_VIEW_RANGE) continue;
-            BattleGuard candidate = new BattleGuard(warden, StarRailPath.byId(guard.variantId), guard.summonActive);
+            BattleGuard candidate = new BattleGuard(living, StarRailPath.byId(guard.variantId), guard.summonActive);
             if (found.getUUID().equals(attacked)) return candidate;
             if (candidateDistance < distance) {
                 nearest = candidate;
@@ -270,7 +293,8 @@ public final class StarRailRuinGuardService extends SavedData {
         }
 
         Entity existing = guard.entity == null ? null : level.getEntity(guard.entity);
-        if (existing instanceof Warden warden && !warden.isDeadOrDying()) {
+        if (existing instanceof net.minecraft.world.entity.LivingEntity living
+                && matchesGuardian(guard, living) && !living.isDeadOrDying()) {
             guard.summonActive = true;
             data.setDirty();
             player.displayClientMessage(Component.translatable(
@@ -310,14 +334,23 @@ public final class StarRailRuinGuardService extends SavedData {
 
     @SubscribeEvent
     public static void onLevelUnload(net.minecraftforge.event.level.LevelEvent.Unload event) {
-        if (event.getLevel() instanceof ServerLevel level) QUEUED.remove(level);
+        if (event.getLevel() instanceof ServerLevel level) {
+            QUEUED.remove(level);
+            PENDING_GUARDIAN_RECONCILES.remove(level);
+        }
     }
 
     /** 不把“UUID 暂时查不到”当成死亡：卸载区块不会重复刷守卫或误开宝箱。 */
     @SubscribeEvent
     public static void onTick(TickEvent.LevelTickEvent event) {
-        if (event.phase != TickEvent.Phase.END || !(event.level instanceof ServerLevel level)
-                || level.getGameTime() % 20 != 0) return;
+        if (!(event.level instanceof ServerLevel level)) return;
+        if (event.phase == TickEvent.Phase.START) {
+            StarRailRuinGuardService data = get(level);
+            processPendingGuardianReconciles(level, data);
+            cleanupMigratedWardens(level, data);
+            return;
+        }
+        if (event.phase != TickEvent.Phase.END || level.getGameTime() % 20 != 0) return;
         var data = get(level);
         data.confirmDeaths(level);
         Set<BlockPos> queued = QUEUED.get(level);
@@ -359,75 +392,256 @@ public final class StarRailRuinGuardService extends SavedData {
         BlockPos spawn = origin.offset(-2, 8, -10);
         if (!level.hasChunkAt(spawn) || !level.hasChunkAt(chestPos(origin))
                 || level.getDifficulty() == Difficulty.PEACEFUL) return false;
-        Warden warden = EntityType.WARDEN.create(level);
-        if (warden == null) return false;
-        warden.moveTo(spawn.getX() + .5, spawn.getY(), spawn.getZ() + .5, 0, 0);
-        // 执行原版出生初始化，否则 DIG_COOLDOWN 未建立，命名守卫仍会立刻钻地。
-        warden.finalizeSpawn(level, level.getCurrentDifficultyAt(spawn),
-                net.minecraft.world.entity.MobSpawnType.STRUCTURE, null, null);
-        warden.setCustomName(Component.literal("遗迹监守者"));
-        warden.setPersistenceRequired();
-        warden.getPersistentData().putLong(ORIGIN_TAG, origin.asLong());
-        if (!level.addFreshEntity(warden)) return false;
+        StarveinConstructGuardian created = StarveinConstructEntities
+                .STARVEIN_CONSTRUCT_GUARDIAN.get().create(level);
+        if (created == null) return false;
+        created.moveTo(spawn.getX() + .5, spawn.getY(), spawn.getZ() + .5, 0, 0);
+        created.configureForPath(StarRailPath.byId(guard.variantId));
+        // This is a new first battle or replay, so initialize it at its configured cap.
+        // Keep this out of configureForPath: that method also runs on saved, damaged mobs.
+        created.setHealth(created.getMaxHealth());
+        created.setCustomName(Component.translatable("entity.starrail_sim.starvein_construct_guardian"));
+        created.setPersistenceRequired();
+        created.getPersistentData().putLong(ORIGIN_TAG, origin.asLong());
+        if (!level.addFreshEntity(created)) return false;
         LOGGER.debug("Ruin guard spawned: origin={}, previous={}, respawn={}, uuid={}",
-                origin, guard.entity, guard.respawn, warden.getUUID());
-        guard.entity = warden.getUUID();
+                origin, guard.entity, guard.respawn, created.getUUID());
+        guard.entity = created.getUUID();
+        guard.constructGuardian = true;
+        guard.constructPrototype = false;
         guard.respawn = false;
         setDirty();
         return true;
     }
 
+    /**
+     * Entity NBT and SavedData are written independently. Reconcile a tagged construct on
+     * the next server tick so a crash between addFreshEntity and UUID binding can recover
+     * without treating an unloaded UUID as a death.
+     */
+    private static void processPendingGuardianReconciles(ServerLevel level,
+                                                          StarRailRuinGuardService data) {
+        Set<UUID> pending = PENDING_GUARDIAN_RECONCILES.get(level);
+        if (pending == null) return;
+        for (UUID uuid : Set.copyOf(pending)) {
+            Entity found = level.getEntity(uuid);
+            if (!(found instanceof StarveinConstructGuardian guardian)
+                    || guardian.isRemoved()) {
+                pending.remove(uuid);
+                continue;
+            }
+            CompoundTag persistent = guardian.getPersistentData();
+            if (!persistent.contains(ORIGIN_TAG)) {
+                pending.remove(uuid);
+                continue;
+            }
+            BlockPos origin = BlockPos.of(persistent.getLong(ORIGIN_TAG));
+            Guard guard = data.guards.get(origin);
+            if (guard == null) continue;
+            reconcileConstructGuardian(level, data, origin, guard, guardian);
+            pending.remove(uuid);
+        }
+        if (pending.isEmpty()) PENDING_GUARDIAN_RECONCILES.remove(level, pending);
+    }
+
+    private static void reconcileConstructGuardian(ServerLevel level,
+            StarRailRuinGuardService data, BlockPos origin, Guard guard,
+            StarveinConstructGuardian guardian) {
+        UUID uuid = guardian.getUUID();
+        // A completed, inactive ruin must not be reopened by a stale entity saved during
+        // the same tick as a victory.
+        if (guard.defeated && !guard.summonActive) {
+            if (uuid.equals(guard.entity)) guard.entity = null;
+            guardian.discard();
+            data.setDirty();
+            return;
+        }
+        if (guard.constructGuardian && uuid.equals(guard.entity)) {
+            guardian.configureForPath(StarRailPath.byId(guard.variantId));
+            return;
+        }
+
+        CompoundTag persistent = guardian.getPersistentData();
+        UUID migrationSource = persistent.hasUUID(MIGRATION_SOURCE_TAG)
+                ? persistent.getUUID(MIGRATION_SOURCE_TAG) : null;
+        boolean migratingBoundWarden = !guard.constructGuardian && guard.entity != null
+                && guard.entity.equals(migrationSource);
+        boolean firstSpawnWithoutBinding = guard.entity == null;
+        boolean respawnWithoutOldEntity = guard.respawn && guard.entity != null
+                && level.getEntity(guard.entity) == null;
+        if (migratingBoundWarden || firstSpawnWithoutBinding || respawnWithoutOldEntity) {
+            if (migratingBoundWarden) guard.legacyEntity = migrationSource;
+            guard.entity = uuid;
+            guard.constructGuardian = true;
+            guard.constructPrototype = false;
+            guard.respawn = false;
+            guardian.configureForPath(StarRailPath.byId(guard.variantId));
+            data.setDirty();
+            return;
+        }
+
+        // If a crash saved both the intended replacement and an orphan copy, keep the
+        // UUID already recorded in SavedData and discard only the extra marked copy.
+        if (guard.constructGuardian && guard.legacyEntity != null
+                && guard.legacyEntity.equals(migrationSource) && guard.entity != null
+                && !guard.entity.equals(uuid)) {
+            Entity bound = level.getEntity(guard.entity);
+            if (bound instanceof StarveinConstructGuardian active
+                    && BlockPos.of(active.getPersistentData().getLong(ORIGIN_TAG)).equals(origin)) {
+                guardian.discard();
+            }
+        }
+    }
+
+    /** A migrated Warden is removed only after its replacement is loaded and UUID-bound. */
+    private static void cleanupMigratedWardens(ServerLevel level,
+                                                StarRailRuinGuardService data) {
+        data.guards.forEach((origin, guard) -> {
+            if (guard.legacyEntity == null) return;
+            Entity found = level.getEntity(guard.legacyEntity);
+            if (!(found instanceof Warden previous)
+                    || !previous.getPersistentData().contains(ORIGIN_TAG)
+                    || !origin.equals(BlockPos.of(previous.getPersistentData().getLong(ORIGIN_TAG)))) return;
+
+            if (guard.defeated && !guard.summonActive && guard.entity == null) {
+                previous.discard();
+                return;
+            }
+            Entity bound = guard.entity == null ? null : level.getEntity(guard.entity);
+            if (bound instanceof StarveinConstructGuardian guardian
+                    && origin.equals(BlockPos.of(guardian.getPersistentData().getLong(ORIGIN_TAG)))) {
+                previous.discard();
+            }
+        });
+    }
+
     /** 修复早期原型保存的缺失出生记忆，仅作用于本模组已标记守卫。 */
     @SubscribeEvent
     public static void onJoin(EntityJoinLevelEvent event) {
-        if (!(event.getLevel() instanceof ServerLevel) || !(event.getEntity() instanceof Warden warden)
-                || !warden.getPersistentData().contains(ORIGIN_TAG)) return;
-        warden.setPersistenceRequired();
-        if (!warden.getBrain().hasMemoryValue(net.minecraft.world.entity.ai.memory.MemoryModuleType.DIG_COOLDOWN))
+        if (!(event.getLevel() instanceof ServerLevel level)
+                || !(event.getEntity() instanceof net.minecraft.world.entity.Mob mob)
+                || !mob.getPersistentData().contains(ORIGIN_TAG)) return;
+        mob.setPersistenceRequired();
+        if (mob instanceof Warden warden) {
+            migrateBoundWarden(level, warden);
+        } else if (mob instanceof StarveinConstructGuardian guardian) {
+            BlockPos origin = BlockPos.of(guardian.getPersistentData().getLong(ORIGIN_TAG));
+            Guard guard = get(level).guards.get(origin);
+            if (guard != null) guardian.configureForPath(StarRailPath.byId(guard.variantId));
+            PENDING_GUARDIAN_RECONCILES.computeIfAbsent(level,
+                    key -> ConcurrentHashMap.newKeySet()).add(guardian.getUUID());
+        }
+        if (mob instanceof Warden warden
+                && !warden.getBrain().hasMemoryValue(net.minecraft.world.entity.ai.memory.MemoryModuleType.DIG_COOLDOWN)) {
             warden.getBrain().setMemoryWithExpiry(
                     net.minecraft.world.entity.ai.memory.MemoryModuleType.DIG_COOLDOWN,
                     net.minecraft.util.Unit.INSTANCE, 1200L);
+        }
+    }
+
+    /**
+     * Converts only a saved Warden whose UUID and persistent ruin origin both match the
+     * registered guard. Unknown, natural, and merely nearby Wardens are left untouched.
+     */
+    private static void migrateBoundWarden(ServerLevel level, Warden previous) {
+        CompoundTag oldData = previous.getPersistentData();
+        if (!oldData.contains(ORIGIN_TAG)) return;
+        BlockPos origin = BlockPos.of(oldData.getLong(ORIGIN_TAG));
+        StarRailRuinGuardService data = get(level);
+        Guard guard = data.guards.get(origin);
+        if (guard == null || guard.constructGuardian || guard.entity == null
+                || !previous.getUUID().equals(guard.entity)) return;
+
+        // A saved live Warden after a recorded first victory is stale state, not permission
+        // to reopen a cleared vault or start a second first-clear reward cycle.
+        if (guard.defeated && !guard.summonActive) {
+            guard.legacyEntity = previous.getUUID();
+            guard.constructGuardian = true;
+            guard.constructPrototype = false;
+            guard.entity = null;
+            guard.respawn = false;
+            data.setDirty();
+            previous.discard();
+            return;
+        }
+
+        StarveinConstructGuardian replacement = StarveinConstructEntities
+                .STARVEIN_CONSTRUCT_GUARDIAN.get().create(level);
+        if (replacement == null) return;
+        replacement.moveTo(previous.getX(), previous.getY(), previous.getZ(),
+                previous.getYRot(), previous.getXRot());
+        replacement.configureForPath(StarRailPath.byId(guard.variantId));
+        float previousMaxHealth = previous.getMaxHealth();
+        float healthFraction = previousMaxHealth > 0.0F
+                ? Math.min(1.0F, Math.max(0.0F, previous.getHealth() / previousMaxHealth))
+                : 1.0F;
+        replacement.setHealth(replacement.getMaxHealth() * healthFraction);
+        replacement.setDeltaMovement(previous.getDeltaMovement());
+        replacement.setCustomName(Component.translatable(
+                "entity.starrail_sim.starvein_construct_guardian"));
+        replacement.setPersistenceRequired();
+        replacement.getPersistentData().merge(oldData.copy());
+        replacement.getPersistentData().putUUID(MIGRATION_SOURCE_TAG, previous.getUUID());
+        guard.legacyEntity = previous.getUUID();
+        data.setDirty();
+
+        // Add the replacement before removing the old entity; if addition fails, the
+        // registered Warden and its saved combat state remain available for another try.
+        if (!level.addFreshEntity(replacement)) {
+            guard.legacyEntity = null;
+            data.setDirty();
+            return;
+        }
+        guard.entity = replacement.getUUID();
+        guard.constructGuardian = true;
+        guard.constructPrototype = false;
+        guard.respawn = false;
+        data.setDirty();
+        previous.discard();
+        LOGGER.info("Migrated registered ruin guardian: origin={}, oldUuid={}, newUuid={}, defeated={}",
+                origin, previous.getUUID(), replacement.getUUID(), guard.defeated);
     }
 
     /** 只有本遗迹绑定的守卫死亡才永久解锁，其他监守者与区块卸载不计入。 */
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void onDeath(LivingDeathEvent event) {
-        if (event.isCanceled() || !(event.getEntity() instanceof Warden warden)
-                || !(warden.level() instanceof ServerLevel level)
-                || !warden.getPersistentData().contains(ORIGIN_TAG)) return;
+        net.minecraft.world.entity.LivingEntity guardian = event.getEntity();
+        if (event.isCanceled() || !(guardian.level() instanceof ServerLevel level)
+                || !guardian.getPersistentData().contains(ORIGIN_TAG)) return;
         var data = get(level);
-        BlockPos origin = BlockPos.of(warden.getPersistentData().getLong(ORIGIN_TAG));
+        BlockPos origin = BlockPos.of(guardian.getPersistentData().getLong(ORIGIN_TAG));
         Guard guard = data.guards.get(origin);
-        if (guard == null || !warden.getUUID().equals(guard.entity)
+        if (guard == null || !matchesGuardian(guard, guardian)
+                || !guardian.getUUID().equals(guard.entity)
                 || (guard.defeated && !guard.summonActive)) return;
         // 等事件分发结束后核对真实死亡，避免别的监听器取消死亡时提前发奖。
-        data.pendingDeaths.put(warden.getUUID(), warden);
+        data.pendingDeaths.put(guardian.getUUID(), guardian);
     }
 
     /** Each path guardian death gets one server-side roll for its matching material. */
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void onGuardDrops(LivingDropsEvent event) {
-        if (event.isCanceled() || !(event.getEntity() instanceof Warden warden)
-                || !(warden.level() instanceof ServerLevel level)
-                || !warden.getPersistentData().contains(ORIGIN_TAG)) return;
-        BlockPos origin = BlockPos.of(warden.getPersistentData().getLong(ORIGIN_TAG));
+        net.minecraft.world.entity.LivingEntity guardian = event.getEntity();
+        if (event.isCanceled() || !(guardian.level() instanceof ServerLevel level)
+                || !guardian.getPersistentData().contains(ORIGIN_TAG)) return;
+        BlockPos origin = BlockPos.of(guardian.getPersistentData().getLong(ORIGIN_TAG));
         var data = get(level);
         Guard guard = data.guards.get(origin);
         StarRailPath path = guard == null ? StarRailPath.NONE : StarRailPath.byId(guard.variantId);
-        if (guard == null || !path.isRealPath()
-                || !warden.getUUID().equals(guard.entity)
+        if (guard == null || !matchesGuardian(guard, guardian) || !path.isRealPath()
+                || !guardian.getUUID().equals(guard.entity)
                 || (guard.defeated && !guard.summonActive)
-                || data.pendingDrops.containsKey(warden.getUUID())) return;
+                || data.pendingDrops.containsKey(guardian.getUUID())) return;
         ItemEntity drop = null;
         if (level.getRandom().nextFloat() < 0.30F) {
-            drop = new ItemEntity(level, warden.getX(), warden.getY() + 0.5D,
-                warden.getZ(), new net.minecraft.world.item.ItemStack(
+            drop = new ItemEntity(level, guardian.getX(), guardian.getY() + 0.5D,
+                guardian.getZ(), new net.minecraft.world.item.ItemStack(
                         StarRailTraceMaterials.get(path)));
             drop.setDefaultPickUpDelay();
             event.getDrops().add(drop);
         }
         // Keep the event reference until confirmation, so later cancellation/removal is respected.
-        data.pendingDrops.put(warden.getUUID(), new DropRoll(event, drop, path));
+        data.pendingDrops.put(guardian.getUUID(), new DropRoll(event, drop, path));
     }
 
     private static void notifyNearby(ServerLevel level, BlockPos origin, Component message) {
@@ -437,11 +651,12 @@ public final class StarRailRuinGuardService extends SavedData {
     }
 
     private void confirmDeaths(ServerLevel level) {
-        for (Warden warden : pendingDeaths.values()) {
-            if (warden.getHealth() > 0 || !warden.isDeadOrDying()) continue;
-            BlockPos origin = BlockPos.of(warden.getPersistentData().getLong(ORIGIN_TAG));
+        for (net.minecraft.world.entity.LivingEntity guardian : pendingDeaths.values()) {
+            if (guardian.getHealth() > 0 || !guardian.isDeadOrDying()) continue;
+            BlockPos origin = BlockPos.of(guardian.getPersistentData().getLong(ORIGIN_TAG));
             Guard guard = guards.get(origin);
-            if (guard == null || !warden.getUUID().equals(guard.entity)
+            if (guard == null || !matchesGuardian(guard, guardian)
+                    || !guardian.getUUID().equals(guard.entity)
                     || (guard.defeated && !guard.summonActive)) continue;
             Component result;
             if (!guard.defeated) {
@@ -456,7 +671,7 @@ public final class StarRailRuinGuardService extends SavedData {
                 setDirty();
                 result = Component.translatable("message.starrail_sim.ruin_anchor.defeated");
             }
-            DropRoll roll = pendingDrops.get(warden.getUUID());
+            DropRoll roll = pendingDrops.get(guardian.getUUID());
             if (roll != null) {
                 boolean dropped = !roll.event().isCanceled() && roll.material() != null
                         && roll.event().getDrops().contains(roll.material());
@@ -480,19 +695,31 @@ public final class StarRailRuinGuardService extends SavedData {
         for (ServerLevel level : event.getServer().getAllLevels()) get(level).confirmDeaths(level);
     }
 
-    /** 和平难度清除等非死亡移除不算获胜；恢复非和平难度后补回原版守卫。 */
+    /** Peaceful removal and other discards are not victories; restore the selected guardian type. */
     @SubscribeEvent
     public static void onLeave(EntityLeaveLevelEvent event) {
         Entity entity = event.getEntity();
-        if (entity instanceof Warden && entity.getPersistentData().contains(ORIGIN_TAG))
+        if (event.getLevel() instanceof ServerLevel level) {
+            Set<UUID> pending = PENDING_GUARDIAN_RECONCILES.get(level);
+            if (pending != null) pending.remove(entity.getUUID());
+        }
+        if (entity instanceof net.minecraft.world.entity.LivingEntity
+                && entity.getPersistentData().contains(ORIGIN_TAG))
             LOGGER.debug("Ruin guard leaving: uuid={}, reason={}", entity.getUUID(), entity.getRemovalReason());
-        if (!(entity instanceof Warden) || !(event.getLevel() instanceof ServerLevel level)
+        if (!(entity instanceof net.minecraft.world.entity.LivingEntity guardian)
+                || !(event.getLevel() instanceof ServerLevel level)
                 || entity.getRemovalReason() != Entity.RemovalReason.DISCARDED
                 || !entity.getPersistentData().contains(ORIGIN_TAG)) return;
         var data = get(level);
         Guard guard = data.guards.get(BlockPos.of(entity.getPersistentData().getLong(ORIGIN_TAG)));
-        if (guard != null && (!guard.defeated || guard.summonActive)
-                && entity.getUUID().equals(guard.entity)) {
+        if (guard != null && entity.getUUID().equals(guard.legacyEntity)
+                && entity.getRemovalReason() == Entity.RemovalReason.DISCARDED) {
+            guard.legacyEntity = null;
+            data.setDirty();
+        }
+        if (guard != null && matchesGuardian(guard, guardian)
+                && (!guard.defeated || guard.summonActive)
+                && guardian.getUUID().equals(guard.entity)) {
             guard.respawn = true;
             data.setDirty();
         }

@@ -1,0 +1,6 @@
+{
+  "parent": "starrail_sim:block/grounded_crop_cross",
+  "textures": {
+    "crop": "starrail_sim:block/stilltide_rice_crop_stage6"
+  }
+}

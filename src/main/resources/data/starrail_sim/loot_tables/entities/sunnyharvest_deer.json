@@ -1,0 +1,79 @@
+{
+  "type": "minecraft:entity",
+  "pools": [
+    {
+      "rolls": 1.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "starrail_sim:sunharvest_meat"
+        }
+      ],
+      "functions": [
+        {
+          "function": "minecraft:set_count",
+          "count": {
+            "type": "minecraft:uniform",
+            "min": 1.0,
+            "max": 3.0
+          }
+        },
+        {
+          "function": "minecraft:looting_enchant",
+          "count": {
+            "type": "minecraft:uniform",
+            "min": 0.0,
+            "max": 1.0
+          }
+        },
+        {
+          "function": "minecraft:furnace_smelt",
+          "conditions": [
+            {
+              "condition": "minecraft:entity_properties",
+              "entity": "this",
+              "predicate": {
+                "flags": {
+                  "is_on_fire": true
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "rolls": 1.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:leather"
+        }
+      ],
+      "conditions": [
+        {
+          "condition": "minecraft:random_chance",
+          "chance": 0.67
+        }
+      ],
+      "functions": [
+        {
+          "function": "minecraft:set_count",
+          "count": {
+            "type": "minecraft:uniform",
+            "min": 1.0,
+            "max": 2.0
+          }
+        },
+        {
+          "function": "minecraft:looting_enchant",
+          "count": {
+            "type": "minecraft:uniform",
+            "min": 0.0,
+            "max": 1.0
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -22,7 +22,7 @@ import java.util.Set;
 @Mod.EventBusSubscriber(modid = StarRailSimMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public final class StarRailExplorationService {
     private static final String PATH_REGION_SUNMEADOW = "sunmeadow";
-    private static final String PATH_REGION_GLIMMERWOOD = "glimmerwood";
+    private static final String PATH_REGION_STARLIGHT_GROVE = "starlight_grove";
     private static final String PATH_REGION_STAR_TIDE_OCEAN = "star_tide_ocean";
     private static final String PATH_REGION_CLEAR_SAND_BEACH = "clear_sand_beach";
     private static final String PATH_REGION_STARVEIN_CAVERN = "starvein_cavern";
@@ -47,7 +47,7 @@ public final class StarRailExplorationService {
             String id = key.location().getPath();
             String currentRegionId = switch (id) {
                 case PATH_REGION_SUNMEADOW -> PATH_REGION_SUNMEADOW;
-                case PATH_REGION_GLIMMERWOOD -> PATH_REGION_GLIMMERWOOD;
+                case PATH_REGION_STARLIGHT_GROVE -> PATH_REGION_STARLIGHT_GROVE;
                 case PATH_REGION_STAR_TIDE_OCEAN -> PATH_REGION_STAR_TIDE_OCEAN;
                 case PATH_REGION_CLEAR_SAND_BEACH -> PATH_REGION_CLEAR_SAND_BEACH;
                 case PATH_REGION_STARVEIN_CAVERN -> PATH_REGION_STARVEIN_CAVERN;
@@ -142,7 +142,7 @@ public final class StarRailExplorationService {
         long mask = 0L;
         Set<String> regions = data.getDiscoveredPathRegions();
         if (regions.contains(PATH_REGION_SUNMEADOW)) mask |= 1L;
-        if (regions.contains(PATH_REGION_GLIMMERWOOD)) mask |= 2L;
+        if (regions.contains(PATH_REGION_STARLIGHT_GROVE)) mask |= 2L;
         if (regions.contains(PATH_REGION_STAR_TIDE_OCEAN)) mask |= 4L;
         if (regions.contains(PATH_REGION_CLEAR_SAND_BEACH)) mask |= 8L;
         if (regions.contains(PATH_REGION_STARVEIN_CAVERN)) mask |= 16L;

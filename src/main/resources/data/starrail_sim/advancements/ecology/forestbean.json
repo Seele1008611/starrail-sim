@@ -1,5 +1,5 @@
 {
-  "parent": "starrail_sim:exploration/glimmerwood",
+  "parent": "starrail_sim:exploration/starlight_grove",
   "display": {
     "icon": {
       "item": "starrail_sim:forestbean_pod"

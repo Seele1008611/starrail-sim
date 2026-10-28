@@ -142,6 +142,16 @@ public final class StarRailRuinSpacingData extends SavedData {
         return true;
     }
 
+    /**
+     * 管理员手动放置测试遗迹时，只避开已登记的实际遗迹和列车枢纽。
+     * 自然生成候选点尚未成为遗迹，不能阻止调试命令在空地搭建测试结构。
+     */
+    public boolean hasManualPlacementClearance(ServerLevel level, int x, int z,
+                                                boolean allowSameSite) {
+        return hasClearance(x, z, allowSameSite)
+                && StarRailDimensionService.hasRuinHubClearance(level, x, z);
+    }
+
     /** overwrite 命令可在原遗迹锚点重建自身，但仍须避开其他遗迹。 */
     public boolean hasClearance(int x, int z, boolean allowSameSite) {
         for (long packedAnchor : anchors) {

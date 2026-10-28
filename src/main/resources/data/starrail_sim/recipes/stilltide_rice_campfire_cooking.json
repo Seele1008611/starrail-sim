@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:campfire_cooking",
+  "ingredient": { "item": "starrail_sim:stilltide_rice_grain" },
+  "result": "starrail_sim:cooked_stilltide_rice",
+  "experience": 0.35,
+  "cookingtime": 600
+}
