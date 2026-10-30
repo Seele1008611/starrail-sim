@@ -1,6 +1,7 @@
 package com.starrail.sim.client;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -25,7 +26,7 @@ import java.util.Map;
 /** Runtime cuboid model read from the approved Blockbench guardian prototype. */
 public final class StarveinConstructModel extends EntityModel<StarveinConstructGuardian> {
     private static final String MODEL_RESOURCE =
-            "/assets/starrail_sim/models/entity/starvein_construct_guard.json";
+            "/assets/starrail_sim/entity_models/starvein_construct_guard.json";
     private static final float ATLAS_WIDTH = 48.0F;
     private static final float ATLAS_HEIGHT = 16.0F;
 
@@ -258,24 +259,30 @@ public final class StarveinConstructModel extends EntityModel<StarveinConstructG
                 JsonObject root = JsonParser.parseReader(
                         new InputStreamReader(stream, StandardCharsets.UTF_8)).getAsJsonObject();
                 Map<String, JsonObject> groupById = new HashMap<>();
-                for (var element : root.getAsJsonArray("groups")) {
+                for (JsonElement element : arrayOrEmpty(root, "groups")) {
+                    if (!element.isJsonObject()) continue;
                     JsonObject group = element.getAsJsonObject();
-                    groupById.put(group.get("uuid").getAsString(), group);
+                    String uuid = stringOrEmpty(group, "uuid");
+                    if (!uuid.isEmpty()) groupById.put(uuid, group);
                 }
                 Map<String, JsonObject> elementById = new HashMap<>();
-                for (var element : root.getAsJsonArray("elements")) {
+                for (JsonElement element : arrayOrEmpty(root, "elements")) {
+                    if (!element.isJsonObject()) continue;
                     JsonObject cube = element.getAsJsonObject();
-                    elementById.put(cube.get("uuid").getAsString(), cube);
+                    String uuid = stringOrEmpty(cube, "uuid");
+                    if (!uuid.isEmpty()) elementById.put(uuid, cube);
                 }
                 List<Part> parts = new ArrayList<>();
-                for (var nodeElement : root.getAsJsonArray("outliner")) {
+                for (JsonElement nodeElement : arrayOrEmpty(root, "outliner")) {
+                    if (!nodeElement.isJsonObject()) continue;
                     JsonObject node = nodeElement.getAsJsonObject();
-                    JsonObject group = groupById.get(node.get("uuid").getAsString());
+                    JsonObject group = groupById.get(stringOrEmpty(node, "uuid"));
                     if (group == null) continue;
                     List<Cube> cubes = new ArrayList<>();
-                    collectCubes(node.getAsJsonArray("children"), groupById,
+                    collectCubes(arrayOrEmpty(node, "children"), groupById,
                             elementById, cubes);
-                    parts.add(new Part(group.get("name").getAsString(), vector(group.getAsJsonArray("origin")), cubes));
+                    parts.add(new Part(stringOrEmpty(group, "name"),
+                            vectorOrZero(group, "origin"), cubes));
                 }
                 if (parts.isEmpty()) throw new IllegalStateException("Guardian model has no groups");
                 return new ModelData(parts);
@@ -286,36 +293,63 @@ public final class StarveinConstructModel extends EntityModel<StarveinConstructG
 
         private static void collectCubes(JsonArray children, Map<String, JsonObject> groups,
                                          Map<String, JsonObject> elements, List<Cube> output) {
-            for (var child : children) {
+            for (JsonElement child : children) {
+                if (!child.isJsonPrimitive()) continue;
                 String id = child.getAsString();
                 JsonObject subgroup = groups.get(id);
                 if (subgroup != null) {
-                    collectCubes(subgroup.getAsJsonArray("children"), groups, elements, output);
+                    collectCubes(arrayOrEmpty(subgroup, "children"), groups, elements, output);
                     continue;
                 }
                 JsonObject element = elements.get(id);
-                if (element == null || !element.get("type").getAsString().equals("cube")) continue;
-                JsonArray from = element.getAsJsonArray("from");
-                JsonArray to = element.getAsJsonArray("to");
-                float[] pivot = element.has("origin") ? vector(element.getAsJsonArray("origin"))
-                        : new float[]{0.0F, 0.0F, 0.0F};
-                float[] rotation = element.has("rotation") ? vector(element.getAsJsonArray("rotation"))
-                        : new float[]{0.0F, 0.0F, 0.0F};
-                JsonObject faceData = element.getAsJsonObject("faces");
+                if (element == null || !"cube".equals(stringOrEmpty(element, "type"))) continue;
+                JsonArray from = arrayOrEmpty(element, "from");
+                JsonArray to = arrayOrEmpty(element, "to");
+                if (from.size() < 3 || to.size() < 3) continue;
+                float[] pivot = vectorOrZero(element, "origin");
+                float[] rotation = vectorOrZero(element, "rotation");
+                JsonObject faceData = objectOrEmpty(element, "faces");
                 Face[] faces = new Face[6];
                 String[] directions = {"north", "east", "south", "west", "up", "down"};
                 for (int i = 0; i < directions.length; i++) {
-                    String direction = directions[i];
-                    JsonObject face = faceData.getAsJsonObject(direction);
-                    if (face == null || face.get("texture").getAsInt() < 0) continue;
-                    JsonArray uv = face.getAsJsonArray("uv");
-                    int faceRotation = face.has("rotation") ? face.get("rotation").getAsInt() : 0;
-                    faces[i] = new Face(direction, uv.get(0).getAsFloat(), uv.get(1).getAsFloat(),
+                    JsonElement faceElement = faceData.get(directions[i]);
+                    if (faceElement == null || !faceElement.isJsonObject()) continue;
+                    JsonObject face = faceElement.getAsJsonObject();
+                    int texture = integerOr(face, "texture", -1);
+                    JsonArray uv = arrayOrEmpty(face, "uv");
+                    if (texture < 0 || uv.size() < 4) continue;
+                    int faceRotation = integerOr(face, "rotation", 0);
+                    faces[i] = new Face(directions[i], uv.get(0).getAsFloat(), uv.get(1).getAsFloat(),
                             uv.get(2).getAsFloat(), uv.get(3).getAsFloat(),
-                            face.get("texture").getAsInt(), faceRotation);
+                            texture, faceRotation);
                 }
                 output.add(new Cube(vector(from), vector(to), pivot, rotation, faces));
             }
+        }
+
+        private static JsonArray arrayOrEmpty(JsonObject object, String key) {
+            JsonElement value = object == null ? null : object.get(key);
+            return value != null && value.isJsonArray() ? value.getAsJsonArray() : new JsonArray();
+        }
+
+        private static JsonObject objectOrEmpty(JsonObject object, String key) {
+            JsonElement value = object == null ? null : object.get(key);
+            return value != null && value.isJsonObject() ? value.getAsJsonObject() : new JsonObject();
+        }
+
+        private static String stringOrEmpty(JsonObject object, String key) {
+            JsonElement value = object == null ? null : object.get(key);
+            return value != null && value.isJsonPrimitive() ? value.getAsString() : "";
+        }
+
+        private static int integerOr(JsonObject object, String key, int fallback) {
+            JsonElement value = object == null ? null : object.get(key);
+            return value != null && value.isJsonPrimitive() ? value.getAsInt() : fallback;
+        }
+
+        private static float[] vectorOrZero(JsonObject object, String key) {
+            JsonArray values = arrayOrEmpty(object, key);
+            return values.size() >= 3 ? vector(values) : new float[]{0.0F, 0.0F, 0.0F};
         }
 
         private static float[] vector(JsonArray values) {

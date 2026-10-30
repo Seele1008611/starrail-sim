@@ -1,0 +1,53 @@
+Voidranger sound sources and processing
+=======================================
+
+All seven source files were provided by the user in
+`崩铁/物品/生物与实体/怪物音效来源/`. The user confirmed that every listed
+Freesound item is CC0. The original source files are retained unchanged in that
+archive. Runtime assets are derived copies under
+`assets/starrail_sim/sounds/voidranger/`.
+
+Processing: FFmpeg 4.3.4 (existing Bilibili installation; no dependency was
+installed), mono 44.1 kHz PCM intermediate, Vorbis quality 5 (about 96 kb/s),
+sample peak normalized to approximately -6 dBFS. A 10 ms fade-in and 25 ms
+fade-out were applied. Leading/trailing silence was trimmed only where the
+FFmpeg silence scan identified a sustained quiet interval at -55 dBFS. The
+short roar and dragon hurt sources were retained at their original durations.
+
+Source and runtime mapping
+-------------------------
+
+| Runtime OGG | Source file (preserved) | Creator / Freesound page | Original format and length | Processing |
+|---|---|---|---|---|
+| `monster_short_roar.ogg` | `132874__ecfike__monster-short-roar.wav` | ecfike, [Monster short roar](https://freesound.org/people/ecfike/sounds/132874/) | PCM s16le, stereo, 44.1 kHz, 1.312 s | Full duration retained; 44.1 kHz mono; peak -2.2 to -5.9 dBFS; output 1.31 s. |
+| `space_laser_shot.ogg` | `325356__klcisa__space-laser-shot.ogg` | klcisa, [space laser shot](https://freesound.org/people/klcisa/sounds/325356/) | Vorbis, stereo, 44.1 kHz, 1.020 s | Trimmed to 0.838 s at the measured trailing silence; decoded/downmixed to 44.1 kHz mono; peak -0.2 to -5.9 dBFS. |
+| `dragon_hurt.ogg` | `442966__qubodup__dragon-hurt.wav` | qubodup, [dragon hurt](https://freesound.org/people/qubodup/sounds/442966/) | PCM s16le, stereo, 44.1 kHz, 1.264 s | Full duration retained; 44.1 kHz mono; peak 0.0 to -5.9 dBFS; output 1.26 s. |
+| `dragon_snarl_roar_attack.ogg` | `466830__breviceps__dragon-snarl-roar-attack.wav` | breviceps, [dragon snarl, roar, attack](https://freesound.org/people/breviceps/sounds/466830/) | Microsoft ADPCM, stereo, 44.1 kHz, 3.293 s | Removed 0.037 s leading silence; 3.256 s retained; 44.1 kHz mono; peak approximately 0.0 to -5.6 dBFS. |
+| `short_sci_fi_whoosh_impact.ogg` | `728520__doudar41__short-sci-fi-whoosh-and-impact.wav` | doudar41, [Short sci-fi whoosh and impact](https://freesound.org/people/doudar41/sounds/728520/) | PCM s16le, mono, 48 kHz, 1.141 s | Trimmed at 0.636 s before the measured 0.505 s trailing silence; resampled to 44.1 kHz; peak 0.0 to -5.0 dBFS. |
+| `growl.ogg` | `752374__whirlproductions__growl.aiff` | whirlproductions, [Growl](https://freesound.org/people/whirlproductions/sounds/752374/) | PCM s24be, stereo, 44.1 kHz, 1.263 s | Trimmed at 0.705 s before the measured trailing silence; downmixed to mono; peak -4.2 to -6.1 dBFS; output 0.71 s. |
+| `robot_monster.ogg` | `851262__javier_rodas__robot-monster-01.wav` | _javier_rodas, [Robot monster 01](https://freesound.org/people/_javier_rodas/sounds/851262/) | PCM s16le, stereo, 48 kHz, 2.603 s | Removed 0.064 s leading silence and trailing silence after 2.512 s; resampled/downmixed to 44.1 kHz mono; peak -4.1 to -5.9 dBFS; output 2.45 s. |
+
+Sound-event assignments
+-----------------------
+
+| Voidranger | Ambient | Hurt | Death | Melee | Special telegraph | Special hit |
+|---|---|---|---|---|---|---|
+| Reaver | robot_monster | dragon_hurt | monster_short_roar | short_sci_fi_whoosh_impact | growl | dragon_snarl_roar_attack |
+| Distorter | growl | dragon_hurt | robot_monster | short_sci_fi_whoosh_impact | robot_monster | space_laser_shot |
+| Trampler | dragon_snarl_roar_attack | dragon_hurt | dragon_snarl_roar_attack | short_sci_fi_whoosh_impact | growl | dragon_snarl_roar_attack |
+| Eliminator | robot_monster | dragon_hurt | monster_short_roar | short_sci_fi_whoosh_impact | space_laser_shot | space_laser_shot |
+
+The `sounds.json` entries use volume and pitch multipliers to distinguish the
+four creatures and to keep ambient cues below attack cues. All 24 entries now
+reference these CC0-derived assets; none reference the old combat cues or
+vanilla `SoundEvents`.
+
+Verification notes
+------------------
+
+FFmpeg decoded each original and each resulting OGG. Duration, channel layout,
+sample rate, peak level, and sustained silence were checked with FFmpeg's input
+metadata, `silencedetect`, and `volumedetect`. The local inspection did not
+include subjective listening. Sound character above is selected from the
+provided source titles and descriptions; this record does not claim that
+background noise or voice artifacts were ruled out by audition.

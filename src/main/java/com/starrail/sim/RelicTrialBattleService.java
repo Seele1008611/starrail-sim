@@ -47,6 +47,9 @@ public final class RelicTrialBattleService {
             Registries.ENTITY_TYPE, new ResourceLocation(StarRailSimMod.MOD_ID, "arena_ranged"));
     private static final TagKey<EntityType<?>> FORGE_BOSSES = TagKey.create(
             Registries.ENTITY_TYPE, new ResourceLocation("forge", "bosses"));
+    private static final Set<String> FIXED_TRIAL_VOIDRANGER_IDS = Set.of(
+            "starrail_sim:voidranger_reaver", "starrail_sim:voidranger_distorter",
+            "starrail_sim:voidranger_trampler", "starrail_sim:voidranger_eliminator");
     private static final Set<String> HARD_EXCLUDED_VANILLA_IDS = Set.of(
             "minecraft:creeper", "minecraft:ender_dragon", "minecraft:wither",
             "minecraft:warden", "minecraft:elder_guardian", "minecraft:ravager",
@@ -119,13 +122,11 @@ public final class RelicTrialBattleService {
     /** Build and validate a complete wave before adding any of its mobs to the world. */
     static boolean spawnWave(ServerLevel level, RelicTrialDeviceBlockEntity device, int waveNumber) {
         if (!device.isBattleActive() || waveNumber < 1 || waveNumber > 3) return false;
-        List<Composition> compositions = waveComposition(device.challengeRank(), waveNumber);
-        List<EntityType<?>> candidates = eligibleTypes(level);
-        if (candidates.isEmpty()) return false;
-        List<EntityType<?>> normal = matchingTypes(level, candidates, Composition.NORMAL);
-        List<EntityType<?>> ranged = matchingTypes(level, candidates, Composition.RANGED);
-        if (normal.isEmpty()) normal = candidates;
-        if (ranged.isEmpty()) ranged = candidates;
+        List<WaveSlot> slots = wavePlan(device.challengeRank(), waveNumber);
+        if (slots.size() != 4) return false;
+        if (slots.stream().anyMatch(slot -> slot.fixedType() == null)) {
+            return false;
+        }
 
         BlockPos devicePos = device.getBlockPos();
         List<BlockPos> pads = new ArrayList<>(List.of(
@@ -136,12 +137,18 @@ public final class RelicTrialBattleService {
         Collections.shuffle(pads, RANDOM);
 
         List<Mob> prepared = new ArrayList<>(4);
-        for (int index = 0; index < compositions.size(); index++) {
-            Composition composition = compositions.get(index);
-            List<EntityType<?>> pool = composition == Composition.RANGED ? ranged
-                    : composition == Composition.NORMAL ? normal : candidates;
-            Mob mob = prepareMob(level, pool, pads.get(index),
-                    composition == Composition.ELITE, device.challengeRank());
+        for (int index = 0; index < slots.size(); index++) {
+            WaveSlot slot = slots.get(index);
+            EntityType<?> fixedType = slot.fixedType();
+            if (fixedType == null || !isFixedTrialType(level, fixedType)) {
+                prepared.forEach(Entity::discard);
+                return false;
+            }
+            boolean eliteSlot = slot.composition() == Composition.ELITE;
+            boolean scaleElite = eliteSlot
+                    && fixedType != VoidrangerEntities.VOIDRANGER_TRAMPLER.get();
+            Mob mob = prepareMob(level, List.of(fixedType), pads.get(index), eliteSlot,
+                    device.challengeRank(), scaleElite);
             if (mob == null) {
                 prepared.forEach(Entity::discard);
                 return false;
@@ -151,6 +158,8 @@ public final class RelicTrialBattleService {
 
         UUID session = device.sessionId();
         for (Mob mob : prepared) {
+            // Only device/session-marked entities enter the active UUID list and trial kill counter.
+            // Natural biome spawns never receive these markers.
             mob.getPersistentData().putLong(DEVICE_POS_TAG, devicePos.asLong());
             mob.getPersistentData().putUUID(SESSION_TAG, session);
         }
@@ -213,7 +222,7 @@ public final class RelicTrialBattleService {
     }
 
     private static Mob prepareMob(ServerLevel level, List<EntityType<?>> pool, BlockPos pad,
-                                  boolean elite, int rank) {
+                                  boolean elite, int rank, boolean scaleElite) {
         if (pool.isEmpty()) return null;
         List<EntityType<?>> shuffled = new ArrayList<>(pool);
         Collections.shuffle(shuffled, RANDOM);
@@ -245,11 +254,13 @@ public final class RelicTrialBattleService {
                 }
                 if (elite) {
                     mob.getPersistentData().putBoolean(ELITE_TAG, true);
-                    double healthMultiplier = rank >= 7 ? 2.5D : rank >= 5 ? 2.0D : 1.5D;
-                    double attackMultiplier = rank >= 7 ? 1.4D : rank >= 5 ? 1.3D : 1.2D;
-                    scaleAttribute(mob, Attributes.MAX_HEALTH, healthMultiplier);
-                    scaleAttribute(mob, Attributes.ATTACK_DAMAGE, attackMultiplier);
-                    mob.setHealth(mob.getMaxHealth());
+                    if (scaleElite) {
+                        double healthMultiplier = rank >= 7 ? 2.5D : rank >= 5 ? 2.0D : 1.5D;
+                        double attackMultiplier = rank >= 7 ? 1.4D : rank >= 5 ? 1.3D : 1.2D;
+                        scaleAttribute(mob, Attributes.MAX_HEALTH, healthMultiplier);
+                        scaleAttribute(mob, Attributes.ATTACK_DAMAGE, attackMultiplier);
+                        mob.setHealth(mob.getMaxHealth());
+                    }
                 }
                 mob.setPersistenceRequired();
                 if (!level.noCollision(mob)) {
@@ -307,7 +318,7 @@ public final class RelicTrialBattleService {
     public static List<EntityType<?>> eligibleTypes(ServerLevel level) {
         List<EntityType<?>> types = new ArrayList<>();
         for (EntityType<?> type : ForgeRegistries.ENTITY_TYPES.getValues()) {
-            if (inspectType(level, type).eligible()) types.add(type);
+            if (isFixedTrialType(level, type)) types.add(type);
         }
         return types;
     }
@@ -377,6 +388,15 @@ public final class RelicTrialBattleService {
                 forgeBoss, allowed, excluded, ranged);
     }
 
+    /** Validate that a trial slot uses one of the four registered project voidrangers. */
+    private static boolean isFixedTrialType(ServerLevel level, EntityType<?> type) {
+        ResourceLocation id = ForgeRegistries.ENTITY_TYPES.getKey(type);
+        if (id == null || !FIXED_TRIAL_VOIDRANGER_IDS.contains(id.toString())
+                || type.getCategory() != MobCategory.MONSTER) return false;
+        var registry = level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
+        return !hasTag(registry, id, FORGE_BOSSES) && !hasTag(registry, id, ARENA_EXCLUDED);
+    }
+
     private static boolean isRangedType(ServerLevel level, EntityType<?> type, ResourceLocation id,
                                         net.minecraft.core.Registry<EntityType<?>> registry) {
         if (hasTag(registry, id, ARENA_RANGED) || looksRanged(id)) return true;
@@ -397,20 +417,6 @@ public final class RelicTrialBattleService {
         if (id == null) return false;
         var registry = level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
         return isRangedType(level, type, id, registry);
-    }
-
-    private static List<EntityType<?>> matchingTypes(ServerLevel level,
-                                                      List<EntityType<?>> types,
-                                                      Composition composition) {
-        var registry = level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
-        List<EntityType<?>> matches = new ArrayList<>();
-        for (EntityType<?> type : types) {
-            ResourceLocation id = ForgeRegistries.ENTITY_TYPES.getKey(type);
-            if (id == null) continue;
-            boolean ranged = isRangedType(level, type, id, registry);
-            if ((composition == Composition.RANGED) == ranged) matches.add(type);
-        }
-        return matches;
     }
 
     private static boolean hasTag(net.minecraft.core.Registry<EntityType<?>> registry,
@@ -455,6 +461,64 @@ public final class RelicTrialBattleService {
         return result;
     }
 
+    /** Build every arena slot from the four project voidrangers without changing wave size. */
+    private static List<WaveSlot> wavePlan(int rank, int wave) {
+        List<Composition> compositions = waveComposition(rank, wave);
+        EntityType<?>[] fixedTypes = new EntityType<?>[compositions.size()];
+
+        if (rank >= 3 && wave == 2) {
+            int reaverSlot = firstSlot(compositions, Composition.NORMAL, 0);
+            if (reaverSlot >= 0) fixedTypes[reaverSlot] = VoidrangerEntities.VOIDRANGER_REAVER.get();
+            if (rank >= 5) {
+                int distorterSlot = firstSlot(compositions, Composition.ELITE, 0);
+                if (distorterSlot >= 0) {
+                    fixedTypes[distorterSlot] = VoidrangerEntities.VOIDRANGER_DISTORTER.get();
+                }
+            }
+        } else if (rank >= 3 && wave == 3) {
+            if (rank <= 4) {
+                int eliminatorSlot = firstSlot(compositions, Composition.RANGED, 0);
+                if (eliminatorSlot >= 0) {
+                    fixedTypes[eliminatorSlot] = VoidrangerEntities.VOIDRANGER_ELIMINATOR.get();
+                }
+            } else {
+                // Higher ranks have no ranged slot in their old composition, so convert one
+                // existing slot and replace a separate elite slot with the two approved mobs.
+                compositions.set(0, Composition.RANGED);
+                fixedTypes[0] = VoidrangerEntities.VOIDRANGER_ELIMINATOR.get();
+                int tramplerSlot = firstSlot(compositions, Composition.ELITE, 1);
+                if (tramplerSlot >= 0) {
+                    fixedTypes[tramplerSlot] = VoidrangerEntities.VOIDRANGER_TRAMPLER.get();
+                }
+            }
+        }
+
+        // Any slot not assigned a special replacement above still uses the matching project mob:
+        // normal slots use the reaver, ranged slots the eliminator, and elite slots the distorter.
+        // This leaves the existing composition, elite count and four-mob wave size intact.
+        for (int index = 0; index < compositions.size(); index++) {
+            if (fixedTypes[index] != null) continue;
+            fixedTypes[index] = switch (compositions.get(index)) {
+                case NORMAL -> VoidrangerEntities.VOIDRANGER_REAVER.get();
+                case RANGED -> VoidrangerEntities.VOIDRANGER_ELIMINATOR.get();
+                case ELITE -> VoidrangerEntities.VOIDRANGER_DISTORTER.get();
+            };
+        }
+
+        List<WaveSlot> slots = new ArrayList<>(compositions.size());
+        for (int index = 0; index < compositions.size(); index++) {
+            slots.add(new WaveSlot(compositions.get(index), fixedTypes[index]));
+        }
+        return slots;
+    }
+
+    private static int firstSlot(List<Composition> compositions, Composition wanted, int startIndex) {
+        for (int index = Math.max(0, startIndex); index < compositions.size(); index++) {
+            if (compositions.get(index) == wanted) return index;
+        }
+        return -1;
+    }
+
     public static void abort(ServerLevel level, RelicTrialDeviceBlockEntity device,
                              Component reason) {
         for (UUID id : device.activeMobIds()) {
@@ -497,6 +561,9 @@ public final class RelicTrialBattleService {
     }
 
     private enum Composition { NORMAL, RANGED, ELITE }
+
+    private record WaveSlot(Composition composition, EntityType<?> fixedType) {
+    }
 
     public record TypeInspection(boolean eligible, String reason, MobCategory category,
                                  double maxHealth, float width, float height,

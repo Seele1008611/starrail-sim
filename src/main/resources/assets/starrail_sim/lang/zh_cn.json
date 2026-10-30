@@ -5584,5 +5584,22 @@
   "item.starrail_sim.roasted_starlight_fungus": "烤星辉菇",
   "block.starrail_sim.path_ridge_windbush": "迎风灌木",
   "block.starrail_sim.path_marsh_root_tuft": "静潮根簇",
-  "entity.starrail_sim.starvein_construct_guardian": "星脉构装守卫"
+  "entity.starrail_sim.starvein_construct_guardian": "星脉构装守卫",
+  "entity.starrail_sim.voidranger_reaver": "虚卒·掠夺者",
+  "entity.starrail_sim.voidranger_distorter": "虚卒·篡改者",
+  "entity.starrail_sim.voidranger_trampler": "虚卒·践踏者",
+  "entity.starrail_sim.voidranger_eliminator": "虚卒·抹消者",
+  "entity.starrail_sim.voidranger_bolt": "虚质弩矢",
+  "item.starrail_sim.void_essence_shard": "虚质残片",
+  "item.starrail_sim.void_heavy_armor_plate": "虚质重甲片",
+  "item.starrail_sim.void_rift_blade": "虚质裂刃",
+  "guide.starrail_sim.help.voidranger_title": "虚卒应对指南",
+  "guide.starrail_sim.help.voidranger.reaver.title": "虚卒·掠夺者",
+  "guide.starrail_sim.help.voidranger.reaver.body": "命途遗境七个群系均可能生成；星潮海域只在水面上方生成。掠夺者会锁定朝向，短暂蓄势后直线冲刺斩击；侧移避开冲刺路线，或借坚实方块阻挡。若冲刺落空或受阻，它会短暂失衡。",
+  "guide.starrail_sim.help.voidranger.distorter.title": "虚卒·篡改者",
+  "guide.starrail_sim.help.voidranger.distorter.body": "命途遗境七个群系均可能生成；星潮海域只在水面上方生成。篡改者会在你当前脚下位置标出圆圈，约 1.5 秒后对半径 2.5 格内释放脉冲；迅速离开标记圈，避免受伤与缓慢效果。",
+  "guide.starrail_sim.help.voidranger.trampler.title": "虚卒·践踏者",
+  "guide.starrail_sim.help.voidranger.trampler.body": "命途遗境七个群系均可能生成；星潮海域只在水面上方生成。践踏者会站定蓄力约 1.4 秒，再以自身为中心重踏，半径 3.5 格内会受伤并被击退；离开范围，趁它收势时还击。",
+  "guide.starrail_sim.help.voidranger.eliminator.title": "虚卒·抹消者",
+  "guide.starrail_sim.help.voidranger.eliminator.body": "命途遗境七个群系均可能生成；星潮海域只在水面上方生成。抹消者会标记你当时站立的位置，约 1.2 秒后朝固定落点直线发射弹体，不会追踪；及时侧移，或用方块阻挡弹道。"
 }

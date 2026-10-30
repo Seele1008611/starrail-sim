@@ -505,6 +505,17 @@ public final class StarRailGuideScreen extends StarRailStyledScreen {
             }
             y += 14;
         }
+
+        drawLine(graphics, Component.translatable("guide.starrail_sim.help.voidranger_title"),
+                contentLeft, y);
+        y += 24;
+        String[] voidrangers = {"reaver", "distorter", "trampler", "eliminator"};
+        for (String voidranger : voidrangers) {
+            y = drawArticle(graphics,
+                    Component.translatable("guide.starrail_sim.help.voidranger." + voidranger + ".title"),
+                    Component.translatable("guide.starrail_sim.help.voidranger." + voidranger + ".body"),
+                    contentLeft, y, textWidth) + 12;
+        }
     }
 
     private void renderArchive(GuiGraphics graphics) {

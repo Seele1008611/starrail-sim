@@ -5578,5 +5578,22 @@
   "item.starrail_sim.roasted_starlight_fungus": "Roasted Starlight Mushroom",
   "block.starrail_sim.path_ridge_windbush": "Windward Shrub",
   "block.starrail_sim.path_marsh_root_tuft": "Stilltide Root Tuft",
-  "entity.starrail_sim.starvein_construct_guardian": "Starvein Construct Guardian"
+  "entity.starrail_sim.starvein_construct_guardian": "Starvein Construct Guardian",
+  "entity.starrail_sim.voidranger_reaver": "Voidranger: Reaver",
+  "entity.starrail_sim.voidranger_distorter": "Voidranger: Distorter",
+  "entity.starrail_sim.voidranger_trampler": "Voidranger: Trampler",
+  "entity.starrail_sim.voidranger_eliminator": "Voidranger: Eliminator",
+  "entity.starrail_sim.voidranger_bolt": "Void Essence Bolt",
+  "item.starrail_sim.void_essence_shard": "Void Essence Shard",
+  "item.starrail_sim.void_heavy_armor_plate": "Void Heavy Armor Plate",
+  "item.starrail_sim.void_rift_blade": "Void Rift Blade",
+  "guide.starrail_sim.help.voidranger_title": "Voidranger Field Notes",
+  "guide.starrail_sim.help.voidranger.reaver.title": "Voidranger: Reaver",
+  "guide.starrail_sim.help.voidranger.reaver.body": "Can appear in all seven Path biomes; in Star-Tide Ocean, spawns are limited to above the water surface. The Reaver locks its facing during a short windup, then dashes forward to slash. Sidestep the route or use a solid obstacle; a missed or blocked dash leaves it staggered.",
+  "guide.starrail_sim.help.voidranger.distorter.title": "Voidranger: Distorter",
+  "guide.starrail_sim.help.voidranger.distorter.body": "Can appear in all seven Path biomes; in Star-Tide Ocean, spawns are limited to above the water surface. It marks the ground at your current position, then pulses after about 1.5 seconds within a 2.5-block radius. Leave the marked circle before the pulse; a hit also applies Slowness I.",
+  "guide.starrail_sim.help.voidranger.trampler.title": "Voidranger: Trampler",
+  "guide.starrail_sim.help.voidranger.trampler.body": "Can appear in all seven Path biomes; in Star-Tide Ocean, spawns are limited to above the water surface. The Trampler stays in place and charges for about 1.4 seconds before stomping within a 3.5-block radius, knocking back players it hits. Leave the circle, then attack during its recovery.",
+  "guide.starrail_sim.help.voidranger.eliminator.title": "Voidranger: Eliminator",
+  "guide.starrail_sim.help.voidranger.eliminator.body": "Can appear in all seven Path biomes; in Star-Tide Ocean, spawns are limited to above the water surface. It marks your current position and fires a straight, non-homing bolt after about 1.2 seconds. Move sideways after the mark appears or use a solid block to stop the shot."
 }

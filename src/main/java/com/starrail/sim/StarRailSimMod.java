@@ -88,6 +88,7 @@ public final class StarRailSimMod {
         PathDawnGoldEquipment.register();
         PathEcologyContent.register();
         PathAnimalFoodContent.register();
+        VoidrangerRewardContent.register();
     }
 
     // 以下按命途注册自定义光锥；注册 ID 必须与模型、语言文件和战利品表一致。
@@ -382,6 +383,7 @@ public final class StarRailSimMod {
                         PathMineralContent.addCreativeItems(output);
                         PathCaveContent.addCreativeItems(output);
                         PathEcologyContent.addMaterialCreativeItems(output);
+                        VoidrangerRewardContent.addCreativeItems(output);
                     })
                     .build());
     public static final RegistryObject<CreativeModeTab> EQUIPMENT_TAB = CREATIVE_TABS.register(
@@ -520,7 +522,9 @@ public final class StarRailSimMod {
         StarRailAttributes.ATTRIBUTES.register(modEventBus);
         PathAnimalEntities.register(modEventBus);
         StarveinConstructEntities.register(modEventBus);
+        VoidrangerEntities.register(modEventBus);
         PathAnimalSounds.SOUNDS.register(modEventBus);
+        VoidrangerSounds.register(modEventBus);
         StarRailCombatSounds.SOUNDS.register(modEventBus);
         EFFECTS.register(modEventBus);
         StarRailTraceMaterials.register();

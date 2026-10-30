@@ -64,6 +64,10 @@ public final class PathEquipmentContent {
     public static final RegistryObject<Item> ANCIENTDREAM_LEGGINGS = armor("path_ancientdream_leggings", ArmorMaterialTier.ANCIENTDREAM, Type.LEGGINGS);
     public static final RegistryObject<Item> ANCIENTDREAM_BOOTS = armor("path_ancientdream_boots", ArmorMaterialTier.ANCIENTDREAM, Type.BOOTS);
 
+    public static final RegistryObject<Item> VOID_RIFT_BLADE = register("void_rift_blade",
+            () -> new SwordItem(ToolTier.VOID_RIFT, 3, -2.4F,
+                    new Item.Properties().durability(ToolTier.VOID_RIFT.getUses())));
+
     public static final RegistryObject<Item> STELLARJADE_UPGRADE_TEMPLATE = template("path_stellarjade_upgrade_smithing_template");
     public static final RegistryObject<Item> ANCIENTDREAM_UPGRADE_TEMPLATE = template("path_ancientdream_upgrade_smithing_template");
 
@@ -129,6 +133,8 @@ public final class PathEquipmentContent {
                 () -> Ingredient.of(PathMineralContent.SUNIRON_INGOT.get())),
         STARMARROW(3, 1561, 8.0F, 3.0F, 10,
                 () -> Ingredient.of(PathMineralContent.STARMARROW.get())),
+        VOID_RIFT(3, 450, 8.0F, 2.5F, 10,
+                () -> Ingredient.of(VoidrangerRewardContent.VOID_ESSENCE_SHARD.get())),
         STELLARJADE(4, 2031, 9.0F, 4.0F, 15,
                 () -> Ingredient.of(PathMineralContent.STELLARJADE_INGOT.get())),
         ANCIENTDREAM(5, 2235, 9.5F, 4.5F, 18,

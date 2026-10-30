@@ -63,10 +63,28 @@
     "misc": [],
     "monster": [
       {
-        "type": "minecraft:drowned",
-        "weight": 8,
+        "type": "starrail_sim:voidranger_reaver",
+        "weight": 16,
         "minCount": 1,
-        "maxCount": 2
+        "maxCount": 1
+      },
+      {
+        "type": "starrail_sim:voidranger_distorter",
+        "weight": 16,
+        "minCount": 1,
+        "maxCount": 1
+      },
+      {
+        "type": "starrail_sim:voidranger_trampler",
+        "weight": 4,
+        "minCount": 1,
+        "maxCount": 1
+      },
+      {
+        "type": "starrail_sim:voidranger_eliminator",
+        "weight": 12,
+        "minCount": 1,
+        "maxCount": 1
       }
     ],
     "water_ambient": [

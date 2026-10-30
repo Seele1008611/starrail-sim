@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "SSS",
+    "SWS",
+    "SPS"
+  ],
+  "key": {
+    "S": {
+      "item": "starrail_sim:void_essence_shard"
+    },
+    "W": {
+      "item": "starrail_sim:path_suniron_sword"
+    },
+    "P": {
+      "item": "starrail_sim:void_heavy_armor_plate"
+    }
+  },
+  "result": {
+    "item": "starrail_sim:void_rift_blade",
+    "count": 1
+  }
+}
