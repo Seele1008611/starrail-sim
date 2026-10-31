@@ -18,7 +18,7 @@ public final class StarRailElationService {
 
     private static final int AFTERGLOW_HITS = 2;
     private static final int GRAND_COOLDOWN = 10 * 20;
-    private static final float AFTERGLOW_MULTIPLIER = 1.10F;
+    private static final float AFTERGLOW_MULTIPLIER = 1.15F;
 
     private StarRailElationService() {
     }
@@ -30,7 +30,7 @@ public final class StarRailElationService {
 
     public static long comboWindow(ServerPlayer player, int rank) {
         return comboWindow(rank) + (StarRailTraceService.hasPassive(
-                player, StarRailPath.ELATION, 6) ? 2L * 20L : 0L);
+                player, StarRailPath.ELATION, 6) ? 3L * 20L : 0L);
     }
 
     public static float burstBonus(int rank) {
@@ -41,7 +41,7 @@ public final class StarRailElationService {
     public static float burstBonus(ServerPlayer player, int rank) {
         float bonus = burstBonus(rank);
         return StarRailTraceService.hasPassive(player, StarRailPath.ELATION, 7)
-                ? bonus * 1.15F : bonus;
+                ? bonus * 1.25F : bonus;
     }
 
     /** Consumes one rank-six follow-up attack bonus. */
@@ -70,7 +70,7 @@ public final class StarRailElationService {
         }
         CompoundTag state = getState(player);
         int hits = AFTERGLOW_HITS + (StarRailTraceService.hasPassive(
-                player, StarRailPath.ELATION, 8) ? 2 : 0);
+                player, StarRailPath.ELATION, 8) ? 3 : 0);
         state.putInt(AFTERGLOW_HITS_TAG, hits);
         saveState(player, state);
         StarRailPathMessages.send(player, StarRailPath.ELATION, Component.translatable(

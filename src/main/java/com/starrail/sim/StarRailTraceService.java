@@ -145,13 +145,13 @@ public final class StarRailTraceService {
         }
         if (!tag.getUUID("target").equals(target.getUUID())) return 0;
         player.getPersistentData().remove("trace_hunt_echo");
-        return .08;
+        return .10;
     }
     public static void armEcho(ServerPlayer player, LivingEntity target) {
         if (!StarRailTraces.has(mask(player), 7)) return;
         var tag = new net.minecraft.nbt.CompoundTag();
         tag.putUUID("target", target.getUUID());
-        tag.putLong("expires", player.level().getGameTime() + 80);
+        tag.putLong("expires", player.level().getGameTime() + 100);
         tag.putString("dimension", player.level().dimension().location().toString());
         player.getPersistentData().put("trace_hunt_echo", tag);
     }

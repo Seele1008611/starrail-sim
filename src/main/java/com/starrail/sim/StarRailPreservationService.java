@@ -55,7 +55,7 @@ public final class StarRailPreservationService {
 
         boolean activatedBarrier = false;
         boolean reducedThreshold = player.getPersistentData().getBoolean(PASSIVE_GUARD_TAG);
-        int requiredStacks = reducedThreshold ? MAX_GUARD_STACKS - 1 : MAX_GUARD_STACKS;
+        int requiredStacks = reducedThreshold ? MAX_GUARD_STACKS - 2 : MAX_GUARD_STACKS;
         if (stacks >= requiredStacks
                 && level >= StarRailPathRank.DEEP_PRACTICE.getLevel()
                 && StarRailRankRuntime.ready(player, "skill_preservation_barrier")
@@ -72,7 +72,7 @@ public final class StarRailPreservationService {
             float multiplier = level >= StarRailPathRank.PATH_PINNACLE.getLevel()
                     ? 0.50F : 0.20F;
             if (StarRailTraceService.hasPassive(player, StarRailPath.PRESERVATION, 8)) {
-                multiplier *= 1.20F;
+                multiplier *= 1.30F;
             }
             float damage = (float) (armor * multiplier);
             if (StarRailTraceService.hasPassive(player, StarRailPath.PRESERVATION, 7)) {
@@ -82,7 +82,7 @@ public final class StarRailPreservationService {
                     && player.getPersistentData().getLong(PASSIVE_SHIELD_BARRIER_TAG)
                     != data.getPreservationBarrierExpireTick()) {
                 player.setAbsorptionAmount(player.getAbsorptionAmount()
-                        + StarRailRelicService.boostShieldAmount(player, 1.0F));
+                        + StarRailRelicService.boostShieldAmount(player, 2.0F));
                 player.getPersistentData().putLong(PASSIVE_SHIELD_BARRIER_TAG,
                         data.getPreservationBarrierExpireTick());
             }

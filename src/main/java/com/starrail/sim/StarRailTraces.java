@@ -2,6 +2,9 @@ package com.starrail.sim;
 
 import java.util.EnumMap;
 import java.util.Map;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
 
 /** Shared path-specific trace definitions. Node IDs remain stable in saves/network packets. */
 public final class StarRailTraces {
@@ -25,84 +28,84 @@ public final class StarRailTraces {
     static {
         register(StarRailPath.HUNT,
                 new String[]{"校准准星", "迅捷箭矢", "致命落点", "弱点洞察", "追猎锋芒", "终局瞄准"},
-                new int[]{CRIT_RATE, ATTACK, CRIT_DAMAGE}, new int[]{10, 50, 50},
+                new int[]{CRIT_RATE, ATTACK, CRIT_DAMAGE}, new int[]{12, 60, 60},
                 new int[][]{{480,332},{337,408},{480,488},{630,408},{480,610},{480,763},{480,225},{322,620},{633,620}},
                 new String[][]{
-                    {"精准追击", "猎意达到 3 层并触发追猎一击时，该次攻击获得 +5% 暴击率。", "5"},
-                    {"追猎余势", "追猎一击命中后，4 秒内对同一目标的下一次攻击获得 +8% 暴击伤害。", "5"},
-                    {"逆时猎杀", "逆时追猎冷却由 8 秒降低至 5 秒。", "7"}
+                    {"精准追击", "猎意达到 2 层并触发追猎一击时，该次攻击获得 +6% 暴击率。", "5"},
+                    {"追猎余势", "追猎一击命中后，5 秒内对同一目标的下一次攻击获得 +10% 暴击伤害。", "5"},
+                    {"逆时猎杀", "逆时追猎冷却由 8 秒降低至 4 秒。", "7"}
                 });
         register(StarRailPath.PRESERVATION,
                 new String[]{"盾面淬炼", "坚壁加固", "壁垒核心", "护缘叠层", "稳固阵列", "不破之盾"},
-                new int[]{ARMOR, ARMOR_TOUGHNESS}, new int[]{60, 60},
+                new int[]{ARMOR, ARMOR_TOUGHNESS}, new int[]{72, 72},
                 new int[][]{{532,262},{387,421},{532,403},{677,421},{532,564},{532,674},{532,161},{390,683},{678,683}},
                 new String[][]{
-                    {"守势余裕", "护壁生效时，首次成功格挡额外获得一层短暂吸收护盾；每次护壁限触发一次。", "5"},
-                    {"反震蓄势", "护壁反震命中后，下一次格挡所需的护卫层数减少 1 层。", "6"},
-                    {"壁垒共鸣", "强化护壁期间，反震伤害提高 20%。", "7"}
+                    {"守势余裕", "护壁生效时，首次成功格挡额外获得 2 点短暂吸收护盾；每次护壁限触发一次。", "5"},
+                    {"反震蓄势", "护壁反震命中后，下一次格挡所需的护卫层数由 3 层降至 1 层。", "6"},
+                    {"壁垒共鸣", "强化护壁期间，反震伤害提高至 ×1.30。", "7"}
                 });
         register(StarRailPath.ABUNDANCE,
                 new String[]{"生命萌芽", "回春脉络", "丰沛根系", "甘露回响", "生生不息", "慈泽满溢"},
-                new int[]{MAX_HEALTH, HEALING_EFFECT}, new int[]{60, 60},
+                new int[]{MAX_HEALTH, HEALING_EFFECT}, new int[]{72, 72},
                 new int[][]{{463,284},{324,393},{463,424},{602,393},{463,562},{541,697},{463,70},{245,610},{681,610}},
                 new String[][]{
-                    {"回春余韵", "生命值低于 50% 时受到治疗，额外获得持续 4 秒的缓慢生命恢复。", "4"},
-                    {"溢疗化生", "溢出治疗转化为吸收量的比例提高 15%。", "5"},
-                    {"不息庇护", "抵挡致死伤害后，额外恢复最大生命值的 10%。", "7"}
+                    {"回春余韵", "生命值低于 60% 时受到治疗，额外获得持续 5 秒的缓慢生命恢复。", "4"},
+                    {"溢疗化生", "溢出治疗转化为吸收量的比例由 50% 提高至 75%；单次最多转化 5 点，护盾累计上限为最大生命值的 25%。", "5"},
+                    {"不息庇护", "抵挡致死伤害后，额外恢复最大生命值的 15%（总计 35%）。", "7"}
                 });
         register(StarRailPath.DESTRUCTION,
                 new String[]{"余烬攻势", "烈火锻锋", "焦灼核心", "逆燃战意", "焚身强袭", "终焉余烬"},
-                new int[]{CRIT_DAMAGE, ATTACK}, new int[]{60, 60},
+                new int[]{CRIT_DAMAGE, ATTACK}, new int[]{72, 72},
                 new int[][]{{514,257},{349,373},{514,396},{680,373},{514,549},{514,680},{514,153},{335,566},{692,566}},
                 new String[][]{
-                    {"余烬不熄", "怒火层数达到上限后，持续时间延长 2 秒。", "5"},
-                    {"破釜一击", "消耗满层怒火的强化攻击额外获得 +10% 暴击伤害。", "6"},
-                    {"绝境回燃", "绝境强化触发后，下一次攻击额外造成一次小范围灼烈冲击。", "7"}
+                    {"余烬不熄", "怒火层数达到上限后，持续时间延长 4 秒（总计 12 秒）。", "5"},
+                    {"破釜一击", "消耗满层怒火的强化攻击额外获得 +15% 暴击伤害。", "6"},
+                    {"绝境回燃", "绝境强化后的下一击额外造成 25% 伤害，波及半径 3 格。", "7"}
                 });
         register(StarRailPath.ERUDITION,
                 new String[]{"星图洞察", "并行演算", "临界精度", "回响推演", "知识汇流", "终局定理"},
-                new int[]{CRIT_RATE, CRIT_DAMAGE, ATTACK}, new int[]{10, 50, 50},
+                new int[]{CRIT_RATE, CRIT_DAMAGE, ATTACK}, new int[]{12, 60, 60},
                 new int[][]{{461,252},{320,418},{461,418},{600,418},{461,650},{324,636},{461,72},{205,418},{714,418}},
                 new String[][]{
-                    {"多重推演", "知识回响额外波及 1 个目标。", "4"},
-                    {"回响增幅", "知识回响造成的伤害提高 15%。", "5"},
-                    {"群星定论", "命中三个不同敌人触发强化攻击后，短时间内下一次知识回响范围扩大。", "7"}
+                    {"多重推演", "知识回响额外波及 2 个目标。", "4"},
+                    {"回响增幅", "知识回响造成的伤害提高至 ×1.25。", "5"},
+                    {"群星定论", "6 秒内命中 2 个不同敌人触发强化攻击后，下一次知识回响范围扩大 2 格，持续 8 秒。", "7"}
                 });
         register(StarRailPath.NIHILITY,
                 new String[]{"侵蚀刻印", "暗潮命中", "虚空增压", "裂隙破击", "沉降攻势", "终末扩散"},
-                new int[]{EFFECT_HIT_RATE, ATTACK, BREAK_EFFECT}, new int[]{50, 50, 50},
+                new int[]{EFFECT_HIT_RATE, ATTACK, BREAK_EFFECT}, new int[]{60, 60, 60},
                 new int[][]{{532,183},{375,320},{532,311},{688,325},{532,461},{532,570},{532,56},{247,276},{807,276}},
                 new String[][]{
-                    {"侵蚀余波", "侵蚀首次扩散时，额外传递给 1 个附近目标。", "5"},
-                    {"持续崩解", "对已被侵蚀标记的目标造成的持续伤害提高 15%。", "6"},
-                    {"虚空回响", "击杀被自己标记的敌人触发爆发后，周围目标额外承受一次较弱的侵蚀。", "7"}
+                    {"侵蚀余波", "侵蚀首次扩散时，标记 3 个附近目标。", "5"},
+                    {"持续崩解", "对已被侵蚀标记的目标造成的持续伤害提高至 ×1.25。", "6"},
+                    {"虚空回响", "击杀被自己标记的敌人后，对 3.5 格内目标造成 3 点爆发伤害，并追加 1.5 点侵蚀伤害。", "7"}
                 });
         register(StarRailPath.HARMONY,
                 new String[]{"和弦护持", "生命协奏", "韧性节拍", "共鸣增幅", "交响壁垒", "终曲守望"},
-                new int[]{ARMOR, MAX_HEALTH, ARMOR_TOUGHNESS}, new int[]{50, 50, 50},
+                new int[]{ARMOR, MAX_HEALTH, ARMOR_TOUGHNESS}, new int[]{60, 60, 60},
                 new int[][]{{362,355},{501,330},{639,356},{500,461},{500,593},{500,697},{500,179},{178,425},{830,427}},
                 new String[][]{
-                    {"延音共鸣", "共鸣持续时间额外延长 4 秒。", "4"},
-                    {"协奏强袭", "共鸣期间可触发的增伤攻击次数增加 1 次。", "5"},
-                    {"终曲回护", "共鸣期间击败敌人时，额外恢复最大生命值的 5%。", "6"}
+                    {"延音共鸣", "共鸣持续时间额外延长 7 秒（基础持续时间 15 秒时总计 22 秒）。", "4"},
+                    {"协奏强袭", "共鸣期间可触发 5 次增伤攻击，每次造成 ×1.10 伤害。", "5"},
+                    {"终曲回护", "共鸣期间击败敌人时，额外恢复最大生命值的 6%（总计 9%）。", "6"}
                 });
         register(StarRailPath.REMEMBRANCE,
                 new String[]{"初始记录", "记忆刻痕", "回响增幅", "追忆之环", "长存印记", "终章回响"},
-                new int[]{ATTACK, CRIT_DAMAGE}, new int[]{60, 60},
+                new int[]{ATTACK, CRIT_DAMAGE}, new int[]{72, 72},
                 new int[][]{{493,236},{276,436},{356,572},{713,436},{630,572},{493,617},{342,290},{849,436},{493,747}},
                 new String[][]{
-                    {"延续记录", "记忆记录窗口额外延长 3 秒。", "4"},
-                    {"回忆追击", "记忆回响后，对该目标的下一击额外获得 +10% 攻击力。", "5"},
-                    {"深层回响", "强化回响触发所需的回响累计次数减少 1 次。", "7"}
+                    {"延续记录", "记忆记录窗口额外延长 4 秒。", "4"},
+                    {"回忆追击", "记忆回响后，对该目标的下一击伤害提高至 ×1.15。", "5"},
+                    {"深层回响", "永恒回响累计 1 次回响即可触发。", "7"}
                 });
         register(StarRailPath.ELATION,
                 new String[]{"欢声起势", "连击节拍", "奇趣增幅", "笑意回环", "高潮迭起", "盛宴终章"},
-                new int[]{CRIT_RATE, ATTACK, CRIT_DAMAGE}, new int[]{10, 50, 50},
+                new int[]{CRIT_RATE, ATTACK, CRIT_DAMAGE}, new int[]{12, 60, 60},
                 new int[][]{{594,94},{450,148},{738,148},{594,265},{594,410},{594,558},{594,725},{306,237},{878,237}},
                 new String[][]{
-                    {"余兴未散", "连击中断前的等待窗口额外延长 2 秒。", "4"},
-                    {"欢愉加码", "欢愉爆发造成的伤害提高 15%。", "5"},
-                    {"盛宴续曲", "强化爆发命中后，后续攻击强化次数额外增加 2 次。", "7"}
+                    {"余兴未散", "连击中断前的等待窗口额外延长 3 秒。", "4"},
+                    {"欢愉加码", "欢愉爆发造成的伤害提高至 ×1.25。", "5"},
+                    {"盛宴续曲", "强化爆发命中后，后续攻击强化次数增加至 5 次，每次伤害提高至 ×1.15。", "7"}
                 });
         HUNT = TREES.get(StarRailPath.HUNT);
     }
@@ -123,7 +126,7 @@ public final class StarRailTraces {
             for (int j = 0; j < stats.length; j++) if (stats[j] == stat) { total = totals[j]; statIndex = j; }
             double amount = total / (double) counts[statIndex] / 100.0;
             int prerequisite = i % 3 == 0 ? -1 : i - 1;
-            nodes[i] = new Node(names[i], statName(stat) + " +" + Math.round(amount * 100) + "%",
+            nodes[i] = new Node(names[i], statName(stat) + " +" + formatPercent(amount * 100.0D) + "%",
                     ranks[i], ranks[i], prerequisite, stat, amount, positions[i][0], positions[i][1]);
         }
         for (int i = 0; i < 3; i++) {
@@ -149,6 +152,11 @@ public final class StarRailTraces {
             case HEALING_EFFECT -> "治疗效果";
             default -> "属性";
         };
+    }
+
+    private static String formatPercent(double amount) {
+        return new DecimalFormat("0.##", DecimalFormatSymbols.getInstance(Locale.ROOT))
+                .format(amount);
     }
 
     public static Node[] nodes(StarRailPath path) { return TREES.getOrDefault(path, HUNT); }

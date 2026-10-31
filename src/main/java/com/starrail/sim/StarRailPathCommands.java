@@ -12,12 +12,19 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.HashSet;
+import java.util.Locale;
+import java.util.Set;
+import java.util.StringJoiner;
 
 /** Temporary commands for testing the path framework before the selection GUI. */
 @Mod.EventBusSubscriber(modid = StarRailSimMod.MOD_ID,
@@ -60,6 +67,8 @@ public final class StarRailPathCommands {
                                          .then(Commands.argument("level",
                                                          IntegerArgumentType.integer(1, 7))
                                                  .executes(StarRailPathCommands::debugSetRank)))
+                                 .then(Commands.literal("inspect")
+                                         .executes(StarRailPathCommands::debugInspect))
                                  .then(Commands.literal("start_rank_trial")
                                          .executes(StarRailPathCommands::debugStartRankTrial)))));
     }
@@ -277,6 +286,90 @@ public final class StarRailPathCommands {
                     data.getCurrentPathRank());
         });
         return 1;
+    }
+
+    /** Read-only snapshot for quickly checking the active path and trace bonuses in game. */
+    private static int debugInspect(CommandContext<CommandSourceStack> context) {
+        ServerPlayer player = getPlayer(context);
+        if (player == null) {
+            return 0;
+        }
+        player.getCapability(StarRailPathCapability.PATH_DATA).ifPresent(data -> {
+            StarRailPath path = data.getCurrentPath();
+            if (!path.isRealPath()) {
+                context.getSource().sendFailure(Component.literal("当前没有已踏上的命途。"));
+                return;
+            }
+
+            int rank = data.getCurrentPathRank().getLevel();
+            int traceMask = data.getTraceMask(path);
+            int traceCount = Integer.bitCount(traceMask);
+            int pinnacleCount = data.getPinnaclePracticeCount(path);
+            double pinnacleBonus = StarRailPathProgress.pinnacleAttackBonus(pinnacleCount);
+            context.getSource().sendSuccess(() -> Component.literal(
+                    "命途实时审查（只读）：" + path.getDisplayName() + "·"
+                            + rank + "级；行迹 " + traceCount + "/9。"), false);
+            context.getSource().sendSuccess(() -> Component.literal(String.format(Locale.ROOT,
+                    "巅峰修习：%d/%d 次，当前累计 +%s%%（每次 +12%%；%s）。",
+                    pinnacleCount, StarRailPathProgress.MAX_PINNACLE_PRACTICE_COUNT,
+                    formatAuditNumber(pinnacleBonus * 100.0D),
+                    rank >= StarRailPathRank.PATH_PINNACLE.getLevel() ? "已生效" : "达到7级后生效")), false);
+
+            StringJoiner traceBonuses = new StringJoiner("；");
+            Set<Integer> reportedStats = new HashSet<>();
+            for (int stat : StarRailTraces.stats(path)) {
+                if (reportedStats.add(stat)) {
+                    double bonus = StarRailTraces.bonus(path, traceMask, stat) * 100.0D;
+                    traceBonuses.add(StarRailTraces.statName(stat) + " +"
+                            + formatAuditNumber(bonus) + "%");
+                }
+            }
+            context.getSource().sendSuccess(() -> Component.literal(
+                    "已解锁行迹的静态加成：" + traceBonuses), false);
+            context.getSource().sendSuccess(() -> Component.literal("实际面板（基础值 → 当前值）："), false);
+
+            sendAttributeAudit(context, player, "攻击力", Attributes.ATTACK_DAMAGE, false);
+            sendAttributeAudit(context, player, "最大生命", Attributes.MAX_HEALTH, false);
+            sendAttributeAudit(context, player, "护甲值", Attributes.ARMOR, false);
+            sendAttributeAudit(context, player, "护甲韧性", Attributes.ARMOR_TOUGHNESS, false);
+            sendAttributeAudit(context, player, "暴击率", StarRailAttributes.CRIT_RATE.get(), true);
+            sendAttributeAudit(context, player, "暴击伤害", StarRailAttributes.CRIT_DAMAGE.get(), true);
+            sendAttributeAudit(context, player, "效果命中", StarRailAttributes.EFFECT_HIT_RATE.get(), true);
+            sendAttributeAudit(context, player, "击破特攻", StarRailAttributes.BREAK_EFFECT.get(), true);
+            sendAttributeAudit(context, player, "治疗效果", StarRailAttributes.HEALING_EFFECT.get(), true);
+        });
+        return 1;
+    }
+
+    private static void sendAttributeAudit(CommandContext<CommandSourceStack> context,
+                                           ServerPlayer player, String label,
+                                           Attribute attribute, boolean percentage) {
+        AttributeInstance instance = player.getAttribute(attribute);
+        if (instance == null) {
+            return;
+        }
+        double scale = percentage ? 100.0D : 1.0D;
+        String suffix = percentage ? "%" : "";
+        context.getSource().sendSuccess(() -> Component.literal(String.format(Locale.ROOT,
+                "%s：%s%s → %s%s", label,
+                formatAuditNumber(instance.getBaseValue() * scale), suffix,
+                formatAuditNumber(instance.getValue() * scale), suffix)), false);
+
+        StringJoiner modifiers = new StringJoiner("；");
+        instance.getModifiers().stream()
+                .filter(modifier -> modifier.getName().startsWith("starrail_sim.path.")
+                        || modifier.getName().endsWith(" traces"))
+                .forEach(modifier -> modifiers.add(modifier.getName() + "="
+                        + formatAuditNumber(modifier.getAmount()) + " ("
+                        + modifier.getOperation().name() + ")"));
+        if (modifiers.length() > 0) {
+            context.getSource().sendSuccess(() -> Component.literal(
+                    "  命途/行迹修饰项：" + modifiers), false);
+        }
+    }
+
+    private static String formatAuditNumber(double value) {
+        return String.format(Locale.ROOT, "%.3f", value).replaceAll("\\.?0+$", "");
     }
 
     private static ServerPlayer getPlayer(CommandContext<CommandSourceStack> context) {

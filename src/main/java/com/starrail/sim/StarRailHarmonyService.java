@@ -23,9 +23,9 @@ public final class StarRailHarmonyService {
     private static final int HARMONY_RESONANCE_DURATION = 20 * 20;
     private static final int MAX_RESONANCE_DURATION = 30 * 20;
     private static final int ABSORPTION_DURATION = 5 * 20;
-    private static final int KILL_HEAL_COOLDOWN = 5 * 20;
+    private static final int KILL_HEAL_COOLDOWN = 4 * 20;
     private static final int RESONANCE_EXTENSION = 3 * 20;
-    private static final float AFTERGLOW_ATTACK_MULTIPLIER = 1.05F;
+    private static final float AFTERGLOW_ATTACK_MULTIPLIER = 1.10F;
 
     private StarRailHarmonyService() {
     }
@@ -35,7 +35,7 @@ public final class StarRailHarmonyService {
         int duration = rank >= StarRailPathRank.PRACTICE.getLevel()
                 ? HARMONY_RESONANCE_DURATION : BASE_RESONANCE_DURATION;
         if (StarRailTraceService.hasPassive(player, StarRailPath.HARMONY, 6)) {
-            duration += 4 * 20;
+            duration += 7 * 20;
         }
         player.addEffect(new MobEffectInstance(
                 MobEffects.DAMAGE_RESISTANCE, duration, 0, false, true, true));
@@ -48,7 +48,7 @@ public final class StarRailHarmonyService {
         CompoundTag state = getState(player);
         state.putLong("resonance_until", StarRailRankRuntime.now(player) + duration);
         if (rank >= StarRailPathRank.DEEP_PRACTICE.getLevel()) {
-            int hits = 3 + (StarRailTraceService.hasPassive(
+            int hits = 4 + (StarRailTraceService.hasPassive(
                     player, StarRailPath.HARMONY, 7) ? 1 : 0);
             state.putInt(AFTERGLOW_HITS_TAG, hits);
         }
@@ -91,8 +91,8 @@ public final class StarRailHarmonyService {
         long now = player.level().getGameTime();
         if (rank >= StarRailPathRank.HIGH_PATHSTRIDER.getLevel()
                 && StarRailRankRuntime.ready(player, "skill_harmony_heal")) {
-            float heal = 0.025F + (StarRailTraceService.hasPassive(
-                    player, StarRailPath.HARMONY, 8) ? 0.05F : 0.0F);
+            float heal = 0.03F + (StarRailTraceService.hasPassive(
+                    player, StarRailPath.HARMONY, 8) ? 0.06F : 0.0F);
             player.heal(player.getMaxHealth() * heal);
             state.putLong(LAST_RESTORE_TICK_TAG, now + KILL_HEAL_COOLDOWN);
             StarRailRankRuntime.cooldown(player, "skill_harmony_heal", KILL_HEAL_COOLDOWN);

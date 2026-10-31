@@ -158,7 +158,7 @@
 
   "screen.starrail_sim.path_practice_max": "Highest currently available Path rank reached",
 
-  "screen.starrail_sim.path_pinnacle_practice": "Path Veteran practice: %s/%s; bonus Attack Damage: %s/%s times (+10%% each)",
+  "screen.starrail_sim.path_pinnacle_practice": "Path Veteran practice: %s/%s; bonus Attack Damage: %s/%s times (+12%% each)",
 
   "screen.starrail_sim.rank_trial_status": "Breakthrough Trial: Target Rank %s",
 
@@ -436,7 +436,7 @@
 
   ,"guide.starrail_sim.current.max": "You have reached the highest currently available Path rank."
 
-  ,"guide.starrail_sim.current.pinnacle_practice": "Path Veteran practice: %s/%s; bonus Attack Damage: %s/%s times (+10%% each)"
+  ,"guide.starrail_sim.current.pinnacle_practice": "Path Veteran practice: %s/%s; bonus Attack Damage: %s/%s times (+12%% each)"
 
   ,"guide.starrail_sim.current.core": "Core Gameplay"
 
@@ -468,7 +468,7 @@
 
   ,"guide.starrail_sim.path.upgrade": "Rank-up Rules"
 
-  ,"guide.starrail_sim.path.rank_rule": "Stage practice targets: 40,80,120,160,200,240. Rank 1 advances directly; later ranks require trials. Trials pause normal practice; timeout retains stage practice. At R7 each 300 practice adds +10%% Attack, max 10 times (+100%%), additive with rank Attack."
+  ,"guide.starrail_sim.path.rank_rule": "Stage practice targets: 40,80,120,160,200,240. Rank 1 advances directly; later ranks require trials. Trials pause normal practice; timeout retains stage practice. At R7 each 300 practice adds +12%% Attack, max 10 times (+120%%), additive with rank Attack."
 
   ,"guide.starrail_sim.ranks.intro": "Path ranks grow through practice. Reaching a practice target automatically starts a breakthrough trial."
 
@@ -484,7 +484,7 @@
 
   ,"guide.starrail_sim.ranks.max": "Highest rank"
 
-  ,"guide.starrail_sim.ranks.trials": "Breakthrough limits R3-R7:180,300,480,600,900s. Each path has separate objectives. At R7,300 practice grants +10%% Attack, up to 10 times."
+  ,"guide.starrail_sim.ranks.trials": "Breakthrough limits R3-R7:180,300,480,600,900s. Each path has separate objectives. At R7,300 practice grants +12%% Attack, up to 10 times."
 
   ,"guide.starrail_sim.help.title": "Path System Guide"
 
@@ -492,7 +492,7 @@
 
   ,"guide.starrail_sim.help.path": "Selecting a Path does not place a ruin until you click Confirm Path Search. Travel to the displayed anchor, open its chest, and use the matching Trial Token to start that Path's initial trial. Each player can have only one pending ruin clue at a time. The token is consumed only after the trial starts successfully."
 
-  ,"guide.starrail_sim.help.practice": "Every practice reward is at most +1; a hit, skill and kill from one attack never pay twice. Paths use separate eligibility and reward intervals. R7:each 300 practice grants +10%% Attack, max 10 times."
+  ,"guide.starrail_sim.help.practice": "Every practice reward is at most +1; a hit, skill and kill from one attack never pay twice. Paths use separate eligibility and reward intervals. R7: each 300 practice grants +12%% Attack, max 10 times."
 
   ,"guide.starrail_sim.help.trial": "The matching ruin Trial Token starts the initial trial; completing both objectives enters the Path automatically. The token is not returned after an initial trial fails or times out; seek again and obtain a new one to retry. Afterward, reaching a practice target automatically starts a rank-up trial, which also ranks up automatically when both objectives are complete."
 
@@ -506,7 +506,7 @@
 
   ,"guide.starrail_sim.path.preservation.practice": "Accumulate 3 actual blocks or 6 actual hostile damage for +1, sharing a 12s reward interval. Both tallies reset on reward."
 
-  ,"guide.starrail_sim.path.preservation.effect": "Cumulative rank bonuses (Armor / Toughness):\\nR1:10%/0%\\nR2:15%/5%\\nR3:20%/10%\\nR4:30%/12%\\nR5:40%/15%\\nR6:45%/20%\\nR7:55%/25%"
+  ,"guide.starrail_sim.path.preservation.effect": "Cumulative rank bonuses (Armor / Toughness):\\nR1:12%/1%\\nR2:18%/6%\\nR3:24%/12%\\nR4:36%/14.4%\\nR5:48%/18%\\nR6:54%/24%\\nR7:66%/30%"
 
   ,"guide.starrail_sim.path.preservation.tips": "From R2, gain a shield every 10 seconds; yellow hearts can stack up to 2.5 times your current Armor. From R4, successfully block hostile mob attacks with your shield to build Guard. Ordinary hits, player attacks, and failed blocks do not count. Guard stacks to 3 and expires if you do not block again for 8 seconds. Barrier has a 6-second cooldown."
 
@@ -518,7 +518,7 @@
 
   ,"guide.starrail_sim.path.destruction.practice": "Kill at <=50% health for +1. Accumulate 8 actual hostile damage at low health for an auxiliary +1, every 15s. A kill clears the damage tally and restarts that interval."
 
-  ,"guide.starrail_sim.path.destruction.effect": "Cumulative rank bonuses (Crit damage / Attack):\\nR1:10%/5%\\nR2:15%/10%\\nR3:20%/15%\\nR4:25%/20%\\nR5:30%/25%\\nR6:35%/30%\\nR7:40%/40%"
+  ,"guide.starrail_sim.path.destruction.effect": "Cumulative rank bonuses (Crit damage / Attack):\\nR1:12%/6%\\nR2:18%/12%\\nR3:24%/18%\\nR4:30%/24%\\nR5:36%/30%\\nR6:42%/36%\\nR7:48%/48%"
 
   ,"guide.starrail_sim.path.destruction.tips": "Destruction rewards fighting while endangered. Defeating enemies or taking damage at low health grants practice; a flawless fight is not the only way to progress. Higher-rank mechanics turn damage taken into Wrath and Burning Soul, but watch your health so you do not fall before the bonuses activate."
 
@@ -530,11 +530,11 @@
 
   ,"guide.starrail_sim.path.hunt.practice": "Defeat a hostile for +1 practice. No extra cooldown; one attack with multiple kills pays at most once."
 
-  ,"guide.starrail_sim.path.hunt.effect": "Cumulative rank bonuses (Crit rate / Crit damage / Attack):\\nR1:5%/5%/5%\\nR2:6%/10%/10%\\nR3:8%/15%/15%\\nR4:10%/20%/20%\\nR5:11%/25%/25%\\nR6:13%/30%/30%\\nR7:15%/40%/35%"
+  ,"guide.starrail_sim.path.hunt.effect": "Cumulative rank bonuses (Crit rate / Crit damage / Attack):\\nR1:6%/6%/6%\\nR2:7.2%/12%/12%\\nR3:9.6%/18%/18%\\nR4:12%/24%/24%\\nR5:13.2%/30%/30%\\nR6:15.6%/36%/36%\\nR7:18%/48%/42%"
 
-  ,"guide.starrail_sim.path.hunt.tips": "Kills advance the hunting streak. Hunt Intent stacks up to 3 times, and the rhythm is lost after 8 seconds without another kill. From Rank 5, the next attack while Intent is active gains Pursuit Strike; Rank 6 critical hits can maintain Intent; Rank 7 Reverse Pursuit has its own cooldown."
+  ,"guide.starrail_sim.path.hunt.tips": "Kills grant Hunt Intent, and each stack increases attack damage; Intent lasts 8 seconds. From Rank 6, a critical hit while Intent is active refreshes its duration. Pursuit Strike and Reverse Pursuit consume Intent only on a landed hit; Reverse Pursuit does not fall back to Pursuit Strike while on cooldown."
 
-  ,"guide.starrail_sim.path.hunt.mechanics": "R4: kills build up to 3 intent stacks for 8s.\\nR5: full intent empowers the next landed direct hit x1.25.\\nR6: critical hits refresh active intent.\\nR7: Reverse Pursuit x1.50, 8s cooldown; no weaker pursuit during cooldown. Trace cooldown reduction still applies."
+  ,"guide.starrail_sim.path.hunt.mechanics": "R4 Hunt Intent: gain 1 stack per kill, up to 3, lasting 8s; each stack grants +8% attack damage.\\nR5 Pursuit Strike: at full stacks, the next landed hit deals x2 damage and consumes Intent; misses and shots that hit nothing do not consume it. The Precise Pursuit trace lowers the trigger threshold to 2 stacks.\\nR6: a critical hit while Intent is active refreshes it to 8s; each stack now grants +12% attack damage.\\nR7 Reverse Pursuit: at full stacks, the next landed hit deals x4 damage and consumes Intent; 8s cooldown. During cooldown, Intent is retained and Pursuit Strike does not trigger instead. The Reverse Hunt trace reduces the cooldown to 4s."
 
   ,"guide.starrail_sim.path.erudition.core": "Practice Erudition through multi-target hits, chain damage, and area combat."
 
@@ -542,7 +542,7 @@
 
   ,"guide.starrail_sim.path.erudition.practice": "Hit >=2 distinct hostiles in one direct attack, or complete rank-six analysis, for +1. Both share an 8s interval; secondary damage never counts."
 
-  ,"guide.starrail_sim.path.erudition.effect": "Cumulative rank bonuses (Crit rate / Crit damage / Attack):\\nR1:0%/5%/5%\\nR2:2%/10%/10%\\nR3:3%/15%/15%\\nR4:5%/20%/20%\\nR5:6%/25%/25%\\nR6:8%/30%/30%\\nR7:10%/35%/35%"
+  ,"guide.starrail_sim.path.erudition.effect": "Cumulative rank bonuses (Crit rate / Crit damage / Attack):\\nR1:1%/6%/6%\\nR2:2.4%/12%/12%\\nR3:3.6%/18%/18%\\nR4:6%/24%/24%\\nR5:7.2%/30%/30%\\nR6:9.6%/36%/36%\\nR7:12%/42%/42%"
 
   ,"guide.starrail_sim.path.erudition.tips": "Erudition requires one attack to hit at least 2 enemies. Area attacks, piercing attacks, and controlled grouping make this easier; repeatedly hitting one enemy does not advance multi-target practice. At higher ranks, multi-target hits build Analysis and trigger Knowledge Echo, while Final Calculation strengthens one area attack."
 
@@ -554,7 +554,7 @@
 
   ,"guide.starrail_sim.path.harmony.practice": "A kill during path resonance grants +1. Three combat food uses can grant auxiliary +1 every 30s; eligible food uses are >=10s apart and require combat within 10s. Kills clear auxiliary progress."
 
-  ,"guide.starrail_sim.path.harmony.effect": "Cumulative rank bonuses (Armor / Max health / Toughness):\\nR1:3%/3%/0%\\nR2:6%/6%/3%\\nR3:9%/9%/6%\\nR4:12%/12%/9%\\nR5:16%/16%/12%\\nR6:20%/20%/16%\\nR7:25%/25%/20%"
+  ,"guide.starrail_sim.path.harmony.effect": "Cumulative rank bonuses (Armor / Max health / Toughness):\\nR1:3.6%/3.6%/1%\\nR2:7.2%/7.2%/3.6%\\nR3:10.8%/10.8%/7.2%\\nR4:14.4%/14.4%/10.8%\\nR5:19.2%/19.2%/14.4%\\nR6:24%/24%/19.2%\\nR7:30%/30%/24%"
 
   ,"guide.starrail_sim.path.harmony.tips": "Food builds Resonance, and continuing to fight while resonating completes the trial. Harmony focuses on sustained support: Rank 5 Afterglow strengthens the next 3 attacks during Resonance, Rank 6 Concert Echo restores health after a kill during Resonance, and Rank 7 Unified Resonance grants Absorption and extends Resonance on kills."
 
@@ -566,7 +566,7 @@
 
   ,"guide.starrail_sim.path.nihility.practice": "New main-target erosion grants +1 at most every 10s. Killing your eroded enemy pays +1 only if it has never paid before. Each enemy grants at most one point in its lifetime."
 
-  ,"guide.starrail_sim.path.nihility.effect": "Cumulative rank bonuses (Effect hit / Attack / Break effect):\\nR1:10%/5%/0%\\nR2:12%/10%/0%\\nR3:15%/20%/5%\\nR4:18%/30%/5%\\nR5:22%/40%/10%\\nR6:25%/50%/15%\\nR7:30%/60%/20%"
+  ,"guide.starrail_sim.path.nihility.effect": "Cumulative rank bonuses (Effect Hit / Attack / Break Effect):\\nR1:12%/6%/1%\\nR2:14.4%/12%/1%\\nR3:18%/24%/6%\\nR4:21.6%/36%/6%\\nR5:26.4%/48%/12%\\nR6:30%/60%/18%\\nR7:36%/72%/24%"
 
   ,"guide.starrail_sim.path.nihility.tips": "Nihility first applies negative effects, then uses damage over time and echoes to gain an advantage. Higher Effect Hit Rate makes Erosion less likely to be blocked by enemy Effect Resistance. Erosion deals periodic damage, while higher-rank mechanics can spread it or trigger a burst when it ends."
 
@@ -578,7 +578,7 @@
 
   ,"guide.starrail_sim.path.abundance.practice": "Restore 6 health actually lost to hostiles for +1 every 12s. Injury credit expires after 30s; environmental self-harm, overhealing and shields do not count. Same-tick healing is merged."
 
-  ,"guide.starrail_sim.path.abundance.effect": "Cumulative rank bonuses (Max health / Healing):\\nR1:5%/0%\\nR2:10%/5%\\nR3:20%/8%\\nR4:30%/10%\\nR5:40%/12%\\nR6:50%/15%\\nR7:60%/20%"
+  ,"guide.starrail_sim.path.abundance.effect": "Cumulative rank bonuses (Max health / Healing):\\nR1:6%/1%\\nR2:12%/6%\\nR3:24%/9.6%\\nR4:36%/12%\\nR5:48%/14.4%\\nR6:60%/18%\\nR7:72%/24%"
 
   ,"guide.starrail_sim.path.abundance.tips": "Healing yourself or allies advances Abundance practice, and separate healing events count separately. Excess healing can become damage absorption; Rank 6 Renewal heals based on max health, while Rank 7 Mercy provides stronger emergency protection with a long cooldown."
 
@@ -590,7 +590,7 @@
 
   ,"guide.starrail_sim.path.remembrance.practice": "A valid echo grants +1 every 8s. Recording, refreshing and Eternal Echo do not add duplicate rewards."
 
-  ,"guide.starrail_sim.path.remembrance.effect": "Cumulative rank bonuses (Attack / Crit damage):\\nR1:5%/5%\\nR2:10%/10%\\nR3:15%/15%\\nR4:20%/20%\\nR5:25%/25%\\nR6:30%/30%\\nR7:40%/40%"
+  ,"guide.starrail_sim.path.remembrance.effect": "Cumulative rank bonuses (Attack / Crit damage):\\nR1:6%/6%\\nR2:12%/12%\\nR3:18%/18%\\nR4:24%/24%\\nR5:30%/30%\\nR6:36%/36%\\nR7:48%/48%"
 
   ,"guide.starrail_sim.path.remembrance.tips": "Remembrance rewards repeatedly connecting with the same target: after recording a memory, hit that target again within the memory window to trigger an echo. The base window is 8 seconds and becomes 12 seconds at Rank 4; keep one target selected instead of switching constantly."
 
@@ -602,7 +602,7 @@
 
   ,"guide.starrail_sim.path.elation.practice": "A three-hit burst grants +1 every 8s. Ordinary hits and the grand burst do not pay extra."
 
-  ,"guide.starrail_sim.path.elation.effect": "Cumulative rank bonuses (Crit rate / Attack / Crit damage):\\nR1:3%/5%/5%\\nR2:4%/10%/10%\\nR3:5%/15%/15%\\nR4:6%/20%/20%\\nR5:7%/25%/25%\\nR6:8%/30%/30%\\nR7:10%/35%/35%"
+  ,"guide.starrail_sim.path.elation.effect": "Cumulative rank bonuses (Crit rate / Attack / Crit damage):\\nR1:3.6%/6%/6%\\nR2:4.8%/12%/12%\\nR3:6%/18%/18%\\nR4:7.2%/24%/24%\\nR5:8.4%/30%/30%\\nR6:9.6%/36%/36%\\nR7:12%/42%/42%"
 
   ,"guide.starrail_sim.path.elation.tips": "Elation builds momentum through consecutive hits and triggers bursts when the rhythm reaches its conditions. Keep attacks close together, then use the burst to amplify damage. Higher ranks improve the combo window and the number or strength of burst triggers."
 
@@ -622,7 +622,7 @@
 
   ,"guide.starrail_sim.help.effect_resistance": "Effect Resistance: a target's ability to resist negative effects. It affects application, not an effect that has already succeeded; when the notification says an effect was resisted, that attempt did not apply."
 
-  ,"guide.starrail_sim.help.knockback_resistance": "Knockback Resistance: reduces the distance or chance of being knocked back by attacks. It is separate from Armor, Armor Toughness, and Effect Resistance, and mainly affects positioning and combat rhythm."
+  ,"guide.starrail_sim.help.knockback_resistance": "Knockback Resistance: lowers the chance of being knocked back by an attack. It is separate from Armor, Armor Toughness, and Effect Resistance, and mainly affects positioning and combat rhythm."
 
   ,"guide.starrail_sim.help.relic_title": "Relic System"
 
@@ -630,7 +630,7 @@
 
   ,"guide.starrail_sim.help.relic_slots": "The outer ring has Head, Hands, Body and Feet slots. The inner ring has Planar Sphere and Link Rope slots. Relic details and tooltips show the set, rarity, main stat and substats."
 
-  ,"guide.starrail_sim.help.relic_trial": "Choose an outer- or inner-ring set at the arena's central device. Defeat 3 waves of 4 enemies to receive 1–3 random relics from that set. Reward count, rarity, and stats are locked when the battle starts; rarity follows the owner's Path rank: rank 1 can drop 2–3 stars, ranks 2–4 improve gradually, and rank 5 or higher guarantees 5 stars. Ordinary floating ruins and Relic Duel Arenas naturally generate across The Path's Clear Sky Meadow and Starlight Grove. Arena generation does not require flat terrain: it clears the footprint and builds foundations beneath low areas. Only vanilla hostile mobs are selected; creepers, vexes, phantoms, and vanilla bosses are excluded. Mobs added by other mods are never summoned. Operators can locate one with /starrail arena locate [dimension]; use /starrail arena pool [all|normal|ranged] to list candidates or /starrail arena inspect namespace:entity_id to see why an entity was included or excluded. The arena_allowed, arena_excluded, and arena_ranged tags can adjust risk filtering, exclusions, and ranged classification for vanilla hostile mobs only; they cannot add modded mobs. To build the 25×25 test arena manually, stand at a clear site and run /starrail arena build [dimension]."
+  ,"guide.starrail_sim.help.relic_trial": "Relic trials: Choose an outer- or inner-ring set at the arena's central device. Defeat 3 waves of 4 enemies to receive 1–3 random relics from that set. Reward count, rarity and stats are set when the battle starts. Rarity follows the owner's Path rank: rank 1 can yield 2- or 3-star relics, ranks 2–4 improve gradually, and rank 5+ guarantees 5 stars. Ordinary floating ruins and relic arenas generate naturally in all seven Path biomes; arenas can generate on uneven terrain by clearing their footprint and filling foundations beneath low areas. Arena waves draw from the four original Voidrangers, with enemy types and elite composition determined by challenge rank; vanilla and other modded hostiles are not summoned. Operators can locate a generated arena with /starrail arena locate [dimension], or build a 25×25 test arena at a clear site with /starrail arena build [dimension]."
 
   ,"guide.starrail_sim.help.relic_growth": "A substat is added or enhanced every 3 enhancement levels. Maximum levels are +6 for 2-star, +9 for 3-star, +12 for 4-star and +15 for 5-star relics. Enhancement consumes Lost Crystals; the page previews the level and stat changes."
 
@@ -4007,7 +4007,7 @@
 
   ,"ui.starrail_sim.path.next_stage": "Practice target: %s. Reaching it starts the next rank breakthrough trial."
 
-  ,"ui.starrail_sim.path.pinnacle_stage": "Path Veteran practice: each %s practice adds +10%% Attack, up to 10 times (+100%%); additive with rank Attack."
+  ,"ui.starrail_sim.path.pinnacle_stage": "Path Veteran practice: each %s practice adds +12%% Attack, up to 10 times (+120%%); additive with rank Attack."
 
   ,"ui.starrail_sim.path.next_trial": "Next rank: %s. Trial limit: %s seconds; objective targets: %s and %s. Complete both to advance."
 
@@ -4039,7 +4039,7 @@
 
   ,"ui.starrail_sim.guide.trial_advance": "Start next rank trial"
 
-  ,"ui.starrail_sim.guide.pinnacle_reward": "Attack +10%, up to 10 times"
+  ,"ui.starrail_sim.guide.pinnacle_reward": "Attack +12%, up to 10 times (max +120%)"
 
   ,"ui.starrail_sim.guide.trial_heading": "Breakthrough Trials and Retries"
 
@@ -4319,11 +4319,11 @@
 
   "guide.starrail_sim.help.hud_title": "Player Status HUD",
 
-  "guide.starrail_sim.help.hud_values": "Status bars: by default, the HUD sits above experience, with each number following its icon. The green main bar shows current/max health and the gold main bar shows hunger; blue and pale-green secondary bars show absorption and saturation. Absorption is a separate shield, not maximum health. Its bar is relative to maximum health; the actual amount remains visible even when the bar is full. Armor and toughness show actual attribute values. Low health, low hunger, damage and recovery have local visual feedback.",
+  "guide.starrail_sim.help.hud_values": "Status bars: by default, the HUD sits above experience, with each number following its icon. The health bar shows current/max health and changes color with low health, Poison or Wither; the gold bar shows hunger. Blue and pale-green secondary bars show absorption and saturation. Absorption is a separate shield, not maximum health. Its bar is relative to maximum health; the actual amount remains visible even when the bar is full. Armor and toughness show actual attribute values. Low health, low hunger, damage and recovery have local visual feedback.",
 
   "guide.starrail_sim.help.hud_context": "Context: bubbles and remaining breathing seconds appear underwater or while air is not full. Living mounts show current/max health, and jumpable mounts also show a short charge meter. These readings share the lower row with absorption. A central gap leaves room for experience levels; if a long level number overlaps, status icons and readings take priority. This survival HUD is hidden in Creative and Spectator modes; F1 hides the HUD.",
 
-  "guide.starrail_sim.help.hud_settings": "Display settings: F8 toggles between the mod HUD and vanilla by default; rebind it in Controls. The Display Settings button at the top right of this guide changes smooth drawing, motion, HUD style and placement, 75%-100% scale, and number format. UI text uses Minecraft's active default font. Choices save immediately and only affect presentation, not attributes or combat.",
+  "guide.starrail_sim.help.hud_settings": "Display settings: F8 toggles between the mod HUD and vanilla by default; rebind it in Controls. The Display Settings button at the top right of this guide changes smooth/standard drawing, full/reduced interface motion, HUD visibility and placement, 75%/85%/100% scale, number format, and combat effect visibility, intensity and camera shake. UI text uses Minecraft's active default font. Choices save immediately and affect presentation only, not attributes or combat calculations.",
 
   "ui.starrail_sim.relic.filters": "Filters and Sorting",
 
@@ -4998,7 +4998,7 @@
   "message.starrail_sim.relic.preset_invalid": "Invalid loadout data. No equipment was changed.",
   "guide.starrail_sim.help.relic_presets": "Relic presets: save up to four loadouts shared across all Paths; each records the six relic slots. Expand a preset to apply it, save your current equipment, or clear it. Before applying, the game checks that every required relic is still in your inventory or equipped and that your inventory can hold the relics being removed. If a check fails, your equipment is left unchanged.",
   "guide.starrail_sim.help.attribute_sources": "Attribute sources: open Attribute Details from Character Details and select an attribute row to inspect its base value, Path growth, Traces, Light Cone, equipment, relics and sets, status effects, fixed bonuses, base percentages, final multipliers, and calculated value. Caps and settlement adjustments are listed separately.",
-  "guide.starrail_sim.help.display_settings": "Display options: all UI text uses Minecraft's active default font. Toggle smooth or standard drawing and full or reduced motion, then adjust HUD style, position, scale, and number format. Choices save immediately; use Preview to compare ordinary and smooth shapes.",
+  "guide.starrail_sim.help.display_settings": "Display options: all UI text uses Minecraft's active default font. Toggle smooth/standard drawing, full/reduced interface motion and the mod/vanilla HUD; adjust HUD position, 75%/85%/100% scale and number format; and set combat effect visibility, intensity and camera shake. Choices save immediately; use Preview to compare ordinary and smooth shapes.",
   "screen.starrail_sim.light_cone.choose": "Choose Light Cone",
   "screen.starrail_sim.light_cone.picker.title": "Choose or Replace Light Cone",
   "screen.starrail_sim.light_cone.picker.search": "Search light cone names",
@@ -5246,10 +5246,10 @@
   "dimension.starrail_sim.overworld": "Overworld",
 
   "guide.starrail_sim.help.dimension_title": "Exploring The Path",
-  "guide.starrail_sim.help.dimension_entry": "Entry and return: The Astral Express is fixed at (0, 280, 0) in the Overworld and (0, 350, 0) in The Path. Activate the Star Rail Beacon inside either train to travel between them. The Path arrival is at (0, 350, 0), and the return point is inside the Overworld train.",
+  "guide.starrail_sim.help.dimension_entry": "Entry and return: The Astral Express is fixed at (0, 280, 0) in both the Overworld and The Path. Activate the Star Rail Beacon inside either train to travel between them. The Path arrival point is (0, 280, 0), and the return point is inside the Overworld train.",
   "guide.starrail_sim.help.dimension_regions": "Regions: Clear Sky Meadow has open grassland, gentle slopes, river valleys and sparse groves. Starlight Grove has bright woodland, lakeshores and clearings. Starlit Tide Ocean ranges from shallow reefs to deep water and trenches, with seabed ores and sparse bubble vents. Clear Sand Beach connects the land to shallow water along the coast. Riverbed Gravel stays near waterways and low ground, while Clearwater River Sand covers most of the beach. Tide Grass grows on sand or gravel; Clear Sand Bellflower roots only in Clearwater River Sand in Clear Sand Beach. Turtles spawn naturally on these beaches. Starvein Cavern is an underground biome with original Starvein Geodes, rare large crystal chambers, and shared minerals in its walls and rock layers. Starfall Highlands have open rocky slopes, scattered scree, and low cushiongrass. Stilltide Marsh is a lowland of humus soil and scattered shallow pools edged with reeds.",
-  "guide.starrail_sim.help.dimension_ruins": "Ruins and challenges: Ordinary floating ruins and relic dueling arenas generate naturally in The Path. Start path seeking from the Path screen while inside the dimension; it records a target location. Relic arenas use three waves and the selected set, then award 1–3 random relics on victory.",
-  "guide.starrail_sim.help.dimension_navigation": "Navigation: The Star Rail Beacon inside each train connects the two fixed hubs. Right-click other beacons to save their coordinates in the Travel Archive and give them a custom name; breaking a recorded beacon removes its coordinates. Operators can use /starrail dimension locate relay to locate the Path train at (0, 350, 0); locate region accepts sunmeadow, starlight_grove, star_tide_ocean, clear_sand_beach, starvein_cavern, star_scree_highlands, or stilltide_marsh. Use ordinary_ruin, relic_trial_arena, or path_ruin for ruins and challenges. locate ore accepts starcoal, dawncopper, suniron, dawn_gold, resonance, memory, starmarrow, stellarjade, or ancientdream; mineral searches only inspect nearby generated chunks and do not generate new ones.",
+  "guide.starrail_sim.help.dimension_ruins": "Ruins and challenges: Ordinary floating ruins and relic dueling arenas generate naturally across all seven Path biomes. Start path seeking from the Path screen while inside the dimension; it records a target location. Relic arenas use three waves and the selected set, then award 1–3 random relics on victory.",
+  "guide.starrail_sim.help.dimension_navigation": "Navigation: The Star Rail Beacon inside each train connects the two fixed hubs. Right-click other beacons to save their coordinates in the Travel Archive and give them a custom name; breaking a recorded beacon removes its coordinates. Operators can use /starrail dimension locate relay to locate the Path train at (0, 280, 0); locate region accepts sunmeadow, starlight_grove, star_tide_ocean, clear_sand_beach, starvein_cavern, star_scree_highlands, or stilltide_marsh. Use ordinary_ruin, relic_trial_arena, or path_ruin for ruins and challenges. locate ore accepts starcoal, dawncopper, suniron, dawn_gold, resonance, memory, starmarrow, stellarjade, or ancientdream; mineral searches only inspect nearby generated chunks and do not generate new ones.",
   "guide.starrail_sim.help.dimension_materials": "Shared ores: All seven biomes generate all nine local minerals. Starcoal, Dawn Copper, Suniron and Memory Crystal mainly occur in shallow to middle Path Stone; Dawn Gold, Resonance Crystal, Starmarrow, Stellarjade and Ancient Dream mainly occur in Deep Path Stone. Y ranges: Starcoal 0–96, Dawn Copper -16–112, Suniron -48–96, Memory Crystal -32–48, Dawn Gold -48–24, Resonance Crystal -56–16, Starmarrow -48–16, Stellarjade -56–8, Ancient Dream -60–-32. Higher-tier ores are deeper. Ancient Dream is somewhat less common than Stellarjade, but not dramatically so. Rare Dawn Copper outcrops only try to generate on naturally exposed Path Stone. Operators can use /starrail dimension locate ore <mineral> to search nearby generated chunks; it does not generate new chunks.",
   "guide.starrail_sim.help.dimension_survival": "Survival and progression: Sunmeadow and Firefly trees can be regrown from saplings; their logs make planks and sticks or renewable charcoal. Starcoal works directly as fuel: one burns for 1,600 ticks, and a block crafted from nine burns for 16,000 ticks. Morning Berry Bushes regrow after harvest and can be propagated with berries; Forestbeans grow on farmland and yield pods that can be cooked. Star Tide Algae grows on the seabed, can be replanted, and can be cooked as food. Tide Grass decorates the shore; Clear Sand Bellflower can be replanted, composted, or crafted into light blue dye. Underwater bubble vents form upward currents that serve as vertical landmarks and help you rise to the surface. The Path uses vanilla water, farmland and crop rules. Clear Sky Grass, Clear Sky Dirt, ordinary dirt and humus can be hoed into farmland or shoveled into dirt paths; coarse slope soil first becomes dirt when hoed. Starfall Scree can be collected and placed for terrain detailing. Stilltide Humus can be hoed into farmland or shoveled into a dirt path. Stilltide Reed grows on suitable soil beside water; Starfall Cushiongrass grows on Path grass, coarse slope soil, or Starfall Scree. Both plants can be collected and replanted, but do not grow or spread by themselves. Gear progresses from Suniron to Starmarrow, then smithing templates upgrade it to Netherite-tier Stellarjade and the higher Ancient Dream tier.",
   "screen.starrail_sim.guide_archive": "Travel Archive",
@@ -5589,11 +5589,11 @@
   "item.starrail_sim.void_rift_blade": "Void Rift Blade",
   "guide.starrail_sim.help.voidranger_title": "Voidranger Field Notes",
   "guide.starrail_sim.help.voidranger.reaver.title": "Voidranger: Reaver",
-  "guide.starrail_sim.help.voidranger.reaver.body": "Can appear in all seven Path biomes; in Star-Tide Ocean, spawns are limited to above the water surface. The Reaver locks its facing during a short windup, then dashes forward to slash. Sidestep the route or use a solid obstacle; a missed or blocked dash leaves it staggered.",
+  "guide.starrail_sim.help.voidranger.reaver.body": "Can spawn on land across all seven Path biomes and above water surfaces such as rivers and oceans. It uses melee at close range. Its special attack locks its facing during a short windup, then dashes forward to slash. Sidestep the route or use a solid obstacle; a missed or blocked dash leaves it staggered.",
   "guide.starrail_sim.help.voidranger.distorter.title": "Voidranger: Distorter",
-  "guide.starrail_sim.help.voidranger.distorter.body": "Can appear in all seven Path biomes; in Star-Tide Ocean, spawns are limited to above the water surface. It marks the ground at your current position, then pulses after about 1.5 seconds within a 2.5-block radius. Leave the marked circle before the pulse; a hit also applies Slowness I.",
+  "guide.starrail_sim.help.voidranger.distorter.body": "Can spawn on land across all seven Path biomes and above water surfaces such as rivers and oceans. It uses melee at close range. Its special attack marks your position, then pulses after about 1.5 seconds within a 2.5-block radius. Leave the marked area; a hit deals damage and applies Slowness I for about 1.5 seconds.",
   "guide.starrail_sim.help.voidranger.trampler.title": "Voidranger: Trampler",
-  "guide.starrail_sim.help.voidranger.trampler.body": "Can appear in all seven Path biomes; in Star-Tide Ocean, spawns are limited to above the water surface. The Trampler stays in place and charges for about 1.4 seconds before stomping within a 3.5-block radius, knocking back players it hits. Leave the circle, then attack during its recovery.",
+  "guide.starrail_sim.help.voidranger.trampler.body": "Can spawn on land across all seven Path biomes and above water surfaces such as rivers and oceans. It uses melee at close range. The Trampler stays in place and charges for about 1.4 seconds before stomping within a 3.5-block radius, damaging and knocking back players it hits. Leave the area, then attack during its recovery.",
   "guide.starrail_sim.help.voidranger.eliminator.title": "Voidranger: Eliminator",
-  "guide.starrail_sim.help.voidranger.eliminator.body": "Can appear in all seven Path biomes; in Star-Tide Ocean, spawns are limited to above the water surface. It marks your current position and fires a straight, non-homing bolt after about 1.2 seconds. Move sideways after the mark appears or use a solid block to stop the shot."
+  "guide.starrail_sim.help.voidranger.eliminator.body": "Can spawn on land across all seven Path biomes and above water surfaces such as rivers and oceans. It uses melee at close range. At range, it marks your position and fires a straight, non-homing bolt after about 1.2 seconds. Move sideways after the mark appears or use a solid block to stop the shot."
 }

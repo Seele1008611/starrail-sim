@@ -14,8 +14,8 @@ import java.util.List;
 /** Server-side multi-target combat mechanics for the Erudition path. */
 public final class StarRailEruditionService {
     private static final long ECHO_COOLDOWN = 24L;
-    private static final long ANALYSIS_WINDOW = 5L * 20L;
-    private static final long ANALYSIS_DURATION = 6L * 20L;
+    private static final long ANALYSIS_WINDOW = 6L * 20L;
+    private static final long ANALYSIS_DURATION = 8L * 20L;
     private static final long FINAL_COOLDOWN = 12L * 20L;
 
     private StarRailEruditionService() {
@@ -67,15 +67,15 @@ public final class StarRailEruditionService {
                     ? 3.0D : 2.5D;
             boolean expandedEcho = player.getPersistentData().getBoolean("trace_erudition_expanded_echo")
                     && StarRailTraceService.hasPassive(player, StarRailPath.ERUDITION, 8);
-            if (expandedEcho) echoRadius += 1.5D;
+            if (expandedEcho) echoRadius += 2.0D;
             List<Monster> nearby = nearbyMonsters(target, echoRadius);
             int maximumTargets = (level >= StarRailPathRank.DEEP_PRACTICE.getLevel() ? 2 : 1)
-                    + (StarRailTraceService.hasPassive(player, StarRailPath.ERUDITION, 6) ? 1 : 0);
+                    + (StarRailTraceService.hasPassive(player, StarRailPath.ERUDITION, 6) ? 2 : 0);
             if (!nearby.isEmpty()) {
                 double multiplier = level >= StarRailPathRank.DEEP_PRACTICE.getLevel()
                         ? 0.20D : 0.15D;
                 if (StarRailTraceService.hasPassive(player, StarRailPath.ERUDITION, 7)) {
-                    multiplier *= 1.15D;
+                    multiplier *= 1.25D;
                 }
                 int affected = 0;
                 for (Monster secondary : nearby) {
@@ -147,7 +147,7 @@ public final class StarRailEruditionService {
         if (!data.addEruditionAnalysisTarget(target.getUUID())) {
             return;
         }
-        if (data.getEruditionAnalysisTarget(2) != null) {
+        if (data.getEruditionAnalysisTarget(1) != null) {
             data.clearEruditionAnalysisTargets();
             data.setEruditionAnalysisWindowExpireTick(-1L);
             data.setEruditionAnalysisExpireTick(currentTick + ANALYSIS_DURATION);

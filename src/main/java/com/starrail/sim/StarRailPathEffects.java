@@ -19,6 +19,8 @@ public final class StarRailPathEffects {
             UUID.fromString("0be5f9db-5111-4c0d-9f4b-9f9b7f74db1b");
     private static final UUID HUNT_ATTACK_DAMAGE_MODIFIER =
             UUID.fromString("a4e1eaf0-3a58-4ef0-9be7-2d3cb3d0ad62");
+    private static final UUID HUNT_INTENT_ATTACK_DAMAGE_MODIFIER =
+            UUID.fromString("d56d41ce-8e9f-4bd2-9a6f-70c96e23c001");
     private static final UUID PRESERVATION_ARMOR_MODIFIER =
             UUID.fromString("a84fdf56-63d9-4f42-9690-f5f2813f1a16");
     private static final UUID PRESERVATION_ARMOR_TOUGHNESS_MODIFIER =
@@ -261,6 +263,16 @@ public final class StarRailPathEffects {
             applyModifier(attackDamage, HUNT_ATTACK_DAMAGE_MODIFIER,
                     "starrail_sim.path.hunt.attack_damage", huntAttackDamage(level),
                     AttributeModifier.Operation.MULTIPLY_TOTAL, false);
+            if (!player.level().isClientSide()) {
+                double huntIntentBonus = player.getCapability(StarRailPathCapability.PATH_DATA)
+                        .map(data -> StarRailHuntService.intentAttackDamageBonus(
+                                data, player.level().getGameTime()))
+                        .orElse(0.0D);
+                applyModifier(attackDamage, HUNT_INTENT_ATTACK_DAMAGE_MODIFIER,
+                        "starrail_sim.path.hunt.intent_attack_damage", huntIntentBonus,
+                        AttributeModifier.Operation.MULTIPLY_TOTAL,
+                        huntIntentBonus > 0.0D);
+            }
             applyModifier(attackDamage, DESTRUCTION_ATTACK_DAMAGE_MODIFIER,
                     "starrail_sim.path.destruction.attack_damage",
                     destructionAttackDamage(level),
@@ -321,98 +333,98 @@ public final class StarRailPathEffects {
     }
 
     private static double huntCritRate(int level) {
-        return rankValue(level, 5, 6, 8, 10, 11, 13, 15);
+        return rankValue(level, 6, 7.2, 9.6, 12, 13.2, 15.6, 18);
     }
 
     private static double huntCritDamage(int level) {
-        return rankValue(level, 5, 10, 15, 20, 25, 30, 40);
+        return rankValue(level, 6, 12, 18, 24, 30, 36, 48);
     }
 
     private static double huntAttackDamage(int level) {
-        return rankValue(level, 5, 10, 15, 20, 25, 30, 35);
+        return rankValue(level, 6, 12, 18, 24, 30, 36, 42);
     }
 
     private static double destructionCritDamage(int level) {
-        return rankValue(level, 10, 15, 20, 25, 30, 35, 40);
+        return rankValue(level, 12, 18, 24, 30, 36, 42, 48);
     }
 
     private static double destructionAttackDamage(int level) {
-        return rankValue(level, 5, 10, 15, 20, 25, 30, 40);
+        return rankValue(level, 6, 12, 18, 24, 30, 36, 48);
     }
 
     private static double eruditionAttackDamage(int level) {
-        return rankValue(level, 5, 10, 15, 20, 25, 30, 35);
+        return rankValue(level, 6, 12, 18, 24, 30, 36, 42);
     }
 
     private static double eruditionCritDamage(int level) {
-        return rankValue(level, 5, 10, 15, 20, 25, 30, 35);
+        return rankValue(level, 6, 12, 18, 24, 30, 36, 42);
     }
 
     private static double eruditionCritRate(int level) {
-        return rankValue(level, 0, 2, 3, 5, 6, 8, 10);
+        return rankValue(level, 1, 2.4, 3.6, 6, 7.2, 9.6, 12);
     }
 
     private static double nihilityEffectHitRate(int level) {
-        return rankValue(level, 10, 12, 15, 18, 22, 25, 30);
+        return rankValue(level, 12, 14.4, 18, 21.6, 26.4, 30, 36);
     }
 
     private static double nihilityAttackDamage(int level) {
-        return rankValue(level, 5, 10, 20, 30, 40, 50, 60);
+        return rankValue(level, 6, 12, 24, 36, 48, 60, 72);
     }
 
     private static double nihilityBreakEffect(int level) {
-        return rankValue(level, 0, 0, 5, 5, 10, 15, 20);
+        return rankValue(level, 1, 1, 6, 6, 12, 18, 24);
     }
 
     private static double harmonyArmor(int level) {
-        return rankValue(level, 3, 6, 9, 12, 16, 20, 25);
+        return rankValue(level, 3.6, 7.2, 10.8, 14.4, 19.2, 24, 30);
     }
 
     private static double remembranceAttackDamage(int level) {
-        return rankValue(level, 5, 10, 15, 20, 25, 30, 40);
+        return rankValue(level, 6, 12, 18, 24, 30, 36, 48);
     }
 
     private static double remembranceCritDamage(int level) {
-        return rankValue(level, 5, 10, 15, 20, 25, 30, 40);
+        return rankValue(level, 6, 12, 18, 24, 30, 36, 48);
     }
 
     private static double elationCritRate(int level) {
-        return rankValue(level, 3, 4, 5, 6, 7, 8, 10);
+        return rankValue(level, 3.6, 4.8, 6, 7.2, 8.4, 9.6, 12);
     }
 
     private static double elationAttackDamage(int level) {
-        return rankValue(level, 5, 10, 15, 20, 25, 30, 35);
+        return rankValue(level, 6, 12, 18, 24, 30, 36, 42);
     }
 
     private static double elationCritDamage(int level) {
-        return rankValue(level, 5, 10, 15, 20, 25, 30, 35);
+        return rankValue(level, 6, 12, 18, 24, 30, 36, 42);
     }
 
     private static double abundanceMaxHealth(int level) {
-        return rankValue(level, 5, 10, 20, 30, 40, 50, 60);
+        return rankValue(level, 6, 12, 24, 36, 48, 60, 72);
     }
 
     private static double abundanceHealingEffect(int level) {
-        return rankValue(level, 0, 5, 8, 10, 12, 15, 20);
+        return rankValue(level, 1, 6, 9.6, 12, 14.4, 18, 24);
     }
 
     private static double harmonyMaxHealth(int level) {
-        return rankValue(level, 3, 6, 9, 12, 16, 20, 25);
+        return rankValue(level, 3.6, 7.2, 10.8, 14.4, 19.2, 24, 30);
     }
 
     private static double harmonyArmorToughness(int level) {
-        return rankValue(level, 0, 3, 6, 9, 12, 16, 20);
+        return rankValue(level, 1, 3.6, 7.2, 10.8, 14.4, 19.2, 24);
     }
 
     private static double preservationArmor(int level) {
-        return rankValue(level, 10, 15, 20, 30, 40, 45, 55);
+        return rankValue(level, 12, 18, 24, 36, 48, 54, 66);
     }
 
     private static double preservationArmorToughness(int level) {
-        return rankValue(level, 0, 5, 10, 12, 15, 20, 25);
+        return rankValue(level, 1, 6, 12, 14.4, 18, 24, 30);
     }
 
-    private static double rankValue(int level, int... percentages) {
+    private static double rankValue(int level, double... percentages) {
         return level <= 0 ? 0 : percentages[Math.min(7, level) - 1] / 100.0D;
     }
 

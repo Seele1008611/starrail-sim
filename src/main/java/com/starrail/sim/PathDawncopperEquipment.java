@@ -45,23 +45,23 @@ public final class PathDawncopperEquipment {
     }
 
     private static RegistryObject<Item> sword(String id) {
-        return register(id, () -> new SwordItem(ToolTier.DAWNCOPPER, 3, -2.4F, new Item.Properties()));
+        return register(id, () -> new SwordItem(ToolTier.DAWNCOPPER, 7, -2.2F, new Item.Properties()));
     }
 
     private static RegistryObject<Item> pickaxe(String id) {
-        return register(id, () -> new PickaxeItem(ToolTier.DAWNCOPPER, 1, -2.8F, new Item.Properties()));
+        return register(id, () -> new PickaxeItem(ToolTier.DAWNCOPPER, 2, -2.6F, new Item.Properties()));
     }
 
     private static RegistryObject<Item> axe(String id) {
-        return register(id, () -> new AxeItem(ToolTier.DAWNCOPPER, 5.0F, -3.0F, new Item.Properties()));
+        return register(id, () -> new AxeItem(ToolTier.DAWNCOPPER, 6.5F, -2.9F, new Item.Properties()));
     }
 
     private static RegistryObject<Item> shovel(String id) {
-        return register(id, () -> new ShovelItem(ToolTier.DAWNCOPPER, 1.5F, -3.0F, new Item.Properties()));
+        return register(id, () -> new ShovelItem(ToolTier.DAWNCOPPER, 2.5F, -2.8F, new Item.Properties()));
     }
 
     private static RegistryObject<Item> hoe(String id) {
-        return register(id, () -> new HoeItem(ToolTier.DAWNCOPPER, -2, -1.0F, new Item.Properties()));
+        return register(id, () -> new HoeItem(ToolTier.DAWNCOPPER, 0, -0.8F, new Item.Properties()));
     }
 
     private static RegistryObject<Item> armor(String id, ArmorItem.Type type) {
@@ -75,7 +75,7 @@ public final class PathDawncopperEquipment {
     }
 
     private enum ToolTier implements Tier {
-        DAWNCOPPER(1, 180, 5.5F, 1.0F, 14,
+        DAWNCOPPER(1, 400, 5.5F, 1.0F, 14,
                 () -> Ingredient.of(PathMineralContent.DAWNCOPPER_INGOT.get()));
 
         private final int level;
@@ -104,21 +104,22 @@ public final class PathDawncopperEquipment {
     }
 
     private enum ArmorMaterialTier implements ArmorMaterial {
-        DAWNCOPPER("dawncopper", 12, new int[]{2, 5, 5, 2}, 14,
+        DAWNCOPPER("dawncopper", new int[]{188, 216, 231, 159},
+                new int[]{3, 6, 6, 3}, 14,
                 SoundEvents.ARMOR_EQUIP_IRON,
                 () -> Ingredient.of(PathMineralContent.DAWNCOPPER_INGOT.get()));
 
         private final String name;
-        private final int durabilityMultiplier;
+        private final int[] durability;
         private final int[] defense;
         private final int enchantmentValue;
         private final SoundEvent equipSound;
         private final Supplier<Ingredient> repairIngredient;
 
-        ArmorMaterialTier(String name, int durabilityMultiplier, int[] defense, int enchantmentValue,
+        ArmorMaterialTier(String name, int[] durability, int[] defense, int enchantmentValue,
                           SoundEvent equipSound, Supplier<Ingredient> repairIngredient) {
             this.name = name;
-            this.durabilityMultiplier = durabilityMultiplier;
+            this.durability = durability;
             this.defense = defense;
             this.enchantmentValue = enchantmentValue;
             this.equipSound = equipSound;
@@ -128,10 +129,10 @@ public final class PathDawncopperEquipment {
         @Override
         public int getDurabilityForType(ArmorItem.Type type) {
             return switch (type) {
-                case BOOTS -> durabilityMultiplier * 13;
-                case LEGGINGS -> durabilityMultiplier * 15;
-                case CHESTPLATE -> durabilityMultiplier * 16;
-                case HELMET -> durabilityMultiplier * 11;
+                case BOOTS -> durability[0];
+                case LEGGINGS -> durability[1];
+                case CHESTPLATE -> durability[2];
+                case HELMET -> durability[3];
             };
         }
 

@@ -80,7 +80,7 @@ public interface IStarRailPathData {
 
     void setPracticeProgress(StarRailPath path, int progress);
 
-    /** Number of post-pinnacle 120-practice milestones completed for a path. */
+    /** Number of post-pinnacle 300-practice milestones completed for a path. */
     int getPinnaclePracticeCount(StarRailPath path);
 
     void setPinnaclePracticeCount(StarRailPath path, int count);

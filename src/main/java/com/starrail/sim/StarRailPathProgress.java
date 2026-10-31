@@ -11,7 +11,7 @@ import net.minecraft.server.level.ServerPlayer;
 public final class StarRailPathProgress {
     public static final int PINNACLE_PRACTICE_TARGET = 300;
     public static final int MAX_PINNACLE_PRACTICE_COUNT = 10;
-    public static final double PINNACLE_ATTACK_BONUS_PER_COUNT = 0.10D;
+    public static final double PINNACLE_ATTACK_BONUS_PER_COUNT = 0.12D;
 
     private StarRailPathProgress() {
     }

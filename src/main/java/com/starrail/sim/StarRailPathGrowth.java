@@ -17,36 +17,36 @@ public final class StarRailPathGrowth {
     }
 
     public static double regenerationFraction(int level) {
-        return clampLevel(level) / 100.0D;
+        return clampLevel(level) * 1.2D / 100.0D;
     }
 
     public static double maxHealthBonus(int level) {
-        return clampLevel(level) * 0.40D / 7.0D;
+        return clampLevel(level) * 0.48D / 7.0D;
     }
 
-    /** Flat max-health growth shared by every path, reaching +40 at rank 7. */
+    /** Flat max-health growth shared by every path, reaching +48 at rank 7. */
     public static double maxHealthFlatBonus(int level) {
-        return clampLevel(level) * 40.0D / 7.0D;
+        return clampLevel(level) * 48.0D / 7.0D;
     }
 
     public static double attackDamageBonus(int level) {
-        return clampLevel(level);
+        return clampLevel(level) * 1.2D;
     }
 
     public static double armorBonus(int level) {
-        return clampLevel(level);
+        return clampLevel(level) * 1.2D;
     }
 
     public static double armorPercentBonus(int level) {
-        return clampLevel(level) / 100.0D;
+        return clampLevel(level) * 1.2D / 100.0D;
     }
 
     public static double armorToughnessBonus(int level) {
-        return clampLevel(level) * 3.0D / 7.0D;
+        return clampLevel(level) * 3.6D / 7.0D;
     }
 
     public static double armorToughnessPercentBonus(int level) {
-        return clampLevel(level) * 3.0D / 700.0D;
+        return clampLevel(level) * 3.6D / 700.0D;
     }
 
     public static Component describeRank(int level) {

@@ -91,7 +91,7 @@ public final class StarRailDestructionService {
         data.setDestructionWrathStacks(stacks);
         long wrathDuration = WRATH_DURATION
                 + (StarRailTraceService.hasPassive(player, StarRailPath.DESTRUCTION, 6)
-                ? 2L * 20L : 0L);
+                ? 4L * 20L : 0L);
         data.setDestructionWrathExpireTick(currentTick + wrathDuration);
         StarRailCombatVfx.self(player, CombatVfxPacket.Kind.DESTRUCTION_RAGE);
         StarRailPathMessages.send(player, StarRailPath.DESTRUCTION,

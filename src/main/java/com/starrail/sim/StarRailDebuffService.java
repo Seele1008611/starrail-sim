@@ -36,9 +36,9 @@ public final class StarRailDebuffService {
     private static final float NIHILITY_DAMAGE = 1.0F;
     private static final int NIHILITY_DEEP_DURATION = 140;
     private static final float NIHILITY_PAIN_DAMAGE = 1.5F;
-    private static final float NIHILITY_FINAL_DAMAGE = 2.0F;
+    private static final float NIHILITY_FINAL_DAMAGE = 3.0F;
     private static final double NIHILITY_DIFFUSION_RADIUS = 2.5D;
-    private static final double NIHILITY_FINAL_RADIUS = 3.0D;
+    private static final double NIHILITY_FINAL_RADIUS = 3.5D;
     private static final String FINAL_BURST_GUARD_KEY =
             "starrail_sim_nihility_final_burst_guard";
 
@@ -90,7 +90,7 @@ public final class StarRailDebuffService {
                 true,
                 true));
         if (StarRailTraceService.hasPassive(owner, StarRailPath.NIHILITY, 7)) {
-            damage *= 1.15F;
+            damage *= 1.25F;
         }
         applyDamageOverTime(target, NIHILITY_MARK_KEY, owner,
                 damage, duration, NIHILITY_DAMAGE_INTERVAL);
@@ -128,7 +128,7 @@ public final class StarRailDebuffService {
                 monster -> monster.isAlive()
                         && monster != source
                         && !hasNihilityMark(monster));
-        int targetCount = StarRailTraceService.hasPassive(owner, StarRailPath.NIHILITY, 6) ? 2 : 1;
+        int targetCount = StarRailTraceService.hasPassive(owner, StarRailPath.NIHILITY, 6) ? 3 : 1;
         int applied = 0;
         for (Monster nearbyTarget : nearby) {
             if (applyNihilityMark(nearbyTarget, owner, rank, false)) {

@@ -54,13 +54,13 @@ public final class StarveinConstructGuardian extends Monster {
                                  double waveRadius) {}
 
     private static final CombatProfile ORDINARY_PROFILE =
-            new CombatProfile(280.0D, 0.23D, 12.0D, 14.0D, 1.0D, 3, 4.4D);
+            new CombatProfile(400.0D, 0.23D, 13.0D, 16.0D, 1.0D, 3, 4.4D);
     private static final CombatProfile ASSAULT_PROFILE =
-            new CombatProfile(270.0D, 0.26D, 13.0D, 12.0D, 0.84D, 3, 4.4D);
+            new CombatProfile(370.0D, 0.26D, 14.0D, 14.0D, 0.84D, 3, 4.4D);
     private static final CombatProfile DEFENSE_PROFILE =
-            new CombatProfile(320.0D, 0.21D, 11.0D, 18.0D, 1.12D, 3, 4.4D);
+            new CombatProfile(450.0D, 0.21D, 12.0D, 20.0D, 1.12D, 3, 4.4D);
     private static final CombatProfile DOMAIN_PROFILE =
-            new CombatProfile(280.0D, 0.22D, 10.5D, 14.0D, 0.96D, 2, 4.2D);
+            new CombatProfile(400.0D, 0.22D, 11.5D, 16.0D, 0.96D, 2, 4.2D);
 
     private int attackCooldown;
     private int attackCycle;
@@ -76,11 +76,11 @@ public final class StarveinConstructGuardian extends Monster {
 
     public static AttributeSupplier.Builder createAttributes() {
         return Mob.createMobAttributes()
-                .add(Attributes.MAX_HEALTH, 280.0D)
+                .add(Attributes.MAX_HEALTH, 400.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.23D)
-                .add(Attributes.ATTACK_DAMAGE, 12.0D)
+                .add(Attributes.ATTACK_DAMAGE, 13.0D)
                 .add(Attributes.FOLLOW_RANGE, 40.0D)
-                .add(Attributes.ARMOR, 14.0D)
+                .add(Attributes.ARMOR, 16.0D)
                 .add(Attributes.ARMOR_TOUGHNESS, 8.0D)
                 .add(Attributes.KNOCKBACK_RESISTANCE, 0.85D);
     }

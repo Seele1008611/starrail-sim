@@ -46,23 +46,23 @@ public final class PathDawnGoldEquipment {
     }
 
     private static RegistryObject<Item> sword(String id) {
-        return register(id, () -> new SwordItem(GOLD, 3, -2.4F, new Item.Properties()));
+        return register(id, () -> new SwordItem(GOLD, 18, -2.2F, new Item.Properties()));
     }
 
     private static RegistryObject<Item> pickaxe(String id) {
-        return register(id, () -> new PickaxeItem(GOLD, 1, -2.8F, new Item.Properties()));
+        return register(id, () -> new PickaxeItem(GOLD, 12, -2.6F, new Item.Properties()));
     }
 
     private static RegistryObject<Item> axe(String id) {
-        return register(id, () -> new AxeItem(GOLD, 6.0F, -3.1F, new Item.Properties()));
+        return register(id, () -> new AxeItem(GOLD, 17.0F, -2.9F, new Item.Properties()));
     }
 
     private static RegistryObject<Item> shovel(String id) {
-        return register(id, () -> new ShovelItem(GOLD, 1.5F, -3.0F, new Item.Properties()));
+        return register(id, () -> new ShovelItem(GOLD, 12.5F, -2.8F, new Item.Properties()));
     }
 
     private static RegistryObject<Item> hoe(String id) {
-        return register(id, () -> new HoeItem(GOLD, -2, -1.0F, new Item.Properties()));
+        return register(id, () -> new HoeItem(GOLD, 9, -0.8F, new Item.Properties()));
     }
 
     private static RegistryObject<Item> armor(String id, ArmorItem.Type type) {
@@ -76,7 +76,7 @@ public final class PathDawnGoldEquipment {
     }
 
     private enum ToolTier implements Tier {
-        GOLD(0, 32, 12.0F, 0.0F, 22,
+        GOLD(0, 1100, 12.0F, 0.0F, 22,
                 () -> Ingredient.of(PathMineralContent.DAWN_GOLD_INGOT.get()));
 
         private final int level;
@@ -105,11 +105,12 @@ public final class PathDawnGoldEquipment {
     }
 
     private enum ArmorMaterialTier implements ArmorMaterial {
-        DAWN_GOLD("dawn_gold", 7, new int[]{1, 3, 5, 2}, 25, SoundEvents.ARMOR_EQUIP_GOLD,
+        DAWN_GOLD("dawn_gold", new int[]{310, 526, 535, 393},
+                new int[]{4, 7, 6, 4}, 25, SoundEvents.ARMOR_EQUIP_GOLD,
                 0.0F, 0.0F, () -> Ingredient.of(PathMineralContent.DAWN_GOLD_INGOT.get()));
 
         private final String name;
-        private final int durabilityMultiplier;
+        private final int[] durability;
         private final int[] defense;
         private final int enchantmentValue;
         private final SoundEvent equipSound;
@@ -117,11 +118,11 @@ public final class PathDawnGoldEquipment {
         private final float knockbackResistance;
         private final Supplier<Ingredient> repairIngredient;
 
-        ArmorMaterialTier(String name, int durabilityMultiplier, int[] defense, int enchantmentValue,
+        ArmorMaterialTier(String name, int[] durability, int[] defense, int enchantmentValue,
                           SoundEvent equipSound, float toughness, float knockbackResistance,
                           Supplier<Ingredient> repairIngredient) {
             this.name = name;
-            this.durabilityMultiplier = durabilityMultiplier;
+            this.durability = durability;
             this.defense = defense;
             this.enchantmentValue = enchantmentValue;
             this.equipSound = equipSound;
@@ -133,10 +134,10 @@ public final class PathDawnGoldEquipment {
         @Override
         public int getDurabilityForType(ArmorItem.Type type) {
             return switch (type) {
-                case BOOTS -> durabilityMultiplier * 13;
-                case LEGGINGS -> durabilityMultiplier * 15;
-                case CHESTPLATE -> durabilityMultiplier * 16;
-                case HELMET -> durabilityMultiplier * 11;
+                case BOOTS -> durability[0];
+                case LEGGINGS -> durability[1];
+                case CHESTPLATE -> durability[2];
+                case HELMET -> durability[3];
             };
         }
 

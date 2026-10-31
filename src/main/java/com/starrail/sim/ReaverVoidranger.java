@@ -22,9 +22,10 @@ public final class ReaverVoidranger extends VoidrangerMob {
 
     public static AttributeSupplier.Builder createAttributes() {
         return Monster.createMonsterAttributes()
-                .add(Attributes.MAX_HEALTH, 36.0D)
+                .add(Attributes.MAX_HEALTH, 50.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.28D)
-                .add(Attributes.ATTACK_DAMAGE, 6.0D);
+                .add(Attributes.ATTACK_DAMAGE, 10.0D)
+                .add(Attributes.ARMOR, 5.0D);
     }
 
     @Override

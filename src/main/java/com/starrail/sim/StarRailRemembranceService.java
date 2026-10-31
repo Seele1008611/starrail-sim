@@ -36,7 +36,7 @@ public final class StarRailRemembranceService {
 
     public static int memoryWindow(ServerPlayer player, int rank) {
         return memoryWindow(rank) + (StarRailTraceService.hasPassive(
-                player, StarRailPath.REMEMBRANCE, 6) ? 3 * 20 : 0);
+                player, StarRailPath.REMEMBRANCE, 6) ? 4 * 20 : 0);
     }
 
     public static float echoBonus(int rank) {
@@ -64,7 +64,7 @@ public final class StarRailRemembranceService {
         state.remove(AFTERGLOW_EXPIRE_TAG);
         saveState(player, state);
         return 1.10F + (StarRailTraceService.hasPassive(
-                player, StarRailPath.REMEMBRANCE, 7) ? 0.10F : 0.0F);
+                player, StarRailPath.REMEMBRANCE, 7) ? 0.05F : 0.0F);
     }
 
     /** Records the target to receive the rank-five follow-up attack bonus. */
@@ -91,7 +91,7 @@ public final class StarRailRemembranceService {
         long now = player.level().getGameTime();
         int count = Math.min(3, state.getInt(ECHO_COUNT_TAG) + 1);
         int requiredEchoes = StarRailTraceService.hasPassive(
-                player, StarRailPath.REMEMBRANCE, 8) ? 2 : 3;
+                player, StarRailPath.REMEMBRANCE, 8) ? 1 : 3;
         boolean eternal = count >= requiredEchoes && StarRailRankRuntime.ready(player, "skill_remembrance_eternal");
         if (eternal) {
             state.putInt(ECHO_COUNT_TAG, 0);

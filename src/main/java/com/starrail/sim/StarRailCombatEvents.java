@@ -62,10 +62,11 @@ public final class StarRailCombatEvents {
             }
         }
 
-        final float pursuit = event.getEntity() instanceof Monster
-                ? player.getCapability(StarRailPathCapability.PATH_DATA).map(data -> StarRailHuntService.consumePursuitStrike(player, data)).orElse(1.0F) : 1.0F;
+        final float pursuit = player.getCapability(StarRailPathCapability.PATH_DATA)
+                .map(data -> StarRailHuntService.consumePursuitStrike(player, data))
+                .orElse(1.0F);
         double echoBonus = StarRailTraceService.consumeEcho(player, event.getEntity());
-        double traceCritBonus = pursuit > 1.0F && StarRailTraces.has(StarRailTraceService.mask(player), 6) ? .05 : 0;
+        double traceCritBonus = pursuit > 1.0F && StarRailTraces.has(StarRailTraceService.mask(player), 6) ? .06 : 0;
         double critRate = Mth.clamp(
                 StarRailAttributes.getCritRate(player) + traceCritBonus
                         + StarRailLightConeService.rainNeverStopsCritRateBonus(
@@ -96,15 +97,16 @@ public final class StarRailCombatEvents {
                         player, data);
                 destructionTraceCritBonus[0] = StarRailDestructionService.consumeWrathCritBonus(player);
                 destructionBlast[0] = StarRailDestructionService.consumeDesperationBlast(player);
-                if (critical && pursuitMultiplier[0] == 1.0F) {
-                    StarRailHuntService.onCriticalHit(player, data);
-                }
             });
+        }
+        if (critical && pursuitMultiplier[0] == 1.0F) {
+            player.getCapability(StarRailPathCapability.PATH_DATA)
+                    .ifPresent(data -> StarRailHuntService.onCriticalHit(player, data));
         }
         if (critical) {
             double bonusCritDamage = Mth.clamp(
                     StarRailAttributes.getCritDamage(player) + echoBonus
-                            + (destructionTraceCritBonus[0] ? 0.10D : 0.0D)
+                            + (destructionTraceCritBonus[0] ? 0.15D : 0.0D)
                             + StarRailLightConeService.infernoCritDamageBonus(
                                     player, event.getEntity())
                             + StarRailLightConeService.tamedCritDamageBonus(
@@ -162,12 +164,12 @@ public final class StarRailCombatEvents {
                 CombatVfxPacket.Kind.HARMONY_AFTERGLOW);
 
         if (destructionBlast[0] && event.getEntity() instanceof Monster target) {
-            float splashDamage = Math.max(0.1F, event.getAmount() * 0.20F);
+            float splashDamage = Math.max(0.1F, event.getAmount() * 0.25F);
             var tag = player.getPersistentData();
             tag.putBoolean("trace_destruction_splash_active", true);
             try {
                 for (Monster nearby : target.level().getEntitiesOfClass(
-                        Monster.class, target.getBoundingBox().inflate(2.5D),
+                        Monster.class, target.getBoundingBox().inflate(3.0D),
                         monster -> monster.isAlive() && monster != target)) {
                     if (nearby.hurt(player.damageSources().generic(), splashDamage)) {
                         StarRailNetwork.sendDamageNumber(player, nearby, splashDamage, false);

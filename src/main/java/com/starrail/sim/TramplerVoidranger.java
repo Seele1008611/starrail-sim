@@ -23,9 +23,10 @@ public final class TramplerVoidranger extends VoidrangerMob {
 
     public static AttributeSupplier.Builder createAttributes() {
         return Monster.createMonsterAttributes()
-                .add(Attributes.MAX_HEALTH, 72.0D)
+                .add(Attributes.MAX_HEALTH, 140.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.22D)
-                .add(Attributes.ATTACK_DAMAGE, 8.0D);
+                .add(Attributes.ATTACK_DAMAGE, 15.0D)
+                .add(Attributes.ARMOR, 8.0D);
     }
 
     @Override
