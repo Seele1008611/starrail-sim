@@ -49,6 +49,12 @@ public final class StarRailCombatPreviewCommands {
                 .executes(context->{StarRailStatusConfig.COMBAT_STRENGTH.set(DoubleArgumentType.getDouble(context,"value"));StarRailStatusConfig.CLIENT.save();return status();})))
             .then(Commands.literal("shake").then(Commands.argument("enabled",BoolArgumentType.bool())
                 .executes(context->{StarRailStatusConfig.COMBAT_CAMERA_SHAKE.set(BoolArgumentType.getBool(context,"enabled"));StarRailStatusConfig.CLIENT.save();return status();})))
+            .then(Commands.literal("trails").then(Commands.argument("enabled",BoolArgumentType.bool())
+                .executes(context->{StarRailStatusConfig.HAND_TRAILS.set(BoolArgumentType.getBool(context,"enabled"));StarRailStatusConfig.CLIENT.save();StarRailHandTrails.clear();return status();})))
+            .then(Commands.literal("trailStrength").then(Commands.argument("value",DoubleArgumentType.doubleArg(.25,2))
+                .executes(context->{StarRailStatusConfig.HAND_TRAIL_STRENGTH.set(DoubleArgumentType.getDouble(context,"value"));StarRailStatusConfig.CLIENT.save();return status();})))
+            .then(Commands.literal("trailShader").then(Commands.argument("enabled",BoolArgumentType.bool())
+                .executes(context->{StarRailStatusConfig.HAND_TRAIL_SHADERS.set(BoolArgumentType.getBool(context,"enabled"));StarRailStatusConfig.CLIENT.save();StarRailHandTrails.clear();return status();})))
             .then(Commands.literal("status").executes(context->status())));
     }
 
@@ -84,6 +90,9 @@ public final class StarRailCombatPreviewCommands {
     }
 
     private static int status() {
+        message(Component.translatable("command.starrail_sim.vfx.trail_status",StarRailStatusConfig.HAND_TRAILS.get(),
+                StarRailStatusConfig.HAND_TRAIL_STRENGTH.get(),StarRailHandTrails.activeHistories()));
+        message(Component.translatable("command.starrail_sim.vfx.trail_shader_status",StarRailTrailShaders.enhanced(),StarRailCombatPost.available()));
         message(Component.translatable("command.starrail_sim.vfx.status",StarRailCombatShaders.available(),
                 StarRailCombatShaders.enhanced(),StarRailCombatMesh.activeEffects(),StarRailCombatMesh.lastFaceCount(),
                 String.format(Locale.ROOT,"%.3f",StarRailCombatMesh.lastBuildMillis())));

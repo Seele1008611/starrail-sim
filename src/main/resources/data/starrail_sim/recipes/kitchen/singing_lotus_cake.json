@@ -1,0 +1,32 @@
+{
+  "type": "starrail_sim:kitchen",
+  "process": "steam",
+  "inputs": [
+    {
+      "item": "starrail_sim:singing_lotus_root",
+      "count": 1
+    },
+    {
+      "item": "starrail_sim:stilltide_rice_grain",
+      "count": 1
+    },
+    {
+      "item": "starrail_sim:grain_sugar",
+      "count": 1
+    },
+    {
+      "item": "starrail_sim:path_spring_water",
+      "count": 1
+    }
+  ],
+  "result": {
+    "item": "starrail_sim:singing_lotus_cake",
+    "count": 2
+  },
+  "returns": [
+    {
+      "item": "starrail_sim:path_water_flask",
+      "count": 1
+    }
+  ]
+}

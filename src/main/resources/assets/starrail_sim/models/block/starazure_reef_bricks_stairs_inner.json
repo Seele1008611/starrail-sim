@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/inner_stairs",
+  "textures": {
+    "bottom": "starrail_sim:block/starazure_reef_bricks",
+    "top": "starrail_sim:block/starazure_reef_bricks",
+    "side": "starrail_sim:block/starazure_reef_bricks"
+  }
+}

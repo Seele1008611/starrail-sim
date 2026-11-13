@@ -1,9 +1,6 @@
 package com.starrail.sim;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.CompoundContainer;
-import net.minecraft.world.Container;
-import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -21,13 +18,14 @@ import java.util.Set;
 /** Tracks Path discoveries and exploration archives. */
 @Mod.EventBusSubscriber(modid = StarRailSimMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public final class StarRailExplorationService {
-    private static final String PATH_REGION_SUNMEADOW = "sunmeadow";
-    private static final String PATH_REGION_STARLIGHT_GROVE = "starlight_grove";
-    private static final String PATH_REGION_STAR_TIDE_OCEAN = "star_tide_ocean";
-    private static final String PATH_REGION_CLEAR_SAND_BEACH = "clear_sand_beach";
-    private static final String PATH_REGION_STARVEIN_CAVERN = "starvein_cavern";
-    private static final String PATH_REGION_STAR_SCREE_HIGHLANDS = "star_scree_highlands";
-    private static final String PATH_REGION_STILLTIDE_MARSH = "stilltide_marsh";
+    // Append entries to preserve the existing archive packet bit assignments.
+    public static final List<String> PATH_REGIONS = List.of(
+            "sunmeadow", "starlight_grove", "star_tide_ocean",
+            "clear_sand_beach", "starvein_cavern", "star_scree_highlands",
+            "stilltide_marsh", "frostveil_taiga", "ochrecrystal_hills",
+            "starazure_reef", "mirrorfrost_snowfield", "ember_spring_terraces",
+            "goldwind_grainvale", "jadebranch_lotus_flats", "echo_tide_cliffs",
+            "duskorange_orchard");
     private static final List<String> PATH_RUIN_IDS = List.of(
             "ordinary", "preservation", "destruction", "hunt", "erudition", "harmony",
             "nihility", "abundance", "remembrance", "elation");
@@ -44,18 +42,9 @@ public final class StarRailExplorationService {
     public static void tick(ServerPlayer player, IStarRailPathData data) {
         if (!player.level().dimension().equals(StarRailDimensionIds.THE_PATH)) return;
         player.level().getBiome(player.blockPosition()).unwrapKey().ifPresent(key -> {
-            String id = key.location().getPath();
-            String currentRegionId = switch (id) {
-                case PATH_REGION_SUNMEADOW -> PATH_REGION_SUNMEADOW;
-                case PATH_REGION_STARLIGHT_GROVE -> PATH_REGION_STARLIGHT_GROVE;
-                case PATH_REGION_STAR_TIDE_OCEAN -> PATH_REGION_STAR_TIDE_OCEAN;
-                case PATH_REGION_CLEAR_SAND_BEACH -> PATH_REGION_CLEAR_SAND_BEACH;
-                case PATH_REGION_STARVEIN_CAVERN -> PATH_REGION_STARVEIN_CAVERN;
-                case PATH_REGION_STAR_SCREE_HIGHLANDS -> PATH_REGION_STAR_SCREE_HIGHLANDS;
-                case PATH_REGION_STILLTIDE_MARSH -> PATH_REGION_STILLTIDE_MARSH;
-                default -> null;
-            };
-            if (currentRegionId != null && data.addDiscoveredPathRegion(currentRegionId)) {
+            if (!key.location().getNamespace().equals(StarRailSimMod.MOD_ID)) return;
+            String currentRegionId = key.location().getPath();
+            if (PATH_REGIONS.contains(currentRegionId) && data.addDiscoveredPathRegion(currentRegionId)) {
                 Component region = Component.translatable("biome.starrail_sim." + currentRegionId);
                 player.sendSystemMessage(Component.translatable(
                         "message.starrail_sim.archive.region_found", region));
@@ -141,13 +130,9 @@ public final class StarRailExplorationService {
     public static long regionMask(IStarRailPathData data) {
         long mask = 0L;
         Set<String> regions = data.getDiscoveredPathRegions();
-        if (regions.contains(PATH_REGION_SUNMEADOW)) mask |= 1L;
-        if (regions.contains(PATH_REGION_STARLIGHT_GROVE)) mask |= 2L;
-        if (regions.contains(PATH_REGION_STAR_TIDE_OCEAN)) mask |= 4L;
-        if (regions.contains(PATH_REGION_CLEAR_SAND_BEACH)) mask |= 8L;
-        if (regions.contains(PATH_REGION_STARVEIN_CAVERN)) mask |= 16L;
-        if (regions.contains(PATH_REGION_STAR_SCREE_HIGHLANDS)) mask |= 32L;
-        if (regions.contains(PATH_REGION_STILLTIDE_MARSH)) mask |= 64L;
+        for (int index = 0; index < PATH_REGIONS.size(); index++) {
+            if (regions.contains(PATH_REGIONS.get(index))) mask |= 1L << index;
+        }
         return mask;
     }
 
@@ -223,64 +208,55 @@ public final class StarRailExplorationService {
     public static void onRuinChestInteract(PlayerInteractEvent.RightClickBlock event) {
         if (event.isCanceled() || event.getHand() != net.minecraft.world.InteractionHand.MAIN_HAND
                 || !(event.getEntity() instanceof ServerPlayer player)
+                || player.isSpectator()
                 || !player.serverLevel().dimension().equals(StarRailDimensionIds.THE_PATH)
                 || !(player.serverLevel().getBlockEntity(event.getPos())
                 instanceof ChestBlockEntity chest)) return;
 
+        resolveRuinId(chest);
+    }
+
+    private static String resolveRuinId(ChestBlockEntity chest) {
         String ruinId = StarRailRuinGuardService.getArchiveRuinId(chest);
-        if (ruinId.isBlank()) {
-            String lootTableId = chest.saveWithFullMetadata().getString("LootTable");
-            ResourceLocation lootTable = ResourceLocation.tryParse(lootTableId);
-            if (lootTable == null || !lootTable.getNamespace().equals(StarRailSimMod.MOD_ID)
-                    || !lootTable.getPath().startsWith("chests/ruin_")) return;
-            ruinId = lootTable.getPath().substring("chests/ruin_".length());
-        }
-        String resolvedRuinId = ruinId;
+        if (!ruinId.isBlank()) return ruinId;
+        ResourceLocation table = RuinLootContainers.lootTable(chest);
+        String prefix = "chests/ruin_";
+        if (table == null || !table.getNamespace().equals(StarRailSimMod.MOD_ID)
+                || !table.getPath().startsWith(prefix)) return "";
+        ruinId = table.getPath().substring(prefix.length());
+        if (PATH_RUIN_IDS.contains(ruinId)) StarRailRuinGuardService.markArchiveChest(chest, ruinId);
+        return ruinId;
+    }
+
+    private static void recordRuinChest(ServerPlayer player, ChestBlockEntity chest) {
+        String resolvedRuinId = resolveRuinId(chest);
         if (!PATH_RUIN_IDS.contains(resolvedRuinId)) return;
+        BlockPos pos = chest.getBlockPos();
         player.getCapability(StarRailPathCapability.PATH_DATA).ifPresent(data -> {
             boolean firstDiscovery = data.addDiscoveredPathRuin(resolvedRuinId);
             boolean firstLocation = data.addDiscoveredPathRuinPosition(
-                    resolvedRuinId, event.getPos().asLong());
+                    resolvedRuinId, pos.asLong());
             if (firstDiscovery || firstLocation) {
                 Component ruin = resolvedRuinId.equals("ordinary")
                         ? Component.translatable("guide.starrail_sim.archive.ordinary_ruin")
                         : Component.literal(StarRailPath.byId(resolvedRuinId).getDisplayName());
                 player.sendSystemMessage(Component.translatable(
                         "message.starrail_sim.archive.ruin_found", ruin,
-                        event.getPos().getX(), event.getPos().getY(), event.getPos().getZ()));
+                        pos.getX(), pos.getY(), pos.getZ()));
                 StarRailPathService.sync(player);
             }
         });
+        if (resolvedRuinId.equals("ordinary")) {
+            StarRailAdvancementService.award(player, "exploration/ordinary_ruin");
+        }
     }
 
     @SubscribeEvent
     public static void onRuinChestOpened(PlayerContainerEvent.Open event) {
-        if (!(event.getEntity() instanceof ServerPlayer player)
-                || !player.serverLevel().dimension().equals(StarRailDimensionIds.THE_PATH)
-                || !(event.getContainer() instanceof ChestMenu chestMenu)) return;
-
-        Container openedContainer = chestMenu.getContainer();
-        if (openedContainer instanceof ChestBlockEntity chest
-                && isOrdinaryRuinChest(chest)) {
-            StarRailAdvancementService.award(player, "exploration/ordinary_ruin");
-            return;
-        }
-        if (!(openedContainer instanceof CompoundContainer doubleChest)) return;
-
-        BlockPos origin = player.blockPosition();
-        BlockPos.betweenClosedStream(origin.offset(-8, -4, -8), origin.offset(8, 4, 8))
-                .map(player.serverLevel()::getBlockEntity)
-                .filter(ChestBlockEntity.class::isInstance)
-                .map(ChestBlockEntity.class::cast)
-                .filter(doubleChest::contains)
-                .filter(StarRailExplorationService::isOrdinaryRuinChest)
-                .findFirst()
-                .ifPresent(chest -> StarRailAdvancementService.award(
-                        player, "exploration/ordinary_ruin"));
+        if (!(event.getEntity() instanceof ServerPlayer player) || player.isSpectator()
+                || !player.serverLevel().dimension().equals(StarRailDimensionIds.THE_PATH)) return;
+        RuinLootContainers.forEachOpened(player, event.getContainer(), container -> {
+            if (container instanceof ChestBlockEntity chest) recordRuinChest(player, chest);
+        });
     }
-
-    private static boolean isOrdinaryRuinChest(ChestBlockEntity chest) {
-        return StarRailRuinGuardService.getArchiveRuinId(chest).equals("ordinary");
-    }
-
 }

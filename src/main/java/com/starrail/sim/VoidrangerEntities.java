@@ -3,7 +3,6 @@ package com.starrail.sim;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.Difficulty;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.MobSpawnType;
@@ -11,7 +10,6 @@ import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.levelgen.Heightmap;
-import net.minecraft.tags.FluidTags;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.event.entity.SpawnPlacementRegisterEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -61,7 +59,7 @@ public final class VoidrangerEntities {
         event.put(VOIDRANGER_ELIMINATOR.get(), EliminatorVoidranger.createAttributes().build());
     }
 
-    /** Keep land spawns on solid ground and allow safe water-surface spawns in any Path biome. */
+    /** Natural voidrangers require dry, solid ground; no water-surface exception. */
     private static void registerSpawnPlacements(SpawnPlacementRegisterEvent event) {
         registerNaturalSpawn(event, VOIDRANGER_REAVER.get());
         registerNaturalSpawn(event, VOIDRANGER_DISTORTER.get());
@@ -71,7 +69,7 @@ public final class VoidrangerEntities {
 
     private static <T extends Monster> void registerNaturalSpawn(
             SpawnPlacementRegisterEvent event, EntityType<T> type) {
-        event.register(type, SpawnPlacements.Type.NO_RESTRICTIONS,
+        event.register(type, SpawnPlacements.Type.ON_GROUND,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 (entityType, level, spawnType, pos, random) ->
                         hasValidNaturalSpawnPosition(entityType, level, spawnType, pos, random),
@@ -84,20 +82,8 @@ public final class VoidrangerEntities {
         if (!level.getBlockState(pos).isAir() || !level.getFluidState(pos).isEmpty()) return false;
 
         BlockPos floorPos = pos.below();
-        var floorFluid = level.getFluidState(floorPos);
-        if (floorFluid.isEmpty()) {
-            return Monster.checkMonsterSpawnRules(entityType, level, spawnType, pos, random)
-                    && level.getBlockState(floorPos).isFaceSturdy(level, floorPos, Direction.UP);
-        }
-
-        // Monster.checkMonsterSpawnRules also requires a sturdy block below the spawn point,
-        // which rejects every water block. For this exposed-water branch, keep its difficulty
-        // and light checks while replacing only the solid-floor condition with a water surface.
-        boolean exposedWaterSurface = floorFluid.is(FluidTags.WATER)
-                && level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
-                pos.getX(), pos.getZ()) == pos.getY();
-        return exposedWaterSurface
-                && level.getDifficulty() != Difficulty.PEACEFUL
-                && Monster.isDarkEnoughToSpawn(level, pos, random);
+        return level.getFluidState(floorPos).isEmpty()
+                && level.getBlockState(floorPos).isFaceSturdy(level,floorPos,Direction.UP)
+                && Monster.checkMonsterSpawnRules(entityType,level,spawnType,pos,random);
     }
 }

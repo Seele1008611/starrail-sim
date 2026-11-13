@@ -16,4 +16,9 @@ public final class StarveinConstructRenderer
     public ResourceLocation getTextureLocation(StarveinConstructGuardian entity) {
         return StarveinConstructModel.texture();
     }
+
+    @Override
+    protected float getFlipDegrees(StarveinConstructGuardian entity) {
+        return 0.0F; // The native death clip already folds the guardian onto its knees.
+    }
 }

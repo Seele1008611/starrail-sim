@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:smoking",
+  "category": "food",
+  "ingredient": {
+    "item": "starrail_sim:reef_algae"
+  },
+  "result": "starrail_sim:reef_algae_chips",
+  "experience": 0.1,
+  "cookingtime": 100
+}

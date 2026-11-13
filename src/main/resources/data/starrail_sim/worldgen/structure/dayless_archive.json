@@ -1,0 +1,7 @@
+{
+  "type": "starrail_sim:dayless_archive",
+  "biomes": "#starrail_sim:dayless_archive_biomes",
+  "step": "surface_structures",
+  "spawn_overrides": {},
+  "terrain_adaptation": "none"
+}

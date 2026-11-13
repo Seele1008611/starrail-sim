@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "starrail_sim:block/starazure_reef_bricks_slab"
+    },
+    "type=top": {
+      "model": "starrail_sim:block/starazure_reef_bricks_slab_top"
+    },
+    "type=double": {
+      "model": "starrail_sim:block/starazure_reef_bricks"
+    }
+  }
+}

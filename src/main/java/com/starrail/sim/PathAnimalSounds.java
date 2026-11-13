@@ -23,12 +23,30 @@ public final class PathAnimalSounds {
     public static final RegistryObject<SoundEvent> FOWL_AMBIENT = sound("stilltide_fowl_ambient");
     public static final RegistryObject<SoundEvent> FOWL_HURT = sound("stilltide_fowl_hurt");
     public static final RegistryObject<SoundEvent> FOWL_DEATH = sound("stilltide_fowl_death");
+    public static final RegistryObject<SoundEvent> GEM_LIZARD = sound("gem_lizard_call");
     public static final RegistryObject<SoundEvent> PACKBEAST_AMBIENT = sound("star_scree_packbeast_ambient");
     public static final RegistryObject<SoundEvent> PACKBEAST_HURT = sound("star_scree_packbeast_hurt");
     public static final RegistryObject<SoundEvent> PACKBEAST_DEATH = sound("star_scree_packbeast_death");
 
+    public static final RegistryObject<SoundEvent> DAILY_DEER_STEP = sound("animal_daily_deer_step");
+    public static final RegistryObject<SoundEvent> DAILY_RAM_STEP = sound("animal_daily_ram_step");
+    public static final RegistryObject<SoundEvent> DAILY_FORAGER_STEP = sound("animal_daily_forager_step");
+    public static final RegistryObject<SoundEvent> DAILY_FOWL_STEP = sound("animal_daily_fowl_step");
+    public static final RegistryObject<SoundEvent> DAILY_PACK_STEP = sound("animal_daily_pack_step");
+    public static final RegistryObject<SoundEvent> DAILY_PACK_GALLOP = sound("animal_daily_pack_gallop");
+    public static final RegistryObject<SoundEvent> DAILY_PACK_EAT = sound("animal_daily_pack_eat");
+    public static final RegistryObject<SoundEvent> DAILY_PACK_ANGRY = sound("animal_daily_pack_angry");
+    public static final RegistryObject<SoundEvent> DAILY_PACK_BREATHE = sound("animal_daily_pack_breathe");
+    public static final RegistryObject<SoundEvent> DAILY_PACK_JUMP = sound("animal_daily_pack_jump");
+    public static final RegistryObject<SoundEvent> DAILY_PACK_LAND = sound("animal_daily_pack_land");
+    public static final RegistryObject<SoundEvent> DAILY_FOWL_EGG = sound("animal_daily_fowl_egg");
+
     private PathAnimalSounds() {
     }
+    public static final RegistryObject<SoundEvent> LOTUS_OTTER=sound("lotus_otter_voice");
+    public static final RegistryObject<SoundEvent> ROCK_CRAB=sound("rockdwelling_crab_voice");
+    public static final RegistryObject<SoundEvent> ORANGE_FINCH=sound("duskorange_finch_voice");
+    public static final RegistryObject<SoundEvent> DUSK_FISH=sound("duskred_fish_flop");
 
     private static RegistryObject<SoundEvent> sound(String id) {
         ResourceLocation location = new ResourceLocation(StarRailSimMod.MOD_ID, id);

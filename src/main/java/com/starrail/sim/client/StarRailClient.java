@@ -37,6 +37,12 @@ public final class StarRailClient {
             GLFW.GLFW_KEY_P,
             "key.categories.starrail_sim");
 
+    public static final KeyMapping ACTIVE_SKILL=new KeyMapping("key.starrail_sim.active_skill",InputConstants.Type.KEYSYM,GLFW.GLFW_KEY_R,"key.categories.starrail_sim");
+
+    public static final KeyMapping USE_CURIO = new KeyMapping(
+            "key.starrail_sim.use_curio", InputConstants.Type.KEYSYM,
+            GLFW.GLFW_KEY_G, "key.categories.starrail_sim");
+
     private StarRailClient() {
     }
 
@@ -44,19 +50,33 @@ public final class StarRailClient {
     public static void registerShaders(net.minecraftforge.client.event.RegisterShadersEvent event) {
         StarRailSmoothUi.register(event);
         StarRailCombatShaders.register(event);
+        StarRailTrailShaders.register(event);
         StarRailCombatPost.register(event);
     }
 
     @SubscribeEvent
     public static void registerKeyMappings(RegisterKeyMappingsEvent event) {
+        event.register(ACTIVE_SKILL);
+        event.register(USE_CURIO);
         event.register(OPEN_CHARACTER);
         event.register(TOGGLE_STATUS);
+    }
+
+    @SubscribeEvent
+    public static void registerFrostSignRenderers(net.minecraftforge.client.event.EntityRenderersEvent.RegisterRenderers event) {
+        event.registerBlockEntityRenderer(com.starrail.sim.PathFrostSigns.SIGN_ENTITY.get(), net.minecraft.client.renderer.blockentity.SignRenderer::new);
+        event.registerBlockEntityRenderer(com.starrail.sim.PathFrostSigns.HANGING_ENTITY.get(), net.minecraft.client.renderer.blockentity.HangingSignRenderer::new);
+        event.registerBlockEntityRenderer(com.starrail.sim.PathSunnySigns.SIGN_ENTITY.get(), net.minecraft.client.renderer.blockentity.SignRenderer::new);
+        event.registerBlockEntityRenderer(com.starrail.sim.PathSunnySigns.HANGING_ENTITY.get(), net.minecraft.client.renderer.blockentity.HangingSignRenderer::new);
+        event.registerBlockEntityRenderer(com.starrail.sim.PathStarlightSigns.SIGN_ENTITY.get(), net.minecraft.client.renderer.blockentity.SignRenderer::new);
+        event.registerBlockEntityRenderer(com.starrail.sim.PathStarlightSigns.HANGING_ENTITY.get(), net.minecraft.client.renderer.blockentity.HangingSignRenderer::new);
     }
 
     @SubscribeEvent
     public static void registerMenus(FMLClientSetupEvent event) {
         event.enqueueWork(() -> {
             MenuScreens.register(StarRailSimMod.RELIC_TRIAL_MENU.get(), RelicTrialScreen::new);
+            MenuScreens.register(com.starrail.sim.PathKitchen.MENU.get(), KitchenScreen::new);
             ItemBlockRenderTypes.setRenderLayer(PathEcologyContent.SUNMEADOW.leaves().get(),
                     RenderType.cutoutMipped());
             ItemBlockRenderTypes.setRenderLayer(PathEcologyContent.STARLIGHTWOOD.leaves().get(),
@@ -69,6 +89,16 @@ public final class StarRailClient {
                     RenderType.cutout());
             ItemBlockRenderTypes.setRenderLayer(PathEcologyContent.STARLIGHTWOOD.trapdoor().get(),
                     RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(PathEcologyContent.FROST_SPRUCE.leaves().get(), RenderType.cutoutMipped());
+            ItemBlockRenderTypes.setRenderLayer(PathEcologyContent.FROST_SPRUCE.sapling().get(), RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(PathEcologyContent.FROST_SPRUCE.door().get(), RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(PathEcologyContent.FROST_SPRUCE.trapdoor().get(), RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(PathEcologyContent.FROST_BERRY_BUSH.get(), RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(PathEcologyContent.FROST_BELL.get(), RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(com.starrail.sim.PathOchreContent.OCHRE_LEAF_BUSH.get(), RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(com.starrail.sim.PathOchreContent.CRYSTAL_SAND_CLUSTER.get(), RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(com.starrail.sim.PathOchreContent.SUNPOD_WILD.get(), RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(com.starrail.sim.PathOchreContent.SUNPOD_CROP.get(), RenderType.cutout());
             ItemBlockRenderTypes.setRenderLayer(PathEcologyContent.MORNING_BERRY_BUSH.get(),
                     RenderType.cutout());
             ItemBlockRenderTypes.setRenderLayer(PathEcologyContent.FORESTBEAN_WILD.get(),

@@ -27,7 +27,9 @@ void shock(vec4 impact, vec2 shape, vec4 tint, inout vec2 offset, inout vec2 chr
     float angle = atan(delta.y, delta.x);
     float facets = style > 0.5 && style < 1.5 ? 1.0 + 0.055 * cos(6.0 * angle + phase * 0.7)
         : style > 1.5 ? 1.0 + 0.018 * sin(3.0 * angle) : 1.0;
-    bool collapse = style > 4.5 && style < 5.05;
+    bool huntFocus = style > 0.1 && style < 0.25;
+    bool huntRewind = style > 0.25 && style < 0.5;
+    bool collapse = (style > 4.5 && style < 5.05) || huntFocus || huntRewind;
     float travel = collapse ? 2.8 - phase * 2.65 : 0.15 + phase * 2.65;
     float radius = shape.x * travel * facets;
     float width = max(0.004, shape.x * (style > 6.5 && style < 7.5 ? 0.11
@@ -41,25 +43,55 @@ void shock(vec4 impact, vec2 shape, vec4 tint, inout vec2 offset, inout vec2 chr
     float orientation = collapse ? -1.0 : 1.0;
     float erosion = style > 4.5 && style < 5.5 ? 0.72 + 0.28 * sin(angle * 17.0 + phase * 18.0) : 1.0;
     offset += direction * ring * weight * displacement * orientation * erosion;
-    if (style > 2.5 && style < 3.5) {
+    if (huntFocus || huntRewind) {
+        // World-anchored annular lens: focus closes inward, reverse pursuit twists its wake back.
+        vec2 tangent = vec2(-direction.y / aspect, direction.x * aspect);
+        float aperture = ring * (0.65 + 0.35 * cos(angle * 8.0 - phase * 9.0));
+        offset += tangent * aperture * weight * (huntRewind ? -0.013 : 0.006);
+        chromatic += direction * aperture * weight * 0.0025;
+        light += tint.rgb * aperture * weight * 0.10;
+    }
+    if (style > 0.5 && style < 1.5) {
+        float facets = 0.5 + 0.5 * cos(angle * 6.0);
+        offset += direction * ring * weight * facets * 0.006;
+        light += tint.rgb * ring * weight * pow(facets, 5.0) * 0.10;
+    } else if (style > 1.5 && style < 2.5) {
+        float sap = sin(delta.y / max(shape.x, 0.001) * 13.0 - phase * 16.0);
+        offset.y += ring * sap * weight * 0.003;
+        light += tint.rgb * ring * weight * (0.06 + 0.04 * sap);
+    } else if (style > 2.5 && style < 3.5) {
         vec2 tangent = vec2(-direction.y, direction.x);
         float heat = sin(angle * 11.0 + phase * 25.0 + sin(distance * 90.0));
-        offset += tangent * ring * heat * weight * 0.004;
+        offset += tangent * ring * heat * weight * 0.009;
     } else if (style > 3.5 && style < 4.5) {
         // A narrow scan sheet sweeps through the target-centered calculation ring.
         float scan = exp(-pow((delta.y - (phase - 0.5) * shape.x * 4.0) / max(width * 0.45, 0.003), 2.0));
         offset.y += scan * weight * 0.004;
         light += tint.rgb * scan * weight * 0.12;
+        vec2 grid = abs(fract(delta / max(shape.x, 0.001) * 4.0) - 0.5);
+        float circuitry = 1.0 - smoothstep(0.025, 0.075, min(grid.x, grid.y));
+        light += tint.rgb * circuitry * scan * weight * 0.10;
     } else if (style > 4.5 && style < 5.5) {
         light += tint.rgb * ring * weight * (0.08 + 0.06 * erosion);
+        vec2 tangent = vec2(-direction.y / aspect, direction.x * aspect);
+        offset += tangent * ring * weight * erosion * (collapse ? -0.012 : 0.008);
+    } else if (style > 5.5 && style < 6.5) {
+        float harmonic = sin(distance / max(shape.x, 0.001) * 18.0 - phase * 18.84956);
+        offset += direction * ring * weight * harmonic * 0.006;
+        light += tint.rgb * ring * weight * max(0.0, harmonic) * 0.10;
     } else if (style > 6.5 && style < 7.5) {
         if (weight > pixelation) {
             pixelation = weight;
             pixelCenter = impact.xy;
             pixelRadius = shape.x * 3.2;
         }
+        vec2 facetNormal = vec2(cos(floor(angle / 1.04719755 + 0.5) * 1.04719755) / aspect,
+                               sin(floor(angle / 1.04719755 + 0.5) * 1.04719755));
+        offset += facetNormal * ring * weight * sin(phase * 12.0) * 0.007;
     } else if (style > 7.5) {
         chromatic += direction * ring * weight * 0.008;
+        float shuffle = sin(floor(delta.y / max(shape.x, 0.001) * 10.0) * 2.4 + floor(phase * 8.0));
+        offset.x += ring * weight * shuffle * 0.007 / aspect;
     }
     float flash = exp(-distance * distance / max(shape.x * shape.x * 4.0, 0.001));
     float ringLight = style > 6.5 && style < 7.5 ? 0.55 : style > 1.5 && style < 2.5 ? 0.25 : 0.42;

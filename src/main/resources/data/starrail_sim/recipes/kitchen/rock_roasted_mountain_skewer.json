@@ -1,0 +1,23 @@
+{
+  "type": "starrail_sim:kitchen",
+  "process": "fry",
+  "inputs": [
+    {
+      "item": "starrail_sim:starlight_fungus",
+      "count": 1
+    },
+    {
+      "item": "starrail_sim:star_tuber",
+      "count": 1
+    },
+    {
+      "item": "starrail_sim:sunmeadow_skewer",
+      "count": 1
+    }
+  ],
+  "result": {
+    "item": "starrail_sim:rock_roasted_mountain_skewer",
+    "count": 1
+  },
+  "returns": []
+}

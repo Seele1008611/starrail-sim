@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "starrail_sim:grainvale_corn"
+    }
+  ],
+  "result": {
+    "item": "starrail_sim:grain_flour",
+    "count": 1
+  }
+}

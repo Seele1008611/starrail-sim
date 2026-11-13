@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "tip=true": {
+      "model": "starrail_sim:block/starazure_kelp"
+    },
+    "tip=false": {
+      "model": "starrail_sim:block/starazure_kelp_stem"
+    }
+  }
+}

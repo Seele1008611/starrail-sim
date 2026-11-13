@@ -20,7 +20,7 @@ public record CombatVfxPacket(Kind kind, StarRailPath path, boolean ranged,
         HARMONY_RESONANCE, HARMONY_AFTERGLOW, HARMONY_CONCERT, HARMONY_UNISON,
         ABUNDANCE_HEAL, ABUNDANCE_MANNA, ABUNDANCE_MERCY,
         REMEMBRANCE_RECORD, REMEMBRANCE_ECHO, REMEMBRANCE_ETERNAL,
-        ELATION_BURST, ELATION_GRAND;
+        ELATION_BURST, ELATION_GRAND, PATH_BASIC;
 
         public StarRailPath path() {
             String prefix = name().substring(0, name().indexOf('_')).toLowerCase(java.util.Locale.ROOT);

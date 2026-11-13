@@ -49,7 +49,8 @@ public final class StarRailCombatEvents {
         if (player == null || StarRailOwnedDamage.isSecondary(player)) {
             return;
         }
-        event.setAmount(StarRailRelicService.boostDamage(player, event.getEntity(), event.getAmount()));
+        event.setAmount(CurioEffects.attack(player, event.getEntity(),
+                StarRailRelicService.boostDamage(player, event.getEntity(), event.getAmount())));
         if (player.getPersistentData().getBoolean("trace_destruction_splash_active")) {
             return;
         }
@@ -68,7 +69,7 @@ public final class StarRailCombatEvents {
         double echoBonus = StarRailTraceService.consumeEcho(player, event.getEntity());
         double traceCritBonus = pursuit > 1.0F && StarRailTraces.has(StarRailTraceService.mask(player), 6) ? .06 : 0;
         double critRate = Mth.clamp(
-                StarRailAttributes.getCritRate(player) + traceCritBonus
+                StarRailAttributes.getCritRate(player) + CurioEffects.critRate(player) + traceCritBonus
                         + StarRailLightConeService.rainNeverStopsCritRateBonus(
                                 player, event.getEntity()), 0.0D, 1.0D);
         StarRailLightConeService.onAttack(player);
@@ -105,7 +106,7 @@ public final class StarRailCombatEvents {
         }
         if (critical) {
             double bonusCritDamage = Mth.clamp(
-                    StarRailAttributes.getCritDamage(player) + echoBonus
+                    StarRailAttributes.getCritDamage(player) + CurioEffects.critDamage(player, event.getEntity()) + echoBonus
                             + (destructionTraceCritBonus[0] ? 0.15D : 0.0D)
                             + StarRailLightConeService.infernoCritDamageBonus(
                                     player, event.getEntity())

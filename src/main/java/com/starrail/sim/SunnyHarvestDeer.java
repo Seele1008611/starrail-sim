@@ -58,6 +58,12 @@ public class SunnyHarvestDeer extends Cow {
     }
 
     @Override
+    public void playSound(SoundEvent sound, float volume, float pitch) {
+        if (sound == net.minecraft.sounds.SoundEvents.COW_STEP) sound = PathAnimalSounds.DAILY_DEER_STEP.get();
+        super.playSound(sound, volume, pitch);
+    }
+
+    @Override
     protected SoundEvent getAmbientSound() {
         return PathAnimalSounds.DEER_AMBIENT.get();
     }

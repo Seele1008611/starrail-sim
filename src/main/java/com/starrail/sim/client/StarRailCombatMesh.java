@@ -48,6 +48,7 @@ public final class StarRailCombatMesh {
         final Vec3 forward, side;
         Vec3 anchor;
         double bodyHeight;
+        double bodyWidth=.6;
         Effect(CombatVfxPacket packet) {
             this.packet = packet;
             anchor = packet.impact();
@@ -58,7 +59,10 @@ public final class StarRailCombatMesh {
             side = forward.cross(UP).normalize();
         }
         Vec3 world(Vec3 local) {
-            return anchor.add(side.scale(local.x)).add(0, local.y, 0).add(forward.scale(local.z));
+            // Basic marks sit on the incoming-facing AABB surface, not hidden inside the torso.
+            double contact=packet.kind()==CombatVfxPacket.Kind.PATH_BASIC
+                    ?bodyWidth*.5/Math.max(.01,Math.max(Math.abs(forward.x),Math.abs(forward.z)))+.045:0;
+            return anchor.add(side.scale(local.x)).add(0, local.y, 0).add(forward.scale(local.z-contact));
         }
         Vec3 local(Vec3 world) {
             Vec3 delta = world.subtract(anchor);
@@ -79,7 +83,7 @@ public final class StarRailCombatMesh {
                 .setOutputState(new OutputStateShard("combat_target",StarRailCombatPost::bindGeometryOutput,()->{})).createCompositeState(false));
     }
     private StarRailCombatMesh() {}
-    static int activeEffects() { return EFFECTS.size(); }
+    static int activeEffects() { return EFFECTS.size()+MonsterCombatEffects.activeEffects(); }
     static int lastFaceCount() { return lastFaceCount; }
     static double lastBuildMillis() { return lastBuildNanos / 1_000_000D; }
     private static double clamp(double v) { return Math.max(0, Math.min(1, v)); }
@@ -114,9 +118,9 @@ public final class StarRailCombatMesh {
             || mc.player.distanceToSqr(packet.impact())>48*48) return;
         int limit=mc.options.particles().get()==ParticleStatus.MINIMAL?12:24;
         if(EFFECTS.size()>=limit) {
-            if(packet.kind()==CombatVfxPacket.Kind.TOUGHNESS_HIT)return;
+            if(packet.kind()==CombatVfxPacket.Kind.TOUGHNESS_HIT || packet.kind()==CombatVfxPacket.Kind.PATH_BASIC)return;
             int replace=0;
-            for(int i=0;i<EFFECTS.size();i++)if(EFFECTS.get(i).packet.kind()==CombatVfxPacket.Kind.TOUGHNESS_HIT) {replace=i;break;}
+            for(int i=0;i<EFFECTS.size();i++)if(EFFECTS.get(i).packet.kind()==CombatVfxPacket.Kind.TOUGHNESS_HIT || EFFECTS.get(i).packet.kind()==CombatVfxPacket.Kind.PATH_BASIC) {replace=i;break;}
             EFFECTS.remove(replace);
         }
         EFFECTS.add(new Effect(packet));
@@ -129,7 +133,7 @@ public final class StarRailCombatMesh {
         Minecraft mc=Minecraft.getInstance();sync(mc);
         if(mc.level==null||mc.isPaused())return;
         clock++;
-        EFFECTS.removeIf(effect->clock-effect.start>50);
+        EFFECTS.removeIf(effect->clock-effect.start>(effect.packet.kind()==CombatVfxPacket.Kind.PATH_BASIC?16:50));
     }
     @SubscribeEvent public static void render(RenderLevelStageEvent event) {
         // AFTER_LEVEL supplies the projection/bobbing stack in this Forge build.
@@ -143,7 +147,7 @@ public final class StarRailCombatMesh {
         Matrix4f matrix=worldViewPose;
         worldViewPose=null;
         Minecraft mc=Minecraft.getInstance();sync(mc);
-        if(mc.level==null||mc.player==null||EFFECTS.isEmpty()||matrix==null) { lastFaceCount=0;lastBuildNanos=0;StarRailCombatPost.idle();return; }
+        if(mc.level==null||mc.player==null||matrix==null) { lastFaceCount=0;lastBuildNanos=0;StarRailCombatPost.idle();return; }
         float partial=mc.isPaused()?0:event.getPartialTick();
         Vec3 camera=event.getCamera().getPosition();
         ParticleStatus quality=mc.options.particles().get();
@@ -153,10 +157,21 @@ public final class StarRailCombatMesh {
         // Match BufferUploader: projection * RenderSystem model-view * CPU vertex pose.
         Matrix4f projectionView=new Matrix4f(RenderSystem.getProjectionMatrix()).mul(RenderSystem.getModelViewMatrix()).mul(matrix);
         FACES.clear();
+        MonsterCombatEffects.draw(detail,camera,mc,partial,(color,alpha,material,u,a,b,c,d)-> {
+            if(FACES.size()>=48000)return;
+            double distance=a.add(b).add(c).add(d).scale(.25).distanceToSqr(camera);
+            FACES.add(new Face(a,b,c,d,color,(float)alpha,distance,material,
+                    (float)u,(float)u,(float)(u+1),(float)(u+1)));
+        });
+        ActiveSkillClient.draw(camera,partial,(color,alpha,material,u,a,b,c,d)-> {
+            if(FACES.size()>=48000)return;
+            FACES.add(new Face(a,b,c,d,color,(float)alpha,a.add(b).add(c).add(d).scale(.25).distanceToSqr(camera),material,(float)u,(float)u,(float)(u+1),(float)(u+1)));
+        });
         for(Effect effect:EFFECTS) {
             Entity target=mc.level.getEntity(effect.packet.targetId());
             if(target!=null&&!target.isRemoved()) {
                 effect.bodyHeight=target.getBbHeight()*.55;
+                effect.bodyWidth=target.getBbWidth();
                 effect.anchor=interpolate(target,partial).add(0,effect.bodyHeight,0);
             }
             if(effect.anchor.distanceToSqr(camera)>48*48)continue;
@@ -164,6 +179,22 @@ public final class StarRailCombatMesh {
             new Scene(effect,age,detail,camera,mc,partial).draw();
             addPathImpulses(effect,age,partial,camera,mc,projectionView,impulses);
         }
+        for (Entity entity : mc.level.entitiesForRendering()) {
+            if (!(entity instanceof com.starrail.sim.DoomsdayBeast boss) || !boss.isAlive()
+                    || boss.distanceToSqr(camera) > 64 * 64) continue;
+            int action = boss.visualAction();
+            float ticks = boss.visualTicks(partial);
+            if (action == com.starrail.sim.DoomsdayBeast.DOUBLE_SLAM) {
+                addPhaseImpulse(boss.visualTarget(), ticks / 20D, 1.25, .55, 4.8F, .8F,
+                        1F, .59F, .18F, 7F, camera, mc, projectionView, impulses);
+            } else if (action == 4) {
+                addPhaseImpulse(boss.visualTarget(), ticks / 20D, 2.3, .42, 5F, 1.05F,
+                        1F, .72F, .32F, 8F, camera, mc, projectionView, impulses);
+                addPhaseImpulse(boss.visualTarget(), ticks / 20D, 3, .42, 5F, 1.15F,
+                        1F, .79F, .45F, 8F, camera, mc, projectionView, impulses);
+            }
+        }
+        if(FACES.isEmpty()) {lastFaceCount=0;lastBuildNanos=System.nanoTime()-buildStart;StarRailCombatPost.idle();return;}
         FACES.sort(Comparator.comparingDouble(Face::distance).reversed());
         lastFaceCount=FACES.size();lastBuildNanos=System.nanoTime()-buildStart;
         StarRailCombatShaders.prepare((float)((clock+partial)/20D % 3600));
@@ -210,6 +241,13 @@ public final class StarRailCombatMesh {
         var kind=effect.packet.kind();
         Vec3 feet=effect.anchor.add(0,-effect.bodyHeight+.08,0);
         if(hunt(effect)) {
+            boolean reverse=kind==CombatVfxPacket.Kind.HUNT_REVERSE;
+            double launch=reverse?1.05:.65,hit=launch+.32;
+            // The lens closes around the arrow gate, then the reverse strike pulls space back.
+            addPhaseImpulse(feet.add(0,2.9,0),age,launch-.22,.54,.72F,reverse?.5F:.3F,
+                    .24F,.70F,1F,.15F,camera,mc,projectionView,out);
+            if(reverse)addPhaseImpulse(feet.add(0,.4,0),age,hit+.08,.62,1.18F,.66F,
+                    .34F,.78F,1F,.35F,camera,mc,projectionView,out);
             double phase=shockPhase(effect,age);
             if(phase>=0&&phase<=1)addImpulse(effect.anchor.add(0,-effect.bodyHeight+.12,0),camera,mc,projectionView,
                     phase,effect.packet.kind().strong()?1.4F:.85F,effect.packet.kind().strong()?1F:.65F,
@@ -359,6 +397,7 @@ public final class StarRailCombatMesh {
             this.effect=effect;this.packet=effect.packet;this.age=age;this.detail=detail;this.camera=camera;
             p=palette(packet.path());strong=packet.kind().strong();
             material=switch(packet.kind()) {
+                case PATH_BASIC -> switch(packet.path()) {case HUNT->1;case PRESERVATION->2;case ABUNDANCE->3;case DESTRUCTION->4;case ERUDITION->5;case NIHILITY->6;case HARMONY->7;case REMEMBRANCE->8;case ELATION->9;default->0;};
                 case HUNT_STRIKE,HUNT_REVERSE -> 1;
                 case PRESERVATION_WALL,PRESERVATION_COUNTER -> 2;
                 case ABUNDANCE_HEAL,ABUNDANCE_MANNA,ABUNDANCE_MERCY -> 3;
@@ -455,6 +494,7 @@ public final class StarRailCombatMesh {
             line(.012,p.accent,.45,birth,life,side.cross(UP),top,left,bottom,right,top);
         }
         void draw() {
+            if(packet.kind()==CombatVfxPacket.Kind.PATH_BASIC) {basicHit();return;}
             if(packet.kind()==CombatVfxPacket.Kind.TOUGHNESS_HIT) { toughness(false);return; }
             if(packet.kind()==CombatVfxPacket.Kind.TOUGHNESS_BREAK) { toughness(true);return; }
             if(packet.path()==StarRailPath.HUNT) { hunt();return; }
@@ -470,7 +510,12 @@ public final class StarRailCombatMesh {
                 case ELATION -> elation();
                 default -> { }
             }
-            secondary();
+            deepening();
+        }
+        /** Confirmed-hit three-phase seals, kept separate from all passive counters. */
+        void basicHit() {
+            BasicAttackImprint.draw(packet.path(),age,detail,effect.local(camera),p.main,p.shade,p.accent,
+                (color,alpha,mat,u,a,b,c,d)->face(color,alpha,0,BasicAttackImprint.LIFE,a,b,c,d));
         }
         boolean self() {
             if(packet.targetId()==packet.sourceId())return true;
@@ -537,6 +582,7 @@ public final class StarRailCombatMesh {
             double t=clamp(local/duration);
             Vec3 tip=root.add(offset.scale(1-t*t)),dir=offset.scale(-1).normalize();
             Vec3 depth=dir.cross(Math.abs(dir.y)>.8?X:UP).normalize(),side=depth.cross(dir).normalize();
+            huntRibbon(root,offset,birth,duration,central,side,depth);
             arrow(tip,dir,size,birth,duration+(central?.43:.19),central);
             for(int sign:new int[]{-1,1}) {
                 Vec3 shift=depth.scale(sign*.055*size);
@@ -559,13 +605,74 @@ public final class StarRailCombatMesh {
                 line(.014,p.main,.45,hit,.28,depth,root.add(back.scale(.55)),root.add(back));
             }
         }
+        /** Sample the actual quadratic arrow path, with a vanishing-width historical tail. */
+        void huntRibbon(Vec3 root,Vec3 offset,double birth,double duration,boolean central,Vec3 side,Vec3 depth) {
+            double elapsed=age-birth,history=central?.19:.13;
+            if(elapsed<=0||elapsed>duration+history)return;
+            int steps=detail<=10?5:9;
+            double release=1-ease((elapsed-duration)/history);
+            for(int band=0;band<2;band++)for(int i=0;i<steps;i++) {
+                double f0=i/(double)steps,f1=(i+1D)/steps;
+                double t0=clamp((elapsed-f0*history)/duration),t1=clamp((elapsed-f1*history)/duration);
+                if(t0-t1<.0001)continue;
+                Vec3 a=root.add(offset.scale(1-t0*t0)),b=root.add(offset.scale(1-t1*t1));
+                // The second ribbon winds about the path rather than lying over the first.
+                double twist0=t0*Math.PI*3,twist1=t1*Math.PI*3;
+                Vec3 axis0=band==0?side:side.scale(Math.cos(twist0)).add(depth.scale(Math.sin(twist0)));
+                Vec3 axis1=band==0?side:side.scale(Math.cos(twist1)).add(depth.scale(Math.sin(twist1)));
+                double width=(central?.12:.055)*(band==0?1:.48);
+                Vec3 wa=axis0.scale(width*(1-f0)*release),wb=axis1.scale(width*(1-f1)*release);
+                double alpha=(band==0?.36:.54)*(1-f0)*release;
+                face(band==0?p.main:p.accent,alpha,birth,duration+history,
+                    a.add(wa),a.subtract(wa),b.subtract(wb),b.add(wb));
+            }
+        }
+        /** A broken time dial contracts before the reverse strike, then rewinds on impact. */
+        void huntTimeDial(double centralBirth) {
+            if(!strong)return;
+            double birth=centralBirth-.27,hit=centralBirth+.32;
+            if(age<birth||age>hit+.65)return;
+            boolean rewind=age>=hit;
+            double phase=rewind?ease((age-hit)/.65):ease((age-birth)/.27);
+            double radius=rewind?1.55*(1-phase)+.22:1.7-.5*phase;
+            double turn=(rewind?-phase*1.8:phase*.5);
+            Vec3 center=foot.add(0,rewind?.16:2.8,0);
+            int count=detail<=10?8:12;
+            for(int i=0;i<count;i++) {
+                double theta=i*Math.PI*2/count+turn;
+                Vec3 inner=center.add(radial(theta,radius*.86,0));
+                Vec3 outer=center.add(radial(theta,radius,0));
+                double start=rewind?hit:birth,life=rewind?.65:.59;
+                line(.022,i%3==0?p.accent:p.main,.56,start,life,UP,inner,outer);
+                orbit(center,radius,0,start,life,p.main,.34,theta+.035,Math.PI*1.2/count);
+                if(i%3==0) {
+                    Vec3 tangent=radial(theta+Math.PI/2,.085,0);
+                    line(.022,p.accent,.62,start,life,UP,
+                        outer.add(tangent),outer.add(radial(theta,.12,0)),outer.subtract(tangent));
+                }
+                if(rewind&&i%2==0) {
+                    Vec3 shard=center.add(radial(theta,radius,.25*Math.sin(phase*Math.PI)));
+                    gem(shard,.035*(1-phase),p.accent,hit,.65,theta-phase*2);
+                }
+            }
+        }
         void hunt() {
             int count=strong?8:4;
             double centralBirth=strong?1.05:.65;
+            huntTimeDial(centralBirth);
+            huntVault(centralBirth);
             for(int i=0;i<count;i++) {
                 int index=i%2==0?i/2:count/2+(i-1)/2;
                 double angle=index*Math.PI*2/count+.32,birth=.04+i*(strong?.085:.1);
                 Vec3 offset=radial(angle,strong?2.05:1.75,2.2),start=c.add(offset),tangent=radial(angle+Math.PI/2,1,0);
+                // Each launch point briefly draws a bow, whose string pulls toward the target.
+                double bowBirth=Math.max(0,birth-.035),draw=ease((age-bowBirth)/.15);
+                Vec3 bowAxis=offset.normalize(),bowCenter=start.add(bowAxis.scale(.12*draw));
+                Vec3 upper=bowCenter.add(tangent.scale(.28)),lower=bowCenter.subtract(tangent.scale(.28));
+                Vec3 grip=bowCenter.add(bowAxis.scale(.11));
+                Vec3 string=bowCenter.subtract(bowAxis.scale(.12+.16*draw));
+                line(.024,p.main,.5,bowBirth,.24,bowAxis,upper,grip,lower);
+                line(.01,p.accent,.62,bowBirth,.2,bowAxis,upper,string,lower);
                 for(int sign:new int[]{-1,1})line(.018,p.main,.48,Math.max(0,birth-.04),.22,offset.normalize(),
                     start.add(tangent.scale(sign*.22)),start.add(tangent.scale(sign*.13)).add(0,.1,0),start.add(tangent.scale(sign*.06)));
                 fall(c,birth,(strong?.43:.38)*1.5,false,offset);
@@ -593,6 +700,82 @@ public final class StarRailCombatMesh {
             }
             fall(foot,centralBirth,strong?1.05:.76,true,v(0,2.9,0));
         }
+        /** A constellation canopy feeds a faceted aperture, instead of another flat ground ring. */
+        void huntVault(double launch) {
+            double charge=launch-.25,hit=launch+.32;
+            int branches=strong?4:2;
+            for(int branch=0;branch<branches;branch++) {
+                final double angle=branch*Math.PI/branches+.25;
+                Vec3 axis=radial(angle,1,0),normal=radial(angle+Math.PI/2,1,0);
+                double open=ease(age/.23),contract=ease((age-charge)/.5);
+                double radius=(strong?1.85:1.45)*open*(1-contract*.28);
+                curve(foot,f->{double theta=.18+f*(Math.PI-.36);
+                    return axis.scale(Math.cos(theta)*radius).add(0,1.05+Math.sin(theta)*1.9,0);
+                },normal,.018,p.main,.24,branch*.025,launch+.25);
+                for(int node=0;node<5;node++) {
+                    double theta=.24+node*(Math.PI-.48)/4;
+                    Vec3 point=foot.add(axis.scale(Math.cos(theta)*radius)).add(0,1.05+Math.sin(theta)*1.9,0);
+                    gem(point,node==2?.042:.025,p.accent,branch*.025+node*.015,launch+.12,angle+age*.4);
+                }
+            }
+            // Hinged diamond vanes peel open around the central arrow's launch aperture.
+            if(age>=charge&&age<=hit+.3) {
+                double phase=ease((age-charge)/.29),recoil=ease((age-hit)/.3);
+                int vanes=strong?8:6;
+                for(int i=0;i<vanes;i++) {
+                    double angle=i*Math.PI*2/vanes+phase*.35;
+                    Vec3 radial=radial(angle,1,0),side=radial(angle+Math.PI/2,1,0);
+                    Vec3 center=foot.add(radial.scale(.48+phase*.22+recoil*.45)).add(0,2.9,0);
+                    Vec3 tip=center.subtract(radial.scale(.25*(1-phase*.5))).add(0,-.18*phase,0);
+                    Vec3 back=center.add(radial.scale(.2)).add(0,.22*(1-phase),0);
+                    Vec3 l=center.add(side.scale(.095)),r=center.subtract(side.scale(.095));
+                    face(p.shade,.12,charge,.87,tip,l,back,r);
+                    line(.02,p.accent,.46,charge,.87,UP,tip,l,back,r,tip);
+                }
+            }
+            // Hollow, moving shaft shells give the impact depth without hiding the target.
+            if(age>=launch&&age<hit+.35) {
+                double phase=clamp((age-launch)/.32),endY=2.9*(1-phase*phase);
+                for(int band=0;band<(strong?3:2);band++) {
+                    double theta=band*Math.PI*2/3+age*1.3;
+                    Vec3 axis=radial(theta,1,0),side=radial(theta+Math.PI/2,1,0);
+                    Vec3 bottom=foot.add(axis.scale(.1)).add(0,endY,0);
+                    Vec3 top=foot.add(axis.scale(.24+band*.04)).add(0,2.95,0);
+                    face(p.main,.09,launch,.65,bottom.subtract(side.scale(.045)),bottom.add(side.scale(.045)),
+                        top.add(side.scale(.08)),top.subtract(side.scale(.08)));
+                }
+            }
+            if(strong&&age>=hit+.08&&age<hit+.68) {
+                double phase=ease((age-hit-.08)/.6);
+                // Only wire echoes travel back upward: the solid arrow remains the real finisher.
+                for(int i=0;i<3;i++) {
+                    double t=clamp(phase-i*.12);
+                    Vec3 tip=foot.add(radial(i*Math.PI*2/3,.12*t,.18+t*2.4));
+                    Vec3 side=radial(i*Math.PI*2/3+Math.PI/2,.14*(1-t*.5),0);
+                    line(.018,p.main,.2*(1-phase),hit+.08+i*.035,.6,Z,
+                        tip.add(side),tip.add(0,-.3,0),tip.subtract(side));
+                    line(.012,p.accent,.18*(1-phase),hit+.08+i*.035,.6,X,tip,tip.add(0,.55,0));
+                }
+            }
+        }
+        /** Deterministic client-only ballistic shards; reverse pursuit retraces their flight. */
+        void huntShards(Vec3 root,double birth) {
+            double elapsed=age-birth,life=strong?.8:.7;
+            if(elapsed<0||elapsed>life)return;
+            int count=detail<=10?8:strong?20:12;
+            double flight=strong?(elapsed<.28?elapsed:Math.max(0,.28*(1-(elapsed-.28)/.52))):elapsed;
+            double fade=1-ease(elapsed/life);
+            for(int i=0;i<count;i++) {
+                double theta=i*2.399963,speed=1.5+(i%5)*.35,up=1.5+(i%3)*.55;
+                Vec3 axis=radial(theta,1,0),side=radial(theta+Math.PI/2,.035*fade,0);
+                Vec3 point=root.add(axis.scale(speed*flight)).add(0,.08+Math.max(0,up*flight-2.4*flight*flight),0);
+                double before=strong&&elapsed>.28?flight+.025:Math.max(0,flight-.025);
+                Vec3 previous=root.add(axis.scale(speed*before)).add(0,.08+Math.max(0,up*before-2.4*before*before),0);
+                face(i%3==0?p.accent:p.main,.5*fade,birth,life,
+                    point.add(side),point.subtract(side),point.add(axis.scale(.09)).add(0,.09*fade,0));
+                line(.012,p.main,.34*fade,birth,life,UP,previous,point);
+            }
+        }
         void huntImpact(Vec3 root,double birth,boolean central) {
             double elapsed=age-birth;
             if(elapsed<0||elapsed>(central?.85:.4))return;
@@ -605,6 +788,7 @@ public final class StarRailCombatMesh {
                 gem(root.add(radial(theta,radius*.8,Math.sin(expansion*Math.PI)*.3)),central?.033:.018,p.main,birth+i*.012,.5,theta);
             }
             if(!central)return;
+            huntShards(root,birth);
             for(int layer=0;layer<2;layer++)for(int i=0;i<8;i++) {
                 double radius2=.3+ease((elapsed-layer*.075)/.6)*1.65;
                 orbit(root,radius2,.018+layer*.025,birth+layer*.075,.8,layer==0?p.main:p.shade,layer==0?.52:.36,i*Math.PI/4+layer*.2,.22);
@@ -855,65 +1039,261 @@ public final class StarRailCombatMesh {
                 gem(root.add(0,-ease((age-1.12)/.65)*.55,0),.018,p.accent,1.12+i*.015,.85,theta);
             }
         }
-        /** Intermediate unfolding layer mirrors the HTML's shield, leaf and crystal structures. */
-        void secondary() {
-            double unfold=ease(age/.35),drift=clamp(age-.3)*.3;
+        /** Each path has its own motion grammar; shared primitives only handle mesh submission. */
+        void deepening() {
             switch(packet.path()) {
-                case PRESERVATION -> {
-                    boolean counter=packet.kind()==CombatVfxPacket.Kind.PRESERVATION_COUNTER;
-                    Vec3 owner=counter?source:c,base=counter?sourceFoot:foot;
-                    for(int i=0;i<6;i++) {
-                        double theta=i*Math.PI/3;Vec3 dir=radial(theta,1,0),side=radial(theta+Math.PI/2,1,0),center=owner.add(dir.scale(.65+unfold*.24));
-                        List<Vec3> poly=List.of(center.subtract(side.scale(.18)).add(0,.45,0),center.add(side.scale(.18)).add(0,.45,0),center.add(side.scale(.25)),center.add(0,-.48,0),center.subtract(side.scale(.25)));
-                        for(int j=0;j<poly.size();j++)face(j%2==0?p.main:p.shade,.12,.15+i*.04,.9,center,poly.get(j),poly.get((j+1)%poly.size()));
-                        List<Vec3> outline=new ArrayList<>(poly);outline.add(poly.get(0));line(outline,dir,.022,p.main,.52,.15+i*.04,.9);
-                    }
-                    orbit(base,1.14,0,.28,.85,p.main,.4,age*.25,Math.PI*1.65);
-                }
-                case DESTRUCTION -> {
-                    boolean rage=packet.kind()==CombatVfxPacket.Kind.DESTRUCTION_RAGE;int count=rage?3:strong?7:5;
-                    for(int i=0;i<count;i++) {
-                        double theta=i*Math.PI*2/count;Vec3 dir=radial(theta,1,0),base=foot.add(dir.scale(.6+unfold*.23));
-                        leaf(base,dir.scale(.25).add(0,(strong?1.15:.7)*unfold,0),.12,p.main,.1+i*.035,.75);
-                        if(!rage)curve(base,f->dir.scale(Math.sin(f*Math.PI)*.22).add(0,f*(strong?1.25:.8),0),radial(theta+Math.PI/2,1,0),.028,p.accent,.48,.23+i*.025,.65);
-                    }
-                }
-                case ERUDITION -> {
-                    for(int layer=0;layer<(strong?2:1);layer++) {
-                        double radius=.85+layer*.18,phase=age*.45+layer*Math.PI;
-                        curve(c,f->{double theta=f*Math.PI*1.6+phase;return v(Math.cos(theta)*radius,Math.sin(theta)*radius*.5,Math.sin(theta)*radius*.5);},v(0,1,1),.025,p.main,.4,.2+layer*.09,.8);
-                        for(int i=0;i<4;i++) {double theta=i*Math.PI/2+age*.45;gem(v(Math.cos(theta)*radius,Math.sin(theta)*radius*.5,Math.sin(theta)*radius*.5),.045,p.accent,.23+i*.04,.7,theta);}
-                    }
-                    for(int i=0;i<6;i++) {double theta=i*Math.PI/3,r=.6+ease((age-.65)/.8)*.8;
-                        curve(c,f->v(Math.cos(theta+f*.45)*r,Math.sin(theta+f*.45)*r,Math.sin((theta+f*.45)*2)*.28),Z,.018,p.accent,.45,.95+i*.02,.8);}
-                }
-                case NIHILITY -> {
-                    for(int layer=0;layer<(strong?3:2);layer++) {
-                        double phase=layer*Math.PI*2/3-age*.8,r=1.25-layer*.12-clamp(age)*.12;
-                        curve(c,f->radial(phase+f*Math.PI*1.4,r,(f-.5)*.6),UP,.045,p.main,.38,.18+layer*.09,.85);
-                        gem(radial(phase+1.2,r,.22),.04,p.main,.28+layer*.09,.7,age);
-                    }
-                }
-                case HARMONY -> {
-                    for(int sign:new int[]{-1,1})for(int layer=0;layer<(strong?3:2);layer++) {final int k=layer;
-                        curve(c,f->v(sign*(.3+f*1.25),Math.sin(f*Math.PI)*.35+Math.sin(f*6.3-age*4)*.06-k*.14,Math.sin(f*Math.PI)*(.2+k*.06)),Z,.025,p.main,.45,.2+layer*.1,.85);}
-                }
-                case ABUNDANCE -> {
-                    for(int sign:new int[]{-1,1})for(int i=0;i<3;i++)leaf(v(sign*(.45+i*.12),-.5+i*.43,.12),v(sign*.43,.32,.1),.13,p.main,.15+i*.08,.9);
-                }
-                case REMEMBRANCE -> {
-                    for(int arm=0;arm<6;arm++) {
-                        double theta=arm*Math.PI/3;Vec3 axis=v(Math.cos(theta),Math.sin(theta),0),across=v(-axis.y,axis.x,0),node=axis.scale(.45);
-                        line(.026,p.main,.52,.18,.75,Z,node,axis.scale(.85));
-                        for(int sign:new int[]{-1,1})line(.018,p.main,.46,.24,.7,Z,node.add(axis.scale(.15)),node.add(axis.scale(.06)).add(across.scale(sign*.15)));
-                    }
-                    if(strong)for(int i=0;i<6;i++){double theta=i*Math.PI/3;gem(radial(theta,.9+drift,.55+Math.sin(theta)*.25),.09,p.main,.3+i*.05,.85,age*.6+theta);}
-                }
-                case ELATION -> {
-                    for(int layer=0;layer<(strong?3:2);layer++) {final int band=layer;
-                        curve(c,f->radial(f*Math.PI*1.35+band*2.4+age*.5,1+f*.3,.65-f*1.1),UP,.04,layer%2==0?p.main:p.accent,.46,.18+layer*.12,.8);}
-                }
+                case PRESERVATION -> preservationLattice();
+                case DESTRUCTION -> destructionRift();
+                case ERUDITION -> eruditionArray();
+                case NIHILITY -> nihilityVortex();
+                case HARMONY -> harmonyScore();
+                case ABUNDANCE -> abundanceGarden();
+                case REMEMBRANCE -> remembranceMirrors();
+                case ELATION -> elationTheater();
                 default -> { }
+            }
+        }
+        void preservationLattice() {
+            boolean counter=packet.kind()==CombatVfxPacket.Kind.PRESERVATION_COUNTER;
+            Vec3 owner=counter?source:c;
+            int panels=detail<=10?4:6;
+            for(int i=0;i<panels;i++) {
+                double theta=i*Math.PI*2/panels,birth=.06+i*.025;
+                Vec3 normal=radial(theta,1,0),side=radial(theta+Math.PI/2,1,0);
+                double unfold=ease((age-birth)/.35),recoil=counter?Math.sin(Math.PI*clamp((age-.3)/.35))*.12:0;
+                Vec3 center=owner.add(normal.scale(.7+.35*unfold-recoil));
+                int rows=detail<=10?2:3;
+                for(int row=0;row<rows;row++)for(int col=0;col<2;col++) {
+                    Vec3 node=center.add(side.scale((col-.5)*.31+(row%2)*.075)).add(0,(row-1)*.29,0);
+                    List<Vec3> hex=new ArrayList<>();
+                    for(int k=0;k<=6;k++) {double a=k*Math.PI/3;
+                        hex.add(node.add(side.scale(Math.cos(a)*.17*unfold)).add(0,Math.sin(a)*.17*unfold,0));}
+                    line(hex,normal,.012,p.accent,.38,birth+row*.035,1.1);
+                    if(row==1)face(p.main,.08,birth,1.1,hex.get(0),hex.get(2),hex.get(3),hex.get(5));
+                }
+                // A travelling facet-light climbs the shield, leaving its body transparent.
+                double sweep=clamp((age-.24)/.65);
+                Vec3 light=center.add(0,-.5+sweep,0);
+                line(.025,p.accent,.5,.24,1.0,normal,light.subtract(side.scale(.27)),light.add(side.scale(.27)));
+            }
+            if(counter) {
+                Vec3 delta=c.subtract(owner),normal=delta.cross(UP).normalize();
+                if(delta.lengthSqr()>.01)for(int echo=0;echo<3;echo++) {
+                    double birth=.24+echo*.10,t=ease((age-birth)/.48);
+                    Vec3 head=owner.lerp(c,t),side=normal.scale(.3*(1-t*.35));
+                    line(.035,p.accent,.54,birth,.56,UP,head.subtract(side).add(0,.22,0),head.add(0,-.22,0),head.add(side).add(0,.22,0));
+                    line(.016,p.main,.28,birth,.56,UP,owner.lerp(c,Math.max(0,t-.18)),head);
+                }
+            }
+        }
+        void destructionRift() {
+            boolean rage=packet.kind()==CombatVfxPacket.Kind.DESTRUCTION_RAGE;
+            if(rage) {
+                for(int i=0;i<(detail<=10?4:7);i++) {
+                    double theta=i*2.39996+age*.6,t=clamp((age-.12-i*.025)/1.1);
+                    Vec3 ember=foot.add(radial(theta,.55-.12*t,.18+1.2*t));
+                    gem(ember,.025*(1-t*.6),p.accent,.12+i*.025,1.25,theta);
+                    line(.012,p.main,.28,.12+i*.025,1.25,UP,ember,ember.add(radial(theta-.12,.08,-.16)));
+                }
+                return;
+            }
+            int count=detail<=10?5:strong?10:7;
+            double rupture=strong&&self()?.24:.57;
+            for(int i=0;i<count;i++) {
+                double theta=i*Math.PI*2/count,birth=.10+i*.015;
+                Vec3 dir=radial(theta,1,0),side=radial(theta+Math.PI/2,1,0);
+                double charge=ease((age-birth)/.38),blast=ease((age-rupture)/.55);
+                Vec3 base=foot.add(dir.scale(.38+blast*(strong?1.4:.8)));
+                double height=(strong?1.65:1.05)*charge*(1-blast*.65);
+                Vec3 tip=base.add(dir.scale(.22+blast*.2)).add(0,height,0),wa=side.scale(.12*(1-blast*.5));
+                face(p.shade,.22,birth,1.3,base.subtract(wa),base.add(wa),tip);
+                line(.025,p.accent,.58,birth,1.3,side,base,base.add(dir.scale(-.06)).add(0,height*.45,0),tip);
+                if(strong) {
+                    Vec3 wing=tip.add(dir.scale(.24)).add(0,-height*.25,0);
+                    face(p.main,.14,birth+.05,1.25,tip,wing,base.add(wa));
+                }
+                double t=Math.max(0,age-rupture-i*.012);
+                if(t<.85) {
+                    Vec3 shard=foot.add(dir.scale(.4+t*(1.4+i%3*.4))).add(0,.1+(1.8+i%3*.3)*t-1.9*t*t,0);
+                    gem(shard,.028,p.accent,rupture+i*.012,.85,theta+t*3);
+                    line(.014,p.main,.32,rupture+i*.012,.85,side,shard,shard.subtract(dir.scale(.13)).add(0,-.08,0));
+                }
+            }
+            if(strong)for(int sign:new int[]{-1,1}) {
+                Vec3 root=foot.add(sign*.2,.15,0);
+                curve(root,f->v(sign*(f*1.3+Math.sin(f*13)*.07),f*2.15,.18*Math.sin(f*7)),Z,.055,p.main,.42,.12,1.25);
+                curve(root,f->v(sign*(f*1.3+Math.sin(f*13)*.07+.05),f*2.15,.18*Math.sin(f*7)),Z,.013,p.accent,.65,.16,1.15);
+            }
+        }
+        void eruditionArray() {
+            double solve=strong?.72:.57,t=ease((age-.12)/.4),collapse=ease((age-solve)/.38);
+            int planes=strong?3:2;
+            for(int plane=0;plane<planes;plane++) {
+                double angle=plane*Math.PI/planes+age*.26;
+                Vec3 side=radial(angle,1,0),normal=side.cross(UP);
+                double size=(1.05+plane*.15)*t*(1-collapse*.7);
+                for(int sign:new int[]{-1,1}) {
+                    Vec3 corner=side.scale(sign*size).add(0,sign*size*.65,0);
+                    line(.021,p.accent,.46,.12+plane*.04,1.25,normal,
+                        corner.subtract(side.scale(sign*.28)),corner,corner.add(0,-sign*.22,0));
+                }
+                int rows=detail<=10?3:5;
+                for(int row=0;row<rows;row++) {
+                    double y=(row-(rows-1)/2D)*.25;
+                    line(.009,p.main,.2,.18+plane*.04+row*.018,1.1,normal,
+                        side.scale(-size).add(0,y,0),side.scale(size).add(0,y,0));
+                    Vec3 node=side.scale(Math.sin(age*2.3+row)*size*.7).add(0,y,0);
+                    diamond(node,side,.055,p.accent,.22+row*.018,1.1);
+                }
+                double scan=-.7+1.4*clamp((age-.22)/.65);
+                Vec3 a=side.scale(-size).add(0,scan,0),b=side.scale(size).add(0,scan,0);
+                face(p.main,.075,.22,1.05,a,b,b.add(0,.10,0),a.add(0,.10,0));
+                line(.023,p.accent,.55,.22,1.05,normal,a,b);
+            }
+            for(int i=0;i<(strong?8:4);i++) {
+                double angle=i*Math.PI*2/(strong?8:4),phase=ease((age-solve)/.32);
+                Vec3 outside=radial(angle,1.45*(1-phase),Math.sin(angle*2)*.55*(1-phase));
+                line(.018,p.accent,.45,solve,.5,UP,outside,outside.scale(.58));
+                gem(outside,.035,p.main,solve,.5,angle);
+            }
+            if(source.lengthSqr()>.5)for(int pulse=0;pulse<(strong?3:2);pulse++) {
+                double birth=.15+pulse*.11,phase=ease((age-birth)/.42);
+                Vec3 point=source.lerp(c,phase);
+                gem(point,.055,p.accent,birth,.55,age*2);
+                line(.016,p.main,.32,birth,.55,UP,source.lerp(c,Math.max(0,phase-.16)),point);
+            }
+        }
+        void nihilityVortex() {
+            boolean end=packet.kind()==CombatVfxPacket.Kind.NIHILITY_END;
+            int count=detail<=10?6:strong?12:9;
+            double collapse=ease((age-.12)/.42),release=end?ease((age-.54)/.5):0;
+            for(int i=0;i<count;i++) {
+                double angle=i*Math.PI*2/count-age*(end?.9:.45);
+                Vec3 axis=radial(angle,1,0),side=radial(angle+Math.PI/2,1,0);
+                double radius=end?1.35*(1-collapse)+.14+release*1.3:1.1-.22*ease(age/.8);
+                Vec3 center=axis.scale(radius).add(0,Math.sin(i*1.8)*.5,0);
+                Vec3 tip=center.subtract(axis.scale(.35)).add(0,.13,0),back=center.add(axis.scale(.16));
+                face(p.shade,.33,.08+i*.012,1.35,tip,center.add(side.scale(.10)),back,center.subtract(side.scale(.10)));
+                line(.013,p.main,.45,.10+i*.012,1.3,UP,back,tip);
+                final double theta=angle,reach=radius;
+                curve(c,f->radial(theta+f*.7,reach*(1-f*.8),Math.sin(theta*1.7)*(1-f)*.5),UP,.014,p.main,.29,.16+i*.012,1.1);
+            }
+            if(packet.kind()==CombatVfxPacket.Kind.NIHILITY_SPREAD&&source.lengthSqr()>.05) {
+                for(int i=0;i<3;i++) {
+                    double birth=.14+i*.07,t=ease((age-birth)/.55);
+                    Vec3 point=source.lerp(c,t).add(0,Math.sin(t*Math.PI)*.45,0);
+                    gem(point,.045,p.main,birth,.65,t*4);
+                    final int strand=i;
+                    curve(source,f->c.subtract(source).scale(f).add(0,Math.sin(f*Math.PI)*.45,Math.sin(f*12-age*4+strand)*.06),UP,.016,p.shade,.42,birth,.65);
+                }
+            }
+        }
+        void harmonyScore() {
+            boolean returning=packet.kind()==CombatVfxPacket.Kind.HARMONY_CONCERT;
+            if(packet.kind()==CombatVfxPacket.Kind.HARMONY_AFTERGLOW) {
+                for(int wave=0;wave<3;wave++) {
+                    final double shift=(wave-1)*.14;
+                    curve(source,f->c.subtract(source).scale(f).add(0,shift+Math.sin(f*Math.PI*2-age*5)*.10,0),UP,.022,p.main,.32,.22+wave*.055,.82);
+                    double phase=ease((age-.22-wave*.055)/.55);
+                    gem(source.lerp(c,phase).add(0,shift,0),.035,p.accent,.22+wave*.055,.82,age);
+                }
+                return;
+            }
+            if(returning&&source.lengthSqr()>.05) {
+                for(int pulse=0;pulse<3;pulse++) {
+                    double birth=.10+pulse*.13,t=ease((age-birth)/.78);
+                    Vec3 head=source.lerp(c,t).add(0,Math.sin(t*Math.PI)*.5,0);
+                    gem(head,.05,p.accent,birth,.87,t*3);
+                    final double reach=t;
+                    curve(source,f->c.subtract(source).scale(f*reach).add(0,Math.sin(f*reach*Math.PI)*.5,Math.sin(f*Math.PI*2)*.06),UP,.018,p.main,.36,birth,.87);
+                }
+                return;
+            }
+            int strings=strong?5:3;
+            for(int row=0;row<strings;row++) {
+                final double height=(row-(strings-1)/2D)*.12;
+                curve(c,f->{double angle=f*Math.PI*2+age*.35;
+                    return radial(angle,1.18,height+Math.sin(angle*2-age*4)*.08);
+                },UP,.012,p.main,.32,.12+row*.025,1.6);
+            }
+            for(int beat=0;beat<(strong?4:3);beat++)for(int node=0;node<4;node++) {
+                double birth=.16+beat*.36,phase=clamp((age-birth)/.5),angle=node*Math.PI/2+beat*.4;
+                Vec3 root=radial(angle,1.18,.12+Math.sin(phase*Math.PI)*.22);
+                Vec3 side=radial(angle+Math.PI/2,1,0),normal=radial(angle,1,0);
+                gem(root,.045,p.accent,birth,.55,angle);
+                line(.024,p.accent,.5,birth,.55,normal,root,root.add(0,.3,0),root.add(side.scale(.15)).add(0,.24,0));
+                if(strong)curve(root,f->side.scale(f*.5).add(0,Math.sin(f*Math.PI)*.3,0),normal,.022,p.main,.38,birth,.55);
+            }
+        }
+        void abundanceGarden() {
+            boolean mercy=packet.kind()==CombatVfxPacket.Kind.ABUNDANCE_MERCY;
+            boolean manna=packet.kind()==CombatVfxPacket.Kind.ABUNDANCE_MANNA;
+            int stems=detail<=10?4:mercy?8:6;
+            for(int i=0;i<stems;i++) {
+                double angle=i*Math.PI*2/stems,birth=.08+i*.025,growth=ease((age-birth)/.65);
+                Vec3 dir=radial(angle,1,0),side=radial(angle+Math.PI/2,1,0);
+                Vec3 base=foot.add(dir.scale(.5)),tip=base.add(dir.scale(.3*growth)).add(0,(mercy?1.5:1.05)*growth,0);
+                curve(base,f->dir.scale(.3*f*growth).add(0,Math.sin(f*Math.PI*.5)*(mercy?1.5:1.05)*growth,0),side,.02,p.main,.4,birth,1.55);
+                for(int leaf=0;leaf<2;leaf++) {
+                    Vec3 node=base.lerp(tip,.4+leaf*.32);
+                    leaf(node,side.scale((leaf%2==0?1:-1)*.3).add(dir.scale(.1)).add(0,.15,0),.085,p.main,birth+.18+leaf*.1,1.3);
+                }
+                if(manna)diamond(tip,side,.19,p.accent,birth+.35,1.25);
+                else gem(tip,.04,p.accent,birth+.35,1.25,angle);
+                double t=clamp((age-.5-i*.035)/.9);
+                Vec3 mote=foot.add(radial(angle+Math.sin(t*Math.PI)*.4,(1-t)*(.95+i%2*.3),.2+Math.sin(t*Math.PI)*1.5));
+                gem(mote,.024,p.accent,.5+i*.035,1,angle+t*3);
+            }
+            if(mercy)for(int branch=0;branch<4;branch++) {
+                final double angle=branch*Math.PI/2;
+                curve(foot,f->radial(angle+f*.7,Math.sin(f*Math.PI)*1.4,.1+Math.sin(f*Math.PI)*2),UP,.023,p.accent,.3,.35+branch*.05,1.5);
+            }
+        }
+        void remembranceMirrors() {
+            boolean record=packet.kind()==CombatVfxPacket.Kind.REMEMBRANCE_RECORD;
+            int count=detail<=10?4:strong?8:6;
+            for(int i=0;i<count;i++) {
+                double angle=i*Math.PI*2/count,birth=.10+i*.025;
+                Vec3 dir=radial(angle,1,0),side=radial(angle+Math.PI/2,1,0);
+                double turn=ease((age-birth)/.45)*Math.PI*.6;
+                Vec3 hinge=side.scale(Math.cos(turn)).add(dir.scale(Math.sin(turn)));
+                double echo=record?0:Math.sin(Math.PI*clamp((age-.65)/.8))*.23;
+                Vec3 center=dir.scale(1+echo).add(0,Math.sin(angle*2)*.25,0);
+                Vec3 top=center.add(0,.55,0),bottom=center.add(0,-.55,0),left=center.subtract(hinge.scale(.21)),right=center.add(hinge.scale(.21));
+                face(p.main,.11,birth,1.35,top,left,bottom,right);
+                line(.02,p.accent,.46,birth,1.35,dir,top,left,bottom,right,top);
+                line(.009,p.main,.35,birth+.12,1.15,dir,top,center,right);
+                if(!record)for(int pulse=0;pulse<(strong?2:1);pulse++) {
+                    double start=(strong?.99:.8)+pulse*.39,t=ease((age-start)/.5);
+                    Vec3 reflection=center.scale(1+.32*t);
+                    line(.013,p.main,.27*(1-t),start,.55,dir,
+                        reflection.add(0,.5,0),reflection.subtract(hinge.scale(.18)),reflection.add(0,-.5,0),reflection.add(hinge.scale(.18)),reflection.add(0,.5,0));
+                }
+                double t=clamp((age-.35-i*.02)/1.0);
+                Vec3 sand=dir.scale(.3*(1-t)).add(0,.6-1.2*t,0);
+                gem(sand,.018,p.accent,.35+i*.02,1.1,angle);
+            }
+        }
+        void elationTheater() {
+            int cards=detail<=10?4:strong?8:5;
+            for(int i=0;i<cards;i++) {
+                double birth=.12+i*.025,t=clamp((age-birth)/1.25),angle=i*Math.PI*2/cards+t*1.1;
+                double shuffle=strong?Math.sin(t*Math.PI*2)*.35:0;
+                Vec3 root=radial(angle,.85+Math.sin(t*Math.PI)*.45,.2+Math.sin(angle*2+t*3)*.4+shuffle);
+                Vec3 radial=radial(angle,1,0),side=radial(angle+Math.PI/2,1,0);
+                Vec3 across=side.scale(Math.cos(t*Math.PI*2+i)).add(radial.scale(Math.sin(t*Math.PI*2+i))).scale(.12);
+                Vec3 up=UP.scale(.2);
+                face(i%2==0?p.main:p.shade,.18,birth,1.4,root.subtract(across).subtract(up),root.add(across).subtract(up),root.add(across).add(up),root.subtract(across).add(up));
+                line(.017,p.accent,.48,birth,1.4,radial,root.subtract(across).subtract(up),root.add(across).subtract(up),root.add(across).add(up),root.subtract(across).add(up),root.subtract(across).subtract(up));
+                gem(root,.022,p.accent,birth,1.4,angle);
+            }
+            int pieces=detail<=10?6:strong?16:10;
+            for(int i=0;i<pieces;i++) {
+                double birth=.57+(strong&&i%2==0?.46:0)+i*.006,t=Math.max(0,age-birth);
+                if(t>.85)continue;
+                double angle=i*2.39996,r=.35+t*(1.1+i%3*.25),bounce=Math.abs(Math.sin(t*7))*Math.exp(-t*2)*.45;
+                Vec3 point=radial(angle,r,.25+bounce),side=radial(angle+t*5,.04,0),up=UP.scale(.04);
+                face(i%4==0?p.accent:p.main,.48,birth,.85,point.subtract(side).subtract(up),point.add(side).subtract(up),point.add(side).add(up),point.subtract(side).add(up));
             }
         }
         void cube(Vec3 root,double size,double turn,double birth) {

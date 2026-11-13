@@ -7,7 +7,6 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -41,6 +40,14 @@ public final class StarveinConstructGuardian extends Monster {
     private static final EntityDataAccessor<Integer> DATA_STAGGER_TICKS =
             SynchedEntityData.defineId(StarveinConstructGuardian.class, EntityDataSerializers.INT);
 
+    private static final EntityDataAccessor<Float> VISUAL_WAVE_X=SynchedEntityData.defineId(StarveinConstructGuardian.class,EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Float> VISUAL_WAVE_Y=SynchedEntityData.defineId(StarveinConstructGuardian.class,EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Float> VISUAL_WAVE_Z=SynchedEntityData.defineId(StarveinConstructGuardian.class,EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Float> VISUAL_WAVE_RADIUS=SynchedEntityData.defineId(StarveinConstructGuardian.class,EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<String> VISUAL_PATH=SynchedEntityData.defineId(StarveinConstructGuardian.class,EntityDataSerializers.STRING);
+    public Vec3 getVisualWaveCenter() {return new Vec3(entityData.get(VISUAL_WAVE_X),entityData.get(VISUAL_WAVE_Y),entityData.get(VISUAL_WAVE_Z));}
+    public double getVisualWaveRadius() {return entityData.get(VISUAL_WAVE_RADIUS);}
+    public StarRailPath getCombatVisualPath() {return StarRailPath.byId(entityData.get(VISUAL_PATH));}
     private static final int SWEEP_WINDUP_TICKS = 14;
     private static final int SWEEP_HIT_TICK = 16;
     private static final int SWEEP_END_TICK = 38;
@@ -63,6 +70,9 @@ public final class StarveinConstructGuardian extends Monster {
             new CombatProfile(400.0D, 0.22D, 11.5D, 16.0D, 0.96D, 2, 4.2D);
 
     private int attackCooldown;
+    private int clientAttackSyncTick;
+    private int clientStaggerStartTick;
+    private boolean clientWasStaggered;
     private int attackCycle;
     private boolean attackHit;
     private Vec3 waveCenter = Vec3.ZERO;
@@ -89,6 +99,8 @@ public final class StarveinConstructGuardian extends Monster {
     public void configureForPath(StarRailPath path) {
         this.pathId = path != null && path.isRealPath() ? path.getId() : "ordinary";
         CombatProfile profile = combatProfile();
+        entityData.set(VISUAL_PATH,this.pathId);
+        entityData.set(VISUAL_WAVE_RADIUS,(float)profile.waveRadius());
         setBaseAttribute(Attributes.MAX_HEALTH, profile.maxHealth());
         setBaseAttribute(Attributes.MOVEMENT_SPEED, profile.movementSpeed());
         setBaseAttribute(Attributes.ATTACK_DAMAGE, profile.attackDamage());
@@ -127,6 +139,8 @@ public final class StarveinConstructGuardian extends Monster {
         this.entityData.define(DATA_ATTACK_STATE, ATTACK_NONE);
         this.entityData.define(DATA_ATTACK_TICKS, 0);
         this.entityData.define(DATA_STAGGER_TICKS, 0);
+        entityData.define(VISUAL_WAVE_X,0f);entityData.define(VISUAL_WAVE_Y,0f);entityData.define(VISUAL_WAVE_Z,0f);
+        entityData.define(VISUAL_WAVE_RADIUS,4.4f);entityData.define(VISUAL_PATH,"ordinary");
     }
 
     public int getAttackState() {
@@ -141,6 +155,29 @@ public final class StarveinConstructGuardian extends Monster {
         return this.entityData.get(DATA_STAGGER_TICKS);
     }
 
+    @Override
+    public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
+        super.onSyncedDataUpdated(key);
+        if (this.level() == null || !this.level().isClientSide) return;
+        if (key.equals(DATA_ATTACK_STATE) || key.equals(DATA_ATTACK_TICKS))
+            this.clientAttackSyncTick = this.tickCount;
+        if (key.equals(DATA_STAGGER_TICKS)) {
+            boolean active = getStaggerTicks() > 0;
+            if (active && !this.clientWasStaggered) this.clientStaggerStartTick = this.tickCount;
+            this.clientWasStaggered = active;
+        }
+    }
+
+    /** Visual interpolation only: server hit ticks and damage remain authoritative. */
+    public float getAttackAnimationTicks(float partial) {
+        int elapsed = this.level().isClientSide ? Math.max(0,this.tickCount-this.clientAttackSyncTick) : 0;
+        return getAttackTicks()+elapsed+Mth.clamp(partial,0,1);
+    }
+
+    public float getStaggerAnimationTicks(float partial) {
+        return Math.max(0,this.tickCount-this.clientStaggerStartTick)+Mth.clamp(partial,0,1);
+    }
+
     /** Called by the toughness system when the guardian is broken. */
     public void staggerFor(int ticks) {
         if (this.level().isClientSide) return;
@@ -149,7 +186,7 @@ public final class StarveinConstructGuardian extends Monster {
         this.entityData.set(DATA_STAGGER_TICKS, Math.max(this.getStaggerTicks(), ticks));
         this.attackCooldown = Math.max(this.attackCooldown, 24);
         this.getNavigation().stop();
-        this.playSound(SoundEvents.AMETHYST_BLOCK_BREAK, 1.2F, 0.65F);
+        this.playSound(StarRailCombatSounds.GUARDIAN_CORE.get(), 1.2F, 0.65F);
     }
 
     @Override
@@ -212,6 +249,7 @@ public final class StarveinConstructGuardian extends Monster {
         this.attackCycle++;
         if (state == ATTACK_CORE_WAVE) {
             this.waveCenter = new Vec3(target.getX(), target.getY(), target.getZ());
+            entityData.set(VISUAL_WAVE_X,(float)waveCenter.x);entityData.set(VISUAL_WAVE_Y,(float)waveCenter.y);entityData.set(VISUAL_WAVE_Z,(float)waveCenter.z);
         }
         this.getNavigation().stop();
     }
@@ -225,15 +263,19 @@ public final class StarveinConstructGuardian extends Monster {
         if (state == ATTACK_STAR_TRAIL_SWEEP) {
             if (ticks == 5 || ticks == 9 || ticks == 13) sendSweepTelegraph();
             if (ticks == SWEEP_HIT_TICK) {
-                this.playSound(SoundEvents.IRON_GOLEM_ATTACK, 1.25F, 0.82F);
+                this.playSound(StarRailCombatSounds.GUARDIAN_ATTACK.get(), 1.25F, 0.82F);
                 hitSweepTargets();
+                MonsterCombatVfx.emit(this,MonsterCombatPacket.Kind.GUARDIAN_SWEEP,position(),
+                        Vec3.directionFromRotation(0,getYRot()),SWEEP_RANGE,MonsterCombatVfx.color(this));
             }
             if (ticks >= SWEEP_END_TICK) finishAttack(28);
         } else if (state == ATTACK_CORE_WAVE) {
             if (ticks < WAVE_HIT_TICK && ticks % 6 == 0) sendWaveTelegraph();
             if (ticks == WAVE_HIT_TICK) {
-                this.playSound(SoundEvents.ANVIL_LAND, 1.4F, 0.8F);
+                this.playSound(StarRailCombatSounds.GUARDIAN_SLAM.get(), 1.4F, 0.8F);
                 hitWaveTargets();
+                MonsterCombatVfx.emit(this,MonsterCombatPacket.Kind.GUARDIAN_WAVE,waveCenter,
+                        new Vec3(0,1,0),combatProfile().waveRadius(),MonsterCombatVfx.color(this));
                 if (this.level() instanceof ServerLevel level) {
                     level.sendParticles(ParticleTypes.POOF, waveCenter.x, waveCenter.y + 0.15D,
                             waveCenter.z, 18, 1.2D, 0.08D, 1.2D, 0.01D);
@@ -312,6 +354,7 @@ public final class StarveinConstructGuardian extends Monster {
     private void hurtAndPush(Player player, double knockback) {
         float damage = (float) this.getAttributeValue(Attributes.ATTACK_DAMAGE);
         if (!player.hurt(this.damageSources().mobAttack(this), damage)) return;
+        MonsterCombatVfx.hit(this,player);
         Vec3 away = player.position().subtract(this.position()).multiply(1.0D, 0.0D, 1.0D);
         if (away.lengthSqr() > 1.0E-4D) {
             away = away.normalize().scale(knockback);
@@ -322,17 +365,17 @@ public final class StarveinConstructGuardian extends Monster {
 
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return SoundEvents.IRON_GOLEM_HURT;
+        return StarRailCombatSounds.GUARDIAN_HURT.get();
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.IRON_GOLEM_DEATH;
+        return StarRailCombatSounds.GUARDIAN_DEATH.get();
     }
 
     @Override
     protected void playStepSound(BlockPos pos, BlockState state) {
-        this.playSound(SoundEvents.IRON_GOLEM_STEP, 0.85F, 0.75F);
+        this.playSound(StarRailCombatSounds.GUARDIAN_STEP.get(), 0.85F, 0.75F);
     }
 
     @Override

@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "starrail_sim:ochre_stone_slab",
+    "starrail_sim:smooth_ochre_stone_slab",
+    "starrail_sim:ochre_stone_bricks_slab",
+    "starrail_sim:starazure_reef_stone_slab",
+    "starrail_sim:porous_reef_stone_slab",
+    "starrail_sim:starazure_reef_bricks_slab"
+  ]
+}

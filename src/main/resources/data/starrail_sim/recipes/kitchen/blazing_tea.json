@@ -1,0 +1,23 @@
+{
+  "type": "starrail_sim:kitchen",
+  "process": "stew",
+  "inputs": [
+    {
+      "item": "starrail_sim:path_tea_leaf",
+      "count": 1
+    },
+    {
+      "item": "starrail_sim:flame_pepper",
+      "count": 1
+    },
+    {
+      "item": "starrail_sim:path_spring_water",
+      "count": 1
+    }
+  ],
+  "result": {
+    "item": "starrail_sim:blazing_tea",
+    "count": 1
+  },
+  "returns": []
+}

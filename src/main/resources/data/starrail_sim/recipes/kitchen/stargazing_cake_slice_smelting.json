@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": {
+    "item": "starrail_sim:stargazing_cake_dough"
+  },
+  "result": "starrail_sim:stargazing_cake_slice",
+  "experience": 0.35,
+  "cookingtime": 200
+}

@@ -52,7 +52,8 @@
     [],
     [
       "starrail_sim:star_tide_algae_patch",
-      "starrail_sim:path_bubble_spring"
+      "starrail_sim:path_bubble_spring",
+      "starrail_sim:starazure_kelp_patch"
     ]
   ],
   "has_precipitation": true,

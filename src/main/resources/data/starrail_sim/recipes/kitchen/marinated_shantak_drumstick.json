@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "starrail_sim:stilltide_fowl_meat"
+    },
+    {
+      "item": "starrail_sim:stilltide_fowl_meat"
+    },
+    {
+      "item": "starrail_sim:fruitwood_spice"
+    },
+    {
+      "item": "starrail_sim:sunseed_oil"
+    }
+  ],
+  "result": {
+    "item": "starrail_sim:marinated_shantak_drumstick",
+    "count": 1
+  }
+}

@@ -2,6 +2,7 @@
   "replace": false,
   "values": [
     "starrail_sim:sunmeadow_fence_gate",
-    "starrail_sim:starlightwood_fence_gate"
+    "starrail_sim:starlightwood_fence_gate",
+    "starrail_sim:fruitwood_fence_gate"
   ]
 }

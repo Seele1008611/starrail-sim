@@ -1,0 +1,19 @@
+{
+  "type": "starrail_sim:kitchen",
+  "process": "fry",
+  "inputs": [
+    {
+      "item": "starrail_sim:grainvale_corn",
+      "count": 1
+    },
+    {
+      "item": "starrail_sim:grain_sugar",
+      "count": 1
+    }
+  ],
+  "result": {
+    "item": "starrail_sim:popcorn",
+    "count": 2
+  },
+  "returns": []
+}

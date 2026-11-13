@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "starrail_sim:white_grape"
+    },
+    {
+      "item": "starrail_sim:grain_sugar"
+    },
+    {
+      "item": "starrail_sim:sparkling_water"
+    }
+  ],
+  "result": {
+    "item": "starrail_sim:pika_whitegrape_soda",
+    "count": 1
+  }
+}

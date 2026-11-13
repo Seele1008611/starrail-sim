@@ -125,6 +125,19 @@ repositories {
         name = "Curios"
         url = uri("https://maven.theillusivec4.top/")
     }
+    // Reuse the project-local optional JEI cache when present, including offline builds.
+    if (file('.gradle/jei-maven').isDirectory()) {
+        maven {
+            name = 'LocalJeiValidationCache'
+            url = uri('.gradle/jei-maven')
+            content { includeGroup 'mezz.jei' }
+        }
+    }
+    maven {
+        name = "JEI"
+        url = uri("https://maven.blamejared.com/")
+        content { includeGroup "mezz.jei" }
+    }
 
     // If you have mod jar dependencies in ./libs, you can declare them as a repository like so.
     // See https://docs.gradle.org/current/userguide/declaring_repositories.html#sub:flat_dir_resolver
@@ -145,11 +158,11 @@ dependencies {
     compileOnly(fg.deobf("top.theillusivec4.curios:curios-forge:${curios_version}:api"))
     runtimeOnly(fg.deobf("top.theillusivec4.curios:curios-forge:${curios_version}"))
 
-    // Example mod dependency with JEI - using fg.deobf() ensures the dependency is remapped to your development mappings
-    // The JEI API is declared for compile time use, while the full JEI artifact is used at runtime
-    // compileOnly fg.deobf("mezz.jei:jei-${mc_version}-common-api:${jei_version}")
-    // compileOnly fg.deobf("mezz.jei:jei-${mc_version}-forge-api:${jei_version}")
-    // runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}-forge:${jei_version}")
+    // Optional client integration. JEI is never bundled with the released mod.
+    compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}")
+    if (providers.gradleProperty('enableJei').map { it.toBoolean() }.getOrElse(false)) {
+        runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}")
+    }
 
     // Example mod dependency using a mod jar from ./libs with a flat dir repository
     // This maps to ./libs/coolmod-${mc_version}-${coolmod_version}.jar

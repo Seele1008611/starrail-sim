@@ -1,0 +1,246 @@
+{
+  "spawners": [
+    {
+      "x": -51,
+      "y": 77,
+      "z": -4,
+      "label": "西翼藏笼",
+      "entity": "starrail_sim:voidranger_reaver"
+    },
+    {
+      "x": -41,
+      "y": 77,
+      "z": 4,
+      "label": "西翼藏笼",
+      "entity": "starrail_sim:voidranger_distorter"
+    },
+    {
+      "x": 41,
+      "y": 81,
+      "z": -4,
+      "label": "东翼藏笼",
+      "entity": "starrail_sim:voidranger_reaver"
+    },
+    {
+      "x": 51,
+      "y": 81,
+      "z": 4,
+      "label": "东翼藏笼",
+      "entity": "starrail_sim:voidranger_distorter"
+    },
+    {
+      "x": -5,
+      "y": 77,
+      "z": 42,
+      "label": "南翼藏笼",
+      "entity": "starrail_sim:voidranger_reaver"
+    },
+    {
+      "x": 5,
+      "y": 77,
+      "z": 50,
+      "label": "南翼藏笼",
+      "entity": "starrail_sim:voidranger_distorter"
+    },
+    {
+      "x": -38,
+      "y": 65,
+      "z": -32,
+      "label": "机务藏笼",
+      "entity": "starrail_sim:voidranger_reaver"
+    },
+    {
+      "x": -28,
+      "y": 65,
+      "z": -24,
+      "label": "机务藏笼",
+      "entity": "starrail_sim:voidranger_distorter"
+    }
+  ],
+  "guards": [
+    {
+      "x": -50,
+      "y": 76,
+      "z": 1,
+      "label": "西翼驻守",
+      "entity": "starrail_sim:voidranger_reaver"
+    },
+    {
+      "x": -42,
+      "y": 76,
+      "z": -1,
+      "label": "西翼驻守",
+      "entity": "starrail_sim:voidranger_distorter"
+    },
+    {
+      "x": -47,
+      "y": 76,
+      "z": 6,
+      "label": "西翼驻守",
+      "entity": "starrail_sim:voidranger_reaver"
+    },
+    {
+      "x": -45,
+      "y": 76,
+      "z": -5,
+      "label": "西翼驻守",
+      "entity": "starrail_sim:voidranger_distorter"
+    },
+    {
+      "x": 42,
+      "y": 80,
+      "z": 1,
+      "label": "东翼驻守",
+      "entity": "starrail_sim:voidranger_reaver"
+    },
+    {
+      "x": 51,
+      "y": 80,
+      "z": -2,
+      "label": "东翼驻守",
+      "entity": "starrail_sim:voidranger_distorter"
+    },
+    {
+      "x": 45,
+      "y": 80,
+      "z": 5,
+      "label": "东翼驻守",
+      "entity": "starrail_sim:voidranger_reaver"
+    },
+    {
+      "x": 47,
+      "y": 80,
+      "z": -5,
+      "label": "东翼驻守",
+      "entity": "starrail_sim:voidranger_distorter"
+    },
+    {
+      "x": -3,
+      "y": 76,
+      "z": 47,
+      "label": "南翼驻守",
+      "entity": "starrail_sim:voidranger_reaver"
+    },
+    {
+      "x": 3,
+      "y": 76,
+      "z": 45,
+      "label": "南翼驻守",
+      "entity": "starrail_sim:voidranger_distorter"
+    },
+    {
+      "x": -1,
+      "y": 76,
+      "z": 51,
+      "label": "南翼驻守",
+      "entity": "starrail_sim:voidranger_reaver"
+    },
+    {
+      "x": 1,
+      "y": 76,
+      "z": 41,
+      "label": "南翼驻守",
+      "entity": "starrail_sim:voidranger_distorter"
+    },
+    {
+      "x": -38,
+      "y": 64,
+      "z": -27,
+      "label": "机务驻守",
+      "entity": "starrail_sim:voidranger_reaver"
+    },
+    {
+      "x": -29,
+      "y": 64,
+      "z": -30,
+      "label": "机务驻守",
+      "entity": "starrail_sim:voidranger_distorter"
+    },
+    {
+      "x": -34,
+      "y": 64,
+      "z": -22,
+      "label": "机务驻守",
+      "entity": "starrail_sim:voidranger_reaver"
+    },
+    {
+      "x": -32,
+      "y": 64,
+      "z": -34,
+      "label": "机务驻守",
+      "entity": "starrail_sim:voidranger_distorter"
+    }
+  ],
+  "chests": [
+    {
+      "x": -49,
+      "y": 76,
+      "z": 6,
+      "label": "西翼补给",
+      "loot": "starrail_sim:chests/archive_supplies"
+    },
+    {
+      "x": -43,
+      "y": 76,
+      "z": -6,
+      "label": "西翼补给",
+      "loot": "starrail_sim:chests/archive_supplies"
+    },
+    {
+      "x": 43,
+      "y": 80,
+      "z": 6,
+      "label": "东翼补给",
+      "loot": "starrail_sim:chests/archive_supplies"
+    },
+    {
+      "x": 49,
+      "y": 80,
+      "z": -6,
+      "label": "东翼补给",
+      "loot": "starrail_sim:chests/archive_supplies"
+    },
+    {
+      "x": -3,
+      "y": 76,
+      "z": 52,
+      "label": "南翼补给",
+      "loot": "starrail_sim:chests/archive_supplies"
+    },
+    {
+      "x": 3,
+      "y": 76,
+      "z": 40,
+      "label": "南翼补给",
+      "loot": "starrail_sim:chests/archive_supplies"
+    },
+    {
+      "x": -36,
+      "y": 64,
+      "z": -22,
+      "label": "机务补给",
+      "loot": "starrail_sim:chests/archive_materials"
+    },
+    {
+      "x": -30,
+      "y": 64,
+      "z": -34,
+      "label": "机务补给",
+      "loot": "starrail_sim:chests/archive_materials"
+    }
+  ],
+  "future": [
+    {
+      "x": 0,
+      "y": 96,
+      "z": 2,
+      "label": "高位观测室预留"
+    },
+    {
+      "x": -33,
+      "y": 64,
+      "z": -28,
+      "label": "机务内舱预留"
+    }
+  ]
+}

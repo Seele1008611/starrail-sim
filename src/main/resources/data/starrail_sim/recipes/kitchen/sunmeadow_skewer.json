@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "P ",
+    " P"
+  ],
+  "key": {
+    "P": {
+      "item": "starrail_sim:sunmeadow_planks"
+    }
+  },
+  "result": {
+    "item": "starrail_sim:sunmeadow_skewer",
+    "count": 8
+  }
+}

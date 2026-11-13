@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smoking",
+  "ingredient": {
+    "item": "starrail_sim:raw_belobog_sausage"
+  },
+  "result": "starrail_sim:belobog_sausage",
+  "experience": 0.35,
+  "cookingtime": 100
+}

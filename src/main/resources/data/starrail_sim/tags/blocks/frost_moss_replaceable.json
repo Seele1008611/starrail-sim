@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:podzol",
+    "minecraft:dirt",
+    "starrail_sim:path_dirt",
+    "starrail_sim:path_forest_humus"
+  ]
+}

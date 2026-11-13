@@ -1,0 +1,15 @@
+{
+  "type": "starrail_sim:kitchen",
+  "process": "stew",
+  "inputs": [
+    {
+      "item": "starrail_sim:grainvale_corn",
+      "count": 2
+    }
+  ],
+  "result": {
+    "item": "starrail_sim:grain_sugar",
+    "count": 1
+  },
+  "returns": []
+}

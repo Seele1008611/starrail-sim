@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "starrail_sim:item/hot_floating_sheep_milk"
+  }
+}

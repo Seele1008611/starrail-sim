@@ -16,6 +16,7 @@ public final class StarveinConstructClient {
 
     @SubscribeEvent
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
+        event.registerEntityRenderer(StarveinConstructEntities.DOOMSDAY_BEAST.get(), DoomsdayBeastRenderer::new);
         event.registerEntityRenderer(StarveinConstructEntities.STARVEIN_CONSTRUCT_GUARDIAN.get(),
                 StarveinConstructRenderer::new);
     }

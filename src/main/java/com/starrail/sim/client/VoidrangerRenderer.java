@@ -20,4 +20,10 @@ public final class VoidrangerRenderer<T extends VoidrangerMob>
     public ResourceLocation getTextureLocation(T entity) {
         return this.model.texture();
     }
+
+    @Override
+    protected float getFlipDegrees(T entity) {
+        // The approved native death clips already fold/kneel the rig; do not roll it a second time.
+        return 0.0F;
+    }
 }

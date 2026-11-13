@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "stage=0": {
+      "model": "starrail_sim:block/orange_sapling"
+    },
+    "stage=1": {
+      "model": "starrail_sim:block/orange_sapling"
+    }
+  }
+}

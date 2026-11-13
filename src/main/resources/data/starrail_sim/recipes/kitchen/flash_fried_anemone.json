@@ -1,0 +1,27 @@
+{
+  "type": "starrail_sim:kitchen",
+  "process": "fry",
+  "inputs": [
+    {
+      "item": "starrail_sim:edible_anemone",
+      "count": 1
+    },
+    {
+      "item": "starrail_sim:flame_pepper",
+      "count": 1
+    },
+    {
+      "item": "starrail_sim:reef_algae",
+      "count": 1
+    },
+    {
+      "item": "starrail_sim:sunseed_oil",
+      "count": 1
+    }
+  ],
+  "result": {
+    "item": "starrail_sim:flash_fried_anemone",
+    "count": 1
+  },
+  "returns": []
+}

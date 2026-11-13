@@ -1,0 +1,18 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:clay",
+    "minecraft:dirt",
+    "minecraft:gravel",
+    "minecraft:sand",
+    "minecraft:stone",
+    "starrail_sim:path_deep_stone",
+    "starrail_sim:path_river_gravel",
+    "starrail_sim:path_river_sand",
+    "starrail_sim:path_river_sandstone",
+    "starrail_sim:path_stone",
+    "starrail_sim:porous_reef_stone",
+    "starrail_sim:starazure_reef_bricks",
+    "starrail_sim:starazure_reef_stone"
+  ]
+}

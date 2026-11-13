@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "starrail_sim:tidal_stripe_rock"
+  },
+  "result": "starrail_sim:tidal_stripe_rock_slab",
+  "count": 2
+}

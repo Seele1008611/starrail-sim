@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "starrail_sim:cooked_froststripe_salmon"
+    },
+    {
+      "item": "starrail_sim:grain_bread"
+    },
+    {
+      "item": "starrail_sim:snowroot"
+    }
+  ],
+  "result": {
+    "item": "starrail_sim:froststripe_salmon_bread",
+    "count": 1
+  }
+}

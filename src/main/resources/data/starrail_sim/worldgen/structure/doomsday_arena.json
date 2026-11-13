@@ -1,0 +1,7 @@
+{
+  "type": "starrail_sim:doomsday_arena",
+  "biomes": "#starrail_sim:the_path_regions",
+  "step": "surface_structures",
+  "spawn_overrides": {},
+  "terrain_adaptation": "none"
+}

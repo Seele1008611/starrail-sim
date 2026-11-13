@@ -9,21 +9,21 @@ import net.minecraft.world.entity.Mob;
 
 /** Shared renderer for the five accepted Path wildlife cuboid models. */
 public final class PathAnimalRenderer<T extends Mob> extends MobRenderer<T, PathAnimalModel<T>> {
-    private final float modelScale;
 
     public PathAnimalRenderer(EntityRendererProvider.Context context,
                               PathAnimalModel.Species species,
-                              float modelScale,
                               float shadowRadius) {
         super(context, new PathAnimalModel<>(species), shadowRadius);
-        this.modelScale = modelScale;
     }
 
     @Override
     protected void scale(T entity, PoseStack poseStack, float partialTick) {
         float ageScale = entity instanceof AgeableMob ageable && ageable.isBaby() ? 0.5F : 1.0F;
-        poseStack.scale(modelScale * ageScale, modelScale * ageScale, modelScale * ageScale);
+        poseStack.scale(ageScale, ageScale, ageScale);
     }
+
+    @Override
+    protected float getFlipDegrees(T entity) { return 0; }
 
     @Override
     public ResourceLocation getTextureLocation(T entity) {

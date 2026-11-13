@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "age=0": {
+      "model": "starrail_sim:block/fruitwood_shrub_0"
+    },
+    "age=1": {
+      "model": "starrail_sim:block/fruitwood_shrub_1"
+    },
+    "age=2": {
+      "model": "starrail_sim:block/fruitwood_shrub_2"
+    },
+    "age=3": {
+      "model": "starrail_sim:block/fruitwood_shrub_3"
+    }
+  }
+}

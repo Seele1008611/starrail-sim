@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "I I",
+    "III"
+  ],
+  "key": {
+    "I": {
+      "item": "starrail_sim:path_suniron_ingot"
+    }
+  },
+  "result": {
+    "item": "starrail_sim:cooking_pot",
+    "count": 1
+  }
+}

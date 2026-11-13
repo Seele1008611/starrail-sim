@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "III",
+    "  S"
+  ],
+  "key": {
+    "I": {
+      "item": "starrail_sim:path_suniron_ingot"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    }
+  },
+  "result": {
+    "item": "starrail_sim:cooking_pan",
+    "count": 1
+  }
+}

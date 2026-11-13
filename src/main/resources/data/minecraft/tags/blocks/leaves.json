@@ -2,6 +2,9 @@
   "replace": false,
   "values": [
     "starrail_sim:sunmeadow_leaves",
-    "starrail_sim:starlightwood_leaves"
+    "starrail_sim:starlightwood_leaves",
+    "starrail_sim:frost_spruce_leaves",
+    "starrail_sim:orange_leaves",
+    "starrail_sim:lemon_leaves"
   ]
 }

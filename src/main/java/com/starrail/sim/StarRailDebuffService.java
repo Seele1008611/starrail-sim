@@ -50,6 +50,13 @@ public final class StarRailDebuffService {
      * second for five seconds. The return value is true only for a new mark,
      * which prevents repeated hits from inflating a trial objective.
      */
+    /** Active field attempts once per target, never refreshes or recursively diffuses an existing mark. */
+    public static boolean applyActiveNihilityMark(LivingEntity target,ServerPlayer owner) {
+        if(hasNihilityMark(target))return false;
+        int rank=owner.getCapability(StarRailPathCapability.PATH_DATA).map(d->d.getPathRank(StarRailPath.NIHILITY).getLevel()).orElse(0);
+        return applyNihilityMark(target,owner,rank,false);
+    }
+
     public static boolean applyNihilityMark(LivingEntity target, ServerPlayer owner) {
         return applyNihilityMark(target, owner, null);
     }
@@ -145,6 +152,7 @@ public final class StarRailDebuffService {
 
     /** Triggers the rank-seven burst when an owned eroded monster dies. */
     public static void onNihilityMarkedDeath(ServerPlayer owner, LivingEntity deceased) {
+        if(StarRailOwnedDamage.isActive(owner))return;
         if (deceased.getPersistentData().getBoolean(FINAL_BURST_GUARD_KEY)) {
             return;
         }

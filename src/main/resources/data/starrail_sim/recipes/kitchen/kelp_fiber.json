@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "starrail_sim:starazure_kelp"
+    }
+  ],
+  "result": {
+    "item": "starrail_sim:kelp_fiber",
+    "count": 2
+  }
+}

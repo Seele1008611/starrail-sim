@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "starrail_sim:spring_travertine"
+    }
+  },
+  "result": {
+    "item": "starrail_sim:spring_travertine_slab",
+    "count": 6
+  }
+}

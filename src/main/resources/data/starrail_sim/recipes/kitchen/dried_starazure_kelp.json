@@ -1,0 +1,15 @@
+{
+  "type": "starrail_sim:kitchen",
+  "process": "dry",
+  "inputs": [
+    {
+      "item": "starrail_sim:starazure_kelp",
+      "count": 1
+    }
+  ],
+  "result": {
+    "item": "starrail_sim:dried_starazure_kelp",
+    "count": 1
+  },
+  "returns": []
+}

@@ -1,67 +1,632 @@
 {
-  "combat_hunt_strike": { "sounds": ["starrail_sim:combat/hunt_strike"] },
-  "combat_hunt_reverse": { "sounds": ["starrail_sim:combat/hunt_reverse"] },
-  "combat_toughness_hit": { "sounds": ["starrail_sim:combat/toughness_hit"] },
-  "combat_toughness_break": { "sounds": ["starrail_sim:combat/toughness_break"] },
-  "combat_preservation_wall": { "sounds": ["starrail_sim:combat/preservation_wall"] },
-  "combat_preservation_counter": { "sounds": ["starrail_sim:combat/preservation_counter"] },
-  "combat_destruction_rage": { "sounds": ["starrail_sim:combat/destruction_rage"] },
-  "combat_destruction_burn": { "sounds": ["starrail_sim:combat/destruction_burn"] },
-  "combat_destruction_desperate": { "sounds": ["starrail_sim:combat/destruction_desperate"] },
-  "combat_erudition_echo": { "sounds": ["starrail_sim:combat/erudition_echo"] },
-  "combat_erudition_final": { "sounds": ["starrail_sim:combat/erudition_final"] },
-  "combat_nihility_mark": { "sounds": ["starrail_sim:combat/nihility_mark"] },
-  "combat_nihility_spread": { "sounds": ["starrail_sim:combat/nihility_spread"] },
-  "combat_nihility_end": { "sounds": ["starrail_sim:combat/nihility_end"] },
-  "combat_harmony_resonance": { "sounds": ["starrail_sim:combat/harmony_resonance"] },
-  "combat_harmony_afterglow": { "sounds": ["starrail_sim:combat/harmony_afterglow"] },
-  "combat_harmony_concert": { "sounds": ["starrail_sim:combat/harmony_concert"] },
-  "combat_harmony_unison": { "sounds": ["starrail_sim:combat/harmony_unison"] },
-  "combat_abundance_heal": { "sounds": ["starrail_sim:combat/abundance_heal"] },
-  "combat_abundance_manna": { "sounds": ["starrail_sim:combat/abundance_manna"] },
-  "combat_abundance_mercy": { "sounds": ["starrail_sim:combat/abundance_mercy"] },
-  "combat_remembrance_record": { "sounds": ["starrail_sim:combat/remembrance_record"] },
-  "combat_remembrance_echo": { "sounds": ["starrail_sim:combat/remembrance_echo"] },
-  "combat_remembrance_eternal": { "sounds": ["starrail_sim:combat/remembrance_eternal"] },
-  "combat_elation_burst": { "sounds": ["starrail_sim:combat/elation_burst"] },
-  "combat_elation_grand": { "sounds": ["starrail_sim:combat/elation_grand"] },
-  "sunnyharvest_deer_ambient": { "sounds": ["starrail_sim:animals/sunnyharvest_deer_call"] },
-  "sunnyharvest_deer_hurt": { "sounds": ["starrail_sim:animals/sunnyharvest_deer_call"] },
-  "sunnyharvest_deer_death": { "sounds": ["starrail_sim:animals/sunnyharvest_deer_call"] },
-  "starvelvet_ram_ambient": { "sounds": ["starrail_sim:animals/starvelvet_ram_call"] },
-  "starvelvet_ram_hurt": { "sounds": ["starrail_sim:animals/starvelvet_ram_call"] },
-  "starvelvet_ram_death": { "sounds": ["starrail_sim:animals/starvelvet_ram_call"] },
-  "woodland_forager_ambient": { "sounds": ["starrail_sim:animals/woodland_forager_call"] },
-  "woodland_forager_hurt": { "sounds": ["starrail_sim:animals/woodland_forager_call"] },
-  "woodland_forager_death": { "sounds": ["starrail_sim:animals/woodland_forager_call"] },
-  "stilltide_fowl_ambient": { "sounds": ["starrail_sim:animals/stilltide_fowl_call"] },
-  "stilltide_fowl_hurt": { "sounds": ["starrail_sim:animals/stilltide_fowl_call"] },
-  "stilltide_fowl_death": { "sounds": ["starrail_sim:animals/stilltide_fowl_call"] },
-  "star_scree_packbeast_ambient": { "sounds": ["starrail_sim:animals/star_scree_packbeast_call"] },
-  "star_scree_packbeast_hurt": { "sounds": ["starrail_sim:animals/star_scree_packbeast_call"] },
-  "star_scree_packbeast_death": { "sounds": ["starrail_sim:animals/star_scree_packbeast_call"] },
-  "voidranger_reaver_ambient": { "sounds": [{ "name": "starrail_sim:voidranger/robot_monster", "volume": 0.45, "pitch": 0.92 }] },
-  "voidranger_reaver_hurt": { "sounds": [{ "name": "starrail_sim:voidranger/dragon_hurt", "volume": 0.85, "pitch": 1.08 }] },
-  "voidranger_reaver_death": { "sounds": [{ "name": "starrail_sim:voidranger/monster_short_roar", "volume": 0.95, "pitch": 0.92 }] },
-  "voidranger_reaver_melee": { "sounds": [{ "name": "starrail_sim:voidranger/short_sci_fi_whoosh_impact", "volume": 0.9, "pitch": 1.1 }] },
-  "voidranger_reaver_special_telegraph": { "sounds": [{ "name": "starrail_sim:voidranger/growl", "volume": 0.8, "pitch": 1.1 }] },
-  "voidranger_reaver_special_hit": { "sounds": [{ "name": "starrail_sim:voidranger/dragon_snarl_roar_attack", "volume": 0.95, "pitch": 1.08 }] },
-  "voidranger_distorter_ambient": { "sounds": [{ "name": "starrail_sim:voidranger/growl", "volume": 0.42, "pitch": 0.82 }] },
-  "voidranger_distorter_hurt": { "sounds": [{ "name": "starrail_sim:voidranger/dragon_hurt", "volume": 0.7, "pitch": 0.9 }] },
-  "voidranger_distorter_death": { "sounds": [{ "name": "starrail_sim:voidranger/robot_monster", "volume": 0.9, "pitch": 0.8 }] },
-  "voidranger_distorter_melee": { "sounds": [{ "name": "starrail_sim:voidranger/short_sci_fi_whoosh_impact", "volume": 0.75, "pitch": 0.92 }] },
-  "voidranger_distorter_special_telegraph": { "sounds": [{ "name": "starrail_sim:voidranger/robot_monster", "volume": 0.8, "pitch": 0.78 }] },
-  "voidranger_distorter_special_hit": { "sounds": [{ "name": "starrail_sim:voidranger/space_laser_shot", "volume": 0.9, "pitch": 0.86 }] },
-  "voidranger_trampler_ambient": { "sounds": [{ "name": "starrail_sim:voidranger/dragon_snarl_roar_attack", "volume": 0.46, "pitch": 0.78 }] },
-  "voidranger_trampler_hurt": { "sounds": [{ "name": "starrail_sim:voidranger/dragon_hurt", "volume": 0.95, "pitch": 0.78 }] },
-  "voidranger_trampler_death": { "sounds": [{ "name": "starrail_sim:voidranger/dragon_snarl_roar_attack", "volume": 1.0, "pitch": 0.72 }] },
-  "voidranger_trampler_melee": { "sounds": [{ "name": "starrail_sim:voidranger/short_sci_fi_whoosh_impact", "volume": 0.95, "pitch": 0.76 }] },
-  "voidranger_trampler_special_telegraph": { "sounds": [{ "name": "starrail_sim:voidranger/growl", "volume": 0.95, "pitch": 0.72 }] },
-  "voidranger_trampler_special_hit": { "sounds": [{ "name": "starrail_sim:voidranger/dragon_snarl_roar_attack", "volume": 1.0, "pitch": 0.84 }] },
-  "voidranger_eliminator_ambient": { "sounds": [{ "name": "starrail_sim:voidranger/robot_monster", "volume": 0.38, "pitch": 1.02 }] },
-  "voidranger_eliminator_hurt": { "sounds": [{ "name": "starrail_sim:voidranger/dragon_hurt", "volume": 0.72, "pitch": 1.16 }] },
-  "voidranger_eliminator_death": { "sounds": [{ "name": "starrail_sim:voidranger/monster_short_roar", "volume": 0.82, "pitch": 1.08 }] },
-  "voidranger_eliminator_melee": { "sounds": [{ "name": "starrail_sim:voidranger/short_sci_fi_whoosh_impact", "volume": 0.68, "pitch": 1.24 }] },
-  "voidranger_eliminator_special_telegraph": { "sounds": [{ "name": "starrail_sim:voidranger/space_laser_shot", "volume": 0.75, "pitch": 1.08 }] },
-  "voidranger_eliminator_special_hit": { "sounds": [{ "name": "starrail_sim:voidranger/space_laser_shot", "volume": 0.92, "pitch": 0.9 }] }
+  "doomsday_roar": {
+    "sounds": [
+      "starrail_sim:doomsday_beast/roar"
+    ]
+  },
+  "doomsday_slam": {
+    "sounds": [
+      "starrail_sim:doomsday_beast/slam"
+    ]
+  },
+  "doomsday_gale": {
+    "sounds": [
+      "starrail_sim:doomsday_beast/gale"
+    ]
+  },
+  "doomsday_charge": {
+    "sounds": [
+      "starrail_sim:doomsday_beast/charge"
+    ]
+  },
+  "doomsday_sweep": {
+    "sounds": [
+      "starrail_sim:doomsday_beast/sweep"
+    ]
+  },
+  "doomsday_strike": {
+    "sounds": [
+      "starrail_sim:doomsday_beast/strike"
+    ]
+  },
+  "doomsday_beam": {
+    "sounds": [
+      "starrail_sim:doomsday_beast/beam"
+    ]
+  },
+  "doomsday_break": {
+    "sounds": [
+      "starrail_sim:doomsday_beast/break"
+    ]
+  },
+  "doomsday_death": {
+    "sounds": [
+      "starrail_sim:doomsday_beast/death"
+    ]
+  },
+  "combat_hunt_strike": {
+    "sounds": [
+      "starrail_sim:combat/hunt_strike"
+    ]
+  },
+  "combat_hunt_reverse": {
+    "sounds": [
+      "starrail_sim:combat/hunt_reverse"
+    ]
+  },
+  "combat_toughness_hit": {
+    "sounds": [
+      "starrail_sim:combat/toughness_hit"
+    ]
+  },
+  "combat_toughness_break": {
+    "sounds": [
+      "starrail_sim:combat/toughness_break"
+    ]
+  },
+  "combat_preservation_wall": {
+    "sounds": [
+      "starrail_sim:combat/preservation_wall"
+    ]
+  },
+  "combat_preservation_counter": {
+    "sounds": [
+      "starrail_sim:combat/preservation_counter"
+    ]
+  },
+  "combat_destruction_rage": {
+    "sounds": [
+      "starrail_sim:combat/destruction_rage"
+    ]
+  },
+  "combat_destruction_burn": {
+    "sounds": [
+      "starrail_sim:combat/destruction_burn"
+    ]
+  },
+  "combat_destruction_desperate": {
+    "sounds": [
+      "starrail_sim:combat/destruction_desperate"
+    ]
+  },
+  "combat_erudition_echo": {
+    "sounds": [
+      "starrail_sim:combat/erudition_echo"
+    ]
+  },
+  "combat_erudition_final": {
+    "sounds": [
+      "starrail_sim:combat/erudition_final"
+    ]
+  },
+  "combat_nihility_mark": {
+    "sounds": [
+      "starrail_sim:combat/nihility_mark"
+    ]
+  },
+  "combat_nihility_spread": {
+    "sounds": [
+      "starrail_sim:combat/nihility_spread"
+    ]
+  },
+  "combat_nihility_end": {
+    "sounds": [
+      "starrail_sim:combat/nihility_end"
+    ]
+  },
+  "combat_harmony_resonance": {
+    "sounds": [
+      "starrail_sim:combat/harmony_resonance"
+    ]
+  },
+  "combat_harmony_afterglow": {
+    "sounds": [
+      "starrail_sim:combat/harmony_afterglow"
+    ]
+  },
+  "combat_harmony_concert": {
+    "sounds": [
+      "starrail_sim:combat/harmony_concert"
+    ]
+  },
+  "combat_harmony_unison": {
+    "sounds": [
+      "starrail_sim:combat/harmony_unison"
+    ]
+  },
+  "combat_abundance_heal": {
+    "sounds": [
+      "starrail_sim:combat/abundance_heal"
+    ]
+  },
+  "combat_abundance_manna": {
+    "sounds": [
+      "starrail_sim:combat/abundance_manna"
+    ]
+  },
+  "combat_abundance_mercy": {
+    "sounds": [
+      "starrail_sim:combat/abundance_mercy"
+    ]
+  },
+  "combat_remembrance_record": {
+    "sounds": [
+      "starrail_sim:combat/remembrance_record"
+    ]
+  },
+  "combat_remembrance_echo": {
+    "sounds": [
+      "starrail_sim:combat/remembrance_echo"
+    ]
+  },
+  "combat_remembrance_eternal": {
+    "sounds": [
+      "starrail_sim:combat/remembrance_eternal"
+    ]
+  },
+  "combat_elation_burst": {
+    "sounds": [
+      "starrail_sim:combat/elation_burst"
+    ]
+  },
+  "combat_elation_grand": {
+    "sounds": [
+      "starrail_sim:combat/elation_grand"
+    ]
+  },
+  "sunnyharvest_deer_ambient": {
+    "sounds": [
+      "starrail_sim:animals/sunnyharvest_deer_call"
+    ]
+  },
+  "sunnyharvest_deer_hurt": {
+    "sounds": [
+      "starrail_sim:animals/sunnyharvest_deer_call"
+    ]
+  },
+  "sunnyharvest_deer_death": {
+    "sounds": [
+      "starrail_sim:animals/sunnyharvest_deer_call"
+    ]
+  },
+  "starvelvet_ram_ambient": {
+    "sounds": [
+      "starrail_sim:animals/starvelvet_ram_call"
+    ]
+  },
+  "starvelvet_ram_hurt": {
+    "sounds": [
+      "starrail_sim:animals/starvelvet_ram_call"
+    ]
+  },
+  "starvelvet_ram_death": {
+    "sounds": [
+      "starrail_sim:animals/starvelvet_ram_call"
+    ]
+  },
+  "woodland_forager_ambient": {
+    "sounds": [
+      "starrail_sim:animals/woodland_forager_call"
+    ]
+  },
+  "woodland_forager_hurt": {
+    "sounds": [
+      "starrail_sim:animals/woodland_forager_call"
+    ]
+  },
+  "woodland_forager_death": {
+    "sounds": [
+      "starrail_sim:animals/woodland_forager_call"
+    ]
+  },
+  "stilltide_fowl_ambient": {
+    "sounds": [
+      "starrail_sim:animals/stilltide_fowl_call"
+    ]
+  },
+  "stilltide_fowl_hurt": {
+    "sounds": [
+      "starrail_sim:animals/stilltide_fowl_call"
+    ]
+  },
+  "stilltide_fowl_death": {
+    "sounds": [
+      "starrail_sim:animals/stilltide_fowl_call"
+    ]
+  },
+  "star_scree_packbeast_ambient": {
+    "sounds": [
+      "starrail_sim:animals/star_scree_packbeast_call"
+    ]
+  },
+  "star_scree_packbeast_hurt": {
+    "sounds": [
+      "starrail_sim:animals/star_scree_packbeast_call"
+    ]
+  },
+  "star_scree_packbeast_death": {
+    "sounds": [
+      "starrail_sim:animals/star_scree_packbeast_call"
+    ]
+  },
+  "voidranger_reaver_ambient": {
+    "sounds": [
+      {
+        "name": "starrail_sim:voidranger/robot_monster",
+        "volume": 0.45,
+        "pitch": 0.92
+      }
+    ]
+  },
+  "voidranger_reaver_hurt": {
+    "sounds": [
+      {
+        "name": "starrail_sim:voidranger/dragon_hurt",
+        "volume": 0.85,
+        "pitch": 1.08
+      }
+    ]
+  },
+  "voidranger_reaver_death": {
+    "sounds": [
+      {
+        "name": "starrail_sim:voidranger/monster_short_roar",
+        "volume": 0.95,
+        "pitch": 0.92
+      }
+    ]
+  },
+  "voidranger_reaver_melee": {
+    "sounds": [
+      {
+        "name": "starrail_sim:voidranger/short_sci_fi_whoosh_impact",
+        "volume": 0.9,
+        "pitch": 1.1
+      }
+    ]
+  },
+  "voidranger_reaver_special_telegraph": {
+    "sounds": [
+      {
+        "name": "starrail_sim:voidranger/growl",
+        "volume": 0.8,
+        "pitch": 1.1
+      }
+    ]
+  },
+  "voidranger_reaver_special_hit": {
+    "sounds": [
+      {
+        "name": "starrail_sim:voidranger/dragon_snarl_roar_attack",
+        "volume": 0.95,
+        "pitch": 1.08
+      }
+    ]
+  },
+  "voidranger_distorter_ambient": {
+    "sounds": [
+      {
+        "name": "starrail_sim:voidranger/growl",
+        "volume": 0.42,
+        "pitch": 0.82
+      }
+    ]
+  },
+  "voidranger_distorter_hurt": {
+    "sounds": [
+      {
+        "name": "starrail_sim:voidranger/dragon_hurt",
+        "volume": 0.7,
+        "pitch": 0.9
+      }
+    ]
+  },
+  "voidranger_distorter_death": {
+    "sounds": [
+      {
+        "name": "starrail_sim:voidranger/robot_monster",
+        "volume": 0.9,
+        "pitch": 0.8
+      }
+    ]
+  },
+  "voidranger_distorter_melee": {
+    "sounds": [
+      {
+        "name": "starrail_sim:voidranger/short_sci_fi_whoosh_impact",
+        "volume": 0.75,
+        "pitch": 0.92
+      }
+    ]
+  },
+  "voidranger_distorter_special_telegraph": {
+    "sounds": [
+      {
+        "name": "starrail_sim:voidranger/robot_monster",
+        "volume": 0.8,
+        "pitch": 0.78
+      }
+    ]
+  },
+  "voidranger_distorter_special_hit": {
+    "sounds": [
+      {
+        "name": "starrail_sim:voidranger/space_laser_shot",
+        "volume": 0.9,
+        "pitch": 0.86
+      }
+    ]
+  },
+  "voidranger_trampler_ambient": {
+    "sounds": [
+      {
+        "name": "starrail_sim:voidranger/dragon_snarl_roar_attack",
+        "volume": 0.46,
+        "pitch": 0.78
+      }
+    ]
+  },
+  "voidranger_trampler_hurt": {
+    "sounds": [
+      {
+        "name": "starrail_sim:voidranger/dragon_hurt",
+        "volume": 0.95,
+        "pitch": 0.78
+      }
+    ]
+  },
+  "voidranger_trampler_death": {
+    "sounds": [
+      {
+        "name": "starrail_sim:voidranger/dragon_snarl_roar_attack",
+        "volume": 1.0,
+        "pitch": 0.72
+      }
+    ]
+  },
+  "voidranger_trampler_melee": {
+    "sounds": [
+      {
+        "name": "starrail_sim:voidranger/short_sci_fi_whoosh_impact",
+        "volume": 0.95,
+        "pitch": 0.76
+      }
+    ]
+  },
+  "voidranger_trampler_special_telegraph": {
+    "sounds": [
+      {
+        "name": "starrail_sim:voidranger/growl",
+        "volume": 0.95,
+        "pitch": 0.72
+      }
+    ]
+  },
+  "voidranger_trampler_special_hit": {
+    "sounds": [
+      {
+        "name": "starrail_sim:voidranger/dragon_snarl_roar_attack",
+        "volume": 1.0,
+        "pitch": 0.84
+      }
+    ]
+  },
+  "voidranger_eliminator_ambient": {
+    "sounds": [
+      {
+        "name": "starrail_sim:voidranger/robot_monster",
+        "volume": 0.38,
+        "pitch": 1.02
+      }
+    ]
+  },
+  "voidranger_eliminator_hurt": {
+    "sounds": [
+      {
+        "name": "starrail_sim:voidranger/dragon_hurt",
+        "volume": 0.72,
+        "pitch": 1.16
+      }
+    ]
+  },
+  "voidranger_eliminator_death": {
+    "sounds": [
+      {
+        "name": "starrail_sim:voidranger/monster_short_roar",
+        "volume": 0.82,
+        "pitch": 1.08
+      }
+    ]
+  },
+  "voidranger_eliminator_melee": {
+    "sounds": [
+      {
+        "name": "starrail_sim:voidranger/short_sci_fi_whoosh_impact",
+        "volume": 0.68,
+        "pitch": 1.24
+      }
+    ]
+  },
+  "voidranger_eliminator_special_telegraph": {
+    "sounds": [
+      {
+        "name": "starrail_sim:voidranger/space_laser_shot",
+        "volume": 0.75,
+        "pitch": 1.08
+      }
+    ]
+  },
+  "voidranger_eliminator_special_hit": {
+    "sounds": [
+      {
+        "name": "starrail_sim:voidranger/space_laser_shot",
+        "volume": 0.92,
+        "pitch": 0.9
+      }
+    ]
+  },
+  "guardian_core": {
+    "sounds": [
+      "starrail_sim:guardian/core"
+    ]
+  },
+  "guardian_attack": {
+    "sounds": [
+      "starrail_sim:guardian/attack"
+    ]
+  },
+  "guardian_slam": {
+    "sounds": [
+      "starrail_sim:guardian/slam"
+    ]
+  },
+  "guardian_hurt": {
+    "sounds": [
+      "starrail_sim:guardian/hurt"
+    ]
+  },
+  "guardian_death": {
+    "sounds": [
+      "starrail_sim:guardian/death"
+    ]
+  },
+  "guardian_step": {
+    "sounds": [
+      "starrail_sim:guardian/step"
+    ]
+  },
+  "active_preservation": {
+    "sounds": [
+      "starrail_sim:active/preservation"
+    ]
+  },
+  "active_destruction": {
+    "sounds": [
+      "starrail_sim:active/destruction"
+    ]
+  },
+  "active_hunt": {
+    "sounds": [
+      "starrail_sim:active/hunt"
+    ]
+  },
+  "active_erudition": {
+    "sounds": [
+      "starrail_sim:active/erudition"
+    ]
+  },
+  "active_harmony": {
+    "sounds": [
+      "starrail_sim:active/harmony"
+    ]
+  },
+  "active_nihility": {
+    "sounds": [
+      "starrail_sim:active/nihility"
+    ]
+  },
+  "active_abundance": {
+    "sounds": [
+      "starrail_sim:active/abundance"
+    ]
+  },
+  "active_remembrance": {
+    "sounds": [
+      "starrail_sim:active/remembrance"
+    ]
+  },
+  "active_elation": {
+    "sounds": [
+      "starrail_sim:active/elation"
+    ]
+  },
+  "animal_daily_deer_step": {
+    "sounds": [
+      "starrail_sim:animals/daily_deer_step"
+    ]
+  },
+  "animal_daily_ram_step": {
+    "sounds": [
+      "starrail_sim:animals/daily_ram_step"
+    ]
+  },
+  "animal_daily_forager_step": {
+    "sounds": [
+      "starrail_sim:animals/daily_forager_step"
+    ]
+  },
+  "animal_daily_fowl_step": {
+    "sounds": [
+      "starrail_sim:animals/daily_fowl_step"
+    ]
+  },
+  "animal_daily_pack_step": {
+    "sounds": [
+      "starrail_sim:animals/daily_pack_step"
+    ]
+  },
+  "animal_daily_pack_gallop": {
+    "sounds": [
+      "starrail_sim:animals/daily_pack_gallop"
+    ]
+  },
+  "animal_daily_pack_eat": {
+    "sounds": [
+      "starrail_sim:animals/daily_pack_eat"
+    ]
+  },
+  "animal_daily_pack_angry": {
+    "sounds": [
+      "starrail_sim:animals/daily_pack_angry"
+    ]
+  },
+  "animal_daily_pack_breathe": {
+    "sounds": [
+      "starrail_sim:animals/daily_pack_breathe"
+    ]
+  },
+  "animal_daily_pack_jump": {
+    "sounds": [
+      "starrail_sim:animals/daily_pack_jump"
+    ]
+  },
+  "animal_daily_pack_land": {
+    "sounds": [
+      "starrail_sim:animals/daily_pack_land"
+    ]
+  },
+  "animal_daily_fowl_egg": {
+    "sounds": [
+      "starrail_sim:animals/daily_fowl_egg"
+    ]
+  },
+  "gem_lizard_call": {
+    "sounds": [
+      "starrail_sim:animals/gem_lizard_call"
+    ]
+  },
+  "lotus_otter_voice": {
+    "subtitle": "subtitles.starrail_sim.lotus_otter_voice",
+    "sounds": [
+      "starrail_sim:animals/lotus_otter_voice"
+    ]
+  },
+  "rockdwelling_crab_voice": {
+    "subtitle": "subtitles.starrail_sim.rockdwelling_crab_voice",
+    "sounds": [
+      "starrail_sim:animals/rockdwelling_crab_voice"
+    ]
+  },
+  "duskorange_finch_voice": {
+    "subtitle": "subtitles.starrail_sim.duskorange_finch_voice",
+    "sounds": [
+      "starrail_sim:animals/duskorange_finch_voice"
+    ]
+  },
+  "duskred_fish_flop": {
+    "subtitle": "subtitles.starrail_sim.duskred_fish_flop",
+    "sounds": [
+      "starrail_sim:animals/duskred_fish_flop"
+    ]
+  }
 }

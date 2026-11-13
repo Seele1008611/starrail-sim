@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "starrail_sim:cooked_duskred_fish"
+    },
+    {
+      "item": "starrail_sim:flame_pepper"
+    },
+    {
+      "item": "starrail_sim:lemon"
+    }
+  ],
+  "result": {
+    "item": "starrail_sim:cold_duskred_fish",
+    "count": 1
+  }
+}

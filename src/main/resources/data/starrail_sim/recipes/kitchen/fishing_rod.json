@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "  S",
+    " SF",
+    "S F"
+  ],
+  "key": {
+    "S": {
+      "item": "minecraft:stick"
+    },
+    "F": {
+      "item": "starrail_sim:kelp_fiber"
+    }
+  },
+  "result": {
+    "item": "minecraft:fishing_rod"
+  }
+}

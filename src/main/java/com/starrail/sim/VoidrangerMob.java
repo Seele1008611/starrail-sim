@@ -50,6 +50,7 @@ public abstract class VoidrangerMob extends Monster {
             SynchedEntityData.defineId(VoidrangerMob.class, EntityDataSerializers.BOOLEAN);
 
     private int cooldownTicks;
+    private int clientPhaseSyncTick;
     private UUID lockedTargetId;
     private float lockedYaw;
     private boolean attackStartedThisTick;
@@ -215,6 +216,7 @@ public abstract class VoidrangerMob extends Monster {
     protected final boolean damageLockedTarget(LivingEntity target, float damage) {
         if (this.attackHit || this.level().isClientSide || target == null || !target.isAlive()) return false;
         boolean hit = target.hurt(this.level().damageSources().mobAttack(this), damage);
+        if (hit) MonsterCombatVfx.hit(this, target);
         this.attackHit |= hit;
         return hit;
     }
@@ -243,7 +245,9 @@ public abstract class VoidrangerMob extends Monster {
     protected final boolean hitPlayer(Player player, float damage) {
         if (this.level().isClientSide || player == null || !player.isAlive()
                 || player.isCreative() || player.isSpectator()) return false;
-        return player.hurt(this.level().damageSources().mobAttack(this), damage);
+        boolean hit = player.hurt(this.level().damageSources().mobAttack(this), damage);
+        if (hit) MonsterCombatVfx.hit(this, player);
+        return hit;
     }
 
     protected final void cancelSpecialAttack() {
@@ -322,6 +326,7 @@ public abstract class VoidrangerMob extends Monster {
     public boolean doHurtTarget(Entity target) {
         boolean hit = super.doHurtTarget(target);
         if (hit && !this.level().isClientSide) {
+            if (target instanceof LivingEntity living) MonsterCombatVfx.hit(this, living);
             playCombatSound(meleeAttackSound(), 0.68F,
                     0.94F + this.random.nextFloat() * 0.12F);
         }
@@ -334,6 +339,21 @@ public abstract class VoidrangerMob extends Monster {
 
     public final int getAttackPhaseTicks() {
         return this.entityData.get(ATTACK_PHASE_TICKS);
+    }
+
+    @Override
+    public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
+        super.onSyncedDataUpdated(key);
+        if (this.level() != null && this.level().isClientSide
+                && (key.equals(ATTACK_STATE) || key.equals(ATTACK_PHASE_TICKS))) {
+            this.clientPhaseSyncTick = this.tickCount;
+        }
+    }
+
+    /** Smooth visual time between synced phase updates; never changes the server's hit timing. */
+    public final float getAttackAnimationPhaseTicks(float partialTick) {
+        int elapsed = this.level().isClientSide ? Math.max(0,this.tickCount-this.clientPhaseSyncTick) : 0;
+        return getAttackPhaseTicks()+elapsed+Math.max(0.0F,Math.min(1.0F,partialTick));
     }
 
     public final Vec3 getAttackMark() {

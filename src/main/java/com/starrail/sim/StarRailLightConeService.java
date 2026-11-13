@@ -25,15 +25,15 @@ public final class StarRailLightConeService {
     public static final int NIGHT_BUTTERFLY_DURATION = 30 * 20;
     public static final int NIGHT_BUTTERFLY_MAX_STACKS = 6;
     public static final int FLOWING_LIGHT_DURATION = 30 * 20;
-    public static final int FLOWING_LIGHT_MAX_STACKS = 3;
+    public static final int FLOWING_LIGHT_MAX_STACKS = 4;
     public static final int TAMED_DURATION = 30 * 20;
-    public static final int TAMED_MAX_STACKS = 3;
+    public static final int TAMED_MAX_STACKS = 4;
     public static final int BEAUTIFUL_DREAM_DURATION = 10 * 20;
     public static final int BEAUTIFUL_DREAM_COOLDOWN = 20 * 20;
     public static final int DEBATE_DURATION = 20 * 20;
-    public static final int THOUGHT_TRAINING_MAX_STACKS = 3;
+    public static final int THOUGHT_TRAINING_MAX_STACKS = 8;
     public static final int RANGER_DURATION = 20 * 20;
-    public static final int RANGER_MAX_STACKS = 4;
+    public static final int RANGER_MAX_STACKS = 6;
     public static final int PAINFUL_VOYAGE_THRESHOLD_PERCENT = 100;
     public static final int METAMORPHOSIS_THRESHOLD_PERCENT = 120;
     public static final int SHADOW_DEVOUR_DURATION = 30 * 20;
@@ -126,6 +126,8 @@ public final class StarRailLightConeService {
             UUID.fromString("0c7cf6f8-1d9f-49ce-a6f4-8c7fb5f5a132");
     private static final UUID BEAUTIFUL_DREAM_CRIT_RATE_MODIFIER =
             UUID.fromString("0c7cf6f8-1d9f-49ce-a6f4-8c7fb5f5a133");
+    private static final UUID BEAUTIFUL_DREAM_CRIT_DAMAGE_MODIFIER =
+            UUID.fromString("7851f69b-c98a-425c-b24e-3582d532dc7f");
     private static final UUID PURE_THOUGHT_BAPTISM_CRIT_DAMAGE_MODIFIER =
             UUID.fromString("0c7cf6f8-1d9f-49ce-a6f4-8c7fb5f5a141");
     private static final UUID DEBATE_ATTACK_DAMAGE_MODIFIER =
@@ -666,27 +668,30 @@ public final class StarRailLightConeService {
             0.30D, 0.375D, 0.45D, 0.525D, 0.60D};
 
     private static final double[] CRIT_RATE = {0.18D, 0.21D, 0.24D, 0.27D, 0.30D};
-    private static final double[] ATTACK_PER_STACK = {0.06D, 0.10D, 0.13D, 0.17D, 0.20D};
+    private static final double[] ATTACK_PER_STACK = {
+            0.10D, 0.15D, 0.20D, 0.25D, 0.30D};
     private static final double[] CRIT_DAMAGE_PER_STACK = {
-            0.12D, 0.17D, 0.21D, 0.26D, 0.30D};
+            0.15D, 0.20D, 0.25D, 0.30D, 0.35D};
     private static final double[] I_WILL_HUNT_CRIT_RATE = {
             0.15D, 0.175D, 0.20D, 0.225D, 0.25D};
     private static final double[] I_WILL_HUNT_CRIT_DAMAGE = {
             0.10D, 0.15D, 0.20D, 0.25D, 0.30D};
     private static final double[] I_WILL_HUNT_DAMAGE_PER_STACK = {
-            0.30D, 0.34D, 0.38D, 0.42D, 0.46D};
+            0.30D, 0.35D, 0.40D, 0.45D, 0.50D};
     private static final double[] WORRISOME_BLISSFUL_CRIT_RATE = {
             0.18D, 0.21D, 0.24D, 0.27D, 0.30D};
     private static final double[] WORRISOME_BLISSFUL_ATTACK_DAMAGE = {
             0.30D, 0.35D, 0.40D, 0.45D, 0.50D};
     private static final double[] WORRISOME_BLISSFUL_CRIT_DAMAGE_PER_STACK = {
-            0.12D, 0.14D, 0.16D, 0.18D, 0.20D};
+            0.30D, 0.35D, 0.40D, 0.45D, 0.50D};
     private static final double[] SLEEP_LIKE_THE_DEAD_CRIT_DAMAGE = {
             0.30D, 0.35D, 0.40D, 0.45D, 0.50D};
     private static final double[] SLEEP_LIKE_THE_DEAD_ATTACK_DAMAGE = {
             0.10D, 0.125D, 0.15D, 0.175D, 0.20D};
     private static final double[] BEAUTIFUL_DREAM_CRIT_RATE = {
             0.36D, 0.42D, 0.48D, 0.54D, 0.60D};
+    private static final double[] BEAUTIFUL_DREAM_CRIT_DAMAGE = {
+            0.50D, 0.60D, 0.70D, 0.80D, 0.90D};
     private static final double[] PURE_THOUGHT_BAPTISM_CRIT_DAMAGE = {
             0.20D, 0.23D, 0.26D, 0.29D, 0.32D};
     private static final double[] THOUGHT_TRAINING_CRIT_DAMAGE_PER_STACK = {
@@ -706,13 +711,13 @@ public final class StarRailLightConeService {
     private static final double[] PAINFUL_VOYAGE_BREAK_DAMAGE = {
             0.30D, 0.40D, 0.50D, 0.60D, 0.70D};
     private static final double[] PAINFUL_VOYAGE_ATTACK_DAMAGE = {
-            0.30D, 0.40D, 0.50D, 0.60D, 0.70D};
+            0.90D, 1.00D, 1.10D, 1.20D, 1.30D};
     private static final double[] FINALE_OF_A_LIE_CRIT_RATE = {
             0.18D, 0.21D, 0.24D, 0.27D, 0.30D};
     private static final double[] SHADOW_DEVOUR_ATTACK_DAMAGE = {
             0.40D, 0.50D, 0.60D, 0.70D, 0.80D};
     private static final double[] SHADOW_DEVOUR_DAMAGE = {
-            0.20D, 0.225D, 0.25D, 0.275D, 0.30D};
+            0.30D, 0.35D, 0.40D, 0.45D, 0.50D};
     private static final double[] SOMETHING_IRREPLACEABLE_ATTACK_DAMAGE = {
             0.30D, 0.34D, 0.38D, 0.40D, 0.44D};
     private static final double[] FAMILY_HEALING = {
@@ -852,6 +857,7 @@ public final class StarRailLightConeService {
             SLEEP_LIKE_THE_DEAD_CRIT_DAMAGE_MODIFIER,
             SLEEP_LIKE_THE_DEAD_ATTACK_DAMAGE_MODIFIER,
             BEAUTIFUL_DREAM_CRIT_RATE_MODIFIER,
+            BEAUTIFUL_DREAM_CRIT_DAMAGE_MODIFIER,
             PURE_THOUGHT_BAPTISM_CRIT_DAMAGE_MODIFIER,
             DEBATE_ATTACK_DAMAGE_MODIFIER,
             IDEAL_BURNING_HELL_CRIT_RATE_MODIFIER,
@@ -1015,6 +1021,10 @@ public final class StarRailLightConeService {
 
     public static double beautifulDreamCritRate(int superimposition) {
         return BEAUTIFUL_DREAM_CRIT_RATE[boundedSuperimposition(superimposition) - 1];
+    }
+
+    public static double beautifulDreamCritDamage(int superimposition) {
+        return BEAUTIFUL_DREAM_CRIT_DAMAGE[boundedSuperimposition(superimposition) - 1];
     }
 
     public static double pureThoughtBaptismCritDamage(int superimposition) {
@@ -2914,6 +2924,11 @@ public final class StarRailLightConeService {
                     "starrail_sim.sleep_like_the_dead.crit_damage",
                     sleepActive
                             ? sleepLikeTheDeadCritDamage(sleepSuperimposition) : 0.0D,
+                    AttributeModifier.Operation.ADDITION);
+            applyModifier(critDamage, BEAUTIFUL_DREAM_CRIT_DAMAGE_MODIFIER,
+                    "starrail_sim.sleep_like_the_dead.beautiful_dream_crit_damage",
+                    sleepActive && player.hasEffect(StarRailSimMod.BEAUTIFUL_DREAM.get())
+                            ? beautifulDreamCritDamage(sleepSuperimposition) : 0.0D,
                     AttributeModifier.Operation.ADDITION);
             applyModifier(critDamage, PURE_THOUGHT_BAPTISM_CRIT_DAMAGE_MODIFIER,
                     "starrail_sim.pure_thought_baptism.crit_damage",

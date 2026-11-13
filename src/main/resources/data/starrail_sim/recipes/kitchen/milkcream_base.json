@@ -1,0 +1,28 @@
+{
+  "type": "starrail_sim:kitchen",
+  "process": "steam",
+  "inputs": [
+    {
+      "item": "starrail_sim:starfleece_milk",
+      "count": 1
+    },
+    {
+      "item": "starrail_sim:grain_sugar",
+      "count": 1
+    },
+    {
+      "item": "starrail_sim:mirrorfrost_ice",
+      "count": 1
+    }
+  ],
+  "result": {
+    "item": "starrail_sim:milkcream_base",
+    "count": 1
+  },
+  "returns": [
+    {
+      "item": "minecraft:bucket",
+      "count": 1
+    }
+  ]
+}

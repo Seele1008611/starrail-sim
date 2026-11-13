@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "starrail_sim:cooked_stilltide_rice"
+    }
+  ],
+  "result": {
+    "item": "starrail_sim:grain_flour",
+    "count": 1
+  }
+}

@@ -19,6 +19,66 @@
             ],
             "continentalness": [
               -1.0,
+              -0.25
+            ],
+            "erosion": [
+              -1.0,
+              1.0
+            ],
+            "depth": [
+              0.0,
+              0.0
+            ],
+            "weirdness": [
+              -1.0,
+              1.0
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "starrail_sim:star_tide_ocean",
+          "parameters": {
+            "temperature": [
+              -1.0,
+              0.35
+            ],
+            "humidity": [
+              -1.0,
+              1.0
+            ],
+            "continentalness": [
+              -0.25,
+              -0.19
+            ],
+            "erosion": [
+              -1.0,
+              1.0
+            ],
+            "depth": [
+              0.0,
+              0.0
+            ],
+            "weirdness": [
+              -1.0,
+              1.0
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "starrail_sim:starazure_reef",
+          "parameters": {
+            "temperature": [
+              0.35,
+              1.0
+            ],
+            "humidity": [
+              -1.0,
+              1.0
+            ],
+            "continentalness": [
+              -0.25,
               -0.19
             ],
             "erosion": [
@@ -49,6 +109,36 @@
             ],
             "continentalness": [
               -1.0,
+              -0.25
+            ],
+            "erosion": [
+              -1.0,
+              1.0
+            ],
+            "depth": [
+              1.0,
+              1.0
+            ],
+            "weirdness": [
+              -1.0,
+              1.0
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "starrail_sim:star_tide_ocean",
+          "parameters": {
+            "temperature": [
+              -1.0,
+              0.35
+            ],
+            "humidity": [
+              -1.0,
+              1.0
+            ],
+            "continentalness": [
+              -0.25,
               -0.19
             ],
             "erosion": [
@@ -67,7 +157,37 @@
           }
         },
         {
-          "biome": "starrail_sim:clear_sand_beach",
+          "biome": "starrail_sim:starazure_reef",
+          "parameters": {
+            "temperature": [
+              0.35,
+              1.0
+            ],
+            "humidity": [
+              -1.0,
+              1.0
+            ],
+            "continentalness": [
+              -0.25,
+              -0.19
+            ],
+            "erosion": [
+              -1.0,
+              1.0
+            ],
+            "depth": [
+              1.0,
+              1.0
+            ],
+            "weirdness": [
+              -1.0,
+              1.0
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "starrail_sim:echo_tide_cliffs",
           "parameters": {
             "temperature": [
               -1.0,
@@ -83,7 +203,7 @@
             ],
             "erosion": [
               -1.0,
-              1.0
+              -0.08
             ],
             "depth": [
               0.0,
@@ -112,7 +232,67 @@
               -0.11
             ],
             "erosion": [
+              -0.08,
+              1.0
+            ],
+            "depth": [
+              0.0,
+              0.0
+            ],
+            "weirdness": [
               -1.0,
+              1.0
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "starrail_sim:echo_tide_cliffs",
+          "parameters": {
+            "temperature": [
+              -1.0,
+              1.0
+            ],
+            "humidity": [
+              -1.0,
+              1.0
+            ],
+            "continentalness": [
+              -0.19,
+              -0.11
+            ],
+            "erosion": [
+              -1.0,
+              -0.08
+            ],
+            "depth": [
+              1.0,
+              1.0
+            ],
+            "weirdness": [
+              -1.0,
+              1.0
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "starrail_sim:clear_sand_beach",
+          "parameters": {
+            "temperature": [
+              -1.0,
+              1.0
+            ],
+            "humidity": [
+              -1.0,
+              1.0
+            ],
+            "continentalness": [
+              -0.19,
+              -0.11
+            ],
+            "erosion": [
+              -0.08,
               1.0
             ],
             "depth": [
@@ -131,10 +311,100 @@
           "parameters": {
             "temperature": [
               -1.0,
+              0.14
+            ],
+            "humidity": [
+              -1.0,
+              0.0
+            ],
+            "continentalness": [
+              -0.11,
+              0.03
+            ],
+            "erosion": [
+              -1.0,
+              1.0
+            ],
+            "depth": [
+              0.0,
+              0.0
+            ],
+            "weirdness": [
+              -1.0,
+              1.0
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "starrail_sim:goldwind_grainvale",
+          "parameters": {
+            "temperature": [
+              0.14,
+              0.45
+            ],
+            "humidity": [
+              -1.0,
+              0.0
+            ],
+            "continentalness": [
+              -0.11,
+              0.03
+            ],
+            "erosion": [
+              -1.0,
+              1.0
+            ],
+            "depth": [
+              0.0,
+              0.0
+            ],
+            "weirdness": [
+              -1.0,
+              1.0
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "starrail_sim:ember_spring_terraces",
+          "parameters": {
+            "temperature": [
+              0.45,
               1.0
             ],
             "humidity": [
               -1.0,
+              -0.09
+            ],
+            "continentalness": [
+              -0.11,
+              0.03
+            ],
+            "erosion": [
+              -1.0,
+              1.0
+            ],
+            "depth": [
+              0.0,
+              0.0
+            ],
+            "weirdness": [
+              -1.0,
+              1.0
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "starrail_sim:ochrecrystal_hills",
+          "parameters": {
+            "temperature": [
+              0.45,
+              1.0
+            ],
+            "humidity": [
+              -0.09,
               0.0
             ],
             "continentalness": [
@@ -161,10 +431,100 @@
           "parameters": {
             "temperature": [
               -1.0,
+              0.14
+            ],
+            "humidity": [
+              -1.0,
+              0.0
+            ],
+            "continentalness": [
+              0.03,
+              1.0
+            ],
+            "erosion": [
+              -0.375,
+              1.0
+            ],
+            "depth": [
+              0.0,
+              0.0
+            ],
+            "weirdness": [
+              -1.0,
+              1.0
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "starrail_sim:goldwind_grainvale",
+          "parameters": {
+            "temperature": [
+              0.14,
+              0.45
+            ],
+            "humidity": [
+              -1.0,
+              0.0
+            ],
+            "continentalness": [
+              0.03,
+              1.0
+            ],
+            "erosion": [
+              -0.375,
+              1.0
+            ],
+            "depth": [
+              0.0,
+              0.0
+            ],
+            "weirdness": [
+              -1.0,
+              1.0
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "starrail_sim:ember_spring_terraces",
+          "parameters": {
+            "temperature": [
+              0.45,
               1.0
             ],
             "humidity": [
               -1.0,
+              -0.09
+            ],
+            "continentalness": [
+              0.03,
+              1.0
+            ],
+            "erosion": [
+              -0.375,
+              1.0
+            ],
+            "depth": [
+              0.0,
+              0.0
+            ],
+            "weirdness": [
+              -1.0,
+              1.0
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "starrail_sim:ochrecrystal_hills",
+          "parameters": {
+            "temperature": [
+              0.45,
+              1.0
+            ],
+            "humidity": [
+              -0.09,
               0.0
             ],
             "continentalness": [
@@ -191,10 +551,100 @@
           "parameters": {
             "temperature": [
               -1.0,
+              0.14
+            ],
+            "humidity": [
+              -1.0,
+              0.0
+            ],
+            "continentalness": [
+              -0.11,
+              0.03
+            ],
+            "erosion": [
+              -1.0,
+              1.0
+            ],
+            "depth": [
+              1.0,
+              1.0
+            ],
+            "weirdness": [
+              -1.0,
+              1.0
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "starrail_sim:goldwind_grainvale",
+          "parameters": {
+            "temperature": [
+              0.14,
+              0.45
+            ],
+            "humidity": [
+              -1.0,
+              0.0
+            ],
+            "continentalness": [
+              -0.11,
+              0.03
+            ],
+            "erosion": [
+              -1.0,
+              1.0
+            ],
+            "depth": [
+              1.0,
+              1.0
+            ],
+            "weirdness": [
+              -1.0,
+              1.0
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "starrail_sim:ember_spring_terraces",
+          "parameters": {
+            "temperature": [
+              0.45,
               1.0
             ],
             "humidity": [
               -1.0,
+              -0.09
+            ],
+            "continentalness": [
+              -0.11,
+              0.03
+            ],
+            "erosion": [
+              -1.0,
+              1.0
+            ],
+            "depth": [
+              1.0,
+              1.0
+            ],
+            "weirdness": [
+              -1.0,
+              1.0
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "starrail_sim:ochrecrystal_hills",
+          "parameters": {
+            "temperature": [
+              0.45,
+              1.0
+            ],
+            "humidity": [
+              -0.09,
               0.0
             ],
             "continentalness": [
@@ -221,10 +671,100 @@
           "parameters": {
             "temperature": [
               -1.0,
+              0.14
+            ],
+            "humidity": [
+              -1.0,
+              0.0
+            ],
+            "continentalness": [
+              0.03,
+              1.0
+            ],
+            "erosion": [
+              -0.375,
+              1.0
+            ],
+            "depth": [
+              1.0,
+              1.0
+            ],
+            "weirdness": [
+              -1.0,
+              1.0
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "starrail_sim:goldwind_grainvale",
+          "parameters": {
+            "temperature": [
+              0.14,
+              0.45
+            ],
+            "humidity": [
+              -1.0,
+              0.0
+            ],
+            "continentalness": [
+              0.03,
+              1.0
+            ],
+            "erosion": [
+              -0.375,
+              1.0
+            ],
+            "depth": [
+              1.0,
+              1.0
+            ],
+            "weirdness": [
+              -1.0,
+              1.0
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "starrail_sim:ember_spring_terraces",
+          "parameters": {
+            "temperature": [
+              0.45,
               1.0
             ],
             "humidity": [
               -1.0,
+              -0.09
+            ],
+            "continentalness": [
+              0.03,
+              1.0
+            ],
+            "erosion": [
+              -0.375,
+              1.0
+            ],
+            "depth": [
+              1.0,
+              1.0
+            ],
+            "weirdness": [
+              -1.0,
+              1.0
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "starrail_sim:ochrecrystal_hills",
+          "parameters": {
+            "temperature": [
+              0.45,
+              1.0
+            ],
+            "humidity": [
+              -0.09,
               0.0
             ],
             "continentalness": [
@@ -250,8 +790,68 @@
           "biome": "starrail_sim:starlight_grove",
           "parameters": {
             "temperature": [
+              -0.35,
+              0.3
+            ],
+            "humidity": [
+              0.0,
+              0.1
+            ],
+            "continentalness": [
+              -0.11,
+              0.03
+            ],
+            "erosion": [
               -1.0,
               1.0
+            ],
+            "depth": [
+              0.0,
+              0.0
+            ],
+            "weirdness": [
+              -1.0,
+              1.0
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "starrail_sim:duskorange_orchard",
+          "parameters": {
+            "temperature": [
+              0.3,
+              1.0
+            ],
+            "humidity": [
+              0.0,
+              0.1
+            ],
+            "continentalness": [
+              -0.11,
+              0.03
+            ],
+            "erosion": [
+              -1.0,
+              1.0
+            ],
+            "depth": [
+              0.0,
+              0.0
+            ],
+            "weirdness": [
+              -1.0,
+              1.0
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "starrail_sim:frostveil_taiga",
+          "parameters": {
+            "temperature": [
+              -1.0,
+              -0.35
             ],
             "humidity": [
               0.0,
@@ -280,8 +880,68 @@
           "biome": "starrail_sim:starlight_grove",
           "parameters": {
             "temperature": [
+              -0.35,
+              0.3
+            ],
+            "humidity": [
+              0.1,
+              1.0
+            ],
+            "continentalness": [
+              -0.11,
+              -0.105
+            ],
+            "erosion": [
               -1.0,
               1.0
+            ],
+            "depth": [
+              0.0,
+              0.0
+            ],
+            "weirdness": [
+              -1.0,
+              1.0
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "starrail_sim:duskorange_orchard",
+          "parameters": {
+            "temperature": [
+              0.3,
+              1.0
+            ],
+            "humidity": [
+              0.1,
+              1.0
+            ],
+            "continentalness": [
+              -0.11,
+              -0.105
+            ],
+            "erosion": [
+              -1.0,
+              1.0
+            ],
+            "depth": [
+              0.0,
+              0.0
+            ],
+            "weirdness": [
+              -1.0,
+              1.0
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "starrail_sim:frostveil_taiga",
+          "parameters": {
+            "temperature": [
+              -1.0,
+              -0.35
             ],
             "humidity": [
               0.1,
@@ -310,8 +970,68 @@
           "biome": "starrail_sim:starlight_grove",
           "parameters": {
             "temperature": [
+              -0.35,
+              0.3
+            ],
+            "humidity": [
+              0.1,
+              1.0
+            ],
+            "continentalness": [
+              -0.105,
+              0.03
+            ],
+            "erosion": [
+              -1.0,
+              0.3
+            ],
+            "depth": [
+              0.0,
+              0.0
+            ],
+            "weirdness": [
               -1.0,
               1.0
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "starrail_sim:duskorange_orchard",
+          "parameters": {
+            "temperature": [
+              0.3,
+              1.0
+            ],
+            "humidity": [
+              0.1,
+              1.0
+            ],
+            "continentalness": [
+              -0.105,
+              0.03
+            ],
+            "erosion": [
+              -1.0,
+              0.3
+            ],
+            "depth": [
+              0.0,
+              0.0
+            ],
+            "weirdness": [
+              -1.0,
+              1.0
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "starrail_sim:frostveil_taiga",
+          "parameters": {
+            "temperature": [
+              -1.0,
+              -0.35
             ],
             "humidity": [
               0.1,
@@ -340,8 +1060,68 @@
           "biome": "starrail_sim:starlight_grove",
           "parameters": {
             "temperature": [
+              -0.35,
+              0.3
+            ],
+            "humidity": [
+              0.0,
+              0.1
+            ],
+            "continentalness": [
+              0.03,
+              1.0
+            ],
+            "erosion": [
+              -0.375,
+              1.0
+            ],
+            "depth": [
+              0.0,
+              0.0
+            ],
+            "weirdness": [
               -1.0,
               1.0
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "starrail_sim:duskorange_orchard",
+          "parameters": {
+            "temperature": [
+              0.3,
+              1.0
+            ],
+            "humidity": [
+              0.0,
+              0.1
+            ],
+            "continentalness": [
+              0.03,
+              1.0
+            ],
+            "erosion": [
+              -0.375,
+              1.0
+            ],
+            "depth": [
+              0.0,
+              0.0
+            ],
+            "weirdness": [
+              -1.0,
+              1.0
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "starrail_sim:frostveil_taiga",
+          "parameters": {
+            "temperature": [
+              -1.0,
+              -0.35
             ],
             "humidity": [
               0.0,
@@ -370,8 +1150,68 @@
           "biome": "starrail_sim:starlight_grove",
           "parameters": {
             "temperature": [
+              -0.35,
+              0.3
+            ],
+            "humidity": [
+              0.1,
+              1.0
+            ],
+            "continentalness": [
+              0.2,
+              1.0
+            ],
+            "erosion": [
+              -0.375,
+              1.0
+            ],
+            "depth": [
+              0.0,
+              0.0
+            ],
+            "weirdness": [
               -1.0,
               1.0
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "starrail_sim:duskorange_orchard",
+          "parameters": {
+            "temperature": [
+              0.3,
+              1.0
+            ],
+            "humidity": [
+              0.1,
+              1.0
+            ],
+            "continentalness": [
+              0.2,
+              1.0
+            ],
+            "erosion": [
+              -0.375,
+              1.0
+            ],
+            "depth": [
+              0.0,
+              0.0
+            ],
+            "weirdness": [
+              -1.0,
+              1.0
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "starrail_sim:frostveil_taiga",
+          "parameters": {
+            "temperature": [
+              -1.0,
+              -0.35
             ],
             "humidity": [
               0.1,
@@ -400,8 +1240,68 @@
           "biome": "starrail_sim:starlight_grove",
           "parameters": {
             "temperature": [
+              -0.35,
+              0.3
+            ],
+            "humidity": [
+              0.1,
+              1.0
+            ],
+            "continentalness": [
+              0.03,
+              0.2
+            ],
+            "erosion": [
+              -0.375,
+              0.3
+            ],
+            "depth": [
+              0.0,
+              0.0
+            ],
+            "weirdness": [
               -1.0,
               1.0
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "starrail_sim:duskorange_orchard",
+          "parameters": {
+            "temperature": [
+              0.3,
+              1.0
+            ],
+            "humidity": [
+              0.1,
+              1.0
+            ],
+            "continentalness": [
+              0.03,
+              0.2
+            ],
+            "erosion": [
+              -0.375,
+              0.3
+            ],
+            "depth": [
+              0.0,
+              0.0
+            ],
+            "weirdness": [
+              -1.0,
+              1.0
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "starrail_sim:frostveil_taiga",
+          "parameters": {
+            "temperature": [
+              -1.0,
+              -0.35
             ],
             "humidity": [
               0.1,
@@ -430,8 +1330,68 @@
           "biome": "starrail_sim:starlight_grove",
           "parameters": {
             "temperature": [
+              -0.35,
+              0.3
+            ],
+            "humidity": [
+              0.0,
+              0.1
+            ],
+            "continentalness": [
+              -0.11,
+              0.03
+            ],
+            "erosion": [
               -1.0,
               1.0
+            ],
+            "depth": [
+              1.0,
+              1.0
+            ],
+            "weirdness": [
+              -1.0,
+              1.0
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "starrail_sim:duskorange_orchard",
+          "parameters": {
+            "temperature": [
+              0.3,
+              1.0
+            ],
+            "humidity": [
+              0.0,
+              0.1
+            ],
+            "continentalness": [
+              -0.11,
+              0.03
+            ],
+            "erosion": [
+              -1.0,
+              1.0
+            ],
+            "depth": [
+              1.0,
+              1.0
+            ],
+            "weirdness": [
+              -1.0,
+              1.0
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "starrail_sim:frostveil_taiga",
+          "parameters": {
+            "temperature": [
+              -1.0,
+              -0.35
             ],
             "humidity": [
               0.0,
@@ -460,8 +1420,68 @@
           "biome": "starrail_sim:starlight_grove",
           "parameters": {
             "temperature": [
+              -0.35,
+              0.3
+            ],
+            "humidity": [
+              0.1,
+              1.0
+            ],
+            "continentalness": [
+              -0.11,
+              -0.105
+            ],
+            "erosion": [
               -1.0,
               1.0
+            ],
+            "depth": [
+              1.0,
+              1.0
+            ],
+            "weirdness": [
+              -1.0,
+              1.0
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "starrail_sim:duskorange_orchard",
+          "parameters": {
+            "temperature": [
+              0.3,
+              1.0
+            ],
+            "humidity": [
+              0.1,
+              1.0
+            ],
+            "continentalness": [
+              -0.11,
+              -0.105
+            ],
+            "erosion": [
+              -1.0,
+              1.0
+            ],
+            "depth": [
+              1.0,
+              1.0
+            ],
+            "weirdness": [
+              -1.0,
+              1.0
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "starrail_sim:frostveil_taiga",
+          "parameters": {
+            "temperature": [
+              -1.0,
+              -0.35
             ],
             "humidity": [
               0.1,
@@ -490,8 +1510,68 @@
           "biome": "starrail_sim:starlight_grove",
           "parameters": {
             "temperature": [
+              -0.35,
+              0.3
+            ],
+            "humidity": [
+              0.1,
+              1.0
+            ],
+            "continentalness": [
+              -0.105,
+              0.03
+            ],
+            "erosion": [
+              -1.0,
+              0.3
+            ],
+            "depth": [
+              1.0,
+              1.0
+            ],
+            "weirdness": [
               -1.0,
               1.0
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "starrail_sim:duskorange_orchard",
+          "parameters": {
+            "temperature": [
+              0.3,
+              1.0
+            ],
+            "humidity": [
+              0.1,
+              1.0
+            ],
+            "continentalness": [
+              -0.105,
+              0.03
+            ],
+            "erosion": [
+              -1.0,
+              0.3
+            ],
+            "depth": [
+              1.0,
+              1.0
+            ],
+            "weirdness": [
+              -1.0,
+              1.0
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "starrail_sim:frostveil_taiga",
+          "parameters": {
+            "temperature": [
+              -1.0,
+              -0.35
             ],
             "humidity": [
               0.1,
@@ -520,8 +1600,68 @@
           "biome": "starrail_sim:starlight_grove",
           "parameters": {
             "temperature": [
+              -0.35,
+              0.3
+            ],
+            "humidity": [
+              0.0,
+              0.1
+            ],
+            "continentalness": [
+              0.03,
+              1.0
+            ],
+            "erosion": [
+              -0.375,
+              1.0
+            ],
+            "depth": [
+              1.0,
+              1.0
+            ],
+            "weirdness": [
               -1.0,
               1.0
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "starrail_sim:duskorange_orchard",
+          "parameters": {
+            "temperature": [
+              0.3,
+              1.0
+            ],
+            "humidity": [
+              0.0,
+              0.1
+            ],
+            "continentalness": [
+              0.03,
+              1.0
+            ],
+            "erosion": [
+              -0.375,
+              1.0
+            ],
+            "depth": [
+              1.0,
+              1.0
+            ],
+            "weirdness": [
+              -1.0,
+              1.0
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "starrail_sim:frostveil_taiga",
+          "parameters": {
+            "temperature": [
+              -1.0,
+              -0.35
             ],
             "humidity": [
               0.0,
@@ -550,8 +1690,68 @@
           "biome": "starrail_sim:starlight_grove",
           "parameters": {
             "temperature": [
+              -0.35,
+              0.3
+            ],
+            "humidity": [
+              0.1,
+              1.0
+            ],
+            "continentalness": [
+              0.2,
+              1.0
+            ],
+            "erosion": [
+              -0.375,
+              1.0
+            ],
+            "depth": [
+              1.0,
+              1.0
+            ],
+            "weirdness": [
               -1.0,
               1.0
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "starrail_sim:duskorange_orchard",
+          "parameters": {
+            "temperature": [
+              0.3,
+              1.0
+            ],
+            "humidity": [
+              0.1,
+              1.0
+            ],
+            "continentalness": [
+              0.2,
+              1.0
+            ],
+            "erosion": [
+              -0.375,
+              1.0
+            ],
+            "depth": [
+              1.0,
+              1.0
+            ],
+            "weirdness": [
+              -1.0,
+              1.0
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "starrail_sim:frostveil_taiga",
+          "parameters": {
+            "temperature": [
+              -1.0,
+              -0.35
             ],
             "humidity": [
               0.1,
@@ -580,8 +1780,68 @@
           "biome": "starrail_sim:starlight_grove",
           "parameters": {
             "temperature": [
+              -0.35,
+              0.3
+            ],
+            "humidity": [
+              0.1,
+              1.0
+            ],
+            "continentalness": [
+              0.03,
+              0.2
+            ],
+            "erosion": [
+              -0.375,
+              0.3
+            ],
+            "depth": [
+              1.0,
+              1.0
+            ],
+            "weirdness": [
               -1.0,
               1.0
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "starrail_sim:duskorange_orchard",
+          "parameters": {
+            "temperature": [
+              0.3,
+              1.0
+            ],
+            "humidity": [
+              0.1,
+              1.0
+            ],
+            "continentalness": [
+              0.03,
+              0.2
+            ],
+            "erosion": [
+              -0.375,
+              0.3
+            ],
+            "depth": [
+              1.0,
+              1.0
+            ],
+            "weirdness": [
+              -1.0,
+              1.0
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "starrail_sim:frostveil_taiga",
+          "parameters": {
+            "temperature": [
+              -1.0,
+              -0.35
             ],
             "humidity": [
               0.1,
@@ -637,11 +1897,11 @@
           }
         },
         {
-          "biome": "starrail_sim:star_scree_highlands",
+          "biome": "starrail_sim:mirrorfrost_snowfield",
           "parameters": {
             "temperature": [
               -1.0,
-              1.0
+              -0.18
             ],
             "humidity": [
               -1.0,
@@ -670,7 +1930,67 @@
           "biome": "starrail_sim:star_scree_highlands",
           "parameters": {
             "temperature": [
+              -0.18,
+              1.0
+            ],
+            "humidity": [
               -1.0,
+              1.0
+            ],
+            "continentalness": [
+              0.03,
+              1.0
+            ],
+            "erosion": [
+              -1.0,
+              -0.375
+            ],
+            "depth": [
+              0.0,
+              0.0
+            ],
+            "weirdness": [
+              -1.0,
+              1.0
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "starrail_sim:mirrorfrost_snowfield",
+          "parameters": {
+            "temperature": [
+              -1.0,
+              -0.18
+            ],
+            "humidity": [
+              -1.0,
+              1.0
+            ],
+            "continentalness": [
+              0.03,
+              1.0
+            ],
+            "erosion": [
+              -1.0,
+              -0.375
+            ],
+            "depth": [
+              1.0,
+              1.0
+            ],
+            "weirdness": [
+              -1.0,
+              1.0
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "starrail_sim:star_scree_highlands",
+          "parameters": {
+            "temperature": [
+              -0.18,
               1.0
             ],
             "humidity": [
@@ -705,6 +2025,36 @@
             ],
             "humidity": [
               0.1,
+              0.22
+            ],
+            "continentalness": [
+              -0.105,
+              0.2
+            ],
+            "erosion": [
+              0.3,
+              1.0
+            ],
+            "depth": [
+              0.0,
+              0.0
+            ],
+            "weirdness": [
+              -1.0,
+              1.0
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "starrail_sim:jadebranch_lotus_flats",
+          "parameters": {
+            "temperature": [
+              -1.0,
+              1.0
+            ],
+            "humidity": [
+              0.22,
               1.0
             ],
             "continentalness": [
@@ -735,6 +2085,36 @@
             ],
             "humidity": [
               0.1,
+              0.22
+            ],
+            "continentalness": [
+              -0.105,
+              0.2
+            ],
+            "erosion": [
+              0.3,
+              1.0
+            ],
+            "depth": [
+              1.0,
+              1.0
+            ],
+            "weirdness": [
+              -1.0,
+              1.0
+            ],
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "starrail_sim:jadebranch_lotus_flats",
+          "parameters": {
+            "temperature": [
+              -1.0,
+              1.0
+            ],
+            "humidity": [
+              0.22,
               1.0
             ],
             "continentalness": [

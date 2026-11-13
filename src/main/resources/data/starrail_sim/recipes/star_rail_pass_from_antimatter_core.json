@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "starrail_sim:antimatter_core_fragment"
+    },
+    {
+      "item": "starrail_sim:antimatter_core_fragment"
+    },
+    {
+      "item": "starrail_sim:antimatter_core_fragment"
+    },
+    {
+      "item": "starrail_sim:antimatter_core_fragment"
+    }
+  ],
+  "result": {
+    "item": "starrail_sim:star_rail_pass",
+    "count": 1
+  }
+}

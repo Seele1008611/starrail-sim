@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": {
+    "item": "starrail_sim:bean_pie_dough"
+  },
+  "result": "starrail_sim:delicious_bean_pie",
+  "experience": 0.35,
+  "cookingtime": 200
+}

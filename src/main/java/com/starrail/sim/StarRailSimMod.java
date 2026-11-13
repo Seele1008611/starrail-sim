@@ -66,6 +66,13 @@ public final class StarRailSimMod {
     public static final RegistryObject<MenuType<RelicTrialMenu>> RELIC_TRIAL_MENU = MENU_TYPES.register(
             "relic_trial", () -> IForgeMenuType.create(RelicTrialMenu::new));
 
+    public static final RegistryObject<Block> DOOMSDAY_SUMMONING_CONSOLE = BLOCKS.register(
+            "doomsday_summoning_console", () -> new DoomsdaySummoningConsoleBlock(BlockBehaviour.Properties.of()
+                    .mapColor(MapColor.COLOR_PURPLE).strength(3.5F, 6.0F).requiresCorrectToolForDrops()
+                    .noOcclusion().lightLevel(state -> 6).pushReaction(PushReaction.BLOCK)));
+    public static final RegistryObject<Item> DOOMSDAY_SUMMONING_CONSOLE_ITEM = ITEMS.register(
+            "doomsday_summoning_console", () -> new BlockItem(DOOMSDAY_SUMMONING_CONSOLE.get(), new Item.Properties()));
+
     public static final RegistryObject<Block> HUNT_RUIN_ANCHOR = BLOCKS.register(
             "hunt_ruin_anchor", () -> new PathRuinAnchorBlock(StarRailPath.HUNT,
                     BlockBehaviour.Properties.of()
@@ -87,8 +94,16 @@ public final class StarRailSimMod {
         PathDawncopperEquipment.register();
         PathDawnGoldEquipment.register();
         PathEcologyContent.register();
+        PathOchreContent.register();
+        PathReefContent.register();
+        PathSpawnEggs.register();
+        PathFrostSigns.register();
+        PathSunnySigns.register();
+        PathStarlightSigns.register();
         PathAnimalFoodContent.register();
         VoidrangerRewardContent.register();
+        DoomsdayRewardContent.register();
+        PrototypeCurios.registerContent();
     }
 
     // 以下按命途注册自定义光锥；注册 ID 必须与模型、语言文件和战利品表一致。
@@ -383,7 +398,12 @@ public final class StarRailSimMod {
                         PathMineralContent.addCreativeItems(output);
                         PathCaveContent.addCreativeItems(output);
                         PathEcologyContent.addMaterialCreativeItems(output);
+                        PathOchreContent.addMaterials(output);
+                        PathReefContent.addMaterials(output);
+                        PathKitchen.addMaterials(output);
                         VoidrangerRewardContent.addCreativeItems(output);
+                        DoomsdayRewardContent.addCreativeItems(output);
+                        PrototypeCurios.addCreativeItems(output);
                     })
                     .build());
     public static final RegistryObject<CreativeModeTab> EQUIPMENT_TAB = CREATIVE_TABS.register(
@@ -408,7 +428,11 @@ public final class StarRailSimMod {
                     .icon(() -> new ItemStack(PathEcologyContent.FORESTBEAN_SEEDS.get()))
                     .displayItems((parameters, output) -> {
                         PathEcologyContent.addFoodCreativeItems(output);
+                        PathOchreContent.addFoods(output);
+                        PathReefContent.addFoods(output);
+                        PathKitchen.addFoods(output);
                         PathAnimalEntities.addCreativeItems(output);
+                        PathSpawnEggs.addCreativeItems(output);
                     })
                     .build());
 
@@ -419,6 +443,7 @@ public final class StarRailSimMod {
             output.accept(StarRailTraceMaterials.get(path));
         }
         output.accept(RELIC_TRIAL_DEVICE_ITEM.get());
+        output.accept(DOOMSDAY_SUMMONING_CONSOLE_ITEM.get());
         StarRailWorldBlocks.addCreativeItems(output);
         StarRailRelicItems.addCreativeItems(output);
         output.accept(STAR_RAIL_LOGO.get());
@@ -530,6 +555,8 @@ public final class StarRailSimMod {
         StarRailTraceMaterials.register();
         BLOCKS.register(modEventBus);
         ITEMS.register(modEventBus);
+        PathKitchen.register(modEventBus);
+        PathFishingLoot.register(modEventBus);
         StarRailRelicItems.ITEMS.register(modEventBus);
         BLOCK_ENTITY_TYPES.register(modEventBus);
         MENU_TYPES.register(modEventBus);

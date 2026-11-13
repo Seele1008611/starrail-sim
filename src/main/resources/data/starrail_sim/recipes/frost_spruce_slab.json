@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "PPP"
+  ],
+  "key": {
+    "P": {
+      "item": "starrail_sim:frost_spruce_planks"
+    }
+  },
+  "result": {
+    "item": "starrail_sim:frost_spruce_slab",
+    "count": 6
+  }
+}

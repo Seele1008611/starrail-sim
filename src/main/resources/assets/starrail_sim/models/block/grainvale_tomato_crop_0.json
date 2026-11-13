@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cross",
+  "textures": {
+    "cross": "starrail_sim:block/grainvale_tomato_crop_0"
+  },
+  "render_type": "minecraft:cutout"
+}

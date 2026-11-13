@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " L ",
+    "LFL",
+    " L "
+  ],
+  "key": {
+    "L": {
+      "item": "starrail_sim:sunmeadow_log"
+    },
+    "F": {
+      "item": "minecraft:furnace"
+    }
+  },
+  "result": {
+    "item": "minecraft:smoker",
+    "count": 1
+  }
+}

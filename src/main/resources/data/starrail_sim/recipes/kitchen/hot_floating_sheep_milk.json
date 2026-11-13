@@ -1,0 +1,32 @@
+{
+  "type": "starrail_sim:kitchen",
+  "process": "stew",
+  "inputs": [
+    {
+      "item": "starrail_sim:starfleece_milk",
+      "count": 1
+    },
+    {
+      "item": "starrail_sim:grainflower_honey",
+      "count": 1
+    },
+    {
+      "item": "starrail_sim:kitchen_cup",
+      "count": 2
+    }
+  ],
+  "result": {
+    "item": "starrail_sim:hot_floating_sheep_milk",
+    "count": 2
+  },
+  "returns": [
+    {
+      "item": "minecraft:bucket",
+      "count": 1
+    },
+    {
+      "item": "starrail_sim:path_water_flask",
+      "count": 1
+    }
+  ]
+}

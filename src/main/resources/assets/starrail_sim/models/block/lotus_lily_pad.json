@@ -1,0 +1,41 @@
+{
+  "textures": {
+    "particle": "starrail_sim:item/lotus_lily_pad",
+    "pad": "starrail_sim:item/lotus_lily_pad"
+  },
+  "render_type": "minecraft:cutout",
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        0.25,
+        16
+      ],
+      "faces": {
+        "up": {
+          "texture": "#pad",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#pad",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    }
+  ]
+}

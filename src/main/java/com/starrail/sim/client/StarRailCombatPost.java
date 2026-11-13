@@ -21,7 +21,7 @@ import java.util.List;
 
 /** Selective HDR bloom and depth-gated world-anchored refraction, before the HUD. */
 public final class StarRailCombatPost {
-    /** style: 0 Hunt, 1 Preservation, 2 Abundance, then the remaining six paths. */
+    /** style: 0 Hunt impact, .15 focus, .35 rewind; 1 Preservation, 2 Abundance, then six paths. */
     public record Impulse(float x,float y,float depth,float radius,float phase,float strength,
                           float red,float green,float blue,float style) { }
     private static final long BUDGET=96L*1024*1024;
@@ -101,8 +101,12 @@ public final class StarRailCombatPost {
 
     /** Main geometry is already drawn; the second geometry submission captures selected path emission. */
     public static void render(Runnable drawEmission,List<Impulse> impulses) {
+        render(drawEmission,impulses,StarRailCombatShaders.enhanced());
+    }
+    /** Shared targets also accept hand-trail emission independently of the combat material toggle. */
+    public static void render(Runnable drawEmission,List<Impulse> impulses,boolean enabled) {
         lastPasses=0;
-        if(!available()||!StarRailCombatShaders.enhanced())return;
+        if(!available()||!enabled)return;
         Minecraft mc=Minecraft.getInstance();RenderTarget main=mc.getMainRenderTarget();
         if(!main.useDepth||main.getDepthTextureId()<0)return;
         ShaderInstance previous=RenderSystem.getShader();

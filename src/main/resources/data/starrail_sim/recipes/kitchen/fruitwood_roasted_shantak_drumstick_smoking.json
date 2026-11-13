@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smoking",
+  "ingredient": {
+    "item": "starrail_sim:marinated_shantak_drumstick"
+  },
+  "result": "starrail_sim:fruitwood_roasted_shantak_drumstick",
+  "experience": 0.35,
+  "cookingtime": 100
+}

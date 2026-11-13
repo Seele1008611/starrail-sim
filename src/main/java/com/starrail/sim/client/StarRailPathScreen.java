@@ -382,6 +382,8 @@ public final class StarRailPathScreen extends StarRailStyledScreen {
         y = drawGrowthHeading(graphics, "mechanics", y + 10);
         y = drawGrowthText(graphics, Component.translatable(
                 "guide.starrail_sim.path." + browsedPath.getId() + ".mechanics"), y, StarRailUiStyle.MUTED_COLOR);
+        y = drawGrowthText(graphics, com.starrail.sim.ActivePathSkills.description(browsedPath), y+10, StarRailUiStyle.MUTED_COLOR);
+        y = drawGrowthText(graphics, Component.translatable("guide.starrail_sim.path."+browsedPath.getId()+".basic"), y+10, StarRailUiStyle.MUTED_COLOR);
         graphics.pose().popPose();
         graphics.disableScissor();
         bodyHeight = y - bodyTop + 12;

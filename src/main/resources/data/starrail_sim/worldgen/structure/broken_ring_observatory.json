@@ -1,0 +1,7 @@
+{
+  "type": "starrail_sim:broken_ring_observatory",
+  "biomes": "#starrail_sim:broken_ring_observatory_biomes",
+  "step": "surface_structures",
+  "spawn_overrides": {},
+  "terrain_adaptation": "none"
+}

@@ -1,0 +1,23 @@
+{
+  "type": "starrail_sim:kitchen",
+  "process": "stew",
+  "inputs": [
+    {
+      "item": "starrail_sim:flame_pepper",
+      "count": 2
+    },
+    {
+      "item": "starrail_sim:grainvale_tomato",
+      "count": 1
+    },
+    {
+      "item": "starrail_sim:path_water_flask",
+      "count": 1
+    }
+  ],
+  "result": {
+    "item": "starrail_sim:flaming_pepper_sauce",
+    "count": 1
+  },
+  "returns": []
+}

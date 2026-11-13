@@ -5,13 +5,14 @@
 ## 版本与依赖
 
 - Mod ID：`starrail_sim`
-- 当前正式版本：1.24.0（2026-10-28）；发行信息、校验值与验收范围见 [1.24.0 发布记录](releases/1.24.0.md)。
+- 当前正式版本：1.27.0，见[发行记录](releases/1.27.0.md)。
+- 可选兼容：JEI、Lootr。
 - Minecraft：`1.20.1`
 - Forge：`47.x`；1.14.0 单人验收使用开发客户端 `47.4.10`。
 - Java：`17`
 - 必需依赖：Curios API（Forge、Minecraft 1.20.1）；发行包使用 `5.14.1` 核验。
 
-1.24.0 最新公开发行包：[starrail_sim-1.24.0.jar](https://github.com/Seele1008611/starrail-sim/releases/download/v1.24.0/starrail_sim-1.24.0.jar)。
+最新正式发行包：[starrail_sim-1.27.0.jar](https://github.com/Seele1008611/starrail-sim/releases/download/v1.27.0/starrail_sim-1.27.0.jar)。
 
 1.24.0 扩展命途遗境七个既有群系的生态，加入五种原创环境生物、本地食物与作物，并以原创构装守卫替换遗迹中的原版 Warden。用户确认阶段 6 剩余实机测试及多人客户端测试无问题；旧世界迁移未测试，专用服务端未确认测试。已知限制与验收范围见 [1.24.0 发布记录](releases/1.24.0.md)。
 
@@ -37,7 +38,7 @@
 - 角色属性、战斗反馈、光锥与 Curios 饰品槽。
 - 1.8.0 新增九命途触发技及韧性削减、击破的立体网格特效，区分近战与远程，并跟随实际目标。
 - 九条命途的初始试炼、命途效果、实践度和等级晋阶。
-- 普通空中遗迹在主世界自然生成；九种命途主题遗迹通过寻迹安排。遗迹由原版监守者守卫，击败后开放宝箱室并解锁奖励。
+- 普通空中遗迹在主世界自然生成；九种命途主题遗迹通过寻迹安排。遗迹由原创构装守卫守卫，击败后开放宝箱室并解锁奖励。
 - 命途界面显示寻迹结果和锚点坐标；对应遗迹宝箱提供匹配的试炼凭证。
 - Curios 光锥栏位使用专属空槽图标；九种命途试炼凭证各有辨识图案、名称和使用说明。
 - 九条命途各有独立行迹树，包含属性节点与被动节点；命途切换保留各自进度，材料校验、节点回退和重置由服务端处理。
@@ -54,7 +55,7 @@
 
 1. 安装 Minecraft 1.20.1、Java 17 和 Forge 47.x。
 2. 安装适用于 Forge 1.20.1 的 Curios API 5.14.1 或更高版本。
-3. 将对应公开发行版本的 JAR 和 Curios API JAR 放入游戏实例的 `mods` 文件夹。当前公开版本为 `starrail_sim-1.24.0.jar`。
+3. 将对应公开发行版本的 JAR 和 Curios API JAR 放入游戏实例的 `mods` 文件夹。当前公开版本为 `starrail_sim-1.27.0.jar`。
 4. 启动 Forge 配置文件。
 
 建议先在新存档中体验。自然生成只会发生在首次生成的区块；已经生成过的区块不会因为安装模组而自动补出遗迹。普通遗迹会在满足高度和结构放置条件时尝试生成，命途主题遗迹由命途寻迹安排。
@@ -68,7 +69,12 @@ Windows 下可用项目自带 Gradle Wrapper 启动开发客户端或构建项�
 .\gradlew.bat build
 ```
 
+测试包交付到 `build/libs/`，正式发布包交付到 `libs/`。完整任务完成且准备交付实机测试时才构建测试JAR。流程规则见[工作流程索引](设计方案/项目文档/当前工作流程与文档索引.md)。
+
 ## 验证状态
+
+- 1.27.0 正式版：用户已完成单人验收。Lootr 双人独立开箱尚未实测。
+- 以下各旧版条目保留各自当时的测试边界，不代表当前开发版仍处于同一状态。
 
 - 1.24.0 阶段 6：用户确认剩余整合测试及多人客户端测试无问题；旧世界迁移未测试，专用服务端和强制崩溃恢复未验收。详细范围与限制见 [1.24.0 发布记录](releases/1.24.0.md)。
 - 1.22.0 阶段 1 至 5 的单人实机验收已通过；多人同步未测试。发行信息见 [1.22.0 发布记录](releases/1.22.0.md)。
@@ -96,8 +102,6 @@ Windows 下可用项目自带 Gradle Wrapper 启动开发客户端或构建项�
 
 ## 项目文档
 
-项目文档与设计资料已按主题整理在 [`设计方案/README.md`](设计方案/README.md)：命途、战斗和版本记录见 [`项目文档`](设计方案/项目文档/README.md)；遗迹概念图、模型源文件和测试记录见 [`遗迹设计`](设计方案/遗迹设计/README.md)。当前版本的详细规则可从 [设计总纲](设计方案/项目文档/系统设计/DESIGN.md)、[命途试炼与寻迹](设计方案/项目文档/系统设计/PATH_TRIALS.md)、[命途等级](设计方案/项目文档/系统设计/PATH_RANKS.md) 开始。版本记录见 [CHANGELOG.md](CHANGELOG.md)；1.6.0 行迹设计与验收记录见 [1.6.0 版本计划](设计方案/项目文档/版本规划/PLAN_1.6.0.md) 和 [九命途行迹设计表](设计方案/项目文档/系统设计/1.6.0巡猎行迹设计表.md)。
+项目文档与设计资料已按主题整理在 [`设计方案/README.md`](设计方案/README.md)：命途、战斗和版本记录见 [`项目文档`](设计方案/项目文档/README.md)；遗迹概念图、模型源文件和测试记录见 [`遗迹设计`](设计方案/遗迹设计/README.md)。历史系统设计可从 [设计总纲](设计方案/项目文档/系统设计/DESIGN.md)、[命途试炼与寻迹](设计方案/项目文档/系统设计/PATH_TRIALS.md)、[命途等级](设计方案/项目文档/系统设计/PATH_RANKS.md) 开始。版本记录见 [CHANGELOG.md](CHANGELOG.md)；1.6.0 行迹设计与验收记录见 [1.6.0 版本计划](设计方案/项目文档/版本规划/历史版本规划_1.2.0-1.9.0.md#v1-6-0) 和 [九命途行迹设计表](设计方案/项目文档/系统设计/1.6.0巡猎行迹设计表.md)。
 
 `README.txt` 和根目录 `changelog.txt` 是 Forge MDK 上游模板文件；项目说明和版本记录以本文件及 `CHANGELOG.md` 为准。版本归档见 [releases/1.24.0.md](releases/1.24.0.md)、[releases/1.23.0.md](releases/1.23.0.md)、[releases/1.22.0.md](releases/1.22.0.md)、[releases/1.21.0.md](releases/1.21.0.md)、[releases/1.20.0.md](releases/1.20.0.md)、[releases/1.19.0.md](releases/1.19.0.md)、[releases/1.18.0.md](releases/1.18.0.md)、[releases/1.17.0.md](releases/1.17.0.md)、[releases/1.16.0.md](releases/1.16.0.md)、[releases/1.15.0.md](releases/1.15.0.md)、[releases/1.14.0.md](releases/1.14.0.md)、[releases/1.13.0.md](releases/1.13.0.md)、[releases/1.12.0.md](releases/1.12.0.md)、[releases/1.11.0.md](releases/1.11.0.md)、[releases/1.10.0.md](releases/1.10.0.md)、[releases/1.9.0.md](releases/1.9.0.md)、[releases/1.8.0.md](releases/1.8.0.md)、[releases/1.7.0.md](releases/1.7.0.md)、[releases/1.6.0.md](releases/1.6.0.md)、[releases/1.5.0.md](releases/1.5.0.md)、[releases/1.4.0.md](releases/1.4.0.md)、[releases/1.3.0.md](releases/1.3.0.md)、[releases/1.2.0.md](releases/1.2.0.md) 和 [releases/1.1.0.md](releases/1.1.0.md)。
-
-

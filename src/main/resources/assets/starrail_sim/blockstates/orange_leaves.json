@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "age=0": {
+      "model": "starrail_sim:block/orange_leaves_empty"
+    },
+    "age=1": {
+      "model": "starrail_sim:block/orange_leaves"
+    }
+  }
+}

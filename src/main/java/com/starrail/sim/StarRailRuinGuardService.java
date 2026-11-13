@@ -740,14 +740,20 @@ public final class StarRailRuinGuardService extends SavedData {
         BlockPos pos = chestPos(origin);
         if (!guard.rewarded && level.hasChunkAt(pos)) {
             // 爆炸/玩家破坏已受保护；管理员命令移除的箱子也可在获胜后恢复。
-            if (!level.getBlockState(pos).is(Blocks.CHEST)) level.setBlockAndUpdate(pos,
-                    Blocks.CHEST.defaultBlockState().setValue(
-                            net.minecraft.world.level.block.ChestBlock.FACING,
-                            net.minecraft.core.Direction.SOUTH));
+            if (!(level.getBlockEntity(pos) instanceof ChestBlockEntity chest)
+                    || !level.getBlockState(pos).is(Blocks.CHEST)
+                    && RuinLootContainers.personalLootId(chest) == null) {
+                level.setBlockAndUpdate(pos, Blocks.CHEST.defaultBlockState().setValue(
+                        net.minecraft.world.level.block.ChestBlock.FACING,
+                        net.minecraft.core.Direction.SOUTH));
+            }
             if (level.getBlockEntity(pos) instanceof ChestBlockEntity chest) {
-                chest.setLootTable(new ResourceLocation(StarRailSimMod.MOD_ID,
-                        "chests/ruin_" + guard.variantId), level.getRandom().nextLong());
-                chest.setChanged();
+                ResourceLocation reward = new ResourceLocation(StarRailSimMod.MOD_ID,
+                        "chests/ruin_" + guard.variantId);
+                if (!reward.equals(RuinLootContainers.lootTable(chest))) {
+                    chest.setLootTable(reward, level.getRandom().nextLong());
+                }
+                markArchiveChest(chest, guard.variantId);
                 guard.rewarded = true;
                 setDirty();
             }

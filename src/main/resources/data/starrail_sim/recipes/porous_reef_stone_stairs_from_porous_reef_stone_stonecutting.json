@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "starrail_sim:porous_reef_stone"
+  },
+  "result": "starrail_sim:porous_reef_stone_stairs",
+  "count": 1
+}

@@ -5,6 +5,7 @@ package com.starrail.sim.client;
  */
 
 import com.starrail.sim.PathActionPacket;
+import com.starrail.sim.StarRailExplorationService;
 import com.starrail.sim.StarRailNetwork;
 import com.starrail.sim.StarRailPath;
 import com.starrail.sim.StarRailPathGrowth;
@@ -384,6 +385,8 @@ public final class StarRailGuideScreen extends StarRailStyledScreen {
                 {"guide.starrail_sim.path.goals", goalKey(selectedPath)},
                 {"guide.starrail_sim.path.practice", practiceKey(selectedPath)},
                 {"guide.starrail_sim.path.mechanics_intro", mechanicsKey(selectedPath)},
+                {"skill.starrail_sim.heading", "active_skill"},
+                {"skill.starrail_sim.basic.heading", "guide.starrail_sim.path."+selectedPath.getId()+".basic"},
                 {"guide.starrail_sim.path.effects", effectKey(selectedPath)},
                 {"guide.starrail_sim.path.upgrade", "guide.starrail_sim.path.rank_rule"},
                 {"guide.starrail_sim.path.tips", tipsKey(selectedPath)}
@@ -394,7 +397,7 @@ public final class StarRailGuideScreen extends StarRailStyledScreen {
                 heading = Component.translatable("ui.starrail_sim.guide.initial_trial",
                         StarRailPathRules.trialTimeLimit(selectedPath, StarRailPathRank.UNALIGNED) / 20);
             }
-            y = drawArticle(graphics, heading, Component.translatable(section[1]),
+            y = drawArticle(graphics, heading, section[1].equals("active_skill")?com.starrail.sim.ActivePathSkills.description(selectedPath):Component.translatable(section[1]),
                     detailX, y, textWidth) + 14;
         }
         y = drawArticle(graphics,
@@ -524,26 +527,19 @@ public final class StarRailGuideScreen extends StarRailStyledScreen {
         drawLine(graphics, Component.translatable("guide.starrail_sim.archive.title"),
                 contentLeft, y);
         y += 24;
-        y = drawGuideBody(graphics, Component.translatable("guide.starrail_sim.archive.intro"),
+        y = drawGuideBody(graphics, Component.translatable("guide.starrail_sim.archive.intro",
+                        StarRailExplorationService.PATH_REGIONS.size()),
                 contentLeft, y, textWidth, StarRailUiStyle.MUTED_COLOR) + 12;
 
         drawLine(graphics, Component.translatable("guide.starrail_sim.archive.regions"),
                 contentLeft, y);
         y += 24;
-        y = drawArchiveRecord(graphics, y, "biome.starrail_sim.sunmeadow",
-                (StarRailPathClientState.getPathRegionMask() & 1) != 0);
-        y = drawArchiveRecord(graphics, y, "biome.starrail_sim.starlight_grove",
-                (StarRailPathClientState.getPathRegionMask() & 2) != 0);
-        y = drawArchiveRecord(graphics, y, "biome.starrail_sim.star_tide_ocean",
-                (StarRailPathClientState.getPathRegionMask() & 4) != 0);
-        y = drawArchiveRecord(graphics, y, "biome.starrail_sim.clear_sand_beach",
-                (StarRailPathClientState.getPathRegionMask() & 8) != 0);
-        y = drawArchiveRecord(graphics, y, "biome.starrail_sim.starvein_cavern",
-                (StarRailPathClientState.getPathRegionMask() & 16) != 0);
-        y = drawArchiveRecord(graphics, y, "biome.starrail_sim.star_scree_highlands",
-                (StarRailPathClientState.getPathRegionMask() & 32L) != 0L);
-        y = drawArchiveRecord(graphics, y, "biome.starrail_sim.stilltide_marsh",
-                (StarRailPathClientState.getPathRegionMask() & 64L) != 0L);
+        long regionMask = StarRailPathClientState.getPathRegionMask();
+        for (int index = 0; index < StarRailExplorationService.PATH_REGIONS.size(); index++) {
+            String region = StarRailExplorationService.PATH_REGIONS.get(index);
+            y = drawArchiveRecord(graphics, y, "biome.starrail_sim." + region,
+                    (regionMask & (1L << index)) != 0);
+        }
         y = drawArchiveRecord(graphics, y,
                 Component.translatable("guide.starrail_sim.archive.beacons",
                         StarRailPathClientState.getPathBeaconCount()), null);

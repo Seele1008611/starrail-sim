@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "PPP",
+    "PPP"
+  ],
+  "key": {
+    "P": {
+      "item": "starrail_sim:fruitwood_planks"
+    }
+  },
+  "result": {
+    "item": "starrail_sim:fruitwood_trapdoor",
+    "count": 2
+  }
+}

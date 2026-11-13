@@ -343,9 +343,23 @@ public final class StarRailRuinCommands {
             } else if (block instanceof LeavesBlock) {
                 state = state.setValue(LeavesBlock.PERSISTENT, true);
             }
+            if (entry.has("properties")) {
+                for (var value : entry.getAsJsonObject("properties").entrySet()) {
+                    var property = state.getBlock().getStateDefinition().getProperty(value.getKey());
+                    if (property == null) throw new IOException("Unknown blueprint property: " + value.getKey());
+                    state = blueprintProperty(state, property, value.getValue().getAsString());
+                }
+            }
             states.add(state);
         }
         return states;
+    }
+
+    private static <T extends Comparable<T>> BlockState blueprintProperty(BlockState state,
+            net.minecraft.world.level.block.state.properties.Property<T> property, String value)
+            throws IOException {
+        return state.setValue(property, property.getValue(value)
+                .orElseThrow(() -> new IOException("Invalid blueprint property value: " + value)));
     }
 
     // 读取每个方块的局部坐标与调色板索引，并拒绝越界索引。

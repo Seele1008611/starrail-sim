@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/outer_stairs",
+  "textures": {
+    "bottom": "starrail_sim:block/autumn_streak_rock",
+    "top": "starrail_sim:block/autumn_streak_rock",
+    "side": "starrail_sim:block/autumn_streak_rock"
+  }
+}

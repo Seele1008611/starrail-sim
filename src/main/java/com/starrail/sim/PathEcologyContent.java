@@ -43,6 +43,13 @@ public final class PathEcologyContent {
     public static final WoodSet SUNMEADOW = woodSet("sunmeadow", MapColor.WOOD, "sunmeadow_tree");
     public static final WoodSet STARLIGHTWOOD = woodSet("starlightwood", MapColor.COLOR_GREEN, "starlightwood_tree");
 
+    public static final WoodSet FROST_SPRUCE = woodSet("frost_spruce", MapColor.COLOR_GRAY, "frost_spruce_tree");
+    public static final RegistryObject<Block> FROST_MOSS = foodBlock("frost_moss", () -> new MossBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_BLUE).strength(0.1F).sound(SoundType.GRASS)));
+    public static final RegistryObject<Block> FROST_BELL = foodBlock("frost_bell", () -> new net.minecraft.world.level.block.BushBlock(plantProperties(MapColor.PLANT)));
+    public static final RegistryObject<Block> FROST_BERRY_BUSH = foodBlock("frost_berry_bush", () -> new FrostBerryBushBlock(plantProperties(MapColor.PLANT).randomTicks()));
+    public static final RegistryObject<Item> FROST_BERRY = item("frost_berry", () -> new FrostBerryItem(new Item.Properties().food(new FoodProperties.Builder().nutrition(2).saturationMod(0.2F).build())));
+    public static final RegistryObject<Item> FROST_BERRY_PIE = item("frost_berry_pie", () -> new Item(new Item.Properties().food(new FoodProperties.Builder().nutrition(8).saturationMod(0.3F).build())));
+
     public static final RegistryObject<Block> MORNING_BERRY_BUSH = foodBlock("morning_berry_bush",
             () -> new PathBerryBushBlock(plantProperties(MapColor.PLANT).randomTicks()));
     public static final RegistryObject<Item> MORNING_BERRY = item("morning_berry",
@@ -152,6 +159,10 @@ public final class PathEcologyContent {
             ComposterBlock.COMPOSTABLES.put(STAR_TIDE_ALGAE_ITEM.get(), 0.3F);
             ComposterBlock.COMPOSTABLES.put(ROASTED_STAR_TIDE_ALGAE.get(), 0.3F);
             ComposterBlock.COMPOSTABLES.put(FORESTBEAN_WILD.get(), 0.3F);
+            ComposterBlock.COMPOSTABLES.put(FROST_SPRUCE.leaves().get(), 0.3F);
+            ComposterBlock.COMPOSTABLES.put(FROST_SPRUCE.sapling().get(), 0.3F);
+            ComposterBlock.COMPOSTABLES.put(FROST_BERRY.get(), 0.3F);
+            ComposterBlock.COMPOSTABLES.put(FROST_BELL.get(), 0.65F);
             ComposterBlock.COMPOSTABLES.put(SUNMEADOW.leaves().get(), 0.3F);
             ComposterBlock.COMPOSTABLES.put(SUNMEADOW.sapling().get(), 0.3F);
             ComposterBlock.COMPOSTABLES.put(STARLIGHTWOOD.leaves().get(), 0.3F);
@@ -161,6 +172,12 @@ public final class PathEcologyContent {
 
     public static void addMaterialCreativeItems(CreativeModeTab.Output output) {
         for (RegistryObject<Item> item : MATERIAL_BLOCK_ITEMS) output.accept(item.get());
+        output.accept(PathFrostSigns.SIGN_ITEM.get());
+        output.accept(PathFrostSigns.HANGING_SIGN_ITEM.get());
+        output.accept(PathSunnySigns.SIGN_ITEM.get());
+        output.accept(PathSunnySigns.HANGING_SIGN_ITEM.get());
+        output.accept(PathStarlightSigns.SIGN_ITEM.get());
+        output.accept(PathStarlightSigns.HANGING_SIGN_ITEM.get());
     }
 
     public static void addFoodCreativeItems(CreativeModeTab.Output output) {

@@ -2,6 +2,7 @@
   "replace": false,
   "values": [
     "starrail_sim:sunmeadow_door",
-    "starrail_sim:starlightwood_door"
+    "starrail_sim:starlightwood_door",
+    "starrail_sim:fruitwood_door"
   ]
 }

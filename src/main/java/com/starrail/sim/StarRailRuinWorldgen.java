@@ -22,6 +22,26 @@ public final class StarRailRuinWorldgen {
     public static final RegistryObject<StructurePieceType> ARENA_PIECE =
             PIECES.register("relic_trial_arena_piece", () -> RelicTrialArenaPiece::new);
 
+    public static final RegistryObject<StructureType<DoomsdayArenaStructure>> DOOMSDAY_ARENA =
+            TYPES.register("doomsday_arena", () -> () -> DoomsdayArenaStructure.CODEC);
+    public static final RegistryObject<StructurePieceType> DOOMSDAY_ARENA_PIECE =
+            PIECES.register("doomsday_arena_piece", () -> DoomsdayArenaPiece::new);
+
+    public static final RegistryObject<StructureType<DaylessArchiveStructure>> DAYLESS_ARCHIVE =
+            TYPES.register("dayless_archive", () -> () -> DaylessArchiveStructure.CODEC);
+    public static final RegistryObject<StructurePieceType> DAYLESS_ARCHIVE_PIECE =
+            PIECES.register("dayless_archive_piece", () -> DaylessArchivePiece::new);
+
+    public static final RegistryObject<StructureType<TidewardDockStructure>> TIDEWARD_DOCK =
+            TYPES.register("tideward_dock", () -> () -> TidewardDockStructure.CODEC);
+    public static final RegistryObject<StructurePieceType> TIDEWARD_DOCK_PIECE =
+            PIECES.register("tideward_dock_piece", () -> TidewardDockPiece::new);
+
+    public static final RegistryObject<StructureType<BrokenRingObservatoryStructure>> BROKEN_RING_OBSERVATORY =
+            TYPES.register("broken_ring_observatory", () -> () -> BrokenRingObservatoryStructure.CODEC);
+    public static final RegistryObject<StructurePieceType> BROKEN_RING_OBSERVATORY_PIECE =
+            PIECES.register("broken_ring_observatory_piece", () -> BrokenRingObservatoryPiece::new);
+
     private StarRailRuinWorldgen() { }
     public static void register(IEventBus bus) {
         TYPES.register(bus);

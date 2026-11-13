@@ -1,0 +1,32 @@
+{
+  "type": "starrail_sim:kitchen",
+  "process": "stew",
+  "inputs": [
+    {
+      "item": "starrail_sim:path_tea_leaf",
+      "count": 1
+    },
+    {
+      "item": "starrail_sim:starfleece_milk",
+      "count": 1
+    },
+    {
+      "item": "starrail_sim:grain_sugar",
+      "count": 1
+    },
+    {
+      "item": "starrail_sim:kitchen_cup",
+      "count": 2
+    }
+  ],
+  "result": {
+    "item": "starrail_sim:happy_immortal_tea",
+    "count": 2
+  },
+  "returns": [
+    {
+      "item": "minecraft:bucket",
+      "count": 1
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "starrail_sim:spring_travertine"
+  },
+  "result": "starrail_sim:spring_travertine_wall",
+  "count": 1
+}

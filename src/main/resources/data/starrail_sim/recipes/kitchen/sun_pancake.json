@@ -1,0 +1,23 @@
+{
+  "type": "starrail_sim:kitchen",
+  "process": "fry",
+  "inputs": [
+    {
+      "item": "starrail_sim:grain_flour",
+      "count": 1
+    },
+    {
+      "item": "starrail_sim:stilltide_fowl_egg",
+      "count": 1
+    },
+    {
+      "item": "starrail_sim:frost_berry",
+      "count": 1
+    }
+  ],
+  "result": {
+    "item": "starrail_sim:sun_pancake",
+    "count": 2
+  },
+  "returns": []
+}

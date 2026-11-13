@@ -11,6 +11,8 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.core.registries.Registries;
@@ -48,6 +50,18 @@ public class StilltideFowl extends Chicken {
     @Override
     public boolean canMate(Animal otherAnimal) {
         return otherAnimal instanceof StilltideFowl && super.canMate(otherAnimal);
+    }
+
+    @Override
+    public void playSound(SoundEvent sound, float volume, float pitch) {
+        if (sound == net.minecraft.sounds.SoundEvents.CHICKEN_STEP) sound = PathAnimalSounds.DAILY_FOWL_STEP.get();
+        if (sound == net.minecraft.sounds.SoundEvents.CHICKEN_EGG) sound = PathAnimalSounds.DAILY_FOWL_EGG.get();
+        super.playSound(sound, volume, pitch);
+    }
+
+    @Override
+    public ItemEntity spawnAtLocation(net.minecraft.world.level.ItemLike item) {
+        return super.spawnAtLocation(item == Items.EGG ? PathKitchen.FOWL_EGG.get() : item);
     }
 
     @Override

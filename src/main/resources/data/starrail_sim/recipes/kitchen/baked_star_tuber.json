@@ -1,0 +1,15 @@
+{
+  "type": "starrail_sim:kitchen",
+  "process": "fry",
+  "inputs": [
+    {
+      "item": "starrail_sim:star_tuber",
+      "count": 1
+    }
+  ],
+  "result": {
+    "item": "starrail_sim:baked_star_tuber",
+    "count": 1
+  },
+  "returns": []
+}

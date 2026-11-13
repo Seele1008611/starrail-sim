@@ -2,6 +2,7 @@
   "replace": false,
   "values": [
     "starrail_sim:sunmeadow_slab",
-    "starrail_sim:starlightwood_slab"
+    "starrail_sim:starlightwood_slab",
+    "starrail_sim:fruitwood_slab"
   ]
 }

@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "starrail_sim:smooth_ochre_stone"
+  },
+  "result": "starrail_sim:ochre_stone_bricks",
+  "count": 1
+}

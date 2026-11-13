@@ -1,0 +1,27 @@
+{
+  "type": "starrail_sim:kitchen",
+  "process": "fry",
+  "inputs": [
+    {
+      "item": "starrail_sim:rock_crab_meat",
+      "count": 1
+    },
+    {
+      "item": "starrail_sim:grain_flour",
+      "count": 1
+    },
+    {
+      "item": "starrail_sim:stilltide_fowl_egg",
+      "count": 1
+    },
+    {
+      "item": "starrail_sim:sunseed_oil",
+      "count": 1
+    }
+  ],
+  "result": {
+    "item": "starrail_sim:fried_rock_crab",
+    "count": 1
+  },
+  "returns": []
+}

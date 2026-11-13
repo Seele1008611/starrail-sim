@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "starrail_sim:grain_flour"
+    },
+    {
+      "item": "starrail_sim:forestbean_pod"
+    },
+    {
+      "item": "starrail_sim:grain_sugar"
+    }
+  ],
+  "result": {
+    "item": "starrail_sim:bean_pie_dough",
+    "count": 2
+  }
+}

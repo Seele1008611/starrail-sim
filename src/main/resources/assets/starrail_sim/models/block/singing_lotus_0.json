@@ -1,0 +1,96 @@
+{
+  "ambientocclusion": false,
+  "textures": {
+    "particle": "starrail_sim:block/singing_lotus",
+    "cross": "starrail_sim:block/singing_lotus"
+  },
+  "elements": [
+    {
+      "from": [
+        5.2,
+        0,
+        8
+      ],
+      "to": [
+        10.8,
+        5.6,
+        8
+      ],
+      "rotation": {
+        "origin": [
+          8,
+          0,
+          8
+        ],
+        "axis": "y",
+        "angle": 45,
+        "rescale": false
+      },
+      "shade": false,
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#cross"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#cross"
+        }
+      }
+    },
+    {
+      "from": [
+        5.2,
+        0,
+        8
+      ],
+      "to": [
+        10.8,
+        5.6,
+        8
+      ],
+      "rotation": {
+        "origin": [
+          8,
+          0,
+          8
+        ],
+        "axis": "y",
+        "angle": -45,
+        "rescale": false
+      },
+      "shade": false,
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#cross"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#cross"
+        }
+      }
+    }
+  ],
+  "render_type": "minecraft:cutout"
+}

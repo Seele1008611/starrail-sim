@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "starrail_sim:path_spring_water"
+    },
+    {
+      "item": "starrail_sim:spring_mineral"
+    }
+  ],
+  "result": {
+    "item": "starrail_sim:sparkling_water",
+    "count": 1
+  }
+}

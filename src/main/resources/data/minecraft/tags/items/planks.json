@@ -2,6 +2,8 @@
   "replace": false,
   "values": [
     "starrail_sim:sunmeadow_planks",
-    "starrail_sim:starlightwood_planks"
+    "starrail_sim:starlightwood_planks",
+    "starrail_sim:frost_spruce_planks",
+    "starrail_sim:fruitwood_planks"
   ]
 }

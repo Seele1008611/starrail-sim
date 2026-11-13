@@ -1,0 +1,96 @@
+{
+  "ambientocclusion": false,
+  "textures": {
+    "particle": "starrail_sim:block/alfalfa_crop",
+    "cross": "starrail_sim:block/alfalfa_crop"
+  },
+  "elements": [
+    {
+      "from": [
+        1.5999999999999996,
+        -1,
+        8
+      ],
+      "to": [
+        14.4,
+        11.8,
+        8
+      ],
+      "rotation": {
+        "origin": [
+          8,
+          -1,
+          8
+        ],
+        "axis": "y",
+        "angle": 45,
+        "rescale": false
+      },
+      "shade": false,
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#cross"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#cross"
+        }
+      }
+    },
+    {
+      "from": [
+        1.5999999999999996,
+        -1,
+        8
+      ],
+      "to": [
+        14.4,
+        11.8,
+        8
+      ],
+      "rotation": {
+        "origin": [
+          8,
+          -1,
+          8
+        ],
+        "axis": "y",
+        "angle": -45,
+        "rescale": false
+      },
+      "shade": false,
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#cross"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#cross"
+        }
+      }
+    }
+  ],
+  "render_type": "minecraft:cutout"
+}

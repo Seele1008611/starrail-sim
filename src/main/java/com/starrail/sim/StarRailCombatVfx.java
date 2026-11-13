@@ -21,7 +21,31 @@ public final class StarRailCombatVfx {
                            Vec3 impact, double floorY, int targetId, boolean ranged, java.util.List<CombatVfxPacket.Kind> effects) {}
     private static final Map<LivingEntity, Pending> PENDING = new WeakHashMap<>();
 
+    private static final class BasicBudget {
+        long tick;final java.util.Set<Integer> targets=new java.util.HashSet<>();
+    }
+    private static final Map<ServerPlayer,BasicBudget> BASIC=new WeakHashMap<>();
     private StarRailCombatVfx() {}
+    private static void basic(LivingDamageEvent event) {
+        if(event.isCanceled() || event.getAmount()<=0 || !(event.getEntity() instanceof net.minecraft.world.entity.monster.Enemy))return;
+        ServerPlayer player=StarRailCombatEvents.getPlayerAttacker(event.getSource());
+        if(player==null || StarRailOwnedDamage.isSecondary(player) || player.isAlliedTo(event.getEntity())
+                || player.getPersistentData().getBoolean("trace_destruction_splash_active")
+                || event.getSource().is(net.minecraft.world.damagesource.DamageTypes.THORNS))return;
+        StarRailPath path=player.getCapability(StarRailPathCapability.PATH_DATA).map(IStarRailPathData::getCurrentPath).orElse(StarRailPath.NONE);
+        if(!path.isRealPath() || path==StarRailPath.REMEMBRANCE)return; // Keep the existing memory-record/echo presentation.
+        BasicBudget budget=BASIC.computeIfAbsent(player,k->new BasicBudget());long tick=player.level().getGameTime();
+        if(budget.tick!=tick) {budget.tick=tick;budget.targets.clear();}
+        if(budget.targets.size()>=6 || !budget.targets.add(event.getEntity().getId()))return;
+        LivingEntity target=event.getEntity();Vec3 impact=target.position().add(0,target.getBbHeight()*.55,0),from=player.getEyePosition();
+        boolean ranged=event.getSource().getDirectEntity() instanceof Projectile;
+        if(event.getSource().getDirectEntity() instanceof Projectile projectile) {
+            Vec3 direction=projectile.getDeltaMovement().normalize();if(direction.lengthSqr()<.001)direction=impact.subtract(from).normalize();
+            from=impact.subtract(direction.scale(1.2));
+        }
+        StarRailNetwork.CHANNEL.send(PacketDistributor.NEAR.with(()->new PacketDistributor.TargetPoint(impact.x,impact.y,impact.z,48,player.level().dimension())),
+                new CombatVfxPacket(CombatVfxPacket.Kind.PATH_BASIC,path,ranged,from,impact,target.getY(),target.getId(),player.getId()));
+    }
 
     public static void queue(ServerPlayer player, LivingEntity target, DamageSource source,
                              float pursuit, int toughness) {
@@ -85,12 +109,14 @@ public final class StarRailCombatVfx {
     @SubscribeEvent(priority = EventPriority.LOWEST, receiveCanceled = true)
     public static void confirmDamage(LivingDamageEvent event) {
         if (event.getEntity().level().isClientSide()) return;
+        basic(event);
         Pending pending = PENDING.get(event.getEntity());
         if (pending == null || pending.source != event.getSource()) return;
         PENDING.remove(event.getEntity());
         if (event.isCanceled() || event.getAmount() <= 0
                 || pending.tick != event.getEntity().level().getGameTime()) return;
-        if (pending.pursuit > 1) send(pending, pending.pursuit >= 1.5F
+        // 1.26.0 uses x2 for the ordinary strike and x4 for reverse pursuit.
+        if (pending.pursuit > 1) send(pending, pending.pursuit >= 4.0F
                 ? CombatVfxPacket.Kind.HUNT_REVERSE : CombatVfxPacket.Kind.HUNT_STRIKE);
         for (CombatVfxPacket.Kind kind : pending.effects) send(pending, kind);
         if (pending.toughness != 0) send(pending, pending.toughness == 2

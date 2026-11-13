@@ -1,0 +1,15 @@
+{
+  "type": "starrail_sim:kitchen",
+  "process": "fry",
+  "inputs": [
+    {
+      "item": "starrail_sim:sunharvest_meat",
+      "count": 1
+    }
+  ],
+  "result": {
+    "item": "starrail_sim:cooked_sunharvest_meat",
+    "count": 1
+  },
+  "returns": []
+}

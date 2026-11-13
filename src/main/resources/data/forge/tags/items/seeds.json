@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "starrail_sim:forestbean_seeds"
+    "starrail_sim:forestbean_seeds",
+    "starrail_sim:sunpod_seeds"
   ]
 }

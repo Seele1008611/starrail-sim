@@ -1,0 +1,14 @@
+{
+  "replace": false,
+  "values": [
+    "starrail_sim:ochre_stone_wall",
+    "starrail_sim:smooth_ochre_stone_wall",
+    "starrail_sim:ochre_stone_bricks_wall",
+    "starrail_sim:starazure_reef_stone_wall",
+    "starrail_sim:porous_reef_stone_wall",
+    "starrail_sim:starazure_reef_bricks_wall",
+    "starrail_sim:spring_travertine_wall",
+    "starrail_sim:bluegrey_frozen_rock_wall",
+    "starrail_sim:windgrain_sandstone_wall"
+  ]
+}

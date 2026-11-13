@@ -545,10 +545,13 @@ public final class StarRailLightConeScreen extends StarRailStyledScreen {
         }
         if (stack.getItem() instanceof BattleIsntOverItem) {
             renderBattleIsntOverSpecialEffect(graphics, player, stack, x, y, width);
+            return;
         } else if (stack.getItem() instanceof MemoryOfMeItem) {
             renderMemoryOfMeSpecialEffect(graphics, player, stack, x, y, width);
+            return;
         } else if (stack.getItem() instanceof WeaveTimeIntoGoldItem) {
             renderWeaveTimeIntoGoldSpecialEffect(graphics, player, stack, x, y, width);
+            return;
         } else if (stack.getItem() instanceof MakeFarewellMoreBeautifulItem) {
             renderMakeFarewellMoreBeautifulSpecialEffect(
                     graphics, player, stack, x, y, width);
@@ -620,8 +623,10 @@ public final class StarRailLightConeScreen extends StarRailStyledScreen {
             return;
         } else if (stack.getItem() instanceof OceanWhySingsItem) {
             renderOceanWhySingsSpecialEffect(graphics, stack, x, y, width);
+            return;
         } else if (stack.getItem() instanceof DoNotForgetHerFlameItem) {
             renderDoNotForgetHerFlameSpecialEffect(graphics, stack, x, y, width);
+            return;
         } else if (stack.getItem() instanceof NewFleshOfInfernoItem) {
             renderNewFleshOfInfernoSpecialEffect(graphics, stack, x, y, width);
             return;
@@ -650,6 +655,7 @@ public final class StarRailLightConeScreen extends StarRailStyledScreen {
             renderOnlyTheScentRemainsSpecialEffect(graphics, stack, x, y, width);
             return;
         }
+        if (!(stack.getItem() instanceof InTheNightItem)) return;
         int superimposition = InTheNightItem.getSuperimposition(stack);
         graphics.drawString(font,
                 Component.translatable("screen.starrail_sim.light_cone_special"), x, y,
@@ -760,7 +766,8 @@ public final class StarRailLightConeScreen extends StarRailStyledScreen {
         y = drawBullet(graphics, Component.translatable(
                 "screen.starrail_sim.light_cone_beautiful_dream",
                 formatPercent(StarRailLightConeService.beautifulDreamCritRate(
-                        superimposition))), x, y, width);
+                        superimposition)),
+                formatPercent(StarRailLightConeService.beautifulDreamCritDamage(superimposition))), x, y, width);
         y += 4;
         MobEffectInstance effect = player == null ? null
                 : player.getEffect(StarRailSimMod.BEAUTIFUL_DREAM.get());
@@ -1339,18 +1346,19 @@ public final class StarRailLightConeScreen extends StarRailStyledScreen {
                 x, y, width, StarRailUiStyle.MUTED_COLOR);
         MobEffectInstance effect = player == null ? null
                 : player.getEffect(StarRailSimMod.METEOR.get());
+        int statusEnd = y + 22;
         if (effect == null) {
-            drawWrapped(graphics, Component.translatable(
+            statusEnd = drawWrapped(graphics, Component.translatable(
                     "screen.starrail_sim.light_cone_no_meteor"), x, y + 22, width,
                     StarRailUiStyle.MUTED_COLOR);
         } else {
             int seconds = (int) Math.ceil(effect.getDuration() / 20.0D);
-            drawWrapped(graphics, Component.translatable(
+            statusEnd = drawWrapped(graphics, Component.translatable(
                     "screen.starrail_sim.light_cone_current_meteor", seconds), x, y + 22,
                     width, StarRailUiStyle.GOLD_ACCENT);
         }
         drawWrapped(graphics, Component.translatable(
-                "screen.starrail_sim.light_cone_meteor_limit"), x, y + 44, width,
+                "screen.starrail_sim.light_cone_meteor_limit"), x, statusEnd + 6, width,
                 StarRailUiStyle.MUTED_COLOR);
     }
 
@@ -1710,18 +1718,19 @@ public final class StarRailLightConeScreen extends StarRailStyledScreen {
                         superimposition))), x, y, width);
         MobEffectInstance effect = player == null ? null
                 : player.getEffect(StarRailSimMod.INHERITANCE.get());
+        int statusEnd = y + 4;
         if (effect == null) {
-            drawWrapped(graphics, Component.translatable(
+            statusEnd = drawWrapped(graphics, Component.translatable(
                     "screen.starrail_sim.light_cone_no_inheritance"), x, y + 4, width,
                     StarRailUiStyle.MUTED_COLOR);
         } else {
             int seconds = (int) Math.ceil(effect.getDuration() / 20.0D);
-            drawWrapped(graphics, Component.translatable(
+            statusEnd = drawWrapped(graphics, Component.translatable(
                     "screen.starrail_sim.light_cone_current_inheritance", seconds), x,
                     y + 4, width, StarRailUiStyle.GOLD_ACCENT);
         }
         drawWrapped(graphics, Component.translatable(
-                "screen.starrail_sim.light_cone_inheritance_limit"), x, y + 26, width,
+                "screen.starrail_sim.light_cone_inheritance_limit"), x, statusEnd + 6, width,
                 StarRailUiStyle.MUTED_COLOR);
     }
 
@@ -1746,20 +1755,21 @@ public final class StarRailLightConeScreen extends StarRailStyledScreen {
                         superimposition))), x, y, width);
         MobEffectInstance effect = player == null ? null
                 : player.getEffect(StarRailSimMod.PLUM_FRAGRANCE.get());
+        int statusEnd = y + 4;
         if (effect == null) {
-            drawWrapped(graphics, Component.translatable(
+            statusEnd = drawWrapped(graphics, Component.translatable(
                     "screen.starrail_sim.light_cone_no_plum_fragrance"), x, y + 4,
                     width, StarRailUiStyle.MUTED_COLOR);
         } else {
             int stacks = Math.min(StarRailLightConeService.PLUM_FRAGRANCE_MAX_STACKS,
                     effect.getAmplifier() + 1);
             int seconds = (int) Math.ceil(effect.getDuration() / 20.0D);
-            drawWrapped(graphics, Component.translatable(
+            statusEnd = drawWrapped(graphics, Component.translatable(
                     "screen.starrail_sim.light_cone_current_plum_fragrance",
                     stacks, seconds), x, y + 4, width, StarRailUiStyle.GOLD_ACCENT);
         }
         drawWrapped(graphics, Component.translatable(
-                "screen.starrail_sim.light_cone_plum_fragrance_limit"), x, y + 26,
+                "screen.starrail_sim.light_cone_plum_fragrance_limit"), x, statusEnd + 6,
                 width, StarRailUiStyle.MUTED_COLOR);
     }
 
@@ -2063,25 +2073,26 @@ public final class StarRailLightConeScreen extends StarRailStyledScreen {
                 : player.getEffect(StarRailSimMod.CHANT.get());
         MobEffectInstance splendor = player == null ? null
                 : player.getEffect(StarRailSimMod.SPLENDOR.get());
+        int statusEnd = y + 4;
         if (splendor != null) {
             int seconds = (int) Math.ceil(splendor.getDuration() / 20.0D);
-            drawWrapped(graphics, Component.translatable(
+            statusEnd = drawWrapped(graphics, Component.translatable(
                     "screen.starrail_sim.light_cone_night_flowing_colors_active_splendor",
                     seconds), x, y + 4, width, StarRailUiStyle.GOLD_ACCENT);
         } else if (chant != null) {
             int stacks = Math.min(StarRailLightConeService
                     .NIGHT_FLOWING_COLORS_MAX_CHANT_STACKS, chant.getAmplifier() + 1);
-            drawWrapped(graphics, Component.translatable(
+            statusEnd = drawWrapped(graphics, Component.translatable(
                     "screen.starrail_sim.light_cone_night_flowing_colors_active_chant",
                     stacks, StarRailLightConeService.NIGHT_FLOWING_COLORS_MAX_CHANT_STACKS),
                     x, y + 4, width, StarRailUiStyle.GOLD_ACCENT);
         } else {
-            drawWrapped(graphics, Component.translatable(
+            statusEnd = drawWrapped(graphics, Component.translatable(
                     "screen.starrail_sim.light_cone_night_flowing_colors_inactive"), x,
                     y + 4, width, StarRailUiStyle.MUTED_COLOR);
         }
         drawWrapped(graphics, Component.translatable(
-                "screen.starrail_sim.light_cone_night_flowing_colors_limit"), x, y + 26,
+                "screen.starrail_sim.light_cone_night_flowing_colors_limit"), x, statusEnd + 6,
                 width, StarRailUiStyle.MUTED_COLOR);
     }
 

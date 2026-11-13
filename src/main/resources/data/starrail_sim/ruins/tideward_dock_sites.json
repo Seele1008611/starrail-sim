@@ -1,0 +1,236 @@
+{
+  "spawners": [
+    {
+      "x": -34,
+      "y": 5,
+      "z": 28,
+      "entity": "starrail_sim:voidranger_reaver"
+    },
+    {
+      "x": -56,
+      "y": 5,
+      "z": 19,
+      "entity": "starrail_sim:voidranger_distorter"
+    },
+    {
+      "x": 24,
+      "y": 5,
+      "z": 18,
+      "entity": "starrail_sim:voidranger_reaver"
+    },
+    {
+      "x": 62,
+      "y": 5,
+      "z": 26,
+      "entity": "starrail_sim:voidranger_distorter"
+    },
+    {
+      "x": 20,
+      "y": 15,
+      "z": -24,
+      "entity": "starrail_sim:voidranger_reaver"
+    },
+    {
+      "x": -35,
+      "y": -9,
+      "z": -26,
+      "entity": "starrail_sim:voidranger_distorter"
+    },
+    {
+      "x": 4,
+      "y": -9,
+      "z": 13,
+      "entity": "starrail_sim:voidranger_reaver"
+    },
+    {
+      "x": 44,
+      "y": -9,
+      "z": 6,
+      "entity": "starrail_sim:voidranger_distorter"
+    },
+    {
+      "x": -3,
+      "y": -21,
+      "z": -7,
+      "entity": "starrail_sim:voidranger_reaver"
+    },
+    {
+      "x": 24,
+      "y": -21,
+      "z": 4,
+      "entity": "starrail_sim:voidranger_distorter"
+    }
+  ],
+  "guards": [
+    {
+      "x": -45,
+      "y": 4,
+      "z": 30,
+      "entity": "starrail_sim:voidranger_reaver"
+    },
+    {
+      "x": -38,
+      "y": 4,
+      "z": 19,
+      "entity": "starrail_sim:voidranger_distorter"
+    },
+    {
+      "x": -40,
+      "y": 4,
+      "z": -10,
+      "entity": "starrail_sim:voidranger_reaver"
+    },
+    {
+      "x": -44,
+      "y": 4,
+      "z": -32,
+      "entity": "starrail_sim:voidranger_distorter"
+    },
+    {
+      "x": 29,
+      "y": 4,
+      "z": 8,
+      "entity": "starrail_sim:voidranger_reaver"
+    },
+    {
+      "x": 33,
+      "y": 4,
+      "z": 25,
+      "entity": "starrail_sim:voidranger_distorter"
+    },
+    {
+      "x": 53,
+      "y": 4,
+      "z": 37,
+      "entity": "starrail_sim:voidranger_reaver"
+    },
+    {
+      "x": 51,
+      "y": 8,
+      "z": 13,
+      "entity": "starrail_sim:voidranger_distorter"
+    },
+    {
+      "x": 27,
+      "y": 4,
+      "z": -24,
+      "entity": "starrail_sim:voidranger_reaver"
+    },
+    {
+      "x": 30,
+      "y": 14,
+      "z": -21,
+      "entity": "starrail_sim:voidranger_distorter"
+    },
+    {
+      "x": -18,
+      "y": -10,
+      "z": -26,
+      "entity": "starrail_sim:voidranger_reaver"
+    },
+    {
+      "x": 10,
+      "y": -10,
+      "z": -27,
+      "entity": "starrail_sim:voidranger_distorter"
+    },
+    {
+      "x": 10,
+      "y": -10,
+      "z": -3,
+      "entity": "starrail_sim:voidranger_reaver"
+    },
+    {
+      "x": 13,
+      "y": -10,
+      "z": 12,
+      "entity": "starrail_sim:voidranger_distorter"
+    },
+    {
+      "x": 37,
+      "y": -10,
+      "z": 18,
+      "entity": "starrail_sim:voidranger_reaver"
+    },
+    {
+      "x": 9,
+      "y": -22,
+      "z": -14,
+      "entity": "starrail_sim:voidranger_distorter"
+    },
+    {
+      "x": 15,
+      "y": -22,
+      "z": 5,
+      "entity": "starrail_sim:voidranger_reaver"
+    },
+    {
+      "x": 41,
+      "y": -22,
+      "z": 10,
+      "entity": "starrail_sim:voidranger_distorter"
+    }
+  ],
+  "chests": [
+    {
+      "x": -54,
+      "y": 4,
+      "z": 29,
+      "loot": "starrail_sim:chests/dock_supplies"
+    },
+    {
+      "x": 29,
+      "y": 4,
+      "z": 32,
+      "loot": "starrail_sim:chests/dock_supplies"
+    },
+    {
+      "x": 56,
+      "y": 8,
+      "z": 12,
+      "loot": "starrail_sim:chests/dock_supplies"
+    },
+    {
+      "x": 30,
+      "y": 14,
+      "z": -34,
+      "loot": "starrail_sim:chests/dock_supplies"
+    },
+    {
+      "x": 19,
+      "y": -10,
+      "z": 20,
+      "loot": "starrail_sim:chests/dock_supplies"
+    },
+    {
+      "x": 30,
+      "y": -10,
+      "z": 24,
+      "loot": "starrail_sim:chests/dock_supplies"
+    },
+    {
+      "x": 22,
+      "y": -22,
+      "z": -13,
+      "loot": "starrail_sim:chests/dock_supplies"
+    },
+    {
+      "x": 44,
+      "y": -22,
+      "z": 5,
+      "loot": "starrail_sim:chests/dock_supplies"
+    },
+    {
+      "x": 16,
+      "y": -4,
+      "z": 52,
+      "loot": "starrail_sim:chests/dock_wreck"
+    },
+    {
+      "x": -35,
+      "y": -4,
+      "z": 49,
+      "loot": "starrail_sim:chests/dock_wreck"
+    }
+  ]
+}

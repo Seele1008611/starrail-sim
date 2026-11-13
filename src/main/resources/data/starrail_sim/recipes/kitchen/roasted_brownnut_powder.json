@@ -1,0 +1,15 @@
+{
+  "type": "starrail_sim:kitchen",
+  "process": "dry",
+  "inputs": [
+    {
+      "item": "starrail_sim:brownnut",
+      "count": 1
+    }
+  ],
+  "result": {
+    "item": "starrail_sim:roasted_brownnut_powder",
+    "count": 1
+  },
+  "returns": []
+}

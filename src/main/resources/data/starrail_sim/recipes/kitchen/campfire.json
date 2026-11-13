@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " S ",
+    "SCS",
+    "LLL"
+  ],
+  "key": {
+    "S": {
+      "item": "minecraft:stick"
+    },
+    "C": {
+      "item": "starrail_sim:path_starcoal"
+    },
+    "L": {
+      "item": "starrail_sim:sunmeadow_log"
+    }
+  },
+  "result": {
+    "item": "minecraft:campfire"
+  }
+}

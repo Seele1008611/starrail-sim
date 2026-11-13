@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "starrail_sim:morning_berry"
+    },
+    {
+      "item": "starrail_sim:stilltide_fowl_egg"
+    },
+    {
+      "item": "starrail_sim:milkcream_base"
+    },
+    {
+      "item": "starrail_sim:grain_flour"
+    }
+  ],
+  "result": {
+    "item": "starrail_sim:stargazing_cake_dough",
+    "count": 2
+  }
+}

@@ -14,6 +14,12 @@ import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.animal.Sheep;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemUtils;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.crafting.Ingredient;
 
 import java.util.EnumSet;
@@ -24,6 +30,7 @@ public class StarvelvetRam extends Sheep {
             net.minecraft.network.syncher.SynchedEntityData.defineId(
                     StarvelvetRam.class, net.minecraft.network.syncher.EntityDataSerializers.BOOLEAN);
     private int shearReactionTicks;
+    private long nextMilkTime;
 
     public StarvelvetRam(EntityType<? extends Sheep> type, Level level) {
         super(type, level);
@@ -65,8 +72,40 @@ public class StarvelvetRam extends Sheep {
     }
 
     @Override
+    public InteractionResult mobInteract(Player player, InteractionHand hand) {
+        ItemStack held = player.getItemInHand(hand);
+        if (!isBaby() && held.is(Items.BUCKET) && level().dimension().equals(StarRailDimensionIds.THE_PATH)
+                && level().getGameTime() >= nextMilkTime) {
+            if (!level().isClientSide) {
+                player.setItemInHand(hand, ItemUtils.createFilledResult(held, player, new ItemStack(PathKitchen.SHEEP_MILK.get())));
+                level().playSound(null, blockPosition(), net.minecraft.sounds.SoundEvents.COW_MILK,
+                        SoundSource.NEUTRAL, 1.0F, 1.0F);
+                nextMilkTime = level().getGameTime() + 6000;
+            }
+            return InteractionResult.sidedSuccess(level().isClientSide);
+        }
+        return super.mobInteract(player, hand);
+    }
+
+    @Override public void addAdditionalSaveData(CompoundTag tag) {
+        super.addAdditionalSaveData(tag);
+        tag.putLong("NextPathMilk", nextMilkTime);
+    }
+
+    @Override public void readAdditionalSaveData(CompoundTag tag) {
+        super.readAdditionalSaveData(tag);
+        nextMilkTime = tag.getLong("NextPathMilk");
+    }
+
+    @Override
     public boolean canMate(Animal otherAnimal) {
         return otherAnimal instanceof StarvelvetRam && super.canMate(otherAnimal);
+    }
+
+    @Override
+    public void playSound(SoundEvent sound, float volume, float pitch) {
+        if (sound == net.minecraft.sounds.SoundEvents.SHEEP_STEP) sound = PathAnimalSounds.DAILY_RAM_STEP.get();
+        super.playSound(sound, volume, pitch);
     }
 
     @Override

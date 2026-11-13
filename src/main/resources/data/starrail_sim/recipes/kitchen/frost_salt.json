@@ -1,0 +1,20 @@
+{
+  "type": "starrail_sim:kitchen",
+  "process": "stew",
+  "inputs": [
+    {
+      "item": "starrail_sim:mirrorfrost_brine",
+      "count": 1
+    }
+  ],
+  "result": {
+    "item": "starrail_sim:frost_salt",
+    "count": 1
+  },
+  "returns": [
+    {
+      "item": "starrail_sim:path_water_flask",
+      "count": 1
+    }
+  ]
+}

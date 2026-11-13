@@ -21,6 +21,12 @@ public final class StarveinConstructEntities {
                             .updateInterval(2)
                             .build("starvein_construct_guardian"));
 
+    public static final RegistryObject<EntityType<DoomsdayBeast>> DOOMSDAY_BEAST =
+            ENTITY_TYPES.register("doomsday_beast", () -> EntityType.Builder
+                    .of(DoomsdayBeast::new, MobCategory.MONSTER)
+                    .sized(5.8F, 4.5F).clientTrackingRange(16).updateInterval(1)
+                    .build("doomsday_beast"));
+
     private StarveinConstructEntities() {
     }
 
@@ -30,6 +36,7 @@ public final class StarveinConstructEntities {
     }
 
     private static void registerAttributes(EntityAttributeCreationEvent event) {
+        event.put(DOOMSDAY_BEAST.get(), DoomsdayBeast.createAttributes().build());
         event.put(STARVEIN_CONSTRUCT_GUARDIAN.get(),
                 StarveinConstructGuardian.createAttributes().build());
     }

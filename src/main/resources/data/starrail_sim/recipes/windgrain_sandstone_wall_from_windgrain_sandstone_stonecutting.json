@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "starrail_sim:windgrain_sandstone"
+  },
+  "result": "starrail_sim:windgrain_sandstone_wall",
+  "count": 1
+}

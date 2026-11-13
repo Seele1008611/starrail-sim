@@ -1,5 +1,6 @@
 package com.starrail.sim.client;
 
+import com.starrail.sim.DoomsdayRewardContent;
 import com.starrail.sim.StarRailRelicItems;
 import com.starrail.sim.StarRailRuinContent;
 import com.starrail.sim.StarRailSimMod;
@@ -29,6 +30,12 @@ public final class StarRailFeatureTooltipHandler {
     }
 
     private static String descriptionKey(Item item) {
+        if (item == DoomsdayRewardContent.ANTIMATTER_CORE_FRAGMENT.get()) {
+            return "tooltip.starrail_sim.antimatter_core_fragment";
+        }
+        if (item == DoomsdayRewardContent.DOOMSDAY_MEDAL.get()) {
+            return "tooltip.starrail_sim.doomsday_medal";
+        }
         if (item == StarRailRelicItems.LOST_CRYSTAL.get()) {
             return "tooltip.starrail_sim.lost_crystal";
         }

@@ -17,21 +17,27 @@ public final class PathAnimalClient {
 
     @SubscribeEvent
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
+        event.registerEntityRenderer(PathAnimalEntities.LOTUS_OTTER.get(),c->renderer(c,PathAnimalModel.Species.LOTUS_OTTER,.4F));
+        event.registerEntityRenderer(PathAnimalEntities.DUSKRED_FISH.get(),c->renderer(c,PathAnimalModel.Species.DUSKRED_FISH,.15F));
+        event.registerEntityRenderer(PathAnimalEntities.ROCK_CRAB.get(),c->renderer(c,PathAnimalModel.Species.ROCK_CRAB,.35F));
+        event.registerEntityRenderer(PathAnimalEntities.ORANGE_FINCH.get(),c->renderer(c,PathAnimalModel.Species.ORANGE_FINCH,.18F));
+        event.registerEntityRenderer(PathAnimalEntities.GEM_LIZARD.get(),
+                context -> renderer(context, PathAnimalModel.Species.GEM_LIZARD, 0.28F));
         event.registerEntityRenderer(PathAnimalEntities.SUNNYHARVEST_DEER.get(),
-                context -> renderer(context, PathAnimalModel.Species.SUN_GRAIN_DEER, 0.35F, 0.60F));
+                context -> renderer(context, PathAnimalModel.Species.SUN_GRAIN_DEER, 0.60F));
         event.registerEntityRenderer(PathAnimalEntities.STARVELVET_RAM.get(),
-                context -> renderer(context, PathAnimalModel.Species.STARFLEECE_RAM, 0.44F, 0.58F));
+                context -> renderer(context, PathAnimalModel.Species.STARFLEECE_RAM, 0.58F));
         event.registerEntityRenderer(PathAnimalEntities.WOODLAND_FORAGER.get(),
-                context -> renderer(context, PathAnimalModel.Species.WOODLAND_FORAGER, 0.50F, 0.62F));
+                context -> renderer(context, PathAnimalModel.Species.WOODLAND_FORAGER, 0.62F));
         event.registerEntityRenderer(PathAnimalEntities.STILLTIDE_FOWL.get(),
-                context -> renderer(context, PathAnimalModel.Species.MARSH_FOWL, 0.20F, 0.32F));
+                context -> renderer(context, PathAnimalModel.Species.MARSH_FOWL, 0.32F));
         event.registerEntityRenderer(PathAnimalEntities.STAR_SCREE_PACKBEAST.get(),
-                context -> renderer(context, PathAnimalModel.Species.STARGRAVEL_PACKBEAST, 0.75F, 0.86F));
+                context -> renderer(context, PathAnimalModel.Species.STARGRAVEL_PACKBEAST, 0.86F));
     }
 
     private static <T extends Mob> PathAnimalRenderer<T> renderer(
             net.minecraft.client.renderer.entity.EntityRendererProvider.Context context,
-            PathAnimalModel.Species species, float scale, float shadowRadius) {
-        return new PathAnimalRenderer<>(context, species, scale, shadowRadius);
+            PathAnimalModel.Species species, float shadowRadius) {
+        return new PathAnimalRenderer<>(context, species, shadowRadius);
     }
 }

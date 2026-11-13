@@ -1,0 +1,117 @@
+{
+  "creature_spawn_probability": 0.35,
+  "carvers": {
+    "air": [
+      "minecraft:cave",
+      "minecraft:cave_extra_underground",
+      "minecraft:canyon"
+    ]
+  },
+  "downfall": 0.08,
+  "temperature": 1.35,
+  "effects": {
+    "fog_color": 12638463,
+    "mood_sound": {
+      "block_search_extent": 8,
+      "offset": 2.0,
+      "sound": "minecraft:ambient.cave",
+      "tick_delay": 10000
+    },
+    "sky_color": 7907327,
+    "water_color": 5869162,
+    "water_fog_color": 2645887,
+    "grass_color": 11504217,
+    "foliage_color": 11504217
+  },
+  "features": [
+    [],
+    [
+      "starrail_sim:ember_spring_pool"
+    ],
+    [],
+    [],
+    [],
+    [],
+    [
+      "starrail_sim:path_starcoal_ore",
+      "starrail_sim:path_dawncopper_ore",
+      "starrail_sim:path_suniron_ore",
+      "starrail_sim:path_dawn_gold_ore",
+      "starrail_sim:path_resonance_ore",
+      "starrail_sim:path_memory_ore",
+      "starrail_sim:path_starmarrow_ore",
+      "starrail_sim:path_stellarjade_ore",
+      "starrail_sim:path_ancientdream_ore",
+      "starrail_sim:path_dawncopper_outcrop"
+    ],
+    [],
+    [],
+    [
+      "starrail_sim:ember_spring_basalt_pillars",
+      "starrail_sim:flame_pepper_bush_patch",
+      "starrail_sim:path_tea_bush_patch",
+      "starrail_sim:warm_spring_crust_patch",
+      "starrail_sim:ember_heatgrass_patch"
+    ],
+    []
+  ],
+  "has_precipitation": false,
+  "spawners": {
+    "ambient": [],
+    "axolotls": [],
+    "creature": [
+      {
+        "type": "starrail_sim:sunnyharvest_deer",
+        "weight": 8,
+        "minCount": 2,
+        "maxCount": 3
+      },
+      {
+        "type": "starrail_sim:stilltide_fowl",
+        "weight": 10,
+        "minCount": 3,
+        "maxCount": 4
+      },
+      {
+        "type": "starrail_sim:star_scree_packbeast",
+        "weight": 2,
+        "minCount": 1,
+        "maxCount": 2
+      },
+      {
+        "type": "starrail_sim:gem_lizard",
+        "weight": 20,
+        "minCount": 2,
+        "maxCount": 3
+      }
+    ],
+    "misc": [],
+    "monster": [
+      {
+        "type": "starrail_sim:voidranger_reaver",
+        "weight": 28,
+        "minCount": 1,
+        "maxCount": 2
+      },
+      {
+        "type": "starrail_sim:voidranger_distorter",
+        "weight": 24,
+        "minCount": 1,
+        "maxCount": 1
+      },
+      {
+        "type": "starrail_sim:voidranger_trampler",
+        "weight": 8,
+        "minCount": 1,
+        "maxCount": 1
+      },
+      {
+        "type": "starrail_sim:voidranger_eliminator",
+        "weight": 16,
+        "minCount": 1,
+        "maxCount": 1
+      }
+    ]
+  },
+  "spawn_costs": {}
+}

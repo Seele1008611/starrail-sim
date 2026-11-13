@@ -48,6 +48,17 @@ public final class VoidrangerSounds {
     public static final RegistryObject<SoundEvent> ELIMINATOR_SPECIAL_HIT =
             sound("voidranger_eliminator_special_hit");
 
+    public static final RegistryObject<SoundEvent> DOOMSDAY_CHARGE = sound("doomsday_charge");
+    public static final RegistryObject<SoundEvent> DOOMSDAY_SWEEP = sound("doomsday_sweep");
+    public static final RegistryObject<SoundEvent> DOOMSDAY_STRIKE = sound("doomsday_strike");
+    public static final RegistryObject<SoundEvent> DOOMSDAY_BEAM = sound("doomsday_beam");
+    public static final RegistryObject<SoundEvent> DOOMSDAY_BREAK = sound("doomsday_break");
+    public static final RegistryObject<SoundEvent> DOOMSDAY_DEATH = sound("doomsday_death");
+
+    public static final RegistryObject<SoundEvent> DOOMSDAY_ROAR = sound("doomsday_roar");
+    public static final RegistryObject<SoundEvent> DOOMSDAY_SLAM = sound("doomsday_slam");
+    public static final RegistryObject<SoundEvent> DOOMSDAY_GALE = sound("doomsday_gale");
+
     private VoidrangerSounds() {
     }
 

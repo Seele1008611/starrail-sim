@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cross",
+  "textures": {
+    "cross": "starrail_sim:block/mirrorfrost_lichen"
+  },
+  "render_type": "minecraft:cutout"
+}

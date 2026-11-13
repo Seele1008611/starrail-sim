@@ -114,6 +114,7 @@ public final class EliminatorVoidranger extends VoidrangerMob {
         bolt.setNoGravity(true);
         bolt.setDeltaMovement(direction.scale(PROJECTILE_SPEED));
         serverLevel.addFreshEntity(bolt);
+        MonsterCombatVfx.emit(bolt,MonsterCombatPacket.Kind.BOLT_RELEASE,start,direction,0,0x9857f5);
         setAttackMark(null);
     }
 }

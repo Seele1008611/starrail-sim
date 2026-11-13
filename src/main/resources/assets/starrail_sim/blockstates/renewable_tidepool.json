@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "age=0": {
+      "model": "starrail_sim:block/renewable_tidepool"
+    },
+    "age=1": {
+      "model": "starrail_sim:block/renewable_tidepool"
+    }
+  }
+}

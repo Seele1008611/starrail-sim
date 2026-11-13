@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "starrail_sim:sunmeadow",
+    "starrail_sim:star_scree_highlands",
+    "starrail_sim:ochrecrystal_hills",
+    "starrail_sim:goldwind_grainvale",
+    "starrail_sim:duskorange_orchard",
+    "starrail_sim:frostveil_taiga"
+  ]
+}

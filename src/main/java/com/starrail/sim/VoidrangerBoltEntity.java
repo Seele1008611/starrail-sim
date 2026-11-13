@@ -38,7 +38,10 @@ public final class VoidrangerBoltEntity extends ThrowableProjectile {
                 && !player.isCreative() && !player.isSpectator()) {
             Entity owner = getOwner();
             LivingEntity attacker = owner instanceof LivingEntity living ? living : null;
-            player.hurt(this.level().damageSources().mobProjectile(this, attacker), 4.5F);
+            boolean hit=player.hurt(this.level().damageSources().mobProjectile(this, attacker), 4.5F);
+            MonsterCombatVfx.emit(this,MonsterCombatPacket.Kind.BOLT_IMPACT,result.getLocation(),
+                    getDeltaMovement().normalize().scale(-1),0,0x9857f5);
+            if(hit && attacker!=null)MonsterCombatVfx.hit(attacker,player);
             discard();
         }
         super.onHitEntity(result);
@@ -46,7 +49,12 @@ public final class VoidrangerBoltEntity extends ThrowableProjectile {
 
     @Override
     protected void onHitBlock(BlockHitResult result) {
-        if (!this.level().isClientSide) discard();
+        if (!this.level().isClientSide) {
+            var normal=result.getDirection().getNormal();
+            MonsterCombatVfx.emit(this,MonsterCombatPacket.Kind.BOLT_IMPACT,result.getLocation(),
+                    new net.minecraft.world.phys.Vec3(normal.getX(),normal.getY(),normal.getZ()),0,0x9857f5);
+            discard();
+        }
         super.onHitBlock(result);
     }
 

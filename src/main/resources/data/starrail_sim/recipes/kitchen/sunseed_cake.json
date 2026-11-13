@@ -1,0 +1,19 @@
+{
+  "type": "starrail_sim:kitchen",
+  "process": "bake",
+  "inputs": [
+    {
+      "item": "starrail_sim:sunseed",
+      "count": 2
+    },
+    {
+      "item": "starrail_sim:grain_flour",
+      "count": 1
+    }
+  ],
+  "result": {
+    "item": "starrail_sim:sunseed_cake",
+    "count": 1
+  },
+  "returns": []
+}

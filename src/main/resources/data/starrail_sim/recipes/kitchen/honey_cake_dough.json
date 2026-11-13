@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "starrail_sim:grain_flour"
+    },
+    {
+      "item": "starrail_sim:grainflower_honey"
+    },
+    {
+      "item": "starrail_sim:stilltide_fowl_egg"
+    },
+    {
+      "item": "starrail_sim:sunseed"
+    }
+  ],
+  "result": {
+    "item": "starrail_sim:honey_cake_dough",
+    "count": 1
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "structures": [
+    {
+      "structure": "starrail_sim:dayless_archive",
+      "weight": 1
+    },
+    {
+      "structure": "starrail_sim:tideward_dock",
+      "weight": 1
+    },
+    {
+      "structure": "starrail_sim:broken_ring_observatory",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "spacing": 128,
+    "separation": 96,
+    "salt": 93031751,
+    "spread_type": "triangular",
+    "exclusion_zone": {
+      "other_set": "starrail_sim:doomsday_arenas",
+      "chunk_count": 16
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "###",
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "starrail_sim:bluegrey_frozen_rock"
+    }
+  },
+  "result": {
+    "item": "starrail_sim:bluegrey_frozen_rock_wall",
+    "count": 6
+  }
+}

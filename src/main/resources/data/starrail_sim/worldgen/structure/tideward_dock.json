@@ -1,0 +1,7 @@
+{
+  "type": "starrail_sim:tideward_dock",
+  "biomes": "#starrail_sim:tideward_dock_biomes",
+  "step": "surface_structures",
+  "spawn_overrides": {},
+  "terrain_adaptation": "none"
+}

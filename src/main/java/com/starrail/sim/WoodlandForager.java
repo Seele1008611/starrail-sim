@@ -50,6 +50,12 @@ public class WoodlandForager extends Pig {
     }
 
     @Override
+    public void playSound(SoundEvent sound, float volume, float pitch) {
+        if (sound == net.minecraft.sounds.SoundEvents.PIG_STEP) sound = PathAnimalSounds.DAILY_FORAGER_STEP.get();
+        super.playSound(sound, volume, pitch);
+    }
+
+    @Override
     protected SoundEvent getAmbientSound() {
         return PathAnimalSounds.FORAGER_AMBIENT.get();
     }

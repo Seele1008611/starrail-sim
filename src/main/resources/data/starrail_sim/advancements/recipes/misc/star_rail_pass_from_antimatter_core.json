@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_core": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "starrail_sim:antimatter_core_fragment"
+            ]
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "starrail_sim:star_rail_pass_from_antimatter_core"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_core",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "starrail_sim:star_rail_pass_from_antimatter_core"
+    ]
+  }
+}

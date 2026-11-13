@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "starrail_sim:item/reef_algae_chips"
+  }
+}

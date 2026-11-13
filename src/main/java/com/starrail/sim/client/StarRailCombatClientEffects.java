@@ -11,7 +11,7 @@ public final class StarRailCombatClientEffects {
 
     public static void accept(CombatVfxPacket packet) {
         StarRailCombatMesh.accept(packet);
-        playSound(packet);
+        if(packet.kind()!=CombatVfxPacket.Kind.PATH_BASIC)playSound(packet);
     }
 
     private static void playSound(CombatVfxPacket packet) {
@@ -28,6 +28,7 @@ public final class StarRailCombatClientEffects {
     /** Per-action mix; the source clips are original procedural sounds bundled with the mod. */
     private static SoundCue cue(CombatVfxPacket.Kind kind) {
         return switch (kind) {
+            case PATH_BASIC -> new SoundCue(0,1);
             case HUNT_STRIKE -> new SoundCue(.62F, 1.08F);
             case HUNT_REVERSE -> new SoundCue(.72F, .94F);
             case TOUGHNESS_HIT -> new SoundCue(.34F, 1.12F);

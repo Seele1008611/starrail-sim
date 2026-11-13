@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "starrail_sim:grain_flour"
+    },
+    {
+      "item": "starrail_sim:stilltide_fowl_egg"
+    },
+    {
+      "item": "starrail_sim:roasted_brownnut_powder"
+    },
+    {
+      "item": "starrail_sim:milkcream_base"
+    }
+  ],
+  "result": {
+    "item": "starrail_sim:oak_roll_dough",
+    "count": 2
+  }
+}

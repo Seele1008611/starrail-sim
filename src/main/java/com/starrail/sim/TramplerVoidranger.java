@@ -103,6 +103,7 @@ public final class TramplerVoidranger extends VoidrangerMob {
             return;
         }
         if (phaseTick != 0) return;
+        MonsterCombatVfx.emit(this,MonsterCombatPacket.Kind.STOMP,position(),new Vec3(0,1,0),STOMP_RADIUS,0x9857f5);
         playCombatSound(VoidrangerSounds.TRAMPLER_SPECIAL_HIT.get(), 0.76F, 0.9F);
         sendCombatParticles(ParticleTypes.POOF, position().add(0.0D, 0.2D, 0.0D),
                 5, 0.28D, 0.08D, 0.28D, 0.018D);

@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "starrail_sim:milkcream_base"
+    },
+    {
+      "item": "starrail_sim:frost_berry"
+    },
+    {
+      "item": "starrail_sim:lemon"
+    },
+    {
+      "item": "starrail_sim:white_grape"
+    },
+    {
+      "item": "starrail_sim:kitchen_cup"
+    }
+  ],
+  "result": {
+    "item": "starrail_sim:seabreeze_tricolor_icecream",
+    "count": 1
+  }
+}

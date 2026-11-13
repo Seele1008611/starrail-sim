@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smoking",
+  "ingredient": {
+    "item": "starrail_sim:lemon_tart_dough"
+  },
+  "result": "starrail_sim:mr_herring_lemon_tart",
+  "experience": 0.35,
+  "cookingtime": 100
+}

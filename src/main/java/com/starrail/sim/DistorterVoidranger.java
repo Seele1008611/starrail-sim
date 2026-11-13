@@ -108,6 +108,7 @@ public final class DistorterVoidranger extends VoidrangerMob {
                 player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 30, 0), this);
             }
         }
+        MonsterCombatVfx.pulse(this, mark);
         setAttackMark(null);
     }
 }

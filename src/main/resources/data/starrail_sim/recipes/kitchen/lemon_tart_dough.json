@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "starrail_sim:lemon"
+    },
+    {
+      "item": "starrail_sim:grain_flour"
+    },
+    {
+      "item": "starrail_sim:stilltide_fowl_egg"
+    },
+    {
+      "item": "starrail_sim:grain_sugar"
+    }
+  ],
+  "result": {
+    "item": "starrail_sim:lemon_tart_dough",
+    "count": 2
+  }
+}

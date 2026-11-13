@@ -1,0 +1,15 @@
+{
+  "type": "starrail_sim:kitchen",
+  "process": "dry",
+  "inputs": [
+    {
+      "item": "starrail_sim:fruitwood_sprig",
+      "count": 1
+    }
+  ],
+  "result": {
+    "item": "starrail_sim:fruitwood_spice",
+    "count": 1
+  },
+  "returns": []
+}

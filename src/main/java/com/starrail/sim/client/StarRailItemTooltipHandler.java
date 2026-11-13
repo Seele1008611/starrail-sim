@@ -1046,7 +1046,8 @@ public final class StarRailItemTooltipHandler {
                         superimposition)));
         addStyled(tooltip, "tooltip.starrail_sim.sleep_like_the_dead.special_dream", theme,
                 formatPercent(StarRailLightConeService.beautifulDreamCritRate(
-                        superimposition)));
+                        superimposition)),
+                formatPercent(StarRailLightConeService.beautifulDreamCritDamage(superimposition)));
         addStyled(tooltip, "tooltip.starrail_sim.sleep_like_the_dead.special_limit", theme);
     }
 

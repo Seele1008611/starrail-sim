@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cross",
+  "textures": {
+    "cross": "starrail_sim:block/flame_pepper_bush_0"
+  },
+  "render_type": "minecraft:cutout"
+}

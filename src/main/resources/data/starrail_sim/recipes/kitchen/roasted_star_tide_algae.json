@@ -1,0 +1,15 @@
+{
+  "type": "starrail_sim:kitchen",
+  "process": "fry",
+  "inputs": [
+    {
+      "item": "starrail_sim:star_tide_algae",
+      "count": 1
+    }
+  ],
+  "result": {
+    "item": "starrail_sim:roasted_star_tide_algae",
+    "count": 1
+  },
+  "returns": []
+}

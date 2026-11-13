@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "starrail_sim:orange"
+    },
+    {
+      "item": "starrail_sim:grainflower_honey"
+    },
+    {
+      "item": "starrail_sim:sparkling_water"
+    }
+  ],
+  "result": {
+    "item": "starrail_sim:cheerful_orange_heart",
+    "count": 1
+  }
+}

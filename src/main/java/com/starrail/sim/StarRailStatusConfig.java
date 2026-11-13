@@ -14,6 +14,9 @@ public final class StarRailStatusConfig {
             ARENA_MAX_MOB_HEIGHT;
     public static final ForgeConfigSpec.BooleanValue SMOOTH_UI, REDUCED_MOTION, COMBAT_SHADERS, COMBAT_CAMERA_SHAKE;
     public static final ForgeConfigSpec.DoubleValue COMBAT_STRENGTH;
+    public static final ForgeConfigSpec.BooleanValue HAND_TRAILS;
+    public static final ForgeConfigSpec.BooleanValue HAND_TRAIL_SHADERS;
+    public static final ForgeConfigSpec.DoubleValue HAND_TRAIL_STRENGTH;
     static {
         var b = new ForgeConfigSpec.Builder();
         EXTEND_LIMITS = b.comment("Restart required. AttributeFix, when installed, owns vanilla ranges.")
@@ -52,6 +55,9 @@ public final class StarRailStatusConfig {
                 .define("combatShaders", true);
         COMBAT_CAMERA_SHAKE=b.comment("Local combat camera feedback only; does not turn the player or change aim.")
                 .define("combatCameraShake",true);
+        HAND_TRAILS=b.comment("Short visual trails for this mod's swinging weapons/tools; no combat changes.").define("handTrails",true);
+        HAND_TRAIL_SHADERS=b.comment("Flowing blade material and selective trail bloom; false uses basic colour ribbons.").define("handTrailShaders",true);
+        HAND_TRAIL_STRENGTH=b.defineInRange("handTrailStrength",1.0,.25,2.0);
         COMBAT_STRENGTH=b.comment("Intensity of combat bloom, refraction and camera feedback.")
                 .defineInRange("combatEffectStrength",1.0,.25,2.0);
         REDUCED_MOTION = b.comment("Reduce interface idle and interaction animation; does not change combat effects.")

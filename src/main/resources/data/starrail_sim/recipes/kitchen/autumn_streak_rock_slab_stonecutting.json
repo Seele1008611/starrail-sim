@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "starrail_sim:autumn_streak_rock"
+  },
+  "result": "starrail_sim:autumn_streak_rock_slab",
+  "count": 2
+}

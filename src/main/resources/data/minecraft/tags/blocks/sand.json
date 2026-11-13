@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "starrail_sim:path_river_sand"
+    "starrail_sim:path_river_sand",
+    "starrail_sim:ochre_sand"
   ]
 }

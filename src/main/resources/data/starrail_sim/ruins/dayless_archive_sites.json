@@ -1,0 +1,287 @@
+{
+  "version": 3,
+  "spawners": [
+    {
+      "x": -48,
+      "y": 1,
+      "z": 24,
+      "concealed": true,
+      "entity": "starrail_sim:voidranger_reaver"
+    },
+    {
+      "x": -50,
+      "y": 1,
+      "z": -20,
+      "concealed": true,
+      "entity": "starrail_sim:voidranger_reaver"
+    },
+    {
+      "x": 48,
+      "y": 1,
+      "z": 24,
+      "concealed": true,
+      "entity": "starrail_sim:voidranger_distorter"
+    },
+    {
+      "x": 50,
+      "y": 1,
+      "z": -20,
+      "concealed": true,
+      "entity": "starrail_sim:voidranger_distorter"
+    },
+    {
+      "x": -8,
+      "y": 1,
+      "z": 4,
+      "concealed": true,
+      "entity": "starrail_sim:voidranger_reaver"
+    },
+    {
+      "x": -16,
+      "y": 1,
+      "z": -44,
+      "concealed": true,
+      "entity": "starrail_sim:voidranger_reaver"
+    },
+    {
+      "x": -49,
+      "y": 11,
+      "z": 10,
+      "concealed": true,
+      "entity": "starrail_sim:voidranger_reaver"
+    },
+    {
+      "x": 49,
+      "y": 11,
+      "z": 10,
+      "concealed": true,
+      "entity": "starrail_sim:voidranger_distorter"
+    },
+    {
+      "x": -45,
+      "y": 21,
+      "z": 23,
+      "concealed": true,
+      "entity": "starrail_sim:voidranger_reaver"
+    },
+    {
+      "x": -6,
+      "y": 21,
+      "z": -15,
+      "concealed": true,
+      "entity": "starrail_sim:voidranger_distorter"
+    },
+    {
+      "x": -25,
+      "y": -9,
+      "z": 3,
+      "concealed": true,
+      "entity": "starrail_sim:voidranger_reaver"
+    },
+    {
+      "x": 26,
+      "y": -9,
+      "z": -41,
+      "concealed": true,
+      "entity": "starrail_sim:voidranger_distorter"
+    }
+  ],
+  "guards": [
+    {
+      "x": -8,
+      "y": 1,
+      "z": 46,
+      "entity": "starrail_sim:voidranger_reaver"
+    },
+    {
+      "x": 9,
+      "y": 1,
+      "z": 46,
+      "entity": "starrail_sim:voidranger_distorter"
+    },
+    {
+      "x": 58,
+      "y": 1,
+      "z": 28,
+      "entity": "starrail_sim:voidranger_reaver"
+    },
+    {
+      "x": -6,
+      "y": 1,
+      "z": 30,
+      "entity": "starrail_sim:voidranger_reaver"
+    },
+    {
+      "x": 8,
+      "y": 1,
+      "z": 31,
+      "entity": "starrail_sim:voidranger_distorter"
+    },
+    {
+      "x": -8,
+      "y": 1,
+      "z": 12,
+      "entity": "starrail_sim:voidranger_reaver"
+    },
+    {
+      "x": 7,
+      "y": 1,
+      "z": 7,
+      "entity": "starrail_sim:voidranger_eliminator"
+    },
+    {
+      "x": -39,
+      "y": 1,
+      "z": 11,
+      "entity": "starrail_sim:voidranger_distorter"
+    },
+    {
+      "x": -42,
+      "y": 11,
+      "z": -7,
+      "entity": "starrail_sim:voidranger_reaver"
+    },
+    {
+      "x": 43,
+      "y": 1,
+      "z": 11,
+      "entity": "starrail_sim:voidranger_reaver"
+    },
+    {
+      "x": 42,
+      "y": 11,
+      "z": -7,
+      "entity": "starrail_sim:voidranger_distorter"
+    },
+    {
+      "x": -4,
+      "y": 11,
+      "z": -16,
+      "entity": "starrail_sim:voidranger_reaver"
+    },
+    {
+      "x": 7,
+      "y": 21,
+      "z": -9,
+      "entity": "starrail_sim:voidranger_eliminator"
+    },
+    {
+      "x": -24,
+      "y": 1,
+      "z": -29,
+      "entity": "starrail_sim:voidranger_trampler"
+    },
+    {
+      "x": 23,
+      "y": 1,
+      "z": -29,
+      "entity": "starrail_sim:voidranger_trampler"
+    },
+    {
+      "x": 0,
+      "y": 1,
+      "z": -40,
+      "entity": "starrail_sim:starvein_construct_guardian"
+    },
+    {
+      "x": -10,
+      "y": -9,
+      "z": 7,
+      "entity": "starrail_sim:voidranger_distorter"
+    },
+    {
+      "x": 24,
+      "y": -9,
+      "z": -5,
+      "entity": "starrail_sim:voidranger_reaver"
+    },
+    {
+      "x": -23,
+      "y": -9,
+      "z": -34,
+      "entity": "starrail_sim:voidranger_reaver"
+    },
+    {
+      "x": 0,
+      "y": -9,
+      "z": -14,
+      "entity": "starrail_sim:voidranger_distorter"
+    }
+  ],
+  "chests": [
+    {
+      "x": -10,
+      "y": 1,
+      "z": 35,
+      "loot": "starrail_sim:chests/archive_supplies"
+    },
+    {
+      "x": -48,
+      "y": 1,
+      "z": 12,
+      "loot": "starrail_sim:chests/archive_materials"
+    },
+    {
+      "x": 48,
+      "y": 1,
+      "z": 12,
+      "loot": "starrail_sim:chests/archive_materials"
+    },
+    {
+      "x": -36,
+      "y": 11,
+      "z": 23,
+      "loot": "starrail_sim:chests/archive_materials"
+    },
+    {
+      "x": 36,
+      "y": 11,
+      "z": 23,
+      "loot": "starrail_sim:chests/archive_materials"
+    },
+    {
+      "x": 0,
+      "y": 11,
+      "z": -20,
+      "loot": "starrail_sim:chests/archive_materials"
+    },
+    {
+      "x": -48,
+      "y": 21,
+      "z": -17,
+      "loot": "starrail_sim:chests/archive_hidden"
+    },
+    {
+      "x": 48,
+      "y": 21,
+      "z": -17,
+      "loot": "starrail_sim:chests/archive_hidden"
+    },
+    {
+      "x": -24,
+      "y": -9,
+      "z": -17,
+      "loot": "starrail_sim:chests/archive_hidden"
+    },
+    {
+      "x": 24,
+      "y": -9,
+      "z": -17,
+      "loot": "starrail_sim:chests/archive_hidden"
+    }
+  ],
+  "future": [
+    {
+      "x": 0,
+      "y": 1,
+      "z": -48,
+      "label": "Q1 封存殿奇物预留"
+    },
+    {
+      "x": 0,
+      "y": -9,
+      "z": -20,
+      "label": "Q2 内厅奇物预留"
+    }
+  ]
+}

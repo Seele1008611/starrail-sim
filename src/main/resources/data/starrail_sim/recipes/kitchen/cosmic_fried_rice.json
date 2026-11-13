@@ -1,0 +1,31 @@
+{
+  "type": "starrail_sim:kitchen",
+  "process": "fry",
+  "inputs": [
+    {
+      "item": "starrail_sim:cooked_stilltide_rice",
+      "count": 1
+    },
+    {
+      "item": "starrail_sim:stilltide_fowl_egg",
+      "count": 1
+    },
+    {
+      "item": "starrail_sim:stilltide_fowl_meat",
+      "count": 1
+    },
+    {
+      "item": "starrail_sim:grainvale_corn",
+      "count": 1
+    },
+    {
+      "item": "starrail_sim:sunseed_oil",
+      "count": 1
+    }
+  ],
+  "result": {
+    "item": "starrail_sim:cosmic_fried_rice",
+    "count": 2
+  },
+  "returns": []
+}

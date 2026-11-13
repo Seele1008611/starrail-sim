@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "starrail_sim:item/snow_plains_combo_stew"
+  }
+}

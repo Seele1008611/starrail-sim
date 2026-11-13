@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "starrail_sim:ochre_stone_bricks"
+    }
+  },
+  "result": {
+    "item": "starrail_sim:ochre_stone_bricks_slab",
+    "count": 6
+  }
+}

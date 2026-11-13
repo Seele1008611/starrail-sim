@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smoking",
+  "ingredient": {
+    "item": "starrail_sim:froststripe_salmon"
+  },
+  "result": "starrail_sim:cooked_froststripe_salmon",
+  "experience": 0.35,
+  "cookingtime": 100
+}

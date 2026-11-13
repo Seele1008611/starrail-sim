@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": {
+    "item": "starrail_sim:oak_roll_dough"
+  },
+  "result": "starrail_sim:oak_cake_roll",
+  "experience": 0.35,
+  "cookingtime": 200
+}

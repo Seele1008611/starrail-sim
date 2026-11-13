@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "starrail_sim:woodland_meat"
+    },
+    {
+      "item": "starrail_sim:woodland_meat"
+    },
+    {
+      "item": "starrail_sim:snowroot"
+    },
+    {
+      "item": "starrail_sim:frost_salt"
+    }
+  ],
+  "result": {
+    "item": "starrail_sim:raw_belobog_sausage",
+    "count": 2
+  }
+}

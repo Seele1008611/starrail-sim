@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "starrail_sim:ochre_stone"
+  },
+  "result": "starrail_sim:ochre_stone_stairs",
+  "count": 1
+}

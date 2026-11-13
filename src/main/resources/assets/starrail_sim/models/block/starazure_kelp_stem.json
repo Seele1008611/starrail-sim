@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cross",
+  "textures": {
+    "cross": "starrail_sim:block/starazure_kelp_stem"
+  },
+  "render_type": "minecraft:cutout"
+}

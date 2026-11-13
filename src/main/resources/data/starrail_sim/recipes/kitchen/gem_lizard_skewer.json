@@ -1,0 +1,23 @@
+{
+  "type": "starrail_sim:kitchen",
+  "process": "fry",
+  "inputs": [
+    {
+      "item": "starrail_sim:gem_lizard_meat",
+      "count": 1
+    },
+    {
+      "item": "starrail_sim:flame_pepper",
+      "count": 1
+    },
+    {
+      "item": "starrail_sim:sunmeadow_skewer",
+      "count": 1
+    }
+  ],
+  "result": {
+    "item": "starrail_sim:gem_lizard_skewer",
+    "count": 1
+  },
+  "returns": []
+}

@@ -1,0 +1,37 @@
+{
+  "parent": "starrail_sim:journey/the_path",
+  "display": {
+    "icon": {
+      "item": "starrail_sim:starazure_reef_stone"
+    },
+    "title": {
+      "translate": "advancements.starrail_sim.exploration.starazure_reef.title"
+    },
+    "description": {
+      "translate": "advancements.starrail_sim.exploration.starazure_reef.description"
+    },
+    "frame": "task",
+    "show_toast": false,
+    "announce_to_chat": false,
+    "hidden": false
+  },
+  "criteria": {
+    "visit_starazure_reef": {
+      "trigger": "minecraft:location",
+      "conditions": {
+        "player": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "location": {
+                "biome": "starrail_sim:starazure_reef",
+                "dimension": "starrail_sim:the_path"
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+}

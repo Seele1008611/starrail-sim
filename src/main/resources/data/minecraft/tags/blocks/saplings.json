@@ -2,6 +2,9 @@
   "replace": false,
   "values": [
     "starrail_sim:sunmeadow_sapling",
-    "starrail_sim:starlightwood_sapling"
+    "starrail_sim:starlightwood_sapling",
+    "starrail_sim:frost_spruce_sapling",
+    "starrail_sim:orange_sapling",
+    "starrail_sim:lemon_sapling"
   ]
 }

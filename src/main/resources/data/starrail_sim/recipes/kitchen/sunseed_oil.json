@@ -1,0 +1,15 @@
+{
+  "type": "starrail_sim:kitchen",
+  "process": "stew",
+  "inputs": [
+    {
+      "item": "starrail_sim:sunseed",
+      "count": 2
+    }
+  ],
+  "result": {
+    "item": "starrail_sim:sunseed_oil",
+    "count": 1
+  },
+  "returns": []
+}

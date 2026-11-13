@@ -8,6 +8,12 @@
     "starrail_sim:starlightwood_log",
     "starrail_sim:starlightwood_wood",
     "starrail_sim:stripped_starlightwood_log",
-    "starrail_sim:stripped_starlightwood_wood"
+    "starrail_sim:stripped_starlightwood_wood",
+    "starrail_sim:frost_spruce_log",
+    "starrail_sim:frost_spruce_wood",
+    "starrail_sim:stripped_frost_spruce_log",
+    "starrail_sim:stripped_frost_spruce_wood",
+    "starrail_sim:fruitwood_log",
+    "starrail_sim:stripped_fruitwood_log"
   ]
 }

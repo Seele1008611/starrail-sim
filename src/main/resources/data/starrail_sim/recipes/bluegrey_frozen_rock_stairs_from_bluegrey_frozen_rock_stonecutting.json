@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "starrail_sim:bluegrey_frozen_rock"
+  },
+  "result": "starrail_sim:bluegrey_frozen_rock_stairs",
+  "count": 1
+}

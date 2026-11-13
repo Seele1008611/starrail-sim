@@ -1,0 +1,15 @@
+{
+  "structures": [
+    {
+      "structure": "starrail_sim:doomsday_arena",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "spacing": 224,
+    "separation": 192,
+    "salt": 91276403,
+    "spread_type": "triangular"
+  }
+}

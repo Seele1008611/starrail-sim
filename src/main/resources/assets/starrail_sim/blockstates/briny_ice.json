@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "age=0": {
+      "model": "starrail_sim:block/briny_ice_spent"
+    },
+    "age=1": {
+      "model": "starrail_sim:block/briny_ice"
+    }
+  }
+}

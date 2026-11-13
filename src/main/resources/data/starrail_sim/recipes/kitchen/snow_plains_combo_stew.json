@@ -1,0 +1,36 @@
+{
+  "type": "starrail_sim:kitchen",
+  "process": "stew",
+  "inputs": [
+    {
+      "item": "starrail_sim:starfleece_mutton",
+      "count": 1
+    },
+    {
+      "item": "starrail_sim:baked_star_tuber",
+      "count": 1
+    },
+    {
+      "item": "starrail_sim:snowroot",
+      "count": 1
+    },
+    {
+      "item": "starrail_sim:path_spring_water",
+      "count": 1
+    },
+    {
+      "item": "minecraft:bowl",
+      "count": 1
+    }
+  ],
+  "result": {
+    "item": "starrail_sim:snow_plains_combo_stew",
+    "count": 1
+  },
+  "returns": [
+    {
+      "item": "starrail_sim:path_water_flask",
+      "count": 1
+    }
+  ]
+}

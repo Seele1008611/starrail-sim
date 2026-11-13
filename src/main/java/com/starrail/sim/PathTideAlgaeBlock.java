@@ -45,6 +45,8 @@ public final class PathTideAlgaeBlock extends Block implements SimpleWaterlogged
                 && (ground.is(Blocks.SAND) || ground.is(Blocks.GRAVEL) || ground.is(Blocks.CLAY)
                 || ground.is(Blocks.DIRT) || ground.is(Blocks.STONE)
                 || ground.is(PathTerrainBlocks.PATH_RIVER_SAND.get())
+                || ground.is(PathReefContent.REEF_STONE.get())
+                || ground.is(PathReefContent.POROUS_STONE.get())
                 || ground.is(PathTerrainBlocks.PATH_RIVER_GRAVEL.get())
                 || ground.is(PathTerrainBlocks.PATH_RIVER_SANDSTONE.get())
                 || ground.is(PathTerrainBlocks.PATH_STONE.get())

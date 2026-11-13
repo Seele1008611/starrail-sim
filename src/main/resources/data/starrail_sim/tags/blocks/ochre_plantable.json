@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "starrail_sim:ochre_sand",
+    "starrail_sim:ochre_stone",
+    "starrail_sim:path_coarse_soil",
+    "starrail_sim:path_dirt"
+  ]
+}

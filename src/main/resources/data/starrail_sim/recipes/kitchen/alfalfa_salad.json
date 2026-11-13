@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "starrail_sim:alfalfa_leaf"
+    },
+    {
+      "item": "starrail_sim:jadebranch_radish"
+    },
+    {
+      "item": "starrail_sim:grainvale_tomato"
+    },
+    {
+      "item": "minecraft:bowl"
+    }
+  ],
+  "result": {
+    "item": "starrail_sim:alfalfa_salad",
+    "count": 1
+  }
+}

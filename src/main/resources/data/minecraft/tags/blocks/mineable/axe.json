@@ -26,6 +26,15 @@
     "starrail_sim:starlightwood_door",
     "starrail_sim:starlightwood_trapdoor",
     "starrail_sim:starlightwood_pressure_plate",
-    "starrail_sim:starlightwood_button"
+    "starrail_sim:starlightwood_button",
+    "starrail_sim:fruitwood_log",
+    "starrail_sim:fruitwood_planks",
+    "starrail_sim:fruitwood_stairs",
+    "starrail_sim:fruitwood_slab",
+    "starrail_sim:fruitwood_fence",
+    "starrail_sim:fruitwood_fence_gate",
+    "starrail_sim:fruitwood_door",
+    "starrail_sim:fruitwood_trapdoor",
+    "starrail_sim:stripped_fruitwood_log"
   ]
 }

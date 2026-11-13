@@ -1,0 +1,27 @@
+{
+  "type": "starrail_sim:kitchen",
+  "process": "stew",
+  "inputs": [
+    {
+      "item": "starrail_sim:sourberry",
+      "count": 1
+    },
+    {
+      "item": "starrail_sim:lemon",
+      "count": 1
+    },
+    {
+      "item": "starrail_sim:grain_sugar",
+      "count": 1
+    },
+    {
+      "item": "starrail_sim:kelp_agar",
+      "count": 1
+    }
+  ],
+  "result": {
+    "item": "starrail_sim:sour_dream_gummies",
+    "count": 2
+  },
+  "returns": []
+}

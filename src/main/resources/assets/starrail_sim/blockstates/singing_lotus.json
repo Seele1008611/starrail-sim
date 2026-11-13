@@ -1,0 +1,28 @@
+{
+  "variants": {
+    "age=0,waterlogged=false": {
+      "model": "starrail_sim:block/singing_lotus_0"
+    },
+    "age=0,waterlogged=true": {
+      "model": "starrail_sim:block/singing_lotus_0"
+    },
+    "age=1,waterlogged=false": {
+      "model": "starrail_sim:block/singing_lotus_1"
+    },
+    "age=1,waterlogged=true": {
+      "model": "starrail_sim:block/singing_lotus_1"
+    },
+    "age=2,waterlogged=false": {
+      "model": "starrail_sim:block/singing_lotus_2"
+    },
+    "age=2,waterlogged=true": {
+      "model": "starrail_sim:block/singing_lotus_2"
+    },
+    "age=3,waterlogged=false": {
+      "model": "starrail_sim:block/singing_lotus_3"
+    },
+    "age=3,waterlogged=true": {
+      "model": "starrail_sim:block/singing_lotus_3"
+    }
+  }
+}

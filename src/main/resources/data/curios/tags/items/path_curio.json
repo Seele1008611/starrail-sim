@@ -1,0 +1,32 @@
+{
+  "replace": false,
+  "values": [
+    "starrail_sim:curio_robe",
+    "starrail_sim:curio_knot",
+    "starrail_sim:curio_galaxy_model",
+    "starrail_sim:curio_annihilation_scissors",
+    "starrail_sim:curio_memory_wheel",
+    "starrail_sim:curio_plague_nest",
+    "starrail_sim:curio_differential_engine",
+    "starrail_sim:curio_reunion",
+    "starrail_sim:curio_local_custom",
+    "starrail_sim:curio_collection",
+    "starrail_sim:curio_heroic_triumph",
+    "starrail_sim:curio_carnival_tail",
+    "starrail_sim:curio_tranquility",
+    "starrail_sim:curio_elegant_code",
+    "starrail_sim:curio_fortune_window",
+    "starrail_sim:curio_trailblaze_seal",
+    "starrail_sim:curio_natural_beauty",
+    "starrail_sim:curio_trailblaze_compass",
+    "starrail_sim:curio_nemesis",
+    "starrail_sim:curio_debt_book",
+    "starrail_sim:curio_toy_box",
+    "starrail_sim:curio_repair_scissors",
+    "starrail_sim:curio_wishing_star",
+    "starrail_sim:curio_water_book",
+    "starrail_sim:curio_fictional_automaton",
+    "starrail_sim:curio_corrupted_fruit",
+    "starrail_sim:curio_law_mark"
+  ]
+}

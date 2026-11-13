@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "S  ",
+    "SS ",
+    "SSS"
+  ],
+  "key": {
+    "S": {
+      "item": "starrail_sim:tidal_stripe_rock"
+    }
+  },
+  "result": {
+    "item": "starrail_sim:tidal_stripe_rock_stairs",
+    "count": 4
+  }
+}

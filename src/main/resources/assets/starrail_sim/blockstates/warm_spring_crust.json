@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "age=0": {
+      "model": "starrail_sim:block/warm_spring_crust_spent"
+    },
+    "age=1": {
+      "model": "starrail_sim:block/warm_spring_crust"
+    }
+  }
+}
