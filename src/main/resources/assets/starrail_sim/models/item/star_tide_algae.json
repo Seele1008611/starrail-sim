@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "starrail_sim:block/star_tide_algae"
+    "layer0": "starrail_sim:item/star_tide_algae"
   }
 }

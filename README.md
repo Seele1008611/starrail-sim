@@ -5,14 +5,14 @@
 ## 版本与依赖
 
 - Mod ID：`starrail_sim`
-- 当前正式版本：1.27.0，见[发行记录](releases/1.27.0.md)。
+- 当前正式版本：1.27.1，见[发行记录](releases/1.27.1.md)。
 - 可选兼容：JEI、Lootr。
 - Minecraft：`1.20.1`
 - Forge：`47.x`；1.14.0 单人验收使用开发客户端 `47.4.10`。
 - Java：`17`
 - 必需依赖：Curios API（Forge、Minecraft 1.20.1）；发行包使用 `5.14.1` 核验。
 
-最新正式发行包：[starrail_sim-1.27.0.jar](https://github.com/Seele1008611/starrail-sim/releases/download/v1.27.0/starrail_sim-1.27.0.jar)。
+最新正式发行包：[starrail_sim-1.27.1.jar](https://github.com/Seele1008611/starrail-sim/releases/download/v1.27.1/starrail_sim-1.27.1.jar)。
 
 1.24.0 扩展命途遗境七个既有群系的生态，加入五种原创环境生物、本地食物与作物，并以原创构装守卫替换遗迹中的原版 Warden。用户确认阶段 6 剩余实机测试及多人客户端测试无问题；旧世界迁移未测试，专用服务端未确认测试。已知限制与验收范围见 [1.24.0 发布记录](releases/1.24.0.md)。
 
@@ -55,7 +55,7 @@
 
 1. 安装 Minecraft 1.20.1、Java 17 和 Forge 47.x。
 2. 安装适用于 Forge 1.20.1 的 Curios API 5.14.1 或更高版本。
-3. 将对应公开发行版本的 JAR 和 Curios API JAR 放入游戏实例的 `mods` 文件夹。当前公开版本为 `starrail_sim-1.27.0.jar`。
+3. 将对应公开发行版本的 JAR 和 Curios API JAR 放入游戏实例的 `mods` 文件夹。当前公开版本为 `starrail_sim-1.27.1.jar`。
 4. 启动 Forge 配置文件。
 
 建议先在新存档中体验。自然生成只会发生在首次生成的区块；已经生成过的区块不会因为安装模组而自动补出遗迹。普通遗迹会在满足高度和结构放置条件时尝试生成，命途主题遗迹由命途寻迹安排。
@@ -73,6 +73,7 @@ Windows 下可用项目自带 Gradle Wrapper 启动开发客户端或构建项�
 
 ## 验证状态
 
+- 1.27.1 正式版：料理、食材和植物的物品图标更新，用户已完成单人验收。
 - 1.27.0 正式版：用户已完成单人验收。Lootr 双人独立开箱尚未实测。
 - 以下各旧版条目保留各自当时的测试边界，不代表当前开发版仍处于同一状态。
 

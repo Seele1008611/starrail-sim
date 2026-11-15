@@ -1,3 +1,6 @@
 {
-  "parent": "starrail_sim:block/path_ridge_windbush"
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "starrail_sim:item/path_ridge_windbush"
+  }
 }

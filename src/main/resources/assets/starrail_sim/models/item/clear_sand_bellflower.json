@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "starrail_sim:block/clear_sand_bellflower"
+    "layer0": "starrail_sim:item/clear_sand_bellflower"
   }
 }

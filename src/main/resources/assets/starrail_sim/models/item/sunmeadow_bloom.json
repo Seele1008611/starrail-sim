@@ -1,3 +1,6 @@
 {
-  "parent": "starrail_sim:block/sunmeadow_bloom"
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "starrail_sim:item/sunmeadow_bloom"
+  }
 }

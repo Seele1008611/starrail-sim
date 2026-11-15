@@ -1,3 +1,6 @@
 {
-  "parent": "starrail_sim:block/path_marsh_root_tuft"
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "starrail_sim:item/path_marsh_root_tuft"
+  }
 }
